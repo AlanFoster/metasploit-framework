@@ -6,12 +6,13 @@ module Jekyll
   
       def generate(site)
         # Grab the latest metadata directly from the file system
-        modules = JSON.load(File.open("../db/modules_metadata_base.json"))
-        modules = modules.slice(*modules.keys.take(10))
+        modules = JSON.load(File.open("../db/modules_metadata_base.json")).values
+        # modules = modules.take(10)
+        # modules = modules.slice(*modules.keys.take(100)).values
         dir = "modules"
 
-        module_pages = modules.map do |(name, metadata)|
-          ModulePage.new(site, site.source, dir, name, metadata)
+        module_pages = modules.map do |metadata|
+          ModulePage.new(site, site.source, dir, metadata)
         end
         
         site.pages.concat(module_pages)
@@ -34,11 +35,11 @@ module Jekyll
     end
 
     class ModulePage < Page
-      def initialize(site, base, dir, name, metadata)
+      def initialize(site, base, dir, metadata)
         @site = site
         @base = base
         @dir  = dir
-        @name = "#{name}.html"
+        @name = "#{CGI.escape(metadata['name'])}.html"
 
         self.process(@name)
         self.read_yaml(File.join(base, '_layouts'), 'modules.html')

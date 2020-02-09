@@ -5,5 +5,22 @@ layout: default
 <h1>{{ page.title }}</h1>
 
 <section>
-  <pre>{{ page.metadata | inspect }}</pre>
+  {%- for metadata_pair in page.metadata -%}
+    {%- assign key = metadata_pair[0] -%}
+    {%- assign value = metadata_pair[1] -%}
+
+    <strong>{{ key }}</strong>
+    {% case key %}
+    {% when 'author' or 'references' or 'autofilter_ports' or 'autofilter_services' %}
+      <ul>
+        {%- for element in value -%}
+          <li>{{ element }}</li>
+        {% endfor %}
+      </ul>
+    {% when 'description' %}
+      <pre>{{value}}</pre>
+    {% else %}   
+      <div>{{ value }}</div>       
+    {% endcase %}
+  {%- endfor -%}
 </section>
