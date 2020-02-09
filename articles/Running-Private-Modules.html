@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Running Private Modules</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-08T15:35:07+00:00" itemprop="datePublished">Jan 8, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>If you’re in the business of writing or collecting Metasploit modules that aren’t part of the standard distribution, then you need a convenient way to load those modules in Metasploit. Never fear, it’s pretty easy, using Metasploit’s default local module search path, <code class="highlighter-rouge">$HOME/.msf4/modules</code>, and there are just a couple caveats:</p>
+
+<h2 id="mirror-the-real-metasploit-module-paths">Mirror the “real” Metasploit module paths</h2>
+
+<p>You must first set up a directory structure that fits with Metasploit’s expectations of path names. What this typically means is that you should first create an “exploits” directory structure, like so:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits
+</code></pre></div></div>
+
+<p>If you are using <code class="highlighter-rouge">auxiliary</code> or <code class="highlighter-rouge">post</code> modules, or are writing <code class="highlighter-rouge">payloads</code> you’ll want to <code class="highlighter-rouge">mkdir</code> those as well.</p>
+
+<h2 id="create-an-appropriate-category">Create an appropriate category</h2>
+
+<p>Modules are sorted by (somewhat arbitrary) categories. These can be anything you like; I usually use <code class="highlighter-rouge">test</code> or <code class="highlighter-rouge">private</code>, but if you are developing a module with an eye toward providing it to the main Metasploit distribution, you will want to mirror the real module path. For example:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/windows/fileformat
+</code></pre></div></div>
+
+<p>… if you are developing a file format exploit for Windows.</p>
+
+<h2 id="create-the-module">Create the module</h2>
+
+<p>Once you have a directory to place it in, feel free to download or start writing your module.</p>
+
+<h2 id="test-it-all-out">Test it all out</h2>
+
+<p>If you already have msfconsole running, use a <code class="highlighter-rouge">reload_all</code> command to pick up your new modules. If not, just start msfconsole and they’ll be picked up automatically. If you’d like to test with something generic, I have a module posted up as a gist, here: https://gist.github.com/todb-r7/5935519 , so let’s give it a shot:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/test
+curl <span class="nt">-Lo</span> ~/.msf4/modules/exploits/test/test_module.rb https://gist.github.com/todb-r7/5935519/raw/17f7e40ab9054051c1f7e0655c6f8c8a1787d4f5/test_module.rb
+todb@ubuntu:~<span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/test
+todb@ubuntu:~<span class="nv">$ </span>curl <span class="nt">-Lo</span> ~/.msf4/modules/exploits/test/test_module.rb https://gist.github.com/todb-r7/5935519/raw/6e5d2da61c82b0aa8cec36825363118e9dd5f86b/test_module.rb 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1140    0  1140    0     0   3607      0 <span class="nt">--</span>:--:-- <span class="nt">--</span>:--:-- <span class="nt">--</span>:--:--  7808
+</code></pre></div></div>
+
+<p>Then, in my msfconsole window:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; reload_all
+[*] Reloading modules from all module paths...
+IIIIII    dTb.dTb        _.---._
+  II     4'  v  'B   .'"".'/|\`.""'.
+  II     6.     .P  :  .' / | \ `.  :
+  II     'T;. .;P'  '.'  /  |  \  `.'
+  II      'T; ;P'    `. /   |   \ .'
+IIIIII     'YvP'       `-.__|__.-'
+
+I love shells --egypt
+
+
+       =[ metasploit v4.6.2-2013052901 [core:4.6 api:1.0]
++ -- --=[ 1122 exploits - 707 auxiliary - 192 post
++ -- --=[ 307 payloads - 30 encoders - 8 nops
+
+msf &gt; use exploit/test/test_module 
+msf exploit(test_module) &gt; info
+
+       Name: Fake Test Module
+     Module: exploit/test/test_module
+    Version: 0
+   Platform: Windows
+ Privileged: No
+    License: Metasploit Framework License (BSD)
+       Rank: Excellent
+
+Provided by:
+  todb &lt;todb@metasploit.com&gt;
+
+Available targets:
+  Id  Name
+  --  ----
+  0   Universal
+
+Basic options:
+  Name  Current Setting  Required  Description
+  ----  ---------------  --------  -----------
+  DATA  Hello, world!    yes       The output data
+
+Payload information:
+
+Description:
+  If this module loads, you know you're doing it right.
+
+References:
+  http://cvedetails.com/cve/1970-0001/
+
+msf exploit(test_module) &gt; exploit
+
+[*] Started reverse handler on 192.168.145.1:4444 
+[+] Hello, world!
+msf exploit(test_module) &gt; 
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>That’s really all there is to it. The most common problems that people (including myself) run into are:</p>
+
+<ul>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/modules/</code>. This won’t work because you need to specify if it’s an exploit or a payload or something. Check <code class="highlighter-rouge">ls /opt/metasploit/apps/pro/msf3/modules/</code> (or where your install of Metasploit lives).</li>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/modules/auxiliary/</code>. This won’t work because you need at least one level of categorization. It can be new, like <code class="highlighter-rouge">auxiliary/0day/</code>, or existing, like <code class="highlighter-rouge">auxiliary/scanner/scada/</code>.</li>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/exploit/</code> or <code class="highlighter-rouge">$HOME/.msf4/posts/</code>. Note the pluralization of the directory names; they’re different for different things. Exploits, payloads, encoders, and nops are plural, while auxiliary and post are singular.</li>
+</ul>
+
+<h3 id="metasploit-community-and-pro-editions">Metasploit Community and Pro editions</h3>
+
+<p>Note that the <code class="highlighter-rouge">$HOME</code> directory for Metasploit Community Edition is going to be <code class="highlighter-rouge">root</code> and not your own user directory, so if you are expecting modules to show up in the Metasploit CE (or Express, or Pro) web UIs, you will want to stash your external modules in <code class="highlighter-rouge">/root/.msf4/modules</code>. Of course, this means you need root access to the machine in question, but hey, you’re a l33t Metasploit user, so that shouldn’t be too hard.</p>
+
+<p>Also note that if your modules are not displaying in the web UI, you should restart Pro service.</p>
+
+<h3 id="windows">Windows</h3>
+
+<p>For Windows users, the above is all true, except for accessing the modules from the web GUI. Sadly, you’re a little out of luck; the module load paths on Windows are a little more restrictive and don’t allow for external modules. However, the Console2-based Metasploit Console (Start &gt; Programs &gt; Metasploit &gt; Metasploit Console) will work out just fine.</p>
+
+<h3 id="new-mixins-and-protocols">New mixins and protocols</h3>
+
+<p>Any module that requires on changes to core library functions, such as new protocol parsers or other library mixins, aren’t going to work out for you this way – you’re going to end up spewing errors all over the place as your module tries to load these classes. It’s possible to write modules as completely self-contained in nearly all cases (thanks to Ruby’s open class architecture), but such modules nearly always get refactored later to make the protocol and other mixin bits available to other modules.</p>
+
+<p>In this case, it would be better to work with modules like that using a proper GitHub checkout with a development branch – see the <a href="https://github.com/rapid7/metasploit-framework/wiki/Setting-Up-a-Metasploit-Development-Environment">dev environment setup docs</a> for tons more on that.</p>
+
+<h2 id="a-final-warning">A final warning</h2>
+
+<p>If you are loading new and exciting Metasploit modules, know that these things will tend to have access to anything you have access to; doubly so if you’re dropping them in root. Metasploit modules are plain text Ruby, so you can read them – but please be careful, and only add external modules from trusted sources; don’t just go grabbing any old thing you see on the Internet, because you may find yourself backdoored (or worse) in short order.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Running-Private-Modules.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

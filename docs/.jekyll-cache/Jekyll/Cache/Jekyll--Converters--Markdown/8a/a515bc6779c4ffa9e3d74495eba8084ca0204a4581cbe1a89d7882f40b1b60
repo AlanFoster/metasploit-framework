@@ -1,0 +1,107 @@
+I"�<p>Usually, if something in Metasploit triggers an error, there is a backtrace or at least a brief message that explains what the problem is about. Most of the time, there is nothing wrong with that. But sometimes if you wish to report that problem, you might lose that information, which makes your bug report less informative, and the problem may take much longer to solve. This is why logging to file in many cases is extremely useful. In this documentation, we’ll explain about how to take advantage of this properly.</p>
+
+<h2 id="basic-usage">Basic Usage</h2>
+
+<p>As an user, you should know that all the logged errors are saved in a file named <strong>framework.log</strong>. The save path is defined in Msf::Config.log_directory, which means in msfconsole, you can switch to irb and figure out where it is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; irb
+[*] Starting IRB shell...
+
+&gt;&gt; Msf::Config.log_directory
+=&gt; "/Users/test/.msf4/logs"
+</code></pre></div></div>
+
+<p>By default, all the log errors are on level 0 - the least informative level. But of course, you can change this by setting the datastore option, like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; setg LogLevel 3
+LogLevel =&gt; 3
+msf &gt;
+</code></pre></div></div>
+
+<h2 id="log-levels">Log Levels</h2>
+
+<p>There are 4 different logging levels defined in <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/constants.rb">log/rex/constants.rb</a>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Log Level</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LEV_0 (Default)</td>
+      <td>The default log level if none is specified. It should be used when a log message should always be displayed when logging is enabled. Very few log messages should occur at this level aside from necessary information logging and error/warning logging.  Debug logging at level zero is not advised.</td>
+    </tr>
+    <tr>
+      <td>LEV_1 (Extra)</td>
+      <td>This log level should be used when extra information may be needed to understand the cause of an error or warning message or to get debugging information that might give clues as to why something is happening. This log level should be used only when information may be useful to understanding the behavior of something at a basic level.  This log level should not be used in an exhaustively verbose fashion.</td>
+    </tr>
+    <tr>
+      <td>LEV_2 (Verbose)</td>
+      <td>This log level should be used when verbose information may be needed to analyze the behavior of the framework.  This should be the default log level for all detailed information not falling into LEV_0 or LEV_1. It is recommended that this log level be used by default if you are unsure.</td>
+    </tr>
+    <tr>
+      <td>LEV_3 (Insanity)</td>
+      <td>This log level should contain very verbose information about the behavior of the framework, such as detailed information about variable states at certain phases including, but not limited to, loop iterations, function calls, and so on.  This log level will rarely be displayed, but when it is the information provided should make it easy to analyze any problem.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For debugging purposes, it’s always better to turn on the highest level of logging.</p>
+
+<h2 id="logging-api">Logging API</h2>
+
+<p>There are mainly five logging methods you will most likely be using a lot, and they all have the exact same arguments. Let’s use one of the logging methods to explain what these arguments are about:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def elog(msg, src = 'core', level = 0, from = caller)
+</code></pre></div></div>
+
+<ul>
+  <li>msg - The message you want to log</li>
+  <li>src - The source of the error (default is core, as in Metasploit core)</li>
+  <li>level - The log level</li>
+  <li>from - The current execution stack. caller is a method from <a href="http://www.ruby-doc.org/core-2.1.3/Kernel.html#method-i-caller">Kernel</a>.</li>
+</ul>
+
+<p>Notice that only the <code class="highlighter-rouge">msg</code> argument is required, the rest are optional.</p>
+
+<p>Now, let’s go over these five methods and explain how they’re meant to be used:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dlog()</td>
+      <td>LOG_DEBUG</td>
+    </tr>
+    <tr>
+      <td>elog()</td>
+      <td>LOG_ERROR</td>
+    </tr>
+    <tr>
+      <td>wlog()</td>
+      <td>LOG_WARN</td>
+    </tr>
+    <tr>
+      <td>ilog()</td>
+      <td>LOG_INFO</td>
+    </tr>
+    <tr>
+      <td>rlog()</td>
+      <td>LOG_RAW</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="code-example">Code Example</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">elog</span><span class="p">(</span><span class="s2">"The sky has fallen"</span><span class="p">)</span>
+</code></pre></div></div>
+:ET

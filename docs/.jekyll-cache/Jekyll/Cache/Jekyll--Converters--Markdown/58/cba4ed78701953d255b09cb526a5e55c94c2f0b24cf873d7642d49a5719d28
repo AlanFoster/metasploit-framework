@@ -1,0 +1,49 @@
+I"�<p>Adding and reviewing module documentation is a great way to contribute to the Metasploit Framework.</p>
+
+<p>Before you write any module documentation, you should take a look at the sample template, <a href="https://github.com/rapid7/metasploit-framework/blob/master/documentation/modules/module_doc_template.md">module_doc_template.md</a>, or take a look at any of the KBs that are already available.</p>
+
+<h3 id="writing-a-kb">Writing a KB</h3>
+
+<p>To write a KB, you’ll need to:</p>
+
+<ul>
+  <li>Create a markdown (.md) file.</li>
+  <li>Write the content.</li>
+  <li>Save the file and name it after the module name. For example, the filename for ms08-067 is <code class="highlighter-rouge">modules/exploits/windows/smb/ms08_067_netapi.rb</code>, so its documentation is <code class="highlighter-rouge">documentation/modules/exploits/windows/smb/ms08_067_netapi.md</code>.</li>
+  <li>Place it in the metasploit-framework/documentation/modules directory.</li>
+</ul>
+
+<h3 id="where-to-put-the-markdown-files">Where to put the markdown files</h3>
+
+<p>If you go to metasploit-framework/documentation/modules, you’ll see that there are documentation directories for each module type: auxiliary, exploit, payload, and post. To figure out where you need to put the file, you’ll need to look at the module’s path.</p>
+
+<ol>
+  <li>Start msfconsole.</li>
+  <li>Type <code class="highlighter-rouge">use &lt;module name&gt;</code>.</li>
+  <li>Type <code class="highlighter-rouge">info -d</code>.</li>
+  <li>When the module name appears, look at the Module field. You’ll see a file path for the module. That’s the path where the KB needs to be added.</li>
+</ol>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf&gt; use auxiliary/scanner/smb/smb_login
+msf (smb_login)&gt; info
+
+Name: SMB Login Check Scanner
+Module: auxiliary/scanner/smb/smb_login
+....
+</code></pre></div></div>
+
+<p>If you were creating a KB for the smb login scanner, you’d add it to <code class="highlighter-rouge">metasploit-framework/documentation/modules/auxiliary/smb.md</code>.</p>
+
+<h3 id="sections-you-should-include-in-the-kb">Sections you should include in the KB</h3>
+
+<p>These are just suggestions, but it’d be nice if the KB had these sections:</p>
+
+<ul>
+  <li><strong>Vulnerable Applications</strong> - Tells users what targets are vulnerable to the module and provides instructions on how to access vulnerable targets for testing.</li>
+  <li><strong>Verification Steps</strong> - Tells users how to use the module and what the expected results are from running the module.</li>
+  <li><strong>Options</strong> - Provides descriptions of all the options that can be run with the module. Additionally, clearly identify the options that are required.</li>
+  <li><strong>Scenarios</strong> - Provides sample usage and describes caveats that the user may need to be aware of when running the module.</li>
+</ul>
+:ET

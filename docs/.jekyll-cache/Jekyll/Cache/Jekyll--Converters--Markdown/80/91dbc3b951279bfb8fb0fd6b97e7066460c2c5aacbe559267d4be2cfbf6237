@@ -1,0 +1,28 @@
+I"·
+<h1 id="description">Description</h1>
+
+<h2 id="how-to-decode-base64-with-metasploitframeworkcompiler">How to decode Base64 with Metasploit::Framework::Compiler</h2>
+
+<p>The Metasploit C compiler has built-in support for Base64 encoding and decoding, which is implemented as <code class="highlighter-rouge">base64.h</code>.</p>
+
+<h1 id="code-example">Code Example</h1>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;Windows.h&gt;
+#include &lt;String.h&gt;
+#include &lt;base64.h&gt;
+</span>
+<span class="c1">// "Hello World" encoded by Rex::Text.encode_base64()</span>
+<span class="cp">#define BASE64STR "aGVsbG8gd29ybGQ="
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">base64StrLen</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">BASE64STR</span><span class="p">);</span>
+  <span class="n">LPVOID</span> <span class="n">lpBuf</span> <span class="o">=</span> <span class="n">VirtualAlloc</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">base64StrLen</span><span class="p">,</span> <span class="n">MEM_COMMIT</span><span class="p">,</span> <span class="n">PAGE_EXECUTE_READWRITE</span><span class="p">);</span>
+  <span class="n">memset</span><span class="p">(</span><span class="n">lpBuf</span><span class="p">,</span> <span class="sc">'\0'</span><span class="p">,</span> <span class="n">base64StrLen</span><span class="p">);</span>
+  <span class="n">base64decode</span><span class="p">(</span><span class="n">lpBuf</span><span class="p">,</span> <span class="n">BASE64STR</span><span class="p">,</span> <span class="n">base64StrLen</span><span class="p">);</span>
+  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">lpBuf</span><span class="p">,</span> <span class="s">"Base64 Test"</span><span class="p">,</span> <span class="n">MB_OK</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To compile, use <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Metasploit%3A%3AFramework%3A%3ACompiler%3A%3AWindows-to-compile-C-code">How to use Metasploit::Framework::Compiler::Windows to compile C code</a></p>
+:ET

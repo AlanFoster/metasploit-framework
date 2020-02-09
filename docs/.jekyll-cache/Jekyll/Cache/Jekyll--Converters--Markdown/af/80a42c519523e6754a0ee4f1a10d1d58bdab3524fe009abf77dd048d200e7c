@@ -1,0 +1,27 @@
+I"Ì<p>Start here:</p>
+
+<ul>
+  <li>http://www.offensive-security.com/metasploit-unleashed/Main_Page</li>
+  <li>https://metasploit.help.rapid7.com/docs/</li>
+  <li>http://docs.kali.org/general-use/starting-metasploit-framework-in-kali</li>
+  <li>https://github.com/rapid7/metasploitable3</li>
+  <li>[[Evading Anti-Virus]]</li>
+</ul>
+
+<h2 id="database-troubleshooting">Database troubleshooting</h2>
+<p>If the database is not connecting automatically, first make sure it is running:</p>
+<ul>
+  <li>Linux:<code class="highlighter-rouge">$ netstat -lnt | grep 7337</code> where 7337 is whatever port you told it to listen on during installation</li>
+  <li>Windows: look for a postgres.exe process in task manager.</li>
+</ul>
+
+<p>If postgres is not running, try starting it manually:</p>
+<ul>
+  <li>Linux:<code class="highlighter-rouge">$ sudo /etc/init.d/metasploit start</code> or if you didnâ€™t choose to install as a service: <code class="highlighter-rouge">$ sudo /opt/metasploit*/ctlscript.sh start</code></li>
+  <li>Windows: Start -&gt; Metasploit -&gt; Services -&gt; Start Services</li>
+</ul>
+
+<p>Once postgres is running and listening, go back to msfconsole:</p>
+<pre><code class="language-`">msf &gt; db_connect
+</code></pre>
+:ET

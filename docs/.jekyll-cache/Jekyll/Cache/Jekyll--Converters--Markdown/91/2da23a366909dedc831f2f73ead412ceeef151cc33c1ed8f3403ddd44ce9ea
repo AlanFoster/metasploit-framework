@@ -1,0 +1,65 @@
+I"�<p>PowerShell is a scripting language developed by Microsoft. It provides API access to almost everything in a Windows platform, less detectable by countermeasures, easy to learn, therefore it is incredibly powerful for penetration testing during post exploitation, or exploit development for payload execution. Take Metasploit’s <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/psexec_psh.rb">windows/smb/psexec_psh.rb</a> module for example: it mimics the psexec utility from SysInternals, the payload is compressed and executed from the command line, which allows it to be somewhat stealthy against antivirus. There’s only less than 30 lines of code in psexec_psh.rb (excluding the metadata that describes what the module is about), because most of the work is done by the Powershell mixin, nothing is easier than that.</p>
+
+<p>The command line will automatically attempt to detect the architecture (x86 or x86_64) that it is being run in, as well as the payload architecture that it contains. If there is a mismatch it will spawn the correct PowerShell architecture to inject the payload into, so there is no need to worry about the architecture of the target system.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>To use the PowerShell mixin, make sure you meet these requirements:</p>
+
+<ul>
+  <li>The target machine supports PowerShell. Vista or newer should support it.</li>
+  <li>You must have permission to execute powershell.exe</li>
+  <li>You must be able to supply system command arguments.</li>
+  <li>You must set up a command execution type attack in order to execute powershell.exe</li>
+</ul>
+
+<h3 id="usage">Usage</h3>
+
+<ul>
+  <li>To add PowerShell to your module, first you need to require it:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'msf/core/exploit/powershell'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>And then include the mixin within the scope of the <code class="highlighter-rouge">Metasploit3</code> class (or maybe <code class="highlighter-rouge">Metasploit4</code> for some)</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Powershell</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Use the <code class="highlighter-rouge">cmd_psh_payload</code> method to generate the PowerShell payload.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cmd_psh_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">.</span><span class="nf">encoded</span><span class="p">,</span> <span class="n">payload_instance</span><span class="p">.</span><span class="nf">arch</span><span class="p">.</span><span class="nf">first</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The actual output of <code class="highlighter-rouge">cmd_psh_payload</code> is a system command, which would look like the following format (as a one-liner):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%COMSPEC% /B /C start powershell.exe -Command $si = New-Object
+System.Diagnostics.ProcessStartInfo;$si.FileName = 'powershell.exe';
+$si.Arguments = ' -EncodedCommand [BASE64 PAYLOAD] ';
+$si.UseShellExecute = $false;
+$si.RedirectStandardOutput = $true;$si.WindowStyle = 'Hidden';
+$si.CreateNoWindow = $True;
+$p = [System.Diagnostics.Process]::Start($si);
+</code></pre></div></div>
+
+<p>A number of options can be used to adjust the final command depending on the circumstances of the exploit. By default the script is compressed but no encoding takes places of the wrapper. This produces a small command of around ~2000 characters (depending on the payload).</p>
+
+<p>Of these <code class="highlighter-rouge">encode_final_payload</code> is the most noteworthy as it will Base64 encode the full payload giving a very simple command with very few bad characters. However, the command length will increase as a result. Combining this with <code class="highlighter-rouge">remove_comspec</code> means the payload would very simply be:</p>
+
+<p><code class="highlighter-rouge">powershell.exe -nop -ep bypass -e AAAABBBBCCCCDDDD.....==</code></p>
+
+<p>Check out the other advanced options in the API documentation below.</p>
+
+<h3 id="references">References</h3>
+
+<p>https://dev.metasploit.com/api/Msf/Exploit/Powershell.html</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/powershell.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/data/exploits/powershell/powerdump.ps1</p>
+:ET

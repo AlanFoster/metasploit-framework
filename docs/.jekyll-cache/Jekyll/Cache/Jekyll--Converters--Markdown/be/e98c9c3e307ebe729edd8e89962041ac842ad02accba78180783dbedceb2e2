@@ -1,0 +1,60 @@
+I"�<p>Checking patch levels is an important task for vulnerability research or exploit development. As a bug-hunting kind of guy, you should care about patch levels because say you have an 0day for Internet Explorer 10, you can’t always assume it affects all IE 10 builds since its debut (2012). If you realize your 0day only affects one or two builds, how much of a threat is it? Probably not as bad as you think.</p>
+
+<p>If you’re an exploit developer, you’re checking patches for another reason: maximum reliability. There are a lot of ways your exploit can fail, a bad <a href="http://en.wikipedia.org/wiki/Return-oriented_programming">gadget</a> due to a change by a system update is easily one of them. If this update occurred at a pretty early stage, chances are your exploit will fail a lot, too.</p>
+
+<h2 id="how-to-collect-microsoft-patches">How to collect Microsoft patches</h2>
+
+<p>If you’re kind of hardcore with patch diffing, you probably maintain your own database of DLLs. But this may require a lot of disk space, for most people it’s probably not worth it unless you have to look at these DLLs pretty much everyday. A more economic way is probably have a way to track all these patches, and have some sort of interface to allow quick and easy access to them.</p>
+
+<p>Luckily, Microsoft maintains a list of all the patches in an Excel file that you can download here:</p>
+
+<p><a href="http://www.microsoft.com/en-us/download/confirmation.aspx?id=36982">http://www.microsoft.com/en-us/download/confirmation.aspx?id=36982</a></p>
+
+<p>If you prefer some sort of GUI for searching, you can use Security TechCenter’s <a href="http://mybulletins.technet.microsoft.com/BulletinPages/Dashboard">My Security Bulletins Dashboard</a>. You can edit this dashboard to add specific filters, such as the Windows version, Internet Explorer version, Office, etc, etc.</p>
+
+<p>For example, if I want to find all the Internet Explorer 10 patches for Windows 7 since its debut, I can add the following filters:</p>
+
+<ul>
+  <li>Windows 7</li>
+  <li>Internet Explorer</li>
+</ul>
+
+<p>And then I sort by date from September 2012 to 2014, I get: 22 results. But of course, this number will go up because IE 10 is still supported.</p>
+
+<p>There are also other desktop or command-line tools that will basically check missing patches for your Windows system, such as <a href="https://gallery.technet.microsoft.com/scriptcenter/2d191bcd-3308-4edd-9de2-88dff796b0bc">Windows Update Powershell Module</a>, in some cases this may work better.</p>
+
+<h2 id="patch-extraction">Patch extraction</h2>
+
+<ul>
+  <li>
+    <p>Old patches used to be packaged as EXEs, and this kind can be extracted by using decompression tools such as <a href="http://www.7-zip.org/">7zip</a>. Internet Explorer 6 patches, for example, can be extracted this way.</p>
+  </li>
+  <li>
+    <p>Newer patches packaged as EXEs support the /X flag for extraction. For example, the following will extract the patch under the same directory. Patches such as Internet Explorer 8 (for XP) can be extracted this way.</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Windows[Something]-KB[Something]-x86-ENU.exe /X:.
+</code></pre></div></div>
+
+<ul>
+  <li>Most patches nowadays are packaged as MSUs. Here’s what you have to do:</li>
+</ul>
+
+<ol>
+  <li>Put all your *.msu files under the same directory (in Windows)</li>
+  <li>Run <a href="https://github.com/rapid7/metasploit-framework/blob/master/tools/extract_msu.bat">tools/extract_msu.bat</a> [absolute directory path to *.msu files)</li>
+  <li>extract_msu.bat should automatically extract all the *.msu files. The “extracted” sub-directory in each new folder is where you can find the updated components.</li>
+</ol>
+
+<p>Note: The update folders might be labeled as GDR or QRE. GDR indicates Generation Distribution Release, while QRE means Quick Fix Engineering.</p>
+
+<h2 id="checking-gadgets-in-patches">Checking gadgets in patches</h2>
+
+<p>The quickest way to check gadgets across different patches is by using Metasploit’s msfpescan utility (or msfbinscan, which is smart enough to know it’s PE format). It’s really easy, all you have to do is put the DLLs in the same directory, and then do:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfbinscan -D -a [address] -A 10 /patches/*.dll
+</code></pre></div></div>
+
+<p>What that does is the tool will disassemble all the DLLs under that directory, at that specific address for 10 bytes. You can probably automate a little more to quickly identify which DLLs don’t have right gadget, and if that’s the case for you, that means the gadget you’re using is unsafe. You should find another one that’s more reliable.</p>
+:ET

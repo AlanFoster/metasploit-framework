@@ -1,0 +1,255 @@
+I"�><h4 id="raptor-description">Raptor Description</h4>
+<p>Raptor’s primary purpose will be to provide all the communication methods needed for Metasploit. This includes Socket level code as well as protocol implmenetations. Raptor should be as standalone as possible. Other Gems should dep Raptor not the other way around.</p>
+
+<h4 id="exploit-helper">Exploit Helper</h4>
+<p>Tentative name for another new Gem. This Gem will focus on code that is designed to assist in the Exploitation process but is not key to communicating over services or implementing a specific protocol. Examples would be the ropbuilder, SEH libraries, egghunter, etc.</p>
+
+<h4 id="binary-manipulation">Binary Manipulation</h4>
+<p>Placeholder name for another Gem centered entirely around the Binary parsing and Manipulation. This includes all the different parsing libraries for the various executable formats.</p>
+
+<h4 id="meterpreter-client">Meterpreter Client</h4>
+<p>Tenative name for a Meterpreter client-side API. This code is currently rolled together with the rest of Rex. Meterpreter itself is already a seperate repo. The client should just be a gem. (This may be integrated into MsfCore instead of a seperate Gem. Investigate Further)</p>
+
+<h4 id="metasploit-core">Metasploit Core</h4>
+<p>The core lbiraries of the Metasploit Framework. If the code has to do with running and maintaing the functions of the Framework rather than doing tasks inside a module, it probably belongs here.</p>
+
+<h4 id="devnull">/dev/null</h4>
+<p><a href="http://en.wikipedia.org/wiki//dev/null">see here</a></p>
+
+<p>These are things which are not needed anymore and should be killed with fire.</p>
+
+<h4 id="wtf">wtf?</h4>
+<p>These are the last few odd-men out. Currently unsure of where these things should move as we clear out Rex and dance around it’s burnt out corpse.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Final Home</th>
+      <th>Directory/File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/io/">io</a></td>
+      <td>IO constructs such as streams and stream servers etc.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/mime/">mime</a></td>
+      <td>Library for handling mime messages.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/proto">proto</a></td>
+      <td>Various Protocol libraries for communicating with different services</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/services">services</a></td>
+      <td>defines different tcp services. Currently only defines a local tcp relay</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/socket/">socket</a></td>
+      <td>Holds all the socket, comm, and siwtchboard classes for handling network communications</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/sslscan/">sslscan</a></td>
+      <td>Classes for SSLScan functionality. Allows discovery of SSL support on any tcp service</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/service_manager.rb">service_manager</a></td>
+      <td>Used to manage connection services such as HTTP Server</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#raptor-description">Raptor</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/text.rb">text</a></td>
+      <td>Text Generation and manipulation routines. Core to almsot every aspect of Metasploit.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/arch/">arch</a></td>
+      <td>Important Architecture information such as registers, opcodes, and stack manipulation routines.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/encoder/">encoder</a></td>
+      <td>Encoder classes used by the encoder modules. (XDR moves to raptor though)</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/encoding/">encoding</a></td>
+      <td>Serve as base classes to some of the things in Encoder. Needs to be merged together with Encoder</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/exploitation/">exploitation</a></td>
+      <td>Grab Bag of Exploitation helpers such as ropdb, opcodedb, egghunter, seh routines etc</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/nop/">nop</a></td>
+      <td>Library for generating multi-byte NOP routines</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/payloads/">payloads</a></td>
+      <td>Contains Kernel mode wrapper for Windows payloads</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/poly/">poly</a></td>
+      <td>Plymorphic code generation routines for polymorphic encoder modules</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#exploit-helper">Exploit Helper</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/ropbuilder/">ropbuilder</a></td>
+      <td>Library for building ROP chains</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/assembly/">assembly</a></td>
+      <td>NASM bindings for use with msfpescan and msfbinscan</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/elfparsey/">elfparsey</a></td>
+      <td>Parse and Maniuplate ELF executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/elfscan/">elfscan</a></td>
+      <td>Scanner for ELF executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/image_source/">imagesource</a></td>
+      <td>Interfaces for reading executables from File or memory</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/machparsey/">marchparsey</a></td>
+      <td>Library for parsing and manipulating Mach-O executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/machscan/">machscan</a></td>
+      <td>Scanner for Mach-O executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/ole/">ole</a></td>
+      <td>OLE Format creation, parsing and manipulations</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/peparsey">peparsey</a></td>
+      <td>Parsing and Maniuplation library for PE format executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#binary-manipulation">Binary Manipulation</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/pescan">pescan</a></td>
+      <td>Scanner for PE format executables</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#meterpreter-client">Meterpreter Client</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/post/">post</a></td>
+      <td>Meterepreter client-side API for talking to the Meterpreter agent</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/logging/">logging</a></td>
+      <td>Classes for Metasploit logging</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/parser">parser</a></td>
+      <td>Import parser classes for various import formats</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/platforms/">platforms</a></td>
+      <td>Windows Registry Constants. Stick it with all the other registry mixins</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/sync/">sync</a></td>
+      <td>Syncrhonization, thread locks etc.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/ui/">ui</a></td>
+      <td>UI code for the msfconsole interface etc.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/compat.rb">compat</a></td>
+      <td>Routines for checking the local paltform and handling compatability issues</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/constants.rb">constants</a></td>
+      <td>A big collection of constants used by framework, probably needs to be split up</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/exceptions.rb">exceptions</a></td>
+      <td>A big collection of exceptions, probably needs split up</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/job_container.rb">job_container</a></td>
+      <td>Job container for framework job management</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/thread_factory.rb">thread_factory</a></td>
+      <td>Thread factory for Framework thread management</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#metasploit-core">Metasploit Core</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/transformer.rb">transformer</a></td>
+      <td>Some MetaProgramming magic rainbow unicorns. Used only in core, so move it there</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#devnull">/dev/null</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/encoders/">encoders</a></td>
+      <td>Deprecated Encoders. Unused.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#devnull">/dev/null</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex//script/">script</a></td>
+      <td>library for dealing with meterpreter scripts, which are no longer supported.</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#devnull">/dev/null</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/struct2/">struct2</a></td>
+      <td>library for creating c-style binary structs. Replace with bitstruct</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#wtf">?</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/registry/">registry</a></td>
+      <td>Offline local registry parsing library. Not sure where this belongs</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#wtf">?</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/zip/">zip</a></td>
+      <td>Library for parsing, creating, and manipulating Zip files</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#wtf">?</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/file.rb">file</a></td>
+      <td>Classes for dealing with extended fileutil options. Not sure where this belongs</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/rapid7/raptor/wiki/Rex-code-layout#wtf">?</a></td>
+      <td><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/rex/mac_oui.rb">mac_oui</a></td>
+      <td>MAC address vendor lookup class</td>
+    </tr>
+  </tbody>
+</table>
+:ET

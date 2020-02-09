@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Rolling back merges</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2013-11-14T19:46:09+00:00" itemprop="datePublished">Nov 14, 2013
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Since the Metasploit-framework repository’s master branch is the bleeding edge of development, occasionally mistakes happen. This page will attempt to give some guidance on how to roll back a bad merge.</p>
+
+<h1 id="whats-a-bad-merge">What’s a bad merge?</h1>
+
+<ul>
+  <li>Anything that causes <a href="travis-ci.org/rapid7/metasploit-framework/builds">Travis-CI</a> to fail rspec tests consistently.</li>
+  <li>Anything that hits untested code that otherwise causes problems with <code class="highlighter-rouge">msfconsole</code>, <code class="highlighter-rouge">msfcli</code>, <code class="highlighter-rouge">msfvenom</code>, and other console commands.</li>
+</ul>
+
+<p>Sometimes, Travis-CI does choke up, due to network weather. Every build is a fresh clone, and all gems have to be reinstalled every time. Also, some rspec tests require network connections to assets on the Internet. Sometimes, Travis-CI itself is under a lot of load, and builds time out.</p>
+
+<p>The best way to diagnose these problems is simply to restart the build. Note, only <a href="https://github.com/rapid7/metasploit-framework/wiki/Committer-Rights">Committers</a> have rights to do this. If that doesn’t clear things up, or if it’s obvious that there are real failures (since you’ve read the rspec results and have read the tests), the first order of business is to undo your bad commit.</p>
+
+<p><strong>Note</strong>: in branches other than <code class="highlighter-rouge">master</code>, you can usually just fix things normally with new commits. There are plenty of “whoops” commit messages in our history.</p>
+
+<h1 id="a-merge-revert-example">A merge revert example</h1>
+
+<p>Once, there was a bad merge on <a href="https://github.com/rapid7/metasploit-framework/pull/2320">PR #2320</a>. The fellow landing this pull request ran into a merge conflict while landing, thought he fixed it, and pushed the results, which ended up breaking about a dozen Rspec tests. Whoops. That was a bad merge. <a href="https://github.com/rapid7/metasploit-framework/pull/2624">PR #2624</a> fixed it. Here’s the procedure used.</p>
+
+<h3 id="figure-out-what-broke-things">Figure out what broke things.</h3>
+
+<p>In this case, the failed build was pretty obvious: <a href="https://travis-ci.org/rapid7/metasploit-framework/builds/13816889">Build #5216</a> was red, and rerunning Travis-CI didn’t solve. Reading the build log, we can see this was <a href="http://github.com/rapid7/metasploit-framework/commit/3996557ec61a6eeefaa3448480012205b8825374">merge commit 3996557</a>.</p>
+
+<h3 id="check-out-the-bad-merge-tip">Check out the bad merge tip.</h3>
+
+<p>These commands will put the local repo back to the bad merge, and create a local branch as such:</p>
+
+<p><code class="highlighter-rouge">git checkout 3996557</code>
+<code class="highlighter-rouge">git checkout -b bad-merge</code></p>
+
+<p>You can inspect exactly what commits are contained in this merge with the following:</p>
+
+<p><code class="highlighter-rouge">git log bad-merge...bad-merge~ --oneline</code></p>
+
+<p>Like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log bad-merge...bad-merge~ --oneline
+3996557 Fix conflcit lib/msf/util/exe.rb
+6296c4f Merge pull request #9 from tabassassin/retab/pr/2320
+d0a3ea6 Retab changes for PR #2320
+bff7d0e Merge for retab
+4c9e6a8 Default to exe-small
+</code></pre></div></div>
+
+<p>The syntax is a little wacky, but this is saying, “Show me all the commit hashes that occur from the <code class="highlighter-rouge">bad-merge</code> point to one back from <code class="highlighter-rouge">bad-merge</code> (iow, from right before <code class="highlighter-rouge">bad-merge</code> was merged). That’s what the tilde (~) means. You could also use <code class="highlighter-rouge">bad-merge^</code> or <code class="highlighter-rouge">bad-merge^1</code>, they’re all equivalent.</p>
+
+<p>You can see the diff with the following command. Note the reverse placement of the <code class="highlighter-rouge">bad-merge</code> and <code class="highlighter-rouge">bad-merge~</code> commit points!</p>
+
+<p><code class="highlighter-rouge">git diff bad-merge~ bad-merge</code></p>
+
+<p>Take a look at that, confirm that yes, this is exactly what you want to revert, and then pull the trigger.</p>
+
+<h3 id="revert-the-merge">Revert the merge</h3>
+
+<p><code class="highlighter-rouge">git revert -m 1 bad-merge</code></p>
+
+<p>The <code class="highlighter-rouge">-m 1</code> bit is important, because that specifies that you want the branch to return to the point from before the merge – I have never had reason to revert a merge and throw out the other side of the merge, but I imagine it comes up often enough for other people to not have it be the default behavior.</p>
+
+<p>Note that this does /not/ reach into the repo and change history; for that, you would need to git push –force, and you <a href="www.reddit.com/r/programming/comments/1qefox/jenkins_developers_accidentally_do_git_push_force/">never want to do that on the master branch</a>. Instead, you are generating a new commit that reverses the contents of the merge commit. As usual, you will want to edit the commit message to be meaningful – mention the affected commit hash and the affected pull request.</p>
+
+<p>You will also want to <code class="highlighter-rouge">git commit -S --amend</code> after this to sign the commit; <code class="highlighter-rouge">git revert</code> does not take a <code class="highlighter-rouge">-S</code> option. Bummer.</p>
+
+<h3 id="create-a-new-pr">Create a new PR.</h3>
+
+<p>You will now create a new PR with your revert commit. That’s simple enough. Again, be sure that the affected PRs are also informed; they may think their material landed, and while it technically did, it’s no longer there; they will need to open new PRs and figure out how to resubmit their changes (hopefully, this time without causing merge conflicts).</p>
+
+<h3 id="bug-the-committers-until-your-revert-lands">Bug the committers until your revert lands.</h3>
+
+<p>Until your revert commit lands, master will remain broken, so dealing with this situation should be blocking basically anything else. Be vocal.</p>
+
+<h2 id="thats-it">That’s it!</h2>
+
+<p>If you have suggestions for fixes on this page, please bother <a href="https://github.com/todb-r7">@todb-r7</a> with them.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Rolling-back-merges.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

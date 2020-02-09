@@ -1,0 +1,108 @@
+I"�&<p>Using multiple networking mixins in a Metasploit module is always a tricky thing to do, because most likely you will run into issues like overlapping datastore options, variables, methods, the super call is only meant for one mixin, etc. This is considered as advanced module development, and sometimes can be rather painful to figure out on your own. To improve the Metasploit development experience, we have a few examples to demonstrate common scenarios that require you to use multiple mixins to achieve exploitation.</p>
+
+<h3 id="todays-lesson-send-a-http-request-to-attack-the-target-machine-and-use-a-httpserver-for-payload-delivery">Today’s lesson: Send a HTTP request to attack the target machine, and use a HttpServer for payload delivery.</h3>
+
+<p>Say you want to exploit a web server or web application. You have code execution on the box, but you need to find a way to deliver the final payload (probably an executable), and a HTTP server happens to be your option.</p>
+
+<p>Here is how you can set it up:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">##</span>
+<span class="c1"># This module requires Metasploit: http://metasploit.com/download</span>
+<span class="c1"># Current source: https://github.com/rapid7/metasploit-framework</span>
+<span class="c1">##</span>
+
+<span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span>
+  <span class="no">Rank</span> <span class="o">=</span> <span class="no">NormalRanking</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span><span class="o">::</span><span class="no">HttpClient</span>
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span><span class="o">::</span><span class="no">HttpServer</span><span class="o">::</span><span class="no">HTML</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s2">"HttpClient and HttpServer Example"</span><span class="p">,</span>
+      <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+        This demonstrates how to use two mixins (HttpClient and HttpServer) at the same time,
+        but this allows the HttpServer to terminate after a delay.
+      }</span><span class="p">,</span>
+      <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+      <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'sinn3r'</span> <span class="p">],</span>
+      <span class="s1">'References'</span>     <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span><span class="s1">'URL'</span><span class="p">,</span> <span class="s1">'http://metasploit.com'</span><span class="p">]</span>
+        <span class="p">],</span>
+      <span class="s1">'Payload'</span>        <span class="o">=&gt;</span> <span class="p">{</span> <span class="s1">'BadChars'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span> <span class="p">},</span>
+      <span class="s1">'Platform'</span>       <span class="o">=&gt;</span> <span class="s1">'win'</span><span class="p">,</span>
+      <span class="s1">'Targets'</span>        <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'Automatic'</span><span class="p">,</span> <span class="p">{}</span> <span class="p">],</span>
+        <span class="p">],</span>
+      <span class="s1">'Privileged'</span>     <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+      <span class="s1">'DisclosureDate'</span> <span class="o">=&gt;</span> <span class="s2">"Dec 09 2013"</span><span class="p">,</span>
+      <span class="s1">'DefaultTarget'</span>  <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">))</span>
+
+      <span class="n">register_options</span><span class="p">(</span>
+        <span class="p">[</span>
+          <span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'TARGETURI'</span><span class="p">,</span> <span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'The path to some web application'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">]),</span>
+          <span class="no">OptInt</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'HTTPDELAY'</span><span class="p">,</span>    <span class="p">[</span><span class="kp">false</span><span class="p">,</span> <span class="s1">'Number of seconds the web server will wait before termination'</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+        <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">on_request_uri</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">req</span><span class="p">)</span>
+    <span class="n">print_status</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">peer</span><span class="si">}</span><span class="s2"> - Payload request received: </span><span class="si">#{</span><span class="n">req</span><span class="p">.</span><span class="nf">uri</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">send_response</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="s1">'You get this, I own you'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">primer</span>
+    <span class="n">print_status</span><span class="p">(</span><span class="s2">"Sending a malicious request to </span><span class="si">#{</span><span class="n">target_uri</span><span class="p">.</span><span class="nf">path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">send_request_cgi</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="n">normalize_uri</span><span class="p">(</span><span class="n">target_uri</span><span class="p">.</span><span class="nf">path</span><span class="p">)})</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exploit</span>
+    <span class="k">begin</span>
+      <span class="no">Timeout</span><span class="p">.</span><span class="nf">timeout</span><span class="p">(</span><span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTPDELAY'</span><span class="p">])</span> <span class="p">{</span> <span class="k">super</span> <span class="p">}</span>
+    <span class="k">rescue</span> <span class="no">Timeout</span><span class="o">::</span><span class="no">Error</span>
+      <span class="c1"># When the server stops due to our timeout, this is raised</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Here’s what happens when you run the above example:</p>
+
+<ol>
+  <li>The super call wrapped in the Timeout block will start the web server.</li>
+  <li>Before the web server is in the infinite loop state, the primer() method is called, which is where you send your malicious requests to get code execution.</li>
+  <li>Your HttpServer serves the final payload upon request.</li>
+  <li>After 10 seconds, the module raises a Timeout exception. The web server finally terminates.</li>
+</ol>
+
+<p>In case you’re wondering why the web server must terminate after a period of time, this is because if the module fails to gain code execution on the target machine, obviously it will never ask your web server for the malicious payload, therefore there is no point to keeping it alive forever. Typically it shouldn’t take a very long time to get a payload request, either, so we keep the timeout short.</p>
+
+<p>The output for the above example should look something like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(test) &gt; run
+[*] Exploit running as background job.
+
+[*] Started reverse handler on 10.0.1.76:4444 
+[*] Using URL: http://0.0.0.0:8080/SUuv1qjZbCibL80
+[*]  Local IP: http://10.0.1.76:8080/SUuv1qjZbCibL80
+[*] Server started.
+[*] Sending a malicious request to /
+msf exploit(test) &gt;
+[*] 10.0.1.76        test - 10.0.1.76:8181 - Payload request received: /SUuv1qjZbCibL80
+[*] Server stopped.
+
+msf exploit(test) &gt;
+</code></pre></div></div>
+
+<h3 id="related-articles">Related Articles:</h3>
+
+<ul>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient</li>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-browser-exploit-using-HttpServer</li>
+  <li>https://community.rapid7.com/community/metasploit/blog/2012/12/17/metasploit-hooks</li>
+</ul>
+:ET

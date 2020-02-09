@@ -1,0 +1,105 @@
+I"q<h1 id="how-to-use-metasploitframeworkcompilerwindows-to-compile-c-code">How to use Metasploit::Framework::Compiler::Windows to compile C code</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::Compiler::Windows</code> is a wrapper of <a href="https://github.com/jjyg/metasm">Metasm</a> specifically for compiling C code for the Windows platform. The purpose of the wrapper is to support default headers, such as <code class="highlighter-rouge">stdio.h</code>, <code class="highlighter-rouge">stdio.h</code>, <code class="highlighter-rouge">String.h</code>, <code class="highlighter-rouge">Windows.h</code>, or some other important headers that you might use while writing in C.</p>
+
+<h1 id="exe-example">EXE Example</h1>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c_template</span> <span class="o">=</span> <span class="sx">%Q|#include &lt;Windows.h&gt;
+
+int main(void) {
+  LPCTSTR lpMessage = "Hello World";
+  LPCTSTR lpTitle = "Hi";
+  MessageBox(NULL, lpMessage, lpTitle, MB_OK);
+  return 0;
+}|</span>
+
+<span class="nb">require</span> <span class="s1">'metasploit/framework/compiler/windows'</span>
+
+<span class="c1"># This will save the binary in variable exe</span>
+<span class="n">exe</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">Compiler</span><span class="o">::</span><span class="no">Windows</span><span class="p">.</span><span class="nf">compile_c</span><span class="p">(</span><span class="n">c_template</span><span class="p">)</span>
+
+<span class="c1"># This will save the binary as a file</span>
+<span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">Compiler</span><span class="o">::</span><span class="no">Windows</span><span class="p">.</span><span class="nf">compile_c_to_file</span><span class="p">(</span><span class="s1">'/tmp/test.exe'</span><span class="p">,</span> <span class="n">c_template</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="dll-example">DLL Example</h1>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c_template</span> <span class="o">=</span> <span class="sx">%Q|#include &lt;Windows.h&gt;
+
+BOOL APIENTRY DllMain __attribute__((export))(HMODULE hModule, DWORD dwReason, LPVOID lpReserved) {
+  switch (dwReason) {
+    case DLL_PROCESS_ATTACH:
+      MessageBox(NULL, "Hello World", "Hello", MB_OK);
+      break;
+    case DLL_THREAD_ATTACH:
+      break;
+    case DLL_THREAD_DETACH:
+      break;
+    case DLL_PROCESS_DETACH:
+      break;
+  }
+
+  return TRUE;
+}
+
+// This will be a function in the export table
+int Msg __attribute__((export))(void) {
+  MessageBox(NULL, "Hello World", "Hello", MB_OK);
+  return 0;
+}
+|</span>
+
+<span class="nb">require</span> <span class="s1">'metasploit/framework/compiler/windows'</span>
+<span class="n">dll</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">Compiler</span><span class="o">::</span><span class="no">Windows</span><span class="p">.</span><span class="nf">compile_c</span><span class="p">(</span><span class="n">c_template</span><span class="p">,</span> <span class="ss">:dll</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>To load a DLL, you can use the LoadLibrary API:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;Windows.h&gt;
+#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">HMODULE</span> <span class="n">hMod</span> <span class="o">=</span> <span class="n">LoadLibrary</span><span class="p">(</span><span class="s">"hello_world.dll"</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">hMod</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"hello_world.dll loaded</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Unable to load hello_world.dll</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Or call the function in export with rundll32:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rundll32 hell_world.dll,Msg
+</code></pre></div></div>
+
+<h1 id="printf">Printf()</h1>
+
+<p>Note that methods like <code class="highlighter-rouge">printf()</code> won’t actually print anything, because it’s not hooked up to stdout. If you want to use <code class="highlighter-rouge">printf()</code> for debugging purposes, you can consider using <code class="highlighter-rouge">OutputDebugString</code>, or <code class="highlighter-rouge">MessageBox</code> instead.</p>
+
+<h1 id="custom-headers">Custom Headers</h1>
+
+<p>Currently, the Metasm wrapper does not support custom headers from an arbitrary location. To work around this, you can place your headers in <code class="highlighter-rouge">data/headers/windows</code>, and then add that file name in <code class="highlighter-rouge">lib/metasploit/framework/compiler/headers/windows.h</code>.</p>
+
+<h1 id="code-randomization">Code Randomization</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::Compiler</code> supports obfuscation that randomizes code at the source code level, and then compile. There are two methods we can use: <code class="highlighter-rouge">Metasploit::Framework::Compiler::Windows.compile_random_c</code>, or <code class="highlighter-rouge">Metasploit::Framework::Compiler::Windows.compile_random_c_to_file</code>. Using the last as an example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'msf/core'</span>
+<span class="nb">require</span> <span class="s1">'metasploit/framework/compiler/windows'</span>
+
+<span class="n">c_source_code</span> <span class="o">=</span> <span class="sx">%Q|
+#include &lt;Windows.h&gt;
+
+int main() {
+  const char* content = "Hello World";
+  const char* title = "Hi";
+  MessageBox(0, content, title, MB_OK);
+  return 0;
+}|</span>
+
+<span class="n">outfile</span> <span class="o">=</span> <span class="s2">"/tmp/helloworld.exe"</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="mi">70</span> <span class="c1"># This value is used to determine how random the code gets.</span>
+<span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">Compiler</span><span class="o">::</span><span class="no">Windows</span><span class="p">.</span><span class="nf">compile_random_c_to_file</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">c_source_code</span><span class="p">,</span> <span class="ss">weight: </span><span class="n">weight</span><span class="p">)</span>
+</code></pre></div></div>
+:ET

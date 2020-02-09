@@ -1,0 +1,50 @@
+I"V<p>Windows Management Instrumentation (WMI) is Microsoft’s implementation of Web-Based Enterprise Management (WBEM), which uses Managed Object Format (MOF) to create Common Information Model (CIM) classes. The security community was actually unfamiliar with the evilness of this technology until the birth of Stuxnet, which used a MOF file to exploit a vulnerability allowing the attacker to create files via a fake Printer Spooler service. This technique was later reverse-engineered and demonstrated in Metasploit’s <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/ms10_061_spoolss.rb">ms10_061_spoolss.rb</a> module, and that significantly changed how we approach write-privilege attacks. Generally speaking, if you find yourself being able to write to system32, you can most likely take advantage of this technique.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>To to able to use the <code class="highlighter-rouge">WBemExec</code> mixin, you must meet these requirements:</p>
+
+<ul>
+  <li>Write permission to C:\Windows\System32\</li>
+  <li>Write permission to C:\Windows\System32\Wbem\</li>
+  <li>The target must NOT be newer than Windows Vista (so mostly good for XP, Win 2003, or older). This is more of a limitation from the API, not the technique. Newer Windows operating systems need the MOF file to be pre-compiled first.</li>
+</ul>
+
+<h3 id="usage">Usage</h3>
+
+<p>First, include the <code class="highlighter-rouge">WbemExec</code> mixin under the scope of your <code class="highlighter-rouge">Metasploit3</code> class. You will also need the <code class="highlighter-rouge">EXE</code> mixin to generate an executable:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">EXE</span>
+<span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">WbemExec</span>
+</code></pre></div></div>
+
+<p>Next, generate a payload name and the executable:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">payload_name</span> <span class="o">=</span> <span class="s2">"evil.exe"</span>
+<span class="n">exe</span> <span class="o">=</span> <span class="n">generate_payload_exe</span>
+</code></pre></div></div>
+
+<p>And then generate the mof file using the <code class="highlighter-rouge">generate_mof</code> method. The first argument should be the name of the mof file, and the second argument is the payload name:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mof_name</span> <span class="o">=</span> <span class="s2">"evil.mof"</span>
+<span class="n">mof</span> <span class="o">=</span> <span class="n">generate_mof</span><span class="p">(</span><span class="n">mof_name</span><span class="p">,</span> <span class="n">payload_name</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now you’re ready to write/upload your files to the target machine. Always make sure you upload the payload executable first to <code class="highlighter-rouge">C:\Windows\System32\</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">upload_file_to_system32</span><span class="p">(</span><span class="n">payload_name</span><span class="p">,</span> <span class="n">exe</span><span class="p">)</span> <span class="c1"># Write your own upload method</span>
+</code></pre></div></div>
+
+<p>And then now you can upload the mof file to <code class="highlighter-rouge">C:\Windows\System32\wbem\</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">upload_mof</span><span class="p">(</span><span class="n">mof_name</span><span class="p">,</span> <span class="n">mof</span><span class="p">)</span> <span class="c1"># Write your own upload method</span>
+</code></pre></div></div>
+
+<p>Once the mof file is uploaded, the Windows Management Service should pick that up and execute it, which will end up executing your payload in system32. Also, the mof file will automatically be moved out of the mof directory after use.</p>
+
+<h3 id="references">References</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/wbemexec.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/smb/ms10_061_spoolss.rb</p>
+:ET

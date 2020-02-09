@@ -1,0 +1,71 @@
+I"�<p>Exception handler overwriting was once a very popular technique to exploit stack buffer overflows, but isn’t so common anymore in newer programs because most likely they’re compiled with SafeSEH. At one point, even with SafeSEH enabled, it was still possible to abuse an exception handler by heap spraying, but of course, memory protections didn’t stop there. DEP/FASLR eventually came to the rescue, so that pretty much ended the glory days of SEH exploits. You can probably still find vulnerable applications not compiled with SafeSEH, but chances are the app is outdated, no longer maintained, or it is more of a learning experiment for the developer. Oh, and there’s probably an exploit for that already. Nonetheless, exploiting a stack buffer overflow with exception handling is still fun, so if you do come across it, here’s how it’s supposed to be written with Metasploit’s <code class="highlighter-rouge">Seh</code> mixin.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>To be able to use the SEH mixin, some exploitable requirements must be met:</p>
+
+<ul>
+  <li>The vulnerable program does not have SafeSEH in place.</li>
+  <li>No DEP (Data Execution Prevention). The mixin uses a short jump to be able to execute the payload, which means the memory must be executable. DEP, as the name implies, prevents that.</li>
+</ul>
+
+<h3 id="usage">Usage</h3>
+
+<p>First, make sure you include the <code class="highlighter-rouge">Seh</code> mixin under the scope of your module’s <code class="highlighter-rouge">Metasploit3</code> class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Seh</span>
+</code></pre></div></div>
+
+<p>Next, you need to set up a <code class="highlighter-rouge">Ret</code> address for the SE handler. This address should be placed in your module’s metadata, specifically under <code class="highlighter-rouge">Targets</code>. In Metasploit, each target is actually an array of two elements. The first element is just the name of the target (and there is currently no strict naming style), the second element is actually a hash that contains information specific to that target, such as the target address. Here’s an example of setting up a <code class="highlighter-rouge">Ret</code> address:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Targets'</span>        <span class="o">=&gt;</span>
+  <span class="p">[</span>
+    <span class="p">[</span> <span class="s1">'Windows XP'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'Ret'</span> <span class="o">=&gt;</span> <span class="mh">0x75022ac4</span> <span class="p">}</span> <span class="p">]</span> <span class="c1"># p/p/r in ws2help.dll</span>
+  <span class="p">]</span>
+</code></pre></div></div>
+
+<p>As you can see, it’s also a good habit to document what the <code class="highlighter-rouge">Ret</code> address does, and which DLL it points to.</p>
+
+<p><code class="highlighter-rouge">Ret</code> is actually kind of a special key, because it can be retrieved by using <code class="highlighter-rouge">target.ret</code> in the module. In our next examples, you will see <code class="highlighter-rouge">target.ret</code> being used instead of coding the target address raw.</p>
+
+<p>If you need a tool to find a POP/POP/RET for the <code class="highlighter-rouge">Ret</code> address, you can use Metasploit’s <code class="highlighter-rouge">msfbinscan</code> utility, which is located under the tools directory.</p>
+
+<p>OK now, let’s move on to the methods. There are two methods provided by the <code class="highlighter-rouge">Seh</code> mixin:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">generate_seh_payload</code> - Generates a fake SEH record with the payload attached right after. Here’s an example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buffer</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="s2">"A"</span> <span class="o">*</span> <span class="mi">1024</span> <span class="c1"># 1024 bytes of padding</span>
+<span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="n">generate_seh_payload</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="nf">ret</span><span class="p">)</span> <span class="c1"># SE record overwritten after 1024 bytes</span>
+</code></pre></div></div>
+
+<p>The actual layout of <code class="highlighter-rouge">buffer</code> should look like this in memory:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ 1024 bytes of 'A' ][ A short jump ][ target.ret ][ Payload ]
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">generate_seh_record</code> - Generates a fake SEH record without the payload, in case you prefer to place the payload somewhere else. Code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">buffer</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="s2">"A"</span> <span class="o">*</span> <span class="mi">1024</span> <span class="c1"># 1024 bytes of padding</span>
+<span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="n">generate_seh_payload</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="nf">ret</span><span class="p">)</span>
+<span class="n">buffer</span> <span class="o">&lt;&lt;</span> <span class="s2">"B"</span> <span class="o">*</span> <span class="mi">1024</span> <span class="c1"># More padding</span>
+</code></pre></div></div>
+
+<p>The memory layout should like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ 1024 bytes of 'A' ][ A short jump ][ target.ret ][ Padding ]
+</code></pre></div></div>
+
+<h3 id="references">References</h3>
+
+<p>https://www.corelan.be/index.php/2009/07/25/writing-buffer-overflow-exploits-a-quick-and-basic-tutorial-part-3-seh/</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/seh.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/seh.rb</p>
+:ET

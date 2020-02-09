@@ -1,0 +1,58 @@
+I"�<p>Project Goliath came about primarilly around the need to enhance the current data service and data models to increase the value of data in metasploit to our end users.</p>
+
+<p>This work is currently being done in 2 stages:</p>
+
+<p><strong><em>Stage 1</em></strong></p>
+
+<p>This is currently a work in progress (which is why Goliath is currently not fully functional).
+The work being done or already done include:</p>
+<ul>
+  <li>Port of the current data models to be used over HTTP / HTTPS</li>
+  <li>Creation of a web service that serves the metasploit data model</li>
+  <li>Creation of a new command in metasploit to remote (web based) data services</li>
+  <li>Creation of a Metasploit Data Service API V1 document</li>
+</ul>
+
+<p><strong><em>Stage 2</em></strong></p>
+<ul>
+  <li>Enhance the current data model</li>
+  <li>Creation of a Metasploit Data Service API V2 document
+Potential Changes include (feel free to submit ideas):
+    <ul>
+      <li>Creation of a generic data type (for when you can’t figure out which data type data belongs)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="rationale">Rationale</h2>
+
+<p>The current data storage mechanism couples the metasploit core framework code to the current data storage technology. Coupling causes inflexibility which are reflected via the following problems:</p>
+<ul>
+  <li>Changes to the current data model are complex</li>
+  <li>The ability to support/use different data storage technologies is difficult</li>
+  <li>Promotes a monolithic architecture where poor performance in any segment of the software affects the entire system (large network scans)</li>
+</ul>
+
+<p>Our solution to this is a data service proxy.  A data service proxy allows us to separate core metasploit framework code from the underlying data service technology.  The <code class="highlighter-rouge">framework.db</code> reference to data services is no longer tied directly to the underlying data storage, but instead all calls are proxied to an underlying implementation.</p>
+
+<p>Currently we plan to support the legacy data storage technology stack (RAILS/PostgreSQL) which we hope to eventually phase out.  The new implementation will use a RESTful (https://en.wikipedia.org/wiki/Representational_state_transfer) approach whereby calls to <code class="highlighter-rouge">framework.db</code> can be proxied to a remote web service that supports the same data service API.  We have built a web service that runs atop the current data storage service for the community.</p>
+
+<p>This approach enables us to:</p>
+<ul>
+  <li>More easily enhance the metasploit data model</li>
+  <li>Run a web-based data service independent of the metasploit framework
+    <ul>
+      <li>Reduces the memory used by a metasploit framework instance using a data service by no longer requiring a DB client</li>
+      <li>Increases throughput as storage calls don’t necessarily need to be asynchronous</li>
+      <li>Allow teams to collaborate easily by connecting to a centralized data service</li>
+    </ul>
+  </li>
+  <li>Quickly build out data services that leverage different technology stacks</li>
+  <li>Isolate component testing</li>
+  <li>Users of metasploit can now leverage a rigid API to build other tools easily (documentation to be provided soon)</li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+
+<p>For more information on setting up the web service and using the data services see <a href="https://github.com/rapid7/metasploit-framework/wiki/Metasploit-Web-Service">Metasploit Web Service</a>.</p>
+:ET

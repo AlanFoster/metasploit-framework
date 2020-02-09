@@ -1,0 +1,69 @@
+I"X<p>Since we have a lot of people creating and merging branches on the Metasploit GitHub repository, we need to periodically get rid of old and abandoned branches. Here’s my technique:</p>
+
+<h1 id="back-up-the-repo">Back up the repo</h1>
+
+<p>Clone a new metasploit-framework.git repository:</p>
+
+<p><code class="highlighter-rouge">todb@presto:~/github/todb-r7$ git clone github_r7:rapid7/metasploit-framework.git msf-backup.git</code></p>
+
+<p>Go there and check out every remote branch we’ve got. That way, if you screw up and delete something important, you can add it back in later from this backup clone.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>todb@presto:~/github/todb-r7$ cd msf-backup.git
+`todb@presto:~/github/todb-r7/metasploit-framework$ for b in `git branch -r | grep -v "HEAD -&gt; origin" | sed 's/^  origin\///'`; do git checkout -b $b --track origin/$b; done
+</code></pre></div></div>
+
+<p>Tarball it out of the way.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>todb@presto:~/github/todb-r7$ cd ..
+todb@presto:~/github$ tar zxvf msf-backup.git.tar.gz
+todb@presto:~/github$ rm -rf msf-backup.git
+</code></pre></div></div>
+
+<h1 id="make-a-new-clone">Make a new clone</h1>
+
+<p>Now, clone metasploit again. I do this because I have like 20 remotes to deal with on my “real” clone and I don’t want to have to grep through all my origin vs non-origin stuff.</p>
+
+<p><code class="highlighter-rouge">mazikeen:./rapid7$ git clone github_r7:rapid7/metasploit-framework.git msf-prune</code></p>
+
+<p>Now start figuring out what branches to delete.</p>
+
+<p>First, wipe out anything that responds to prune. Usually that’s not a lot.</p>
+
+<p><code class="highlighter-rouge">mazikeen:./msf-prune$ git prune remote origin</code></p>
+
+<p>Next, take a look at what’s already merged and what’s not. We can drop most of the merged stuff right away.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mazikeen:./msf-prune$ git branch -r --merged 
+mazikeen:./msf-prune$ git branch -r --no-merged 
+</code></pre></div></div>
+
+<p>That gives a pretty good idea of how many branches we’re talking about.</p>
+
+<h1 id="start-deleting-old-merged-branches">Start deleting old, merged branches</h1>
+
+<p>Here’s a one-liner, lightly modified from http://stackoverflow.com/questions/2514172/listing-each-branch-and-its-last-revisions-date-in-git#2514279 which lists all remote <strong>merged</strong> branches in date order.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mazikeen:./msf-prune$ for k in `git branch -r --merged |grep -v "HEAD -&gt;" | sed s/^..//`; do echo -e `git log -1 --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k --`\\t"$k";done | sort
+</code></pre></div></div>
+
+<p>Count off how many you want to keep at the end, do the arithmetic, and tack on another couple pipes to catch everything that’s more than two weeks old. These are the merged branches that nobody’s likely to miss.</p>
+
+<pre><code class="language-`">mazikeen:./msf-prune$ for k in `git branch -r --merged |grep -v "HEAD -&gt;" | sed s/^..//`; do echo -e `git log -1 --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k --`\\t"$k";done | sort | head -45 | sed "s/^.*origin\///" &gt; /tmp/merged_to_delete.txt
+</code></pre>
+
+<p>Pull the trigger:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mazikeen:./msf-prune$ for b in `cat /tmp/merged_to_delete.txt`; do echo Deleting $b &amp;&amp; git push origin :$b; done
+</code></pre></div></div>
+
+<p>Note that we still have our tarball, so if we need to reinstate any of these branches, just need to re-push.</p>
+
+<h1 id="repeat-for-the-unmerged-branches">Repeat for the unmerged branches</h1>
+
+<p>Pretty much the same as above, but use <code class="highlighter-rouge">--no-merged</code> instead of <code class="highlighter-rouge">--merged</code> and allow for older unmerged branches (say, 2 months).</p>
+
+<h1 id="tell-people-about-it">Tell people about it.</h1>
+
+<p>Sometimes, some people may run into sync problems with these missing branches and need to <code class="highlighter-rouge">git remote prune origin</code> themselves. Alternatively, they want to look into these branches again – especially the unmerged ones. So, let people know that you just did this on the metasploit-hackers list and the Freenode IRC channel. If someone wants an old branch back, just go to your backup clone and push it back up as you would any branch: <code class="highlighter-rouge">git checkout branchname &amp;&amp; git push origin branchname</code>. No problem.</p>
+
+:ET

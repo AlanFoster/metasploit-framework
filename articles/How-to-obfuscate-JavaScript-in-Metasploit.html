@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to obfuscate JavaScript in Metasploit</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-01-28T21:57:36+00:00" itemprop="datePublished">Jan 28, 2016
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Stealth is an important feature to think about during exploit development. If your exploit gets caught all the time, it doesn’t matter how awesome or how technically challenging your exploit is, it is most likely not very usable in a real penetration test. Browser exploits in particular, heavily rely on JavaScript to trigger vulnerabilities, therefore a lot of antivirus or signature-based intrusion detection/prevention systems will scan the JavaScript and flag specific lines as malicious. The following code used to be considered as MS12-063 by multiple <a href="https://www.virustotal.com/en/file/90fdf2beab48cf3c269f70d8c9cf7736f3442430ea023d06b65ff073f724870e/analysis/1388888489/">antivirus vendors</a> even though it is not necessarily harmful or malicious, we’ll use this as an example throughout the wiki:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">arrr</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span>
+<span class="nx">arrr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">windows</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="dl">"</span><span class="s2">img</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">arrr</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="dl">"</span><span class="s2">src</span><span class="dl">"</span><span class="p">]</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">a</span><span class="dl">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>To avoid getting flagged, there are some common evasive tricks we can try. For example, you can manually modify the code a little bit to make it not recognizable by any signatures. Or if the antivirus relies on cached webpages to scan for exploits, it is possible to make the browser not cache your exploit so you stay undetected. Or in this case, you can obfuscate your code, which is what this writeup will focus on.</p>
+
+<p>In Metasploit, there are three common ways to obfuscate your JavaScript. The first one is simply by using the <code class="highlighter-rouge">rand_text_alpha</code> method (in <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/text.rb#L1223">Rex</a>) to randomize your variables. The second one is by using the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/obfuscatejs.rb">ObfuscateJS</a> class. And the third option is the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/jsobfu.rb">JSObfu</a> class.</p>
+
+<h2 id="the-rand_text_alpha-trick">The rand_text_alpha trick</h2>
+
+<p>Using <code class="highlighter-rouge">rand_text_alpha</code> is the most basic form of evasion, but also the least effective. If this is your choice, you should randomize whatever can be randomized without breaking the code.</p>
+
+<p>By using the above MS12-063, here’s how you would use <code class="highlighter-rouge">rand_text_alpha</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Randomizes the array variable</span>
+<span class="c1"># Max size = 6, Min = 3</span>
+<span class="n">var_array</span> <span class="o">=</span> <span class="n">rand_text_alpha</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Randomizes the src value</span>
+<span class="n">val_src</span>   <span class="o">=</span> <span class="n">rand_text_alpha</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">js</span> <span class="o">=</span> <span class="sx">%Q|
+var </span><span class="si">#{</span><span class="n">var_array</span><span class="si">}</span><span class="sx"> = new Array();
+</span><span class="si">#{</span><span class="n">var_array</span><span class="si">}</span><span class="sx">[0] = windows.document.createElement("img");
+</span><span class="si">#{</span><span class="n">var_array</span><span class="si">}</span><span class="sx">[0]["src"] = "</span><span class="si">#{</span><span class="n">val_src</span><span class="si">}</span><span class="sx">";
+|</span>
+</code></pre></div></div>
+
+<h2 id="the-obfuscatejs-class">The ObfuscateJS class</h2>
+
+<p>The ObfuscateJS class is like the <code class="highlighter-rouge">rand_text_alpha</code> technique on steroids, but even better. It allows you to replace symbol names such as variables, methods, classes, and namespaces. It can also obfuscate strings by either randomly using <code class="highlighter-rouge">fromCharCode</code> or <code class="highlighter-rouge">unescape</code>. And lastly, it can strip JavaScript comments, which is handy because exploits often are hard to understand and read so you need comments to remember why something is written in a specific way, but you don’t want to show or leak those comments in a pentest.</p>
+
+<p>To use ObfuscateJS, let’s use the MS12-063 example again to demonstrate. If you feel like following the steps yourself without writing a module, what you can do is go ahead and run <code class="highlighter-rouge">msfconsole</code>, and then switch to irb, like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfconsole -q
+msf &gt; irb
+[*] Starting IRB shell...
+
+&gt;&gt; 
+</code></pre></div></div>
+
+<p>And then you are ready to go.</p>
+
+<p>The first thing you do with ObfuscateJS is you need to initialize it with the JavaScript you want to obfuscate, so in this case, begin like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>js = %Q|
+var arrr = new Array();
+arrr[0] = windows.document.createElement("img");
+arrr[0]["src"] = "a";
+|
+
+obfu = ::Rex::Exploitation::ObfuscateJS.new(js)
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">obfu</code> should return a <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/obfuscatejs.rb">Rex::Exploitation::ObfuscateJS</a> object. It allows you to do a lot of things, you can really just call <code class="highlighter-rouge">methods</code>, or look at the source to see what methods are available (with additional API documentation). But for demo purposes, we’ll showcase the most common one: the <code class="highlighter-rouge">obfuscate</code> method.</p>
+
+<p>To actually obfuscate, you need to call the <code class="highlighter-rouge">obfuscate</code> method. This method accepts a symbols argument that allows you to manually specify what symbol names (variables, methods, classes, etc) to obfuscate, it should be in a hash like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+	<span class="s1">'Variables'</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'var1'</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
+	<span class="s1">'Methods'</span>    <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'method1'</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
+	<span class="s1">'Namespaces'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'n'</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
+	<span class="s1">'Classes'</span>    <span class="o">=&gt;</span> <span class="p">[</span> <span class="p">{</span> <span class="s1">'Namespace'</span> <span class="o">=&gt;</span> <span class="s1">'n'</span><span class="p">,</span> <span class="s1">'Class'</span> <span class="o">=&gt;</span> <span class="s1">'y'</span><span class="p">},</span> <span class="o">...</span> <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So if I want to obfuscate the variable <code class="highlighter-rouge">arrr</code>, and I want to obfuscate the src string, here’s how:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; obfu.obfuscate('Symbols' =&gt; {'Variables'=&gt;['arrr']}, 'Strings' =&gt; true)
+=&gt; "\nvar QqLFS = new Array();\nQqLFS[0] = windows.document.createElement(unescape(String.fromCharCode(  37, 54, 071, 045, 0x36, 0144, 37, 066, 067 )));\nQqLFS[0][String.fromCharCode(  115, 0x72, 0143 )] = unescape(String.fromCharCode(  045, 0x36, 0x31 ));\n"
+</code></pre></div></div>
+
+<p>In some cases, you might actually want to know the obfuscated version of a symbol name. One scenario is calling a JavaScript function from an element’s event handler, such as this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="kd">function</span> <span class="nx">test</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">hello, world!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"test();"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>The obfuscated version would look like the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span> <span class="o">=</span> <span class="sx">%Q|
+function test() {
+	alert("hello, world!");
+}
+|</span>
+
+<span class="n">obfu</span> <span class="o">=</span> <span class="o">::</span><span class="no">Rex</span><span class="o">::</span><span class="no">Exploitation</span><span class="o">::</span><span class="no">ObfuscateJS</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">js</span><span class="p">)</span>
+<span class="n">obfu</span><span class="p">.</span><span class="nf">obfuscate</span><span class="p">(</span><span class="s1">'Symbols'</span> <span class="o">=&gt;</span> <span class="p">{</span><span class="s1">'Methods'</span><span class="o">=&gt;</span><span class="p">[</span><span class="s1">'test'</span><span class="p">]},</span> <span class="s1">'Strings'</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
+
+<span class="n">html</span> <span class="o">=</span> <span class="sx">%Q|
+&lt;html&gt;
+&lt;head&gt;
+&lt;script&gt;
+</span><span class="si">#{</span><span class="n">js</span><span class="si">}</span><span class="sx">
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="</span><span class="si">#{</span><span class="n">obfu</span><span class="p">.</span><span class="nf">sym</span><span class="p">(</span><span class="s1">'test'</span><span class="p">)</span><span class="si">}</span><span class="sx">();"&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+|</span>
+
+<span class="nb">puts</span> <span class="n">html</span>
+</code></pre></div></div>
+
+<h2 id="the-jsobfu-class">The JSObfu class</h2>
+
+<p>The JSObfu class used to be ObfuscateJS’ cousin, but it has been completely rewritten since September 2014, and packaged as a <a href="https://rubygems.org/gems/jsobfu">gem</a>. The obfuscation is more complex and you can actually tell it to obfuscate multiple times. You also no longer have to manually specify what symbol names to change, it just knows.</p>
+
+<p><strong>Trying JSObfu in Rex</strong></p>
+
+<p>Let’s get back to irb again to demonstrate how easy it is to use JSObfu:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfconsole -q
+msf &gt; irb
+[*] Starting IRB shell...
+
+&gt;&gt; 
+</code></pre></div></div>
+
+<p>This time we’ll do a “hello world” example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; js = ::Rex::Exploitation::JSObfu.new %Q|alert('hello, world!');|
+=&gt; alert('hello, world!');
+&gt;&gt; js.obfuscate
+=&gt; nil
+</code></pre></div></div>
+
+<p>And here’s the output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>window[(function () { var _d="t",y="ler",N="a"; return N+y+_d })()]((function () { var f='d!',B='orl',Q2='h',m='ello, w'; return Q2+m+B+f })());
+</code></pre></div></div>
+
+<p>Like ObfuscateJS, if you need to get the randomized version of a symbol name, you can still do that. We’ll demonstrate this with the following example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;</span> <span class="n">js</span> <span class="o">=</span> <span class="o">::</span><span class="no">Rex</span><span class="o">::</span><span class="no">Exploitation</span><span class="o">::</span><span class="no">JSObfu</span><span class="p">.</span><span class="nf">new</span> <span class="sx">%Q|function test() { alert("hello"); }|</span>
+<span class="o">=&gt;</span> <span class="n">function</span> <span class="nb">test</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">alert</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;</span> <span class="n">js</span><span class="p">.</span><span class="nf">obfuscate</span>
+</code></pre></div></div>
+
+<p>Say we want to know the randomized version of the method name “test”:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;</span> <span class="nb">puts</span> <span class="n">js</span><span class="p">.</span><span class="nf">sym</span><span class="p">(</span><span class="s2">"test"</span><span class="p">)</span>
+<span class="n">_</span>
+</code></pre></div></div>
+
+<p>OK, double check right quick:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; puts js
+function _(){window[(function () { var N="t",r="r",i="ale"; return i+r+N })()](String.fromCharCode(0150,0x65,0154,0x6c,0x6f));}
+</code></pre></div></div>
+
+<p>Yup, that looks good to me.</p>
+
+<p>And finally, let’s try to obfuscate a few times to see how that goes:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; js = ::Rex::Exploitation::JSObfu.new %Q|alert('hello, world!');|
+=&gt; alert('hello, world!');
+&gt;&gt; js.obfuscate(:iterations=&gt;3)
+=&gt; window[String[((function(){var s=(function () { var r="e"; return r })(),Q=(function () { var I="d",dG="o"; return dG+I })(),c=String.fromCharCode(0x66,114),w=(function () { var i="C",v="r",f="omCh",j="a"; return f+j+v+i })();return c+w+Q+s;})())](('Urx'.length*((0x1*(01*(1*020+5)+1)+3)*'u'.length+('SGgdrAJ'.length-7))+(('Iac'.length*'XLR'.length+2)*'qm'.length+0)),(('l'.length*((function () { var vZ='k'; return vZ })()[((function () { var E="h",t="t",O="leng"; return O+t+E })())]*(0x12*1+0)+'xE'.length)+'h'.length)*(function () { var Z='uA',J='tR',D='x'; return D+J+Z })()[((function () { var m="th",o="g",U="l",Y="en"; return U+Y+o+m })())]+'lLc'.length),('mQ'.length*(02*023+2)+('Tt'.length*'OEzGiMVf'.length+5)),(String.fromCharCode(0x48,0131)[((function () { var i="gth",r="len"; return r+i })())]*('E'.length*0x21+19)+(0x1*'XlhgGJ'.length+4)),(String.fromCharCode(0x69)[((function () { var L="th",Q="n",$="l",I="g",x="e"; return $+x+Q+I+L })())]*('QC'.length*0x2b+3)+(01*26+1)))]((function(){var C=String[((function () { var w="rCode",j="mCha",A="fr",B="o"; return A+B+j+w })())]((6*0x10+15),('riHey'.length*('NHnex'.length*0x4+2)+4),(01*95+13),(1*('Z'.length*(0x1*(01*(0x3*6+5)+1)+18)+12)+46),(0x1*(01*013+6)+16)),JQ=String[((function () { var NO="ode",T="rC",HT="fromCha"; return HT+T+NO })())](('J'.length*0x54+17),(0x2*051+26),('TFJAGR'.length*('ymYaSJtR'.length*'gv'.length+0)+12),(01*0155+2),(0xe*'FBc'.length+2),(0x1*22+10),(3*(01*043+1)+11)),g=(function(){var N=(function () { var s='h'; return s })();return N;})();return g+JQ+C;})());
+</code></pre></div></div>
+
+<p><strong>Using JSObfu for module development</strong></p>
+
+<p>When you are writing a module, you should not call Rex directly like the above examples. Instead, you should be using the <code class="highlighter-rouge">#js_obfuscate</code> method found in <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/jsobfu.rb">JSObfu mixin</a>. When you’re using JavaScript in your module, always do write it like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This returns a Rex::Exploitation::JSObfu object</span>
+<span class="n">js</span> <span class="o">=</span> <span class="n">js_obfuscate</span><span class="p">(</span><span class="n">your_code</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Note that by default, even though your module is calling the #js_obfuscate method, obfuscation will not kick in unless the user sets the JsObfuscate datastore option. This option is an OptInt, which allows you to set the number of times to obfuscate (default is 0).</p>
+
+<h2 id="references">Reference(s)</h2>
+
+<p>https://community.rapid7.com/community/metasploit/blog/2011/07/08/jsobfu</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-obfuscate-JavaScript-in-Metasploit.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

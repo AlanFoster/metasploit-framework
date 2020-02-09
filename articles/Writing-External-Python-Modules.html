@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Writing External Python Modules</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-06-25T19:35:59+01:00" itemprop="datePublished">Jun 25, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="writing-python-modules-for-metasploit">Writing Python Modules for Metasploit</h1>
+
+<p>This is an example of how to write a Python module for Metasploit Framework that uses a Python metasploit library to communicate with framework via JSON-RPC over stdin/stdout.</p>
+
+<h2 id="python-library">Python Library</h2>
+
+<p>The library currently supports a few function calls that can be used to report information to Metasploit Framework. The <code class="highlighter-rouge">metasploit</code> library can be loaded into your Python module by including the following line:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">metasploit</span> <span class="kn">import</span> <span class="n">module</span>
+</code></pre></div></div>
+
+<p>The location of the <a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core/modules/external/python">metasploit library</a> is automatically added to the <code class="highlighter-rouge">PYTHONPATH</code> environment variable before the Python module is executed.</p>
+
+<h2 id="describe-yourself">Describe Yourself</h2>
+
+<p>Metasploit modules include information about authors of the modules, references to other sources with information about the vulnerabilities, descriptions of the modules, options, etc.</p>
+
+<p>Python modules need to include this metadata information as well. The structure of the data is similar to modules written in Ruby. The following is an example template of metadata information:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'&lt;name&gt;'</span><span class="p">,</span>
+    <span class="s">'description'</span><span class="p">:</span> <span class="s">'''
+        &lt;description&gt;
+    '''</span><span class="p">,</span>
+    <span class="s">'authors'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">'&lt;author&gt;'</span><span class="p">,</span>
+        <span class="s">'&lt;author&gt;'</span>
+    <span class="p">],</span>
+    <span class="s">'date'</span><span class="p">:</span> <span class="s">'YYYY-MM-DD'</span><span class="p">,</span>
+    <span class="s">'license'</span><span class="p">:</span> <span class="s">'&lt;license&gt;'</span><span class="p">,</span>
+    <span class="s">'references'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'url'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'&lt;url&gt;'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'cve'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'YYYY-#'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'edb'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'#'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'aka'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'&lt;name&gt;'</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">'type'</span><span class="p">:</span> <span class="s">'&lt;module type&gt;'</span><span class="p">,</span>
+    <span class="s">'options'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'&lt;name&gt;'</span><span class="p">:</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'address'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'&lt;description&gt;'</span><span class="p">,</span> <span class="s">'required'</span><span class="p">:</span> <span class="o">&lt;</span><span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="o">&gt;</span><span class="p">,</span> <span class="s">'default'</span><span class="p">:</span> <span class="bp">None</span><span class="p">},</span>
+        <span class="s">'&lt;name&gt;'</span><span class="p">:</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'string'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'&lt;description&gt;'</span><span class="p">,</span> <span class="s">'required'</span><span class="p">:</span> <span class="o">&lt;</span><span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="o">&gt;</span><span class="p">,</span> <span class="s">'default'</span><span class="p">:</span> <span class="bp">None</span><span class="p">},</span>
+        <span class="s">'&lt;name&gt;'</span><span class="p">:</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'string'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'&lt;description&gt;'</span><span class="p">,</span> <span class="s">'required'</span><span class="p">:</span> <span class="o">&lt;</span><span class="bp">True</span><span class="o">/</span><span class="bp">False</span><span class="o">&gt;</span><span class="p">,</span> <span class="s">'default'</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="module-type">Module Type</h3>
+
+<p>As shown in the metadata template information, a <code class="highlighter-rouge">type</code> is also include for the module. The module type is used to select an ERB template, which generates a Ruby document for the module. The ERB templates can be found <a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core/modules/external/templates">here</a>. The following templates are currently available:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>remote_exploit_cmd_stager
+capture_server
+dos
+single_scanner
+multi_scanner
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">remote_exploit_cmd_stager</code> module type is used when writing an exploit for command execution or code injection vulnerabilities and provides the command to inject into the vulnerable code based on the <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-use-command-stagers">flavor</a> specified for the command stager.</p>
+
+<p>The <code class="highlighter-rouge">capture_server</code> module type is used when a module is designed to simulate a service to capture credentials for connecting clients.</p>
+
+<p>The <code class="highlighter-rouge">dos</code> module type is used when the module will send packets to a remote service that will crash the service or put it in an unusable state.</p>
+
+<p>The <code class="highlighter-rouge">single_scanner</code> module type is used when creating a module to scan hosts without batching.</p>
+
+<p>The <code class="highlighter-rouge">multi_scanner</code> module type is used for modules that are going to scan hosts in batches. The <code class="highlighter-rouge">batch_size</code> option is registered in the mutli_scanner ERB template with a default of 200.</p>
+
+<h3 id="options">Options</h3>
+
+<p>The <code class="highlighter-rouge">options</code> dictionary in the metadata are the options that will be available in msfconsole when the module is loaded. The options can be required (necessary for the module to run) or not (provide additional functionality).</p>
+
+<h3 id="communication">Communication</h3>
+
+<p>To pass the metadata information, as well as the starting function of your Python module, to msfconsole, use the <code class="highlighter-rouge">module.run()</code> function. The <code class="highlighter-rouge">module.run()</code> function takes two arguments, the first is the metadata and the second is the callback function to use when executing the module from msfconsole. The code snippet will look like the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Your code here
+</span>    <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>When msfconsole sends a <code class="highlighter-rouge">describe</code> request to the Python module, the metadata information is returned. When msfconsole sends a <code class="highlighter-rouge">run</code> request to the module, the callback function, <code class="highlighter-rouge">run</code> in this example, will be called with the arguments provided to msfconsole.</p>
+
+<p>A <a href="https://github.com/rapid7/metasploit-framework/pull/9739">LogHandler</a> can be setup and used to communicate status information back to framework during execution of the Python module. Here is code snippet that uses the LogHandler:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">metasploit</span> <span class="kn">import</span> <span class="n">module</span>
+
+<span class="n">module</span><span class="o">.</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">msg_prefix</span><span class="o">=</span><span class="s">'logging test: '</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">'info'</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">'error'</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">'warning'</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">'debug'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">module.LogHandler.setup()</code> function is used the create a Handler and Formatter that will call <code class="highlighter-rouge">module.log()</code> with the appropriate log level.</p>
+
+<h2 id="full-example">Full Example</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+</span>
+<span class="c1"># standard modules
+</span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># extra modules
+</span><span class="n">dependencies_missing</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">requests</span>
+<span class="k">except</span> <span class="nb">ImportError</span><span class="p">:</span>
+    <span class="n">dependencies_missing</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="kn">from</span> <span class="nn">metasploit</span> <span class="kn">import</span> <span class="n">module</span>
+
+
+<span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Python Module Example'</span><span class="p">,</span>
+    <span class="s">'description'</span><span class="p">:</span> <span class="s">'''
+        Python communication with msfconsole.
+    '''</span><span class="p">,</span>
+    <span class="s">'authors'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">'Jacob Robles'</span>
+    <span class="p">],</span>
+    <span class="s">'date'</span><span class="p">:</span> <span class="s">'2018-03-22'</span><span class="p">,</span>
+    <span class="s">'license'</span><span class="p">:</span> <span class="s">'MSF_LICENSE'</span><span class="p">,</span>
+    <span class="s">'references'</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'url'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'https://blog.rapid7.com/2017/12/28/regifting-python-in-metasploit/'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'aka'</span><span class="p">,</span> <span class="s">'ref'</span><span class="p">:</span> <span class="s">'Coldstone'</span><span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">'type'</span><span class="p">:</span> <span class="s">'single_scanner'</span><span class="p">,</span>
+    <span class="s">'options'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'targeturi'</span><span class="p">:</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'string'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'The base path'</span><span class="p">,</span> <span class="s">'required'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">'default'</span><span class="p">:</span> <span class="s">'/'</span><span class="p">},</span>
+        <span class="s">'rhost'</span><span class="p">:</span> <span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'address'</span><span class="p">,</span> <span class="s">'description'</span><span class="p">:</span> <span class="s">'Target address'</span><span class="p">,</span> <span class="s">'required'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">'default'</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">LogHandler</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">msg_prefix</span><span class="o">=</span><span class="s">'{} - '</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s">'rhost'</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">dependencies_missing</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">'Module dependency (requests) is missing, cannot continue'</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Your code here
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://{}/{}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s">'rhost'</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s">'targeturi'</span><span class="p">]),</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">'{}'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">'{}...'</span><span class="o">.</span><span class="nb">format</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">]))</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span>
+</code></pre></div></div>
+<p>The example sends a get request to the given <code class="highlighter-rouge">rhost</code> and <code class="highlighter-rouge">targeturi</code>, then calls <code class="highlighter-rouge">logging.info()</code> on the result to have the output displayed in msfconsole.</p>
+
+<h2 id="coding-with-style">Coding with Style</h2>
+
+<p>All the Python code in Metasploit aims to be <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8</a> compliant. The biggest differences coming from Metasploit’s Ruby style:</p>
+<ul>
+  <li>Two lines between functions (but not class methods)</li>
+  <li>Two lines between different types of code (like imports and the metadata, see above)</li>
+  <li>Four spaces for indenting</li>
+</ul>
+
+<p>Some coding choices to think about when writing your module:</p>
+<ul>
+  <li>Prefer <code class="highlighter-rouge">"foo {}".format('bar')</code> over interpolation with <code class="highlighter-rouge">%</code></li>
+  <li>Keep your callback methods short and readable. If it gets cluttered, break out sub-tasks into well-named functions</li>
+  <li>Variable names should be descriptive, readable, and short (<a href="http://journal.stuffwithstuff.com/2016/06/16/long-names-are-long">a guide</a>)</li>
+  <li>If you really need Python3 features in your module, use <code class="highlighter-rouge"><span class="c1">#!/usr/bin/env python3</span></code> for the shebang</li>
+  <li>If you have a lot of legacy code in 2.7 or need a 2.7 library, use <code class="highlighter-rouge"><span class="c1">#!/usr/bin/env python2.7</span></code> (macOS in particular does not ship with a <code class="highlighter-rouge">python2</code> executable by default)</li>
+  <li>If possible, have your module compatible with both and use <code class="highlighter-rouge"><span class="c1">#!/usr/bin/env python</span></code></li>
+</ul>
+
+<h2 id="potentially-common-questions">(Potentially) Common Questions</h2>
+
+<h3 id="why-doesnt-the-module-appear-when-i-search-for-it-in-msfconsole">Why doesn’t the module appear when I search for it in msfconsole?</h3>
+
+<p>The module may have errors and fail to load inside of msfconsole. Check the framework log file, <code class="highlighter-rouge">~/.msf4/logs/framework.log</code>, for error messages. Also, if the module is not marked as executable, then it will not show up when you search for it in msfconsole.</p>
+
+<h3 id="why-is-the-output-from-the-python-module-not-showing-up-in-msfconsole">Why is the output from the Python module not showing up in msfconsole?</h3>
+
+<p>The external modules communicate with framework via JSON-RPC. If your Python module contains <code class="highlighter-rouge">print</code> statements, framework may not recognize those as JSON-RPC requests. Use the <code class="highlighter-rouge">LogHandler</code> or <code class="highlighter-rouge">module.log()</code> to send status information, which will be displayed in msfconsole.</p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p><a href="https://blog.rapid7.com/2017/12/28/regifting-python-in-metasploit/">Rapid7 Blog: Regifting Python in Metasploit</a></p>
+
+<p><a href="https://blog.rapid7.com/2018/09/05/external-metasploit-modules-the-gift-that-keeps-on-slithering/">Rapid7 Blog: External Metasploit Modules: The Gift That Keeps On Slithering</a></p>
+
+<p><a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/modules/external/python/">Metasploit Python library</a></p>
+
+<p><a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core/modules/external/templates">ERB Templates</a></p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Writing-External-Python-Modules.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

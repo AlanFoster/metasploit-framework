@@ -1,0 +1,119 @@
+I""<p>A reference in a Metasploit module is a source of information related to the module. This can be a link to the vulnerability advisory, a news article, a blog post about a specific technique the module uses, a specific tweet, etc. The more you have the better. However, you should not use this as a form of advertisement.</p>
+
+<h2 id="list-of-supported-reference-identifiers">List of supported reference identifiers</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Source</th>
+      <th>Code Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CVE</td>
+      <td>cvedetails.com</td>
+      <td><code class="highlighter-rouge">['CVE', '2014-9999']</code></td>
+    </tr>
+    <tr>
+      <td>CWE</td>
+      <td>cwe.mitre.org</td>
+      <td><code class="highlighter-rouge">['CWE', '90']</code></td>
+    </tr>
+    <tr>
+      <td>BID</td>
+      <td>securityfocus.com</td>
+      <td><code class="highlighter-rouge">['BID', '1234']</code></td>
+    </tr>
+    <tr>
+      <td>MSB</td>
+      <td>technet.microsoft.com</td>
+      <td><code class="highlighter-rouge">['MSB', 'MS13-055']</code></td>
+    </tr>
+    <tr>
+      <td>EDB</td>
+      <td>exploit-db.com</td>
+      <td><code class="highlighter-rouge">['EDB', '1337']</code></td>
+    </tr>
+    <tr>
+      <td>US-CERT-VU</td>
+      <td>kb.cert.org</td>
+      <td><code class="highlighter-rouge">['US-CERT-VU', '800113']</code></td>
+    </tr>
+    <tr>
+      <td>ZDI</td>
+      <td>zerodayinitiative.com</td>
+      <td><code class="highlighter-rouge">['ZDI', '10-123']</code></td>
+    </tr>
+    <tr>
+      <td>WPVDB</td>
+      <td>wpvulndb.com</td>
+      <td><code class="highlighter-rouge">['WPVDB', '7615']</code></td>
+    </tr>
+    <tr>
+      <td>PACKETSTORM</td>
+      <td>packetstormsecurity.com</td>
+      <td><code class="highlighter-rouge">['PACKETSTORM', '132721']</code></td>
+    </tr>
+    <tr>
+      <td>URL</td>
+      <td>anything</td>
+      <td><code class="highlighter-rouge">['URL', 'http://example.com/blog.php?id=123']</code></td>
+    </tr>
+    <tr>
+      <td>AKA (<em>deprecated</em>*)</td>
+      <td>anything</td>
+      <td><del><code class="highlighter-rouge">['AKA', 'shellshock']</code></del></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>*Note: AKA names for modules are no longer stored as a reference identifier, but rather in the <code class="highlighter-rouge">Notes</code> metadata field as shown in the example below.</p>
+
+<h2 id="code-example-of-having-references-in-a-module">Code Example of having references in a module</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span>
+  <span class="no">Rank</span> <span class="o">=</span> <span class="no">NormalRanking</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s2">"Code Example"</span><span class="p">,</span>
+      <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+        This is an example of a module using references
+      }</span><span class="p">,</span>
+      <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+      <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'Unknown'</span> <span class="p">],</span>
+      <span class="s1">'References'</span>     <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'CVE'</span><span class="p">,</span> <span class="s1">'2014-9999'</span> <span class="p">],</span>
+          <span class="p">[</span><span class="s1">'BID'</span><span class="p">,</span> <span class="s1">'1234'</span><span class="p">],</span>
+          <span class="p">[</span><span class="s1">'URL'</span><span class="p">,</span> <span class="s1">'http://example.com/blog.php?id=123'</span><span class="p">]</span>
+        <span class="p">],</span>
+      <span class="s1">'Platform'</span>       <span class="o">=&gt;</span> <span class="s1">'win'</span><span class="p">,</span>
+      <span class="s1">'Targets'</span>        <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'Example'</span><span class="p">,</span> <span class="p">{</span> <span class="s1">'Ret'</span> <span class="o">=&gt;</span> <span class="mh">0x41414141</span> <span class="p">}</span> <span class="p">]</span>
+        <span class="p">],</span>
+      <span class="s1">'Payload'</span>        <span class="o">=&gt;</span>
+        <span class="p">{</span>
+          <span class="s1">'BadChars'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span>
+        <span class="p">},</span>
+      <span class="s1">'Privileged'</span>     <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+      <span class="s1">'DisclosureDate'</span> <span class="o">=&gt;</span> <span class="s2">"Apr 1 2014"</span><span class="p">,</span>
+      <span class="s1">'DefaultTarget'</span>  <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="s1">'Notes'</span>          <span class="o">=&gt;</span> <span class="p">{</span>
+          <span class="s1">'AKA'</span>        <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'shellshock'</span> <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exploit</span>
+    <span class="n">print_debug</span><span class="p">(</span><span class="s1">'Hello, world'</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+:ET

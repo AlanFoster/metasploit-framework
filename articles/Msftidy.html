@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Msftidy</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-06-11T16:12:16+01:00" itemprop="datePublished">Jun 11, 2016
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="description">Description</h1>
+
+<h1 id="checks">Checks</h1>
+<h2 id="file-modes">File modes</h2>
+<p>This check ensures that modules are not marked executable. A module is only called by the framework and not directly. The correct file mode is <code class="highlighter-rouge">??</code></p>
+<h2 id="shebang">Shebang</h2>
+<p>A module should not have a <a href="http://en.wikipedia.org/wiki/Shebang_%28Unix%29">Shebang</a> line.</p>
+<h2 id="nokogiri">Nokogiri</h2>
+<p>Modules should not rely on the Nokogiri GEM. Please use REXML instead.</p>
+<h2 id="invalid-formats">Invalid Formats</h2>
+<h3 id="cve">CVE</h3>
+<p>CVE references should be in the format <code class="highlighter-rouge">YYYY-NNNN</code></p>
+<h3 id="bid">BID</h3>
+<p>BID references should only contain numbers</p>
+<h3 id="msb">MSB</h3>
+<p>OSVDB references should be in the format <code class="highlighter-rouge">MSddd-ddd</code> (d = digit)</p>
+<h3 id="mil">MIL</h3>
+<p>Milw0rm references are no longer supported (site suspended)</p>
+<h3 id="edb">EDB</h3>
+<p>EDB references should only contain numbers</p>
+<h3 id="us-cert-vu">US-CERT-VU</h3>
+<p>US-CERT references should only contain numbers</p>
+<h3 id="zdi">ZDI</h3>
+<p>ZDI references should be in the format <code class="highlighter-rouge">dd-ddd</code> (d = digit)</p>
+<h3 id="url">URL</h3>
+<p>If you supply an URL where a short identifiert is available, please use the identifier.</p>
+
+<h2 id="old-keywords">Old Keywords</h2>
+<p>Before Metasploit moved to Github the sources were stored in a SVN repository. SVN has support to replace custom variables with current values like the last revision. Since GIT does not support them, the references should be removed from code.</p>
+
+<h2 id="verbose">Verbose</h2>
+<p>You should not define a VERBOSE option in your module. A VERBOSE option is already provided by the framework. To make use of the VERBOSE setting, you can use methods like <code class="highlighter-rouge">vprint_status</code> and <code class="highlighter-rouge">vprint_error</code></p>
+
+<h2 id="badchars">Badchars</h2>
+<p>This checks looks for bad characters in the module title. If you encounter this error, please replace the characters.</p>
+
+<h2 id="file-extension">File Extension</h2>
+<p>All modules should have a <code class="highlighter-rouge">.rb</code> file extenstion to be loaded by the framework.</p>
+
+<h2 id="old-rubies">Old Rubies</h2>
+<p>This check checks the file for syntax errors with old Ruby versions. By default this check will not run. To execute this check you need to set the environment variable <code class="highlighter-rouge">MSF_CHECK_OLD_RUBIES</code>.</p>
+
+<h2 id="ranking">Ranking</h2>
+<p>This check ensures you added the correct ranking to your module. <a href="Exploit-Ranking">Click here</a> to read more about Exploit Ranking.</p>
+
+<h2 id="disclosure-date">Disclosure Date</h2>
+<p>Date format needs to be <code class="highlighter-rouge">Month Day, YYYY</code>. Example: <code class="highlighter-rouge">Jan 01, 2014</code></p>
+
+<h2 id="title-casing">Title Casing</h2>
+<p>This check ensures you used the correct case in your title.</p>
+
+<h2 id="bad-terms">Bad Terms</h2>
+<p>This checks for the correct use of the terms <code class="highlighter-rouge">Stack Buffer overflow</code> and <code class="highlighter-rouge">Stack Exhaustion</code>. See <a href="http://blogs.technet.com/b/srd/archive/2009/01/28/stack-overflow-stack-exhaustion-not-the-same-as-stack-buffer-overflow.aspx">“Stack overflow” vs “Stack buffer overflow”</a> for more information.</p>
+
+<h2 id="function-arguments">Function Arguments</h2>
+<p>If you define a function which defines a lot of input arguments, the check ensures you use a hash instead.</p>
+
+<h2 id="line-check">Line Check</h2>
+<h3 id="unicode">Unicode</h3>
+<p>Your module must not contain Unicode characters.</p>
+
+<h3 id="spaces-at-eol">Spaces at EOL</h3>
+<p>Your module must not conatin spaces at the end of a line.</p>
+
+<h3 id="mixed-tab-spaces">Mixed Tab Spaces</h3>
+<p>Your module contains Tabs and Spaces in one line. Only spaces should be used</p>
+
+<h3 id="tabs">Tabs</h3>
+<p>Your module should not use tabs for intending code. Please use spaces instead.</p>
+
+<h3 id="carriage-return">Carriage return</h3>
+<p>The specified line only contains a carriage return (<code class="highlighter-rouge">\r</code>) at the end of line. Please change to a normal linebreak (<code class="highlighter-rouge">\n</code> or <code class="highlighter-rouge">\r\n</code>).</p>
+
+<h3 id="fileopen">File.open</h3>
+<p>You used a File.open call without specifying a binary mode???</p>
+
+<h3 id="load">Load</h3>
+<p>You used the <code class="highlighter-rouge">load</code> command in your module. This is not required since the framework loads all necessary files for you.</p>
+
+<h3 id="stdout">STDOUT</h3>
+<p>Modules should not write directly to stdout. Please use the <code class="highlighter-rouge">print_*</code> functions instead.</p>
+
+<h3 id="modified-datastore">Modified datastore</h3>
+<p>Datastore options (options set by the user) should not be modified in code. If you need to change some values use local variables instead.</p>
+
+<h3 id="set-cookie">Set-Cookie</h3>
+<p>The Set-Cookie header should not be parsed by your code. You can use the API call <code class="highlighter-rouge">res.get_cookies</code> insteady which already handles some special cases and ensures a clean header.</p>
+
+<h3 id="auxiliary-rand">Auxiliary Rand</h3>
+<p>Auxiliary modules should have no Rank. Only Exploits and Payloads should have a Rank attribute.</p>
+
+<h2 id="snake-case">Snake Case</h2>
+<p>This check ensures your module filename is in <a href="http://en.wikipedia.org/wiki/Snake_case">Snake Case</a></p>
+
+<h2 id="old-license">Old License</h2>
+<p>This check checks for the old Metasploit license in the module header. You can use the tool <code class="highlighter-rouge">ruby tools/dev/resplat.rb &lt;filename&gt;</code> to convert the file.</p>
+
+<h2 id="vuln-codes">VULN Codes</h2>
+<p>This check ensures only known CheckCodes are returned by the <code class="highlighter-rouge">check</code> function.</p>
+
+<h2 id="vars_get">vars_get</h2>
+<p>When using <code class="highlighter-rouge">send_request_cgi</code> or <code class="highlighter-rouge">send_request_raw</code> the URL supplied should not contain GET Paramters. Please provide the Parameter via the <code class="highlighter-rouge">vars_get</code> hash.
+Example:
+bad:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span> <span class="o">=</span> <span class="n">send_request_raw</span><span class="p">({</span>
+    <span class="s1">'uri'</span>     <span class="o">=&gt;</span> <span class="n">uri_base</span> <span class="o">+</span> <span class="s1">'/upload.php?type=file&amp;folder='</span> <span class="o">+</span> <span class="n">folder</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p>good:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span> <span class="o">=</span> <span class="n">send_request_raw</span><span class="p">({</span>
+    <span class="s1">'uri'</span>      <span class="o">=&gt;</span> <span class="n">uri_base</span> <span class="o">+</span> <span class="s1">'/upload.php'</span><span class="p">,</span>
+    <span class="s1">'vars_get'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="s1">'type'</span>   <span class="o">=&gt;</span> <span class="s1">'file'</span><span class="p">,</span>
+        <span class="s1">'folder'</span> <span class="o">=&gt;</span> <span class="n">folder</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Msftidy.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

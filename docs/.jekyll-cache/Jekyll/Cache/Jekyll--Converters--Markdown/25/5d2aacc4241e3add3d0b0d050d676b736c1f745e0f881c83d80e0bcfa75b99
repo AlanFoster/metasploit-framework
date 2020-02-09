@@ -1,0 +1,495 @@
+I"��<p>So, you want to make a Login Scanner Module in Metasploit, eh? There are a few things you will need to know before you begin. This article will try to illustrate all the moving pieces involved in creating an effective bruteforce/login scanner module.</p>
+
+<ul>
+  <li><a href="#credential-objects">Credential objects</a></li>
+  <li><a href="#result-objects">Result objects</a></li>
+  <li><a href="#credentialcollection">CredentialCollection</a></li>
+  <li><a href="#loginscanner-base">LoginScanner Base</a>
+    <ul>
+      <li><a href="#attributes">Attributes</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#constants">Constants</a></li>
+    </ul>
+  </li>
+  <li><a href="#pulling-it-all-together-in-a-module">Pulling it all Together in a module</a>
+    <ul>
+      <li><a href="#the-cred-collection">The Cred Collection</a></li>
+      <li><a href="#initialising-the-scanner">Initialising the Scanner</a></li>
+      <li><a href="#the-scan-block">The scan block</a></li>
+      <li><a href="#ftp_login-final-view">ftp_login final view</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="credential-objects">Credential Objects</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::Credential
+(lib/metasploit/framework/credential.rb)</code></p>
+
+<p>These objects represent the most basic concept of how we now think about Credentials.</p>
+
+<ul>
+  <li><strong>Public</strong>: The public part of a credential refers to the part that can be publicly known. In almost all cases this is the username.</li>
+  <li><strong>Private</strong>: The private part of the credential, this is the part that should be a secret. This currently represents: Password, SSH Key, NTLM Hash etc.</li>
+  <li><strong>Private Type</strong>: This defines what type of private credential is defined above</li>
+  <li><strong>Realm</strong>: This represents an authentication realm that the credential is valid for. This is a tertiary part of the authentication process. Examples include: Active Directory Domain, Postgres Database etc.</li>
+  <li><strong>Realm Key</strong>: This defines what type of Realm the Realm Attribute represents.</li>
+  <li><strong>Paired</strong>: This attribute is a boolean value that sets whether the Credential must have both a public and private to be valid.</li>
+</ul>
+
+<p>All LoginScanners use Credential objects as the basis for their attempts.</p>
+
+<h1 id="result-objects">Result Objects</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::LoginScanner::Result
+(lib/metasploit/framework/login_scanner/result.rb)</code></p>
+
+<p>These are the objects yielded by the <code class="highlighter-rouge">scan!</code> method on each <code class="highlighter-rouge">LoginScanner</code>.  They contain:</p>
+
+<ul>
+  <li><strong>Access Level</strong>: An optional Access Level which can describe the level of access granted by the login attempt.</li>
+  <li><strong>Credential</strong> : The Credential object that achieved that result</li>
+  <li><strong>Proof</strong>: An optional proof string to show why we think the result is valid</li>
+  <li><strong>Status</strong>: The status of the login attempt. These values come from Metasploit::model::Login::Status , examples include “Incorrect”, “Unable to Connect”, “Untried” etc</li>
+</ul>
+
+<h1 id="credentialcollection">CredentialCollection</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::CredentialCollection
+(lib/metasploit/framework/credential_collection.rb)</code></p>
+
+<p>This class is used to take datastore options from a module and yield Credential objects from an each method. It takes wordlist files, as well as direct username and password options. It also takes options for username as pass and blank password. It can be passed in as the <code class="highlighter-rouge">cred_details</code> on the <code class="highlighter-rouge">LoginScanner</code>, and responds to #each and yields crafted Credentials.</p>
+
+<p><strong>Example (from modules/auxiliary/scanner/ftp/ftp_login.rb)</strong>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cred_collection</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">CredentialCollection</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="ss">blank_passwords: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'BLANK_PASSWORDS'</span><span class="p">],</span>
+        <span class="ss">pass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASS_FILE'</span><span class="p">],</span>
+        <span class="ss">password: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASSWORD'</span><span class="p">],</span>
+        <span class="ss">user_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_FILE'</span><span class="p">],</span>
+        <span class="ss">userpass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERPASS_FILE'</span><span class="p">],</span>
+        <span class="ss">username: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERNAME'</span><span class="p">],</span>
+        <span class="ss">user_as_pass: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_AS_PASS'</span><span class="p">],</span>
+        <span class="ss">prepended_creds: </span><span class="n">anonymous_creds</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="loginscanner-base">LoginScanner Base</h1>
+
+<p><code class="highlighter-rouge">Metasploit::Framework::LoginScanner::Base
+(lib/metasploit/framework/login_scanner/base.rb)</code></p>
+
+<p>This is a Ruby Module that contains all the base behaviour for all <code class="highlighter-rouge">LoginScanners</code>. All <code class="highlighter-rouge">LoginScanner</code> classes should include this module.</p>
+
+<p>The specs for this behaviour are kept in a shared example group. Specs for your <code class="highlighter-rouge">LoginScanner</code> should use the following syntax to include these tests:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">it_behaves_like</span> <span class="s1">'Metasploit::Framework::LoginScanner::Base'</span><span class="p">,</span> <span class="ss">has_realm_key: </span><span class="kp">false</span><span class="p">,</span> <span class="ss">has_default_realm: </span><span class="kp">false</span>
+</code></pre></div></div>
+<p>Where <code class="highlighter-rouge">has_realm_key</code> and <code class="highlighter-rouge">has_default_realm</code> should be set according to whether your <code class="highlighter-rouge">LoginScanner</code> has those things. (More on this later)</p>
+
+<p>LoginScanners always take a collection of Credentials to try and one host and port. So each <code class="highlighter-rouge">LoginScanner</code> object attempts to login to only one specific service.</p>
+
+<h2 id="attributes">Attributes</h2>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">connection_timeout</code></strong>: The time to wait for a connection to timeout</li>
+  <li><strong><code class="highlighter-rouge">cred_details</code></strong>: An object that yields credentials on each (like credentialCollection or an Array)</li>
+  <li><strong><code class="highlighter-rouge">host</code></strong>: The address for the target host</li>
+  <li><strong><code class="highlighter-rouge">port</code></strong>: The port number for the target service</li>
+  <li><strong><code class="highlighter-rouge">proxies</code></strong>: Any proxies to use in the connection (some scanners might not support this)</li>
+  <li><strong><code class="highlighter-rouge">stop_on_success</code></strong>: Whether to stop trying after a successful login is found</li>
+</ul>
+
+<h2 id="methods">Methods</h2>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">each_credential</code></strong> : You will not have to worry much about this method, Be aware that it is there. It iterates through whatever is in <code class="highlighter-rouge">cred_details</code>, does some normalization and tries to make sure each Credential is properly setup for use by the given <code class="highlighter-rouge">LoginScanner</code>. It yields each Credential in a block.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">def</span> <span class="nf">each_credential</span>
+            <span class="n">cred_details</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">raw_cred</span><span class="o">|</span>
+              <span class="c1"># This could be a Credential object, or a Credential Core, or an Attempt object</span>
+              <span class="c1"># so make sure that whatever it is, we end up with a Credential.</span>
+              <span class="n">credential</span> <span class="o">=</span> <span class="n">raw_cred</span><span class="p">.</span><span class="nf">to_credential</span>
+
+              <span class="k">if</span> <span class="n">credential</span><span class="p">.</span><span class="nf">realm</span><span class="p">.</span><span class="nf">present?</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">REALM_KEY</span><span class="p">.</span><span class="nf">present?</span>
+                <span class="n">credential</span><span class="p">.</span><span class="nf">realm_key</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">REALM_KEY</span>
+                <span class="k">yield</span> <span class="n">credential</span>
+              <span class="k">elsif</span> <span class="n">credential</span><span class="p">.</span><span class="nf">realm</span><span class="p">.</span><span class="nf">blank?</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">REALM_KEY</span><span class="p">.</span><span class="nf">present?</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">DEFAULT_REALM</span><span class="p">.</span><span class="nf">present?</span>
+                <span class="n">credential</span><span class="p">.</span><span class="nf">realm_key</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">REALM_KEY</span>
+                <span class="n">credential</span><span class="p">.</span><span class="nf">realm</span>     <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">DEFAULT_REALM</span>
+                <span class="k">yield</span> <span class="n">credential</span>
+              <span class="k">elsif</span> <span class="n">credential</span><span class="p">.</span><span class="nf">realm</span><span class="p">.</span><span class="nf">present?</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="o">::</span><span class="no">REALM_KEY</span><span class="p">.</span><span class="nf">blank?</span>
+                <span class="n">second_cred</span> <span class="o">=</span> <span class="n">credential</span><span class="p">.</span><span class="nf">dup</span>
+                <span class="c1"># Strip the realm off here, as we don't want it</span>
+                <span class="n">credential</span><span class="p">.</span><span class="nf">realm</span> <span class="o">=</span> <span class="kp">nil</span>
+                <span class="n">credential</span><span class="p">.</span><span class="nf">realm_key</span> <span class="o">=</span> <span class="kp">nil</span>
+                <span class="k">yield</span> <span class="n">credential</span>
+                <span class="c1"># Some services can take a domain in the username like this even though</span>
+                <span class="c1"># they do not explicitly take a domain as part of the protocol.</span>
+                <span class="n">second_cred</span><span class="p">.</span><span class="nf">public</span> <span class="o">=</span> <span class="s2">"</span><span class="si">#{</span><span class="n">second_cred</span><span class="p">.</span><span class="nf">realm</span><span class="si">}</span><span class="se">\\</span><span class="si">#{</span><span class="n">second_cred</span><span class="p">.</span><span class="nf">public</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">second_cred</span><span class="p">.</span><span class="nf">realm</span> <span class="o">=</span> <span class="kp">nil</span>
+                <span class="n">second_cred</span><span class="p">.</span><span class="nf">realm_key</span> <span class="o">=</span> <span class="kp">nil</span>
+                <span class="k">yield</span> <span class="n">second_cred</span>
+              <span class="k">else</span>
+                <span class="k">yield</span> <span class="n">credential</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+          <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">set_sane_defaults</code></strong>: This method will be overridden by each specific <code class="highlighter-rouge">LoginScanner</code>. This is called at the end of the initializer and sets any sane defaults for attributes that have them and were not given a specific value in the initializer.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># This is a placeholder method. Each LoginScanner class</span>
+          <span class="c1"># will override this with any sane defaults specific to</span>
+          <span class="c1"># its own behaviour.</span>
+          <span class="c1"># @abstract</span>
+          <span class="c1"># @return [void]</span>
+          <span class="k">def</span> <span class="nf">set_sane_defaults</span>
+            <span class="nb">self</span><span class="p">.</span><span class="nf">connection_timeout</span> <span class="o">=</span> <span class="mi">30</span> <span class="k">if</span> <span class="nb">self</span><span class="p">.</span><span class="nf">connection_timeout</span><span class="p">.</span><span class="nf">nil?</span>
+          <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">attempt_login</code></strong>: This method is just a stub on the Base mixin. It will be overridden in each LoginScanner class to contain the logic to take one single Credential object and use it to make a login attempt against the target service. It returns a <code class="highlighter-rouge">::Metasploit::Framework::LoginScanner::Result</code> object containing all the information about that attempt’s result.</li>
+</ul>
+
+<p>For an example let’s look at the attempt_login method from <code class="highlighter-rouge">Metasploit::Framework::LoginScanner::FTP (lib/metasploit/framework/login_scanner/ftp.rb)</code></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># (see Base#attempt_login)</span>
+        <span class="k">def</span> <span class="nf">attempt_login</span><span class="p">(</span><span class="n">credential</span><span class="p">)</span>
+          <span class="n">result_options</span> <span class="o">=</span> <span class="p">{</span>
+              <span class="ss">credential: </span><span class="n">credential</span>
+          <span class="p">}</span>
+
+          <span class="k">begin</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">connect_login</span><span class="p">(</span><span class="n">credential</span><span class="p">.</span><span class="nf">public</span><span class="p">,</span> <span class="n">credential</span><span class="p">.</span><span class="nf">private</span><span class="p">)</span>
+          <span class="k">rescue</span> <span class="o">::</span><span class="no">EOFError</span><span class="p">,</span>  <span class="no">Rex</span><span class="o">::</span><span class="no">AddressInUse</span><span class="p">,</span> <span class="no">Rex</span><span class="o">::</span><span class="no">ConnectionError</span><span class="p">,</span> <span class="no">Rex</span><span class="o">::</span><span class="no">ConnectionTimeout</span><span class="p">,</span> <span class="o">::</span><span class="no">Timeout</span><span class="o">::</span><span class="no">Error</span>
+            <span class="n">result_options</span><span class="p">[</span><span class="ss">:status</span><span class="p">]</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Login</span><span class="o">::</span><span class="no">Status</span><span class="o">::</span><span class="no">UNABLE_TO_CONNECT</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kp">false</span>
+          <span class="k">end</span>
+
+
+          <span class="k">if</span> <span class="n">success</span>
+            <span class="n">result_options</span><span class="p">[</span><span class="ss">:status</span><span class="p">]</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Login</span><span class="o">::</span><span class="no">Status</span><span class="o">::</span><span class="no">SUCCESSFUL</span>
+          <span class="k">elsif</span> <span class="o">!</span><span class="p">(</span><span class="n">result_options</span><span class="p">.</span><span class="nf">has_key?</span> <span class="ss">:status</span><span class="p">)</span>
+            <span class="n">result_options</span><span class="p">[</span><span class="ss">:status</span><span class="p">]</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Login</span><span class="o">::</span><span class="no">Status</span><span class="o">::</span><span class="no">INCORRECT</span>
+          <span class="k">end</span>
+
+          <span class="o">::</span><span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">LoginScanner</span><span class="o">::</span><span class="no">Result</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">result_options</span><span class="p">)</span>
+
+        <span class="k">end</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">scan!</code></strong> : This method is the main one you will be concerned with. This method does several things. 
+ 	- It calls valid! which will check all of the validations on the class and raise an <code class="highlighter-rouge">Metasploit::Framework::LoginScanner::Invalid</code> if any of the Validations fail. This exception will contain all the errors messages for any failing validations.
+ 	- it keeps track of the connection error count, and will bail out if we have too many connection errors or too many in a row
+ 	- it runs through all of the credentials by calling each_credential with a block
+ 	- in that block it passes each credential to <code class="highlighter-rouge">#attempt_login</code>
+ 	- it yields the Result object into the block it is passed
+ 	- if stop_on_success is set it will also exit out early if it the result was a success</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Attempt to login with every {Credential credential} in</span>
+          <span class="c1"># {#cred_details}, by calling {#attempt_login} once for each.</span>
+          <span class="c1">#</span>
+          <span class="c1"># If a successful login is found for a user, no more attempts</span>
+          <span class="c1"># will be made for that user.</span>
+          <span class="c1">#</span>
+          <span class="c1"># @yieldparam result [Result] The {Result} object for each attempt</span>
+          <span class="c1"># @yieldreturn [void]</span>
+          <span class="c1"># @return [void]</span>
+          <span class="k">def</span> <span class="nf">scan!</span>
+            <span class="n">valid!</span>
+
+            <span class="c1"># Keep track of connection errors.</span>
+            <span class="c1"># If we encounter too many, we will stop.</span>
+            <span class="n">consecutive_error_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">total_error_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">successful_users</span> <span class="o">=</span> <span class="no">Set</span><span class="p">.</span><span class="nf">new</span>
+
+            <span class="n">each_credential</span> <span class="k">do</span> <span class="o">|</span><span class="n">credential</span><span class="o">|</span>
+              <span class="k">next</span> <span class="k">if</span> <span class="n">successful_users</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">credential</span><span class="p">.</span><span class="nf">public</span><span class="p">)</span>
+
+              <span class="n">result</span> <span class="o">=</span> <span class="n">attempt_login</span><span class="p">(</span><span class="n">credential</span><span class="p">)</span>
+              <span class="n">result</span><span class="p">.</span><span class="nf">freeze</span>
+
+              <span class="k">yield</span> <span class="n">result</span> <span class="k">if</span> <span class="nb">block_given?</span>
+
+              <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">success?</span>
+                <span class="n">consecutive_error_count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">break</span> <span class="k">if</span> <span class="n">stop_on_success</span>
+                <span class="n">successful_users</span> <span class="o">&lt;&lt;</span> <span class="n">credential</span><span class="p">.</span><span class="nf">public</span>
+              <span class="k">else</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">status</span> <span class="o">==</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Login</span><span class="o">::</span><span class="no">Status</span><span class="o">::</span><span class="no">UNABLE_TO_CONNECT</span>
+                  <span class="n">consecutive_error_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                  <span class="n">total_error_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                  <span class="k">break</span> <span class="k">if</span> <span class="n">consecutive_error_count</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+                  <span class="k">break</span> <span class="k">if</span> <span class="n">total_error_count</span> <span class="o">&gt;=</span> <span class="mi">10</span>
+                <span class="k">end</span>
+              <span class="k">end</span>
+            <span class="k">end</span>
+            <span class="kp">nil</span>
+          <span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="constants">Constants</h2>
+
+<p>Although not defined on Base, each <code class="highlighter-rouge">LoginScanner</code> has a series of Constants that can be defined on it to assist with critical behaviour.</p>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">DEFAULT_PORT</code></strong>: <code class="highlighter-rouge">DEFAULT_PORT</code> is a simple constant for use with <code class="highlighter-rouge">set_sane_defaults</code>. If the port isn’t set by the user it will use <code class="highlighter-rouge">DEFAULT_PORT</code>. This is put in a constant so it can be quickly referenced from outside the scanner.</li>
+</ul>
+
+<p>These next two Constants are used by the LoginScanner namespace method classes_for_services. This method invoked by <code class="highlighter-rouge">Metasploit::Framework::LoginScanner.classes_for_service(&lt;Mdm::service&gt;)</code> will actually return an array of LoginScanner classes that may be useful to try against that particular Service.</p>
+<ul>
+  <li><strong><code class="highlighter-rouge">LIKELY_PORTS</code></strong> : This constant holds n array of port numbers that it would be likely useful to use this scanner against.</li>
+  <li>
+    <p><strong><code class="highlighter-rouge">LIKELY_SERVICE_NAMES</code></strong> : Like above except with strings for service names instead of port numbers.</p>
+  </li>
+  <li><strong><code class="highlighter-rouge">PRIVATE_TYPES</code></strong> : This contains an array of symbols representing the different Private credential types it supports. It should always match the demodulize result for the Private class i.e :password, <code class="highlighter-rouge">:ntlm_hash</code>, <code class="highlighter-rouge">:ssh_key</code></li>
+</ul>
+
+<p>These constants are fore <code class="highlighter-rouge">LoginScanners</code> that have to deal with Realms such as AD domains or Database Names.</p>
+
+<ul>
+  <li><strong><code class="highlighter-rouge">REALM_KEY</code></strong>: The type of Realm this scanner expects to deal with. Should always be a constants from <code class="highlighter-rouge">Metasploit::Model::Login::Status</code></li>
+  <li>
+    <p><strong><code class="highlighter-rouge">DEFAULT_REALM</code></strong>: Some scanners have a default realm (like WORKSTATION for AD domain stuff). If a credential is given to a scanner that requires a realm, but the credential has no realm, this value will be added to the credential as the realm.</p>
+  </li>
+  <li><strong><code class="highlighter-rouge">CAN_GET_SESSION</code></strong>: this should be either true or false as to whether we expect we could somehow get a session with a Credential found from this scanner.</li>
+</ul>
+
+<p><strong>example1 ( Metasploit::Framework::LoginScanner::FTP)</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="no">DEFAULT_PORT</span>         <span class="o">=</span> <span class="mi">21</span>
+        <span class="no">LIKELY_PORTS</span>         <span class="o">=</span> <span class="p">[</span> <span class="no">DEFAULT_PORT</span><span class="p">,</span> <span class="mi">2121</span> <span class="p">]</span>
+        <span class="no">LIKELY_SERVICE_NAMES</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">'ftp'</span> <span class="p">]</span>
+        <span class="no">PRIVATE_TYPES</span>        <span class="o">=</span> <span class="p">[</span> <span class="ss">:password</span> <span class="p">]</span>
+        <span class="no">REALM_KEY</span>           <span class="o">=</span> <span class="kp">nil</span>
+</code></pre></div></div>
+
+<p><strong>example2 ( Metasploit::Framework::LoginScanner::SMB)</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="no">CAN_GET_SESSION</span>      <span class="o">=</span> <span class="kp">true</span>
+        <span class="no">DEFAULT_REALM</span>        <span class="o">=</span> <span class="s1">'WORKSTATION'</span>
+        <span class="no">LIKELY_PORTS</span>         <span class="o">=</span> <span class="p">[</span> <span class="mi">139</span><span class="p">,</span> <span class="mi">445</span> <span class="p">]</span>
+        <span class="no">LIKELY_SERVICE_NAMES</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">"smb"</span> <span class="p">]</span>
+        <span class="no">PRIVATE_TYPES</span>        <span class="o">=</span> <span class="p">[</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:ntlm_hash</span> <span class="p">]</span>
+        <span class="no">REALM_KEY</span>            <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Model</span><span class="o">::</span><span class="no">Realm</span><span class="o">::</span><span class="no">Key</span><span class="o">::</span><span class="no">ACTIVE_DIRECTORY_DOMAIN</span>
+</code></pre></div></div>
+
+<h1 id="pulling-it-all-together-in-a-module">Pulling it all Together in a module</h1>
+
+<p>So now you hopefully have a good idea of all the moving pieces involved in creating a LoginScanner. The next step is using your brand new LoginScanner in an actual module.</p>
+
+<p>Let’s look at the <code class="highlighter-rouge">ftp_login</code> module:</p>
+
+<p><code class="highlighter-rouge">def run_host(ip)</code></p>
+
+<p>Every Bruteforce/Login module should be a scanner and should use the run_host method which will run once for each RHOST.</p>
+
+<h2 id="the-cred-collection">The Cred Collection</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">cred_collection</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">CredentialCollection</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="ss">blank_passwords: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'BLANK_PASSWORDS'</span><span class="p">],</span>
+        <span class="ss">pass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASS_FILE'</span><span class="p">],</span>
+        <span class="ss">password: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASSWORD'</span><span class="p">],</span>
+        <span class="ss">user_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_FILE'</span><span class="p">],</span>
+        <span class="ss">userpass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERPASS_FILE'</span><span class="p">],</span>
+        <span class="ss">username: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERNAME'</span><span class="p">],</span>
+        <span class="ss">user_as_pass: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_AS_PASS'</span><span class="p">],</span>
+        <span class="ss">prepended_creds: </span><span class="n">anonymous_creds</span>
+    <span class="p">)</span>
+
+</code></pre></div></div>
+<p>So here we see the CredentialCollection getting created using the datastore options. We pass in the options for Cred creation such as wordlists, raw usernames and passwords, whether to try the username as a password, and whether to try blank passwords.</p>
+
+<p>you’ll also notice an option here called <code class="highlighter-rouge">prepended_creds</code>. FTP is one of the only module to make use of this, but it is generally available through the CredentialCollection. This option is an array of <code class="highlighter-rouge">Metasploit::Framework::Credential</code> objects that should be spit back by the collection before any others. FTP uses this to deal with testing for anon FTP access.</p>
+
+<h2 id="initialising-the-scanner">Initialising the Scanner</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scanner</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">LoginScanner</span><span class="o">::</span><span class="no">FTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="ss">host: </span><span class="n">ip</span><span class="p">,</span>
+        <span class="ss">port: </span><span class="n">rport</span><span class="p">,</span>
+        <span class="ss">proxies: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PROXIES'</span><span class="p">],</span>
+        <span class="ss">cred_details: </span><span class="n">cred_collection</span><span class="p">,</span>
+        <span class="ss">stop_on_success: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'STOP_ON_SUCCESS'</span><span class="p">],</span>
+        <span class="ss">connection_timeout: </span><span class="mi">30</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>Here we actually create our Scanner object. We set the IP and Port based on data the module already knows about. We can pull any user supplied proxy data from the datatstore. we also pull from the datastore whether to stop on a success for this service. The cred details object is populated by our Credentialcollection which will handle all the credential generation for us invisibly.</p>
+
+<p>This gives us our scanner object, all configured and ready to go.</p>
+
+<h2 id="the-scan-block">The Scan Block</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">scanner</span><span class="p">.</span><span class="nf">scan!</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+      <span class="n">credential_data</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="nf">to_h</span>
+      <span class="n">credential_data</span><span class="p">.</span><span class="nf">merge!</span><span class="p">(</span>
+          <span class="ss">module_fullname: </span><span class="nb">self</span><span class="p">.</span><span class="nf">fullname</span><span class="p">,</span>
+          <span class="ss">workspace_id: </span><span class="n">myworkspace_id</span>
+      <span class="p">)</span>
+      <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">success?</span>
+        <span class="n">credential_core</span> <span class="o">=</span> <span class="n">create_credential</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+        <span class="n">credential_data</span><span class="p">[</span><span class="ss">:core</span><span class="p">]</span> <span class="o">=</span> <span class="n">credential_core</span>
+        <span class="n">create_credential_login</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+
+        <span class="n">print_good</span> <span class="s2">"</span><span class="si">#{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - LOGIN SUCCESSFUL: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">credential</span><span class="si">}</span><span class="s2">"</span>
+      <span class="k">else</span>
+        <span class="n">invalidate_login</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+        <span class="n">print_status</span> <span class="s2">"</span><span class="si">#{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - LOGIN FAILED: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">credential</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">status</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">proof</span><span class="si">}</span><span class="s2">)"</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+</code></pre></div></div>
+
+<p>This is the real heart of the matter here. We call s<code class="highlighter-rouge">can!</code> on our scanner, and pass it a block. As we mentioned before, the scanner yields each attempt’s Result object into that block. We check the result’s status to see if it was successful or not.</p>
+
+<p>The result object now as a <code class="highlighter-rouge">.to_h</code> method which returns a hash compatible with our credential creation methods. We take that hash and merge in our module specific information and workspace id.</p>
+
+<p>In the case of a success we build some info hashes and call <code class="highlighter-rouge">create_credential</code>. This is a method found in the metasploit-credential gem under <code class="highlighter-rouge">lib/metasploit/credential/creation.rb</code> in a mixin called <code class="highlighter-rouge">Metasploit::Credential::Creation</code>. This mixin is included in the Report mixin, so if your module includes that mixin you’ll get these methods for free.</p>
+
+<p><code class="highlighter-rouge">create_credential</code> creates a <code class="highlighter-rouge">Metasploit::Credential::Core</code>. We then take that core, the service data, and merge it with some additional data. This additional data includes the access level, the current time (to update last_attempted_at on the <code class="highlighter-rouge">Metasploit::Credential::Login</code>), the the status.</p>
+
+<p>Finally, for a success, we output the result to the console.</p>
+
+<p>In the case of a failure, we call the <code class="highlighter-rouge">invalidate_login</code> method. This method also comes from the Creation mixin. This method looks to see if a Login object already exists for this credential:service pair. If it does, it updates the status to the status we got back from the scanner. This is primarily to account for Login objects created by things like Post modules that have an untried status.</p>
+
+<h2 id="ftp_login-final-view"><code class="highlighter-rouge">ftp_login</code> Final View</h2>
+
+<p>Pulling it all together, we get a new <code class="highlighter-rouge">ftp_login</code> module that looks something like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">##</span>
+<span class="c1"># This module requires Metasploit: http//metasploit.com/download</span>
+<span class="c1"># Current source: https://github.com/rapid7/metasploit-framework</span>
+<span class="c1">##</span>
+
+<span class="nb">require</span> <span class="s1">'msf/core'</span>
+<span class="nb">require</span> <span class="s1">'metasploit/framework/credential_collection'</span>
+<span class="nb">require</span> <span class="s1">'metasploit/framework/login_scanner/ftp'</span>
+
+<span class="k">class</span> <span class="nc">Metasploit3</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span><span class="o">::</span><span class="no">Ftp</span>
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span><span class="o">::</span><span class="no">Scanner</span>
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span><span class="o">::</span><span class="no">Report</span>
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span><span class="o">::</span><span class="no">AuthBrute</span>
+
+  <span class="k">def</span> <span class="nf">proto</span>
+    <span class="s1">'ftp'</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="k">super</span><span class="p">(</span>
+      <span class="s1">'Name'</span>        <span class="o">=&gt;</span> <span class="s1">'FTP Authentication Scanner'</span><span class="p">,</span>
+      <span class="s1">'Description'</span> <span class="o">=&gt;</span> <span class="sx">%q{
+        This module will test FTP logins on a range of machines and
+        report successful logins.  If you have loaded a database plugin
+        and connected to a database this module will record successful
+        logins and hosts so you can track your access.
+      }</span><span class="p">,</span>
+      <span class="s1">'Author'</span>      <span class="o">=&gt;</span> <span class="s1">'todb'</span><span class="p">,</span>
+      <span class="s1">'References'</span>     <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'CVE'</span><span class="p">,</span> <span class="s1">'1999-0502'</span><span class="p">]</span> <span class="c1"># Weak password</span>
+        <span class="p">],</span>
+      <span class="s1">'License'</span>     <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span>
+    <span class="p">)</span>
+
+    <span class="n">register_options</span><span class="p">(</span>
+      <span class="p">[</span>
+        <span class="no">Opt</span><span class="o">::</span><span class="no">RPORT</span><span class="p">(</span><span class="mi">21</span><span class="p">),</span>
+        <span class="no">OptBool</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'RECORD_GUEST'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">false</span><span class="p">,</span> <span class="s2">"Record anonymous/guest logins to the database"</span><span class="p">,</span> <span class="kp">false</span><span class="p">])</span>
+      <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+
+    <span class="n">register_advanced_options</span><span class="p">(</span>
+      <span class="p">[</span>
+        <span class="no">OptBool</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'SINGLE_SESSION'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">false</span><span class="p">,</span> <span class="s1">'Disconnect after every login attempt'</span><span class="p">,</span> <span class="kp">false</span><span class="p">])</span>
+      <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">deregister_options</span><span class="p">(</span><span class="s1">'FTPUSER'</span><span class="p">,</span><span class="s1">'FTPPASS'</span><span class="p">)</span> <span class="c1"># Can use these, but should use 'username' and 'password'</span>
+    <span class="vi">@accepts_all_logins</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">end</span>
+
+
+  <span class="k">def</span> <span class="nf">run_host</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="n">print_status</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - Starting FTP login sweep"</span><span class="p">)</span>
+
+    <span class="n">cred_collection</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">CredentialCollection</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="ss">blank_passwords: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'BLANK_PASSWORDS'</span><span class="p">],</span>
+        <span class="ss">pass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASS_FILE'</span><span class="p">],</span>
+        <span class="ss">password: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PASSWORD'</span><span class="p">],</span>
+        <span class="ss">user_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_FILE'</span><span class="p">],</span>
+        <span class="ss">userpass_file: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERPASS_FILE'</span><span class="p">],</span>
+        <span class="ss">username: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USERNAME'</span><span class="p">],</span>
+        <span class="ss">user_as_pass: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'USER_AS_PASS'</span><span class="p">],</span>
+        <span class="ss">prepended_creds: </span><span class="n">anonymous_creds</span>
+    <span class="p">)</span>
+
+    <span class="n">scanner</span> <span class="o">=</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">LoginScanner</span><span class="o">::</span><span class="no">FTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="ss">host: </span><span class="n">ip</span><span class="p">,</span>
+        <span class="ss">port: </span><span class="n">rport</span><span class="p">,</span>
+        <span class="ss">proxies: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'PROXIES'</span><span class="p">],</span>
+        <span class="ss">cred_details: </span><span class="n">cred_collection</span><span class="p">,</span>
+        <span class="ss">stop_on_success: </span><span class="n">datastore</span><span class="p">[</span><span class="s1">'STOP_ON_SUCCESS'</span><span class="p">],</span>
+        <span class="ss">connection_timeout: </span><span class="mi">30</span>
+    <span class="p">)</span>
+
+    <span class="n">scanner</span><span class="p">.</span><span class="nf">scan!</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+      <span class="n">credential_data</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="nf">to_h</span>
+      <span class="n">credential_data</span><span class="p">.</span><span class="nf">merge!</span><span class="p">(</span>
+          <span class="ss">module_fullname: </span><span class="nb">self</span><span class="p">.</span><span class="nf">fullname</span><span class="p">,</span>
+          <span class="ss">workspace_id: </span><span class="n">myworkspace_id</span>
+      <span class="p">)</span>
+      <span class="k">if</span> <span class="n">result</span><span class="p">.</span><span class="nf">success?</span>
+        <span class="n">credential_core</span> <span class="o">=</span> <span class="n">create_credential</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+        <span class="n">credential_data</span><span class="p">[</span><span class="ss">:core</span><span class="p">]</span> <span class="o">=</span> <span class="n">credential_core</span>
+        <span class="n">create_credential_login</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+
+        <span class="n">print_good</span> <span class="s2">"</span><span class="si">#{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - LOGIN SUCCESSFUL: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">credential</span><span class="si">}</span><span class="s2">"</span>
+      <span class="k">else</span>
+        <span class="n">invalidate_login</span><span class="p">(</span><span class="n">credential_data</span><span class="p">)</span>
+        <span class="n">print_status</span> <span class="s2">"</span><span class="si">#{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - LOGIN FAILED: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">credential</span><span class="si">}</span><span class="s2"> (</span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">status</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">result</span><span class="p">.</span><span class="nf">proof</span><span class="si">}</span><span class="s2">)"</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+
+
+  <span class="c1"># Always check for anonymous access by pretending to be a browser.</span>
+  <span class="k">def</span> <span class="nf">anonymous_creds</span>
+    <span class="n">anon_creds</span> <span class="o">=</span> <span class="p">[</span> <span class="p">]</span>
+    <span class="k">if</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'RECORD_GUEST'</span><span class="p">]</span>
+      <span class="p">[</span><span class="s1">'IEUser@'</span><span class="p">,</span> <span class="s1">'User@'</span><span class="p">,</span> <span class="s1">'mozilla@example.com'</span><span class="p">,</span> <span class="s1">'chrome@example.com'</span> <span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">password</span><span class="o">|</span>
+        <span class="n">anon_creds</span> <span class="o">&lt;&lt;</span> <span class="no">Metasploit</span><span class="o">::</span><span class="no">Framework</span><span class="o">::</span><span class="no">Credential</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">public: </span><span class="s1">'anonymous'</span><span class="p">,</span> <span class="ss">private: </span><span class="n">password</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">anon_creds</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">test_ftp_access</span><span class="p">(</span><span class="n">user</span><span class="p">,</span><span class="n">scanner</span><span class="p">)</span>
+    <span class="n">dir</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Text</span><span class="p">.</span><span class="nf">rand_text_alpha</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">write_check</span> <span class="o">=</span> <span class="n">scanner</span><span class="p">.</span><span class="nf">send_cmd</span><span class="p">([</span><span class="s1">'MKD'</span><span class="p">,</span> <span class="n">dir</span><span class="p">],</span> <span class="kp">true</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">write_check</span> <span class="n">and</span> <span class="n">write_check</span> <span class="o">=~</span> <span class="sr">/^2/</span>
+      <span class="n">scanner</span><span class="p">.</span><span class="nf">send_cmd</span><span class="p">([</span><span class="s1">'RMD'</span><span class="p">,</span><span class="n">dir</span><span class="p">],</span> <span class="kp">true</span><span class="p">)</span>
+      <span class="n">print_status</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">rhost</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - User '</span><span class="si">#{</span><span class="n">user</span><span class="si">}</span><span class="s2">' has READ/WRITE access"</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s1">'Read/Write'</span>
+    <span class="k">else</span>
+      <span class="n">print_status</span><span class="p">(</span><span class="s2">"</span><span class="si">#{</span><span class="n">rhost</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">rport</span><span class="si">}</span><span class="s2"> - User '</span><span class="si">#{</span><span class="n">user</span><span class="si">}</span><span class="s2">' has READ access"</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s1">'Read-only'</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+
+<span class="k">end</span>
+
+
+</code></pre></div></div>
+:ET

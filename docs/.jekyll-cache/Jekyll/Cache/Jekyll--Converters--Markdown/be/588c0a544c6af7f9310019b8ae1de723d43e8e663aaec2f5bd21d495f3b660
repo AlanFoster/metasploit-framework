@@ -1,0 +1,51 @@
+I"<h1 id="some-terminology">Some Terminology</h1>
+
+<p>In this quick HOWTO, we’ll be referring to the <code class="highlighter-rouge">rapid7</code> fork of <code class="highlighter-rouge">metasploit-framework</code> as <code class="highlighter-rouge">upstream</code>. It’s a pretty common local configuration, advocated by the <a href="http://r-7.co/MSF-DEV">development environment setup</a>. Your fork of <code class="highlighter-rouge">metasploit-framework</code> will be referred to as <code class="highlighter-rouge">origin</code>.</p>
+
+<p>The term ‘repo’ is short for ‘Repository.’ Also known as ‘fork’ (as a noun).</p>
+
+<h2 id="the-easy-way">The Easy Way</h2>
+
+<p>The easiest way to keep in sync with master is to trash your fork of <code class="highlighter-rouge">metasploit-framework</code>, and re-fork. This is a surprisingly common practice, since most people in the world don’t work with Metasploit every day. If you’re the sort to be struck by hackerish inspiration every few months, and couldn’t give a whit about preserving branches, history, or pull requests, simply nuke your local fork.</p>
+
+<p>On your fork, in the GitHub UI, go to <strong>Settings</strong>, scroll down to the <strong>Danger Zone</strong>, and hit <strong>Delete this repository</strong>. Once you’ve re-authenticated, re-fork the <code class="highlighter-rouge">metasploit-framework</code> repository by going to the <a href="https://github.com/rapid7/metasploit-framework">Rapid7 repo</a> and hit <strong>Fork</strong> as hard as you possibly can.</p>
+
+<h2 id="the-hard-way">The Hard Way</h2>
+
+<p>If you’re contributing to the Metasploit Framework a lot, first off, THANK YOU. Metasploit is more than a framework, it’s a collective and a community of people around the world who are driven to make the Internet – and therefore, human civilization – a better place.</p>
+
+<p>Gushing aside, if you want to keep in sync with upstream, the hard way (and therefore, best way), is to have a local clone of <code class="highlighter-rouge">origin/mestasploit-framework</code> on your local workstation. (Linux is preferred, but there are servicable solutions for OSX and Windows).</p>
+
+<p>And, with <em>that</em> said, the GitHub documentation is pretty excellent in explaining how to do this – it’s really not all that hard. Take a look at their <a href="https://help.github.com/articles/fork-a-repo/">Fork A Repo</a> docs, and do what it says.</p>
+
+<p>One thing I like to do is to keep separate branches for <code class="highlighter-rouge">master</code> (which tracks <code class="highlighter-rouge">origin/master</code>), and <code class="highlighter-rouge">upstream-master</code> (which tracks, unsurprisingly, <code class="highlighter-rouge">upstream/master</code>). If you just want to know how to add an <code class="highlighter-rouge">upstream</code> remote, <a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/">check it out</a>. Once you’ve done that, all you need to do is to pull one of these:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -b upstream-master --track upstream/master
+git checkout master
+git merge --ff-only upstream-master
+git commit
+git push origin
+</code></pre></div></div>
+
+<p>Now, this only works well if you <strong>never commit to master</strong>. If you do, you’re going to have a bad time, as you’ll eventually hit a dreaded <a href="https://help.github.com/articles/resolving-merge-conflicts/">merge conflict</a>.</p>
+
+<p>Any change you make, be it for local experimentation or public proposal, should be done in a branch <em>from</em> the <code class="highlighter-rouge">master</code> branch (or, if you’re a habitual committer, a branch off the <code class="highlighter-rouge">upstream-master</code> branch).</p>
+
+<p>Ignore this advice at your own peril.</p>
+
+<h2 id="the-max-powers-way">The Max Powers Way</h2>
+
+<p><em>It’s like the wrong way, but faster.</em>
+<em>- Max Powers</em></p>
+
+<p>If you are allergic to the command line, it <em>is possible</em> to sync with upstream/master via the GitHub web UI. This is a little messy, but it’s handy if you have small changes that you don’t care to sign (by the way, <a href="http://mikegerwitz.com/papers/git-horror-story">you should sign your commits</a>).</p>
+
+<p>First, go to the <a href="https://github.com/rapid7/metasploit-framework">Rapid7 branch</a>, and click the green, somewhat subtle mini-PR button. Then, click <strong>Compare across forks</strong>, and set <strong>base fork</strong> to your fork, while leaving the head fork pointing to Rapid7’s fork. That’ll take you to a URL like this: https://github.com/rapid7/metasploit-framework/compare/YOURGITHUBNAME:master…master</p>
+
+<p>Next, you’ll hit the big green <strong>Create a Pull Request</strong> button, which will drop you to a new PR page, against your own fork. Fill it in, then immediately click the <strong>PRs</strong> icon on the left side, find your new PR, and merge it.</p>
+
+<p>This will keep your GitHub-hosted fork up-to-date, and if you prefer using the GitHub UI over a real development environment, you can jump in and start making changes there.</p>
+
+<p>This method is especially handy for light changes, like documentation or cosmetic changes to modules. However, using the GitHub UI means that you are necessarily not testing new modules or libraries, and you of course cannot sign your commits, which is <a href="http://mikegerwitz.com/papers/git-horror-story">horrifying</a>. It’s also nice for people very new to GitHub as a collaborative platform.</p>
+
+:ET

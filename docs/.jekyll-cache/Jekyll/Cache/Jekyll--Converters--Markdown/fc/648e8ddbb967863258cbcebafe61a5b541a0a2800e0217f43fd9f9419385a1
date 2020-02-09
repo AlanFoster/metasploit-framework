@@ -1,0 +1,59 @@
+I"�<p><code class="highlighter-rouge">Msf::Exploit::FILEFORMAT</code> is the mixin to use to create a file format exploit. There actually isn’t much in the mixin, but the most important method is this: <code class="highlighter-rouge">file_create</code>:</p>
+
+<h3 id="usage-for-file_create">Usage for file_create</h3>
+
+<p>As the name implies, the <code class="highlighter-rouge">file_create</code> method allows you to create a file. You should be using this method because it does more than just writing data to disk. One of the important things it does is it will report the file creation to the database in the format of <code class="highlighter-rouge">#{ltype}.localpath</code>, and the file will always be written to Metasploit’s local directory defined in <code class="highlighter-rouge">Msf::Config.local_directory</code> (by default this path is <code class="highlighter-rouge">~/.msf4/local</code>), which keep files nice and organized.</p>
+
+<p>To use the mixin, first include <code class="highlighter-rouge">Msf::Exploit::FILEFORMAT</code> under the scope of your <code class="highlighter-rouge">Metasploit3</code> class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">FILEFORMAT</span>
+</code></pre></div></div>
+
+<p>And here’s an example of using <code class="highlighter-rouge">file_create</code> to build an imaginary exploit:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is my imaginary exploit</span>
+<span class="n">buf</span> <span class="o">=</span> <span class="s2">""</span>
+<span class="n">buf</span> <span class="o">&lt;&lt;</span> <span class="s2">"A"</span> <span class="o">*</span> <span class="mi">1024</span>
+<span class="n">buf</span> <span class="o">&lt;&lt;</span> <span class="p">[</span><span class="mh">0x40201f01</span><span class="p">].</span><span class="nf">pack</span><span class="p">(</span><span class="s2">"V"</span><span class="p">)</span>
+<span class="n">buf</span> <span class="o">&lt;&lt;</span> <span class="s2">"</span><span class="se">\x90</span><span class="s2">"</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="n">buf</span> <span class="o">&lt;&lt;</span> <span class="n">payload</span><span class="p">.</span><span class="nf">encoded</span>
+
+<span class="n">file_create</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="custom-filename">Custom filename</h3>
+
+<p>The <code class="highlighter-rouge">Msf::Exploit::FILENAME</code> mixin by default has a registered <code class="highlighter-rouge">FILENAME</code> datastore option, and it is actually optional. If there’s no filename provided, the mixin will set the name in this format: <code class="highlighter-rouge">"exploit.fileformat.#{self.shortname}"</code>, where <code class="highlighter-rouge">self.shortname</code> means the shorter version of the module name.</p>
+
+<p>If you wish to set a default one (but still changeable by the user), then you simply register it again in the module, like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">register_options</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'FILENAME'</span><span class="p">,</span> <span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'The malicious file name'</span><span class="p">,</span>  <span class="s1">'msf.jpg'</span><span class="p">])</span>
+  <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="fixed-filename">Fixed filename</h3>
+
+<p>Occasionally, you might not want your user to change the filename at all. A lazy trick to do that is by modifying the <code class="highlighter-rouge">FILENAME</code> datastore option at runtime, but this is very much not recommended. In fact, if you do this, you will not pass <a href="https://github.com/rapid7/metasploit-framework/wiki/Guidelines-for-Accepting-Modules-and-Enhancements#module-additions">msftidy</a>. Instead, here’s how it’s done properly:</p>
+
+<p>1 - Deregister the <code class="highlighter-rouge">FILENAME</code> option</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">deregister_options</span><span class="p">(</span><span class="s1">'FILENAME'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>2 - Next, override the <code class="highlighter-rouge">file_format_filename</code> method, and make it return the filename you want:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">file_format_filename</span>
+  <span class="s1">'something.jpg'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>3 - Finally, please leave a note about this in the module description.</p>
+
+<h3 id="references">References</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/fileformat.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/tree/master/modules/exploits/windows/local</p>
+:ET

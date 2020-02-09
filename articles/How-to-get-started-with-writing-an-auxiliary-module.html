@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to get started with writing an auxiliary module</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2017-05-10T00:26:37+01:00" itemprop="datePublished">May 10, 2017
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Metasploit is known for its free, open-source exploits - modules that pop shells. But in reality, penetration testers rely more on auxiliary modules, and often a successful pentest can be done without firing a single exploit. They’re just more handy, and the punishment for a failed attempt is generally much lower. Professionals actually love auxiliary modules.</p>
+
+<p>Another interesting fact about auxiliary modules is that some of them aren’t so different from being exploits. The main difference is how it’s defined in Metasploit: if a module pops a shell, it’s an exploit. If not, even though it takes advantage of a vulnerability, it still belongs to the auxiliary category.</p>
+
+<p>So you see, if you’re an auxiliary module addict, you are on the right track.</p>
+
+<h3 id="plan-your-module">Plan your module</h3>
+
+<p>Just like writing a software, before you start coding you should have a clear and specific goal for what your auxiliary module does. It’s never a good idea to have multiple functionalities in a single module. You should break it down into multiple modules instead.</p>
+
+<p>You should also think about how your module will perform in different situations. For example, if it’s meant to test against a Tomcat server, what happens if you use it against Nginx? Will it error out and leave a backtrace? If it does, you should handle that properly. Does your module require specific settings/conditions from the target machine? What happens if it doesn’t? Will it error out again?</p>
+
+<p>Most importantly, make sure to test your module thoroughly. It’s always ugly to find out problems in the middle of an important engagement, that just might cost you.</p>
+
+<h3 id="main-categories-of-auxiliary-modules">Main categories of auxiliary modules</h3>
+
+<p>Generally speaking, auxiliary modules are categorized based on their behavior, but this is somewhat inconsistent so you’ll just have to use your best judgement and find the most appropriate one. Here’s a list of the common ones:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>admin</strong></td>
+      <td>Modules that modify, operate, or manipulate something on target machine.</td>
+    </tr>
+    <tr>
+      <td><strong>analyze</strong></td>
+      <td>We initially created this folder for password-cracking modules that require analysis time.</td>
+    </tr>
+    <tr>
+      <td><strong>client</strong></td>
+      <td>We initially created this folder for an SMTP module for social-engineering purposes.</td>
+    </tr>
+    <tr>
+      <td><strong>dos</strong></td>
+      <td>Pretty self-explanatory: denial-of-service modules.</td>
+    </tr>
+    <tr>
+      <td><strong>fuzzers</strong></td>
+      <td>If your module is a fuzzer, this is where it belongs. Make sure to place it in the correct sub-directory based on the protocol.</td>
+    </tr>
+    <tr>
+      <td><strong>gather</strong></td>
+      <td>Modules that gather, collect, or enumerates data from a single target.</td>
+    </tr>
+    <tr>
+      <td><strong>scanner</strong></td>
+      <td>Modules that use the <code class="highlighter-rouge">Msf::Auxiliary::Scanner</code> mixin almost always go here. Make sure to place yours in the correct sub-directory based on the protocol.</td>
+    </tr>
+    <tr>
+      <td><strong>server</strong></td>
+      <td>Modules that are servers.</td>
+    </tr>
+    <tr>
+      <td><strong>sniffer</strong></td>
+      <td>Modules that are sniffers.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>There are actually a few more directories in auxiliary, but that’s kind of where the gray area is. You are more than welcome to <a href="https://github.com/rapid7/metasploit-framework/tree/master/modules/auxiliary">see if yourself</a>.</p>
+
+<h3 id="the-msfauxiliaryscanner-mixin">The Msf::Auxiliary::Scanner mixin</h3>
+
+<p>The <code class="highlighter-rouge">Msf::Auxiliary::Scanner</code> mixin is heavily used in auxiliary modules, so we might as well talk about it right here. The mixin allows you to be able to test against a range of hosts, and it’s multi-threaded. To use it, first off you need to include the mixin under the scope of your <code class="highlighter-rouge">Metasploit3</code> class:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span><span class="o">::</span><span class="no">Scanner</span>
+</code></pre></div></div>
+
+<p>A couple of new things will be added to your module when you include this mixin. You will have a new datastore option named “RHOSTS”, which allows the user to specify multiple hosts. There’s a new “THREADS” option, which allows the number of threads to run during execution. There’s also “ShowProgress” and “ShowProgressPercent” for tracking scan progress.</p>
+
+<p>Typically, the main method for an auxiliary module is “def run”. But when you use the <code class="highlighter-rouge">Msf::Auxiliary::Scanenr</code> mixin, you need to be using <code class="highlighter-rouge">def run_host(ip)</code>. The IP parameter is the target machine.</p>
+
+<h3 id="templates">Templates</h3>
+
+<p>Here’s the most basic example of an auxiliary module. We’ll explain a bit more about the fields that need to be filled:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">##</span>
+<span class="c1"># This module requires Metasploit: http://metasploit.com/download</span>
+<span class="c1"># Current source: https://github.com/rapid7/metasploit-framework</span>
+<span class="c1">##</span>
+
+<span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s1">'Module name'</span><span class="p">,</span>
+      <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+        Say something that the user might want to know.
+      }</span><span class="p">,</span>
+      <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'Name'</span> <span class="p">],</span>
+      <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span>
+    <span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run</span>
+    <span class="c1"># Main function</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The <strong>Name</strong> field can begin with the vendor name, but optional. Followed by the software name. And then a few words that basically describe what it’s for. For example: “Dolibarr ERP/CRM Login Utility”</p>
+
+<p>The <strong>Description</strong> field should explain what the module does, things to watch out for, specific requirements, the more the better. The goal is to let the user understand what he’s using without the need to actually read the module’s source and figure things out. And trust me, most of them don’t.</p>
+
+<p>The <strong>Author</strong> field is where you put your name. The format should be “Name “. If you want to have your Twitter handle there, leave it as a comment, for example: “Name # handle”</p>
+
+<p>Because the <code class="highlighter-rouge">Msf::Auxiliary::Scanner</code> mixin is so popular, we figured you want a template for it, too. And here you go:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">##</span>
+<span class="c1"># This module requires Metasploit: http://metasploit.com/download</span>
+<span class="c1"># Current source: https://github.com/rapid7/metasploit-framework</span>
+<span class="c1">##</span>
+
+<span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span><span class="o">::</span><span class="no">Scanner</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s1">'Module name'</span><span class="p">,</span>
+      <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+        Say something that the user might want to know.
+      }</span><span class="p">,</span>
+      <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'Name'</span> <span class="p">],</span>
+      <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span>
+    <span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">run_host</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+    <span class="c1"># Main method</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="basic-git-commands">Basic git commands</h3>
+
+<p>Metasploit no longer uses svn for source code management, instead we use git, so knowing some tricks with git go a long way. We’re not here to lecture you about how awesome git is, we know it has a learning curve and it’s not surprising to find new users making mistakes. Every once a while, your git “rage” will kick in, and we understand. However, it’s important for you to take advantage of branching.</p>
+
+<p>Every time you make a module, or make some changes to existing code, you should not do so on the default master branch. Why? Because when you do a <code class="highlighter-rouge">msfupdate</code>, which is Metasploit’s utility for updating your repository, it will do a git reset before merging the changes, and all your code go bye-bye.</p>
+
+<p>Another mistake people tend to do is have all the changes on master before submitting a pull request. This is a bad idea, because most likely you’re submitting other crap you don’t intend to change, and/or you’re probably asking us to merge other unnecessary commit history when there only needs to be one commit. Thanks for contributing your module to the community, but no thanks to your crazy commit history.</p>
+
+<p>So as a habit, when you want to make something new, or change something, begin with a new branch that’s up to date to master. First off, make sure you’re on master. If you do a <code class="highlighter-rouge">git status</code> it will tell you what branch you’re currently on:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git status
+# On branch upstream-master
+nothing to commit, working directory clean
+</code></pre></div></div>
+
+<p>Ok, now do a <code class="highlighter-rouge">git pull</code> to download the latest changes from Metasploit:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git pull
+Already up-to-date.
+</code></pre></div></div>
+
+<p>At this point, you’re ready to start a new branch. In this case, we’ll name our new branch “my_awesome_branch”:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git checkout -b my_awesome_module
+Switched to a new branch 'my_awesome_module'
+</code></pre></div></div>
+
+<p>And then you can go ahead and add that module. Make sure it’s in the appropriate path:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git add [module path]
+</code></pre></div></div>
+
+<p>When you decide to save the changes, commit (if there’s only one module, you can do <code class="highlighter-rouge">git commit -a</code> too so you don’t have to type the module path. Note <code class="highlighter-rouge">-a</code> really means EVERYTHING):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git commit [module path]
+</code></pre></div></div>
+
+<p>When you’re done, push your changes, which will upload your code to your remote branch “my_awesome_branch”. You must push your changes in order to submit the pull request, or share it with others on the Internet.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git push origin my_awesome_branch
+</code></pre></div></div>
+
+<h3 id="references">References</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/tree/master/modules/auxiliary</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/auxiliary.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/auxiliary/scanner.rb</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-get-started-with-writing-an-auxiliary-module.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

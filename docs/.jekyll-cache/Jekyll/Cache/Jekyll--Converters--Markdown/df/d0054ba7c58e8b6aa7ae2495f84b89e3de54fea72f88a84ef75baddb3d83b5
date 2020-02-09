@@ -1,0 +1,163 @@
+I"i7<p>This is an example of how to write a module that uses the <a href="https://rapid7.github.io/metasploit-framework/api/Msf/Exploit/Remote/HttpClient.html">HttpClient</a> mixin to send a basic HTTP request.</p>
+
+<h3 id="there-are-mainly-two-common-methods-you-will-see">There are mainly two common methods you will see:</h3>
+
+<ul>
+  <li><strong><a href="https://rapid7.github.io/metasploit-framework/api/Msf/Exploit/Remote/HttpClient.html#send_request_raw-instance_method">send_request_raw</a></strong> - You use this to send a raw HTTP request. Usually, you will want this method if you need something that violates the specification; in most other cases, you should prefer <code class="highlighter-rouge">send_request_cgi</code>.  If you wish to learn about how this method works, look at the documentation for <a href="https://rapid7.github.io/metasploit-framework/api/Rex/Proto/Http/Client.html#request_raw-instance_method"><code class="highlighter-rouge">Rex::Proto::Http::Client#request_raw</code></a>.</li>
+</ul>
+
+<p>Here’s a basic example of how to use <code class="highlighter-rouge">send_request_raw</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">send_request_raw</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="s1">'/index.php'</span><span class="p">})</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><a href="https://rapid7.github.io/metasploit-framework/api/Msf/Exploit/Remote/HttpClient.html#send_request_cgi-instance_method">send_request_cgi</a></strong> - You use this to send a more CGI-compatible HTTP request. If your request contains a query string (or POST data), then you should use this.  If you wish to learn about how this method works, check out <a href="https://rapid7.github.io/metasploit-framework/api/Rex/Proto/Http/Client.html#request_cgi-instance_method"><code class="highlighter-rouge">Rex::Proto::Http::Client#request_cgi</code></a>.</li>
+</ul>
+
+<p>Here’s a very basic example for <code class="highlighter-rouge">send_request_cgi</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">send_request_cgi</span><span class="p">({</span>
+		<span class="s1">'method'</span>   <span class="o">=&gt;</span> <span class="s1">'GET'</span><span class="p">,</span>
+		<span class="s1">'uri'</span>      <span class="o">=&gt;</span> <span class="s1">'/hello_world.php'</span><span class="p">,</span>
+		<span class="s1">'vars_get'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+			<span class="s1">'param_1'</span> <span class="o">=&gt;</span> <span class="s1">'abc'</span><span class="p">,</span>
+			<span class="s1">'param_2'</span> <span class="o">=&gt;</span> <span class="s1">'123'</span>
+		<span class="p">}</span>
+	<span class="p">})</span>
+</code></pre></div></div>
+
+<p><strong>Please note</strong>: <code class="highlighter-rouge">send_request_raw</code> and <code class="highlighter-rouge">send_request_cgi</code> will return a <code class="highlighter-rouge">nil</code> if there’s a timeout, so please make sure to account for that condition when you handle the return value.</p>
+
+<h3 id="uri-parsing">URI Parsing</h3>
+
+<p>Before you send a HTTP request, you will most likely have to do some URI parsing.  This is a tricky task, because sometimes when you join paths, you may accidentally get double slashes, like this: “/test//index.php”.  Or for some reason you have a missing slash.  These are really commonly made mistakes.  So here’s how you can handle it safely:</p>
+
+<p><strong>1</strong> - Register your default URI datastore option as ‘TARGETURI’:</p>
+
+<p>Example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">register_options</span><span class="p">(</span>
+		<span class="p">[</span>
+			<span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'TARGETURI'</span><span class="p">,</span> <span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'The base path to XXX application'</span><span class="p">,</span> <span class="s1">'/xxx_v1/'</span><span class="p">])</span>
+		<span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>2</strong> - Load your TARGETURI with <a href="https://rapid7.github.io/metasploit-framework/api/Msf/Exploit/Remote/HttpClient.html#target_uri-instance_method"><code class="highlighter-rouge">target_uri</code></a>, that way the URI input validation will kick in, and then you get a real <code class="highlighter-rouge">URI</code> object:</p>
+
+<p>In this example, we’ll just load the path:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">uri</span> <span class="o">=</span> <span class="n">target_uri</span><span class="p">.</span><span class="nf">path</span>
+</code></pre></div></div>
+
+<p><strong>3</strong> - When you want to join another URI, always use <a href="https://rapid7.github.io/metasploit-framework/api/Msf/Exploit/Remote/HttpClient.html#normalize_uri-instance_method"><code class="highlighter-rouge">normalize_uri</code></a>:</p>
+
+<p>Example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1"># Returns: "/xxx_v1/admin/upload.php"</span>
+	<span class="n">uri</span> <span class="o">=</span> <span class="n">normalize_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="s1">'admin'</span><span class="p">,</span> <span class="s1">'upload.php'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>4</strong> - When you’re done normalizing the URI, you’re ready to use <code class="highlighter-rouge">send_request_cgi</code> or <code class="highlighter-rouge">send_request_raw</code></p>
+
+<p>Please note: The <code class="highlighter-rouge">normalize_uri</code> method will always follow these rules:</p>
+
+<ol>
+  <li>The URI should always begin with a slash.</li>
+  <li>You will have to decide if you need the trailing slash or not.</li>
+  <li>There should be no double slashes.</li>
+</ol>
+
+<h3 id="full-example">Full Example</h3>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+	<span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+	<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Auxiliary</span>
+
+		<span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span><span class="o">::</span><span class="no">HttpClient</span>
+
+		<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span> <span class="o">=</span> <span class="p">{})</span>
+			<span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+				<span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s1">'HttpClient Example'</span><span class="p">,</span>
+				<span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+					Do a send_request_cgi()
+				}</span><span class="p">,</span>
+				<span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'sinn3r'</span> <span class="p">],</span>
+				<span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span>
+			<span class="p">))</span>
+
+			<span class="n">register_options</span><span class="p">(</span>
+				<span class="p">[</span>
+					<span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'TARGETURI'</span><span class="p">,</span> <span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'The base path'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">])</span>
+				<span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+		<span class="k">end</span>
+
+
+		<span class="k">def</span> <span class="nf">run</span>
+			<span class="n">uri</span> <span class="o">=</span> <span class="n">target_uri</span><span class="p">.</span><span class="nf">path</span>
+
+			<span class="n">res</span> <span class="o">=</span> <span class="n">send_request_cgi</span><span class="p">({</span>
+				<span class="s1">'method'</span>   <span class="o">=&gt;</span> <span class="s1">'GET'</span><span class="p">,</span>
+				<span class="s1">'uri'</span>      <span class="o">=&gt;</span> <span class="n">normalize_uri</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="s1">'admin'</span><span class="p">,</span> <span class="s1">'index.php'</span><span class="p">),</span>
+				<span class="s1">'vars_get'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+					<span class="s1">'p1'</span> <span class="o">=&gt;</span> <span class="s2">"This is param 1"</span><span class="p">,</span>
+					<span class="s1">'p2'</span> <span class="o">=&gt;</span> <span class="s2">"This is param 2"</span>
+				<span class="p">}</span>
+			<span class="p">})</span>
+
+			<span class="k">if</span> <span class="n">res</span> <span class="o">&amp;&amp;</span> <span class="n">res</span><span class="p">.</span><span class="nf">code</span> <span class="o">==</span> <span class="mi">200</span>
+				<span class="n">print_good</span><span class="p">(</span><span class="s2">"I got a 200, awesome"</span><span class="p">)</span>
+			<span class="k">else</span>
+				<span class="n">print_error</span><span class="p">(</span><span class="s2">"No 200, feeling blue"</span><span class="p">)</span>
+			<span class="k">end</span>
+		<span class="k">end</span>
+	<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="working-with-burp-suite">Working with Burp Suite</h3>
+
+<p>Burp Suite is a useful tool to examine or modify HTTPS traffic while developing a module using HttpClient. To do this:</p>
+
+<ol>
+  <li>Start Burp: <code class="highlighter-rouge">java -jar burpsuite.jar</code></li>
+  <li>In Burp, click on the Proxies tab, and then Options. Configure the proxy listener there. In this example, let’s say we have a listener on port 6666.</li>
+  <li>Once the Burp listener is up, start msfconsole and load the module you’re working on.</li>
+  <li>Enter: <code class="highlighter-rouge">set Proxies HTTP:127.0.0.1:6666</code></li>
+  <li>Go ahead and run the module, Burp should intercept the HTTPS traffic.</li>
+</ol>
+
+<p>Note that Burp only supports HTTPS for HttpClient. This problem is only specific to Burp and Metasploit.</p>
+
+<p>If you need to examine HTTP traffic for HttpClient, a workaround is adding the following method in your module. This will override HttpClient’s send_request_* method, and return the modified output:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">send_request_cgi</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+  <span class="n">res</span> <span class="o">=</span> <span class="k">super</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="n">res</span><span class="p">.</span><span class="nf">request</span><span class="p">.</span><span class="nf">to_s</span>
+  <span class="nb">puts</span>
+  <span class="nb">puts</span> <span class="n">res</span><span class="p">.</span><span class="nf">to_s</span>
+  <span class="nb">puts</span>
+  <span class="nb">puts</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>You can do the same for send_request_raw as well.</p>
+
+<h3 id="other-common-questions">Other Common questions:</h3>
+
+<p><strong>1 - Can I use <code class="highlighter-rouge">vars_get</code> and <code class="highlighter-rouge">vars_post</code> together?</strong></p>
+
+<p>Yes. When you supply a hash to <code class="highlighter-rouge">vars_get</code>, basically it means “put all this data in the query string”. When you supply a hash to <code class="highlighter-rouge">vars_post</code>, it means “put all this data in the body.” All of them will be in the same request. You do need to make sure you’re using <code class="highlighter-rouge">send_request_cgi</code>, of course.</p>
+
+<p><strong>2 - I can’t use <code class="highlighter-rouge">vars_get</code> or <code class="highlighter-rouge">vars_post</code> due to some weird reason, what to do?</strong></p>
+
+<p>Do mention about this problem in the code (as a comment). If you can’t use <code class="highlighter-rouge">vars_post</code>, you can try the <code class="highlighter-rouge">data</code> key instead, which will send your post data raw. Normally, the most common solution to get around <code class="highlighter-rouge">vars_get</code> is to leave your stuff in the <code class="highlighter-rouge">uri</code> key. msftidy will flag this, but only as an “Info” and not a warning, which means you should still pass msftidy anyway. If this is a common problem, we can always change msftidy.</p>
+
+<p><strong>3 - Do I need to manually do basic auth?</strong></p>
+
+<p>You do not need to manually do basic auth in your request, because HttpClient should automatically do that for you. All you have to do is set the username and password in the datastore options, and then the mixin will use that when the web server asks.</p>
+
+<h2 id="references">References</h2>
+
+<p>https://github.com/rapid7/metasploit-framework/wiki/How-to-send-an-HTTP-request-using-Rex%3A%3AProto%3A%3AHttp%3A%3AClient</p>
+:ET

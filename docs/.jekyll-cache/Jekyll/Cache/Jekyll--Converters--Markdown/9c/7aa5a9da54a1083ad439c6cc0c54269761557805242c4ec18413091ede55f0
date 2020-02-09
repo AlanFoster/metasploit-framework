@@ -1,0 +1,61 @@
+I"�<p>There comes a time in the life of many a Meterpreter session when it needs to go quiet for a while. There are many reasons that this might be needed:</p>
+
+<ul>
+  <li>During an assessment, the blue team may have detected suspicious activity, and communications is too noisy.</li>
+  <li>Long term engagements require long-term shells, but the red team isn’t awake 24-hours a day, and so keeping the communications active the whole time doesn’t make sense.</li>
+  <li>Users may just want to reduce the number of shells they have to worry about at a given time and want some of them to go away for a while.</li>
+</ul>
+
+<p>For these reasons, and more, the new <code class="highlighter-rouge">sleep</code> command in Meterpreter was created. This document explains what it is and how it works.</p>
+
+<h2 id="silent-shells">Silent shells</h2>
+
+<p>Noise during an assessment is not necessarily a good thing. With the advent of Meterpreter’s new support and control of <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Transport-Control">multiple transports</a>, Meterpreter has the ability to change transports and therefore change the traffic pattern for communication. However, sometimes this isn’t enough and sometimes users want to be able to shut the session off temporarily.</p>
+
+<p>The <code class="highlighter-rouge">sleep</code> command is designed to do just that: make the current Meterpreter session go to sleep for a specified period of time, and the wake up again once that time has expired.</p>
+
+<p>During this dormant period, no socket is active, no requests are made, and no responses are given. From the perspective of Metasploit it’s as if the Meterpreter session doesn’t exist.</p>
+
+<p>The interface to the sleep command looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; sleep
+Usage: sleep &lt;time&gt;
+
+  time: Number of seconds to wait (positive integer)
+
+  This command tells Meterpreter to go to sleep for the specified
+  number of seconds. Sleeping will result in the transport being
+  shut down and restarted after the designated timeout.
+</code></pre></div></div>
+
+<p>As shown, <code class="highlighter-rouge">sleep</code> expects to be given a single postive integer value that represents the number of seconds that Meterpreter should be silent for. When run, the session will close, and then callback after the elapsed period of time. Given that Meterpreter lives in memory, this lack of communication will make it extremely difficult to track.</p>
+
+<p>The following shows a sample run where Meterpreter is put to sleep for 20 seconds, after which the session reconnects while the handler is still in background:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; sleep 20
+[*] Telling the target instance to sleep for 20 seconds ...
+[+] Target instance has gone to sleep, terminating current session.
+
+[*] 10.1.10.35 - Meterpreter session 3 closed.  Reason: User exit
+msf exploit(handler) &gt; [*] Meterpreter session 4 opened (10.1.10.40:6005 -&gt; 10.1.10.35:49315) at 2015-06-02 23:00:29 +1000
+
+msf exploit(handler) &gt; sessions -i 4
+[*] Starting interaction with 4...
+
+meterpreter &gt; getuid
+Server username: WIN-S45GUQ5KGVK\OJ
+</code></pre></div></div>
+
+<h2 id="under-the-hood">Under the hood</h2>
+
+<p>The implementation of this command was made rather simple as a result of the work that was done to support multiple transports. To facilitate this command, all that happens is:</p>
+
+<ul>
+  <li>A transport change is invoked, but the transport that is selected as the “next” transport is the same as the currently active one.</li>
+  <li>The transport is shut down and the session is closed.</li>
+  <li>The timeout value is passed to a call to <code class="highlighter-rouge">sleep()</code>, forcing the main thread of execution to pause for the allotted period of time.</li>
+  <li>Execution resumes, and the resumption of connectivity continues in the usual transport switching fashion, only in this case, the transport that is fired up is the one that was just shut down.</li>
+</ul>
+
+<p>In short, the <code class="highlighter-rouge">sleep</code> command is a transport switch to the current transport with a delay. Simple!</p>
+:ET

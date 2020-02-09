@@ -1,0 +1,168 @@
+I"�3<p>In Metasploit, exploits and auxiliary modules support the check command that allows the user to be able to determine the vulnerable state before using the module. This feature is handy for those who need to verify the vulnerability without actually popping a shell, and used to quickly identify all vulnerable, or possibly exploitable machines on the network.</p>
+
+<p>Although vulnerability checks aren’t the focus of Metasploit, because it isn’t a vulnerability scanner like Nexpose, we do actually encourage people to implement the check() method anyway to add more value to the module. If you do write one, make sure to keep these guidelines in mind:</p>
+
+<h2 id="check-method-output">Check Method Output</h2>
+
+<p>Modules messages are important to the user, because they keep him/her informed about what the module is doing, and usually make the module more debuggable. However, you do also want to keep your messages in verbose mode because it becomes really noisy if the check is used against multiple targets. Ideally, you only should be using these print methods:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>vprint_line()</strong></td>
+      <td>verbose version of print_line</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_status()</strong></td>
+      <td>verbose version of print_status that begins with “[*]”</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_error()</strong></td>
+      <td>verbose version of print_error that begins with “[x]”</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_warning()</strong></td>
+      <td>verbose version of print_warning that begins with “[!]”, in yellow</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_debug()</strong></td>
+      <td>verbose versino of print_debug that begins with “[!]”, in blue</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note: You shouldn’t be printing if a target is vulnerable or not, as this is automatically handled by the framework when your method returns a check code.</p>
+
+<h2 id="check-codes">Check Codes</h2>
+
+<p>Once you have determined the vulnerable state, you should return a check code. Check codes are constants defined in Msf::Exploit::CheckCode, and these are the ones you can use:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Checkcode</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Exploit::CheckCode::Unknown</strong></td>
+      <td>Used if the module fails to retrieve enough information from the target machine, such as due to a timeout.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Safe</strong></td>
+      <td>Used if the check fails to trigger the vulnerability, or even detect the service.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Detected</strong></td>
+      <td>The target is running the service in question, but the check fails to determine whether the target is vulnerable or not.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Appears</strong></td>
+      <td>This is used if the vulnerability is determined based on passive reconnaissance. For example: version, banner grabbing, or simply having the resource that’s known to be vulnearble.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Vulnerable</strong></td>
+      <td>Only used if the check is able to actually take advantage of the bug, and obtain some sort of hard evidence. For example: for a command execution type bug, get a command output from the target system. For a directory traversal, read a file from the target, etc. Since this level of check is pretty aggressive in nature, you should not try to DoS the host as a way to prove the vulnerability.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Unsupported</strong></td>
+      <td>The exploit does not support the check method. If this is the case, then you don’t really have to add the check method.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="remote-check-example">Remote Check Example</h2>
+
+<p>Here’s an abstract example of how a Metasploit check might be written:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#</span>
+<span class="c1"># Returns a check code that indicates the vulnerable state on an app running on OS X</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">check</span>
+  <span class="k">if</span> <span class="n">exec_cmd_via_http</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/uid=\d+\(.+\)/</span>
+    <span class="c1"># Found the correct ID output, good indicating our command executed</span>
+    <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">end</span>
+
+  <span class="n">http_body</span> <span class="o">=</span> <span class="n">get_http_body</span>
+  <span class="k">if</span> <span class="n">http_body</span>
+    <span class="k">if</span> <span class="n">http_body</span> <span class="o">=~</span> <span class="sr">/Something CMS v1\.0/</span>
+      <span class="c1"># We are able to find the version thefore more precise about the vuln state</span>
+      <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Appears</span>
+    <span class="k">elsif</span> <span class="n">http_body</span> <span class="o">=~</span> <span class="sr">/Something CMS/</span>
+      <span class="c1"># All we can tell the vulnerable app is running, but no more info to</span>
+      <span class="c1"># determine the vuln</span>
+      <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Detected</span>
+    <span class="k">end</span>
+  <span class="k">else</span>
+    <span class="n">vprint_error</span><span class="p">(</span><span class="s2">"Unable to determine due to a HTTP connection timeout"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Unknown</span>
+  <span class="k">end</span>
+
+  <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Safe</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Note: If you are writing an auxiliary module with the <code class="highlighter-rouge">Msf::Auxiliary::Scanner</code> mixin, you should declare your check method like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check_host</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+  <span class="c1"># Do your thing</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="local-exploit-check-example">Local Exploit Check Example</h3>
+
+<p>Most local exploit checks are done by checking the version of the vulnerable file, which is considered passive, therefore they should be flagging Exploit::CheckCode::Appears. Passive local exploit checks don’t necessarily mean they are less reliable, in fact, they are not bad. But to qualify for Exploit::CheckCode::Vulnerable, your check should do the extra mile, which means either you somehow make the program return a vulnerable response, or you inspect the vulnerable code.</p>
+
+<p>An example of making the program return a vulnerable response is ShellShock (the following is specific for VMWare):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check</span>
+  <span class="n">check_str</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Text</span><span class="p">.</span><span class="nf">rand_text_alphanumeric</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="c1"># ensure they are vulnerable to bash env variable bug</span>
+  <span class="k">if</span> <span class="n">cmd_exec</span><span class="p">(</span><span class="s2">"env x='() { :;}; echo </span><span class="si">#{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">' bash -c echo"</span><span class="p">).</span><span class="nf">include?</span><span class="p">(</span><span class="n">check_str</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+     <span class="n">cmd_exec</span><span class="p">(</span><span class="s2">"file '</span><span class="si">#{</span><span class="n">datastore</span><span class="p">[</span><span class="s1">'VMWARE_PATH'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span> <span class="o">!~</span> <span class="sr">/cannot open/</span>
+
+     <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">else</span>
+    <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Safe</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>One way to inspect the vulnerable code is to come up with a signature, and see if it exists in the vulnerable process. Here’s an example with adobe_sandbox_adobecollabsync.rb:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 'AdobeCollabSyncTriggerSignature' =&gt; "\x56\x68\xBC\x00\x00\x00\xE8\xF5\xFD\xFF\xFF"</span>
+<span class="c1"># 'AdobeCollabSyncTrigger' =&gt; 0x18fa0</span>
+
+<span class="k">def</span> <span class="nf">check_trigger</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">railgun</span><span class="p">.</span><span class="nf">memread</span><span class="p">(</span><span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">+</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTrigger'</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTriggerSignature'</span><span class="p">].</span><span class="nf">length</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">signature</span> <span class="o">==</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTriggerSignature'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="k">return</span> <span class="kp">false</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">check</span>
+  <span class="vi">@addresses</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">acrord32</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">railgun</span><span class="p">.</span><span class="nf">kernel32</span><span class="o">.</span><span class="no">GetModuleHandleA</span><span class="p">(</span><span class="s2">"AcroRd32.exe"</span><span class="p">)</span>
+  <span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">=</span> <span class="n">acrord32</span><span class="p">[</span><span class="s2">"return"</span><span class="p">]</span>
+  <span class="k">if</span> <span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Unknown</span>
+  <span class="k">elsif</span> <span class="n">check_trigger</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">else</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Detected</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Another possible way to inspect is grab the vulnerable file, and use Metasm. But of course, this is a lot slower and generates more network traffic.</p>
+:ET

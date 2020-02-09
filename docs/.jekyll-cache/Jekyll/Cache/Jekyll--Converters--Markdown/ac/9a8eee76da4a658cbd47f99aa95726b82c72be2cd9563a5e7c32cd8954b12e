@@ -1,0 +1,399 @@
+I"�e<p>The Metasploit Framework provides different mixins you can use to develop a browser exploit, mainly they are:</p>
+
+<ul>
+  <li><strong><a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-browser-exploit-using-HttpServer">Msf::Exploit::Remote::HttpServer</a></strong> - The most basic form of a HTTP server.</li>
+  <li><strong>Msf::Exploit::Remote::HttpServer::HTML</strong> - which provides Javascript functions that the module can use when crafting HTML contents.</li>
+  <li><strong><a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-browser-exploit-using-BrowserExploitServer">Msf::Exploit::Remote::BrowserExploitServer</a></strong> - which includes features from both HttpServer and HttpServer::HTML, but with even more goodies. This writeup covers the <a href="https://rapid7.github.io/metasploit-framework/Msf/Exploit/Remote/BrowserExploitServer.html">BrowserExploitServer</a> mixin.</li>
+</ul>
+
+<h3 id="the-automatic-exploitation-procedure">The Automatic Exploitation Procedure</h3>
+
+<p>The BrowserExploitServer mixin is the only mixin specially designed for browser exploitation. Before you use this mixin, you should understand what it does behind the scenes for you:</p>
+
+<ol>
+  <li>It automatically collects the browser information, including things like: OS name, version, browser name, browser version, whether a proxy is used, Java plugin version, Microsoft Office version, etc, etc. If the browser doesn’t have Javascript enabled, then it knows less about the target. All the info gathered will be stored in a profile managed by the mixin.</li>
+  <li>The mixin will then tag the browser to track the session. It will also use the same tag to retrieve the profile when needed.</li>
+  <li>Before the mixin decides if it should serve the exploit to the browser, it will check with the module for any exploitable requirements. If the requirements aren’t met, it will send a 404 to the browser, and the operation bails.</li>
+  <li>If the requirements are met, the mixin will pass the profile (information about the browser gathered during the detection stage) to the module, and let it take over the rest.</li>
+</ol>
+
+<p>Hint: In the module, you can check the :source key in the profile to determine whether Javascript is enabled or not: If the :source is “script”, it means Javascript is enabled. If it’s “headers” (as in HTTP headers), then the browser has Javascript disabled.</p>
+
+<h3 id="setting-exploitable-requirements">Setting Exploitable Requirements</h3>
+
+<p>Being able to set browser requirements is an important feature of the mixin. It allows your attack to be smarter, more targeted, and prevents accidents. Here’s a scenario: Say you have a vulnerability against Internet Explorer that only affects a specific range of MSHTML builds, you can set the :os_name, :ua_name, :ua_ver, and :mshtml_build to make sure it doesn’t blindly exploit against anything else. The :mshtml_build requirement can be found in “Product version” under MSHTML’s file properties.</p>
+
+<p>Exploitable browser requirements are defined under “BrowserRequirements” in the module’s metadata. Here’s an example of defining a vulnerable target running some ActiveX control:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'BrowserRequirements'</span> <span class="o">=&gt;</span>
+<span class="p">{</span>
+	<span class="ss">source: </span><span class="sr">/script/i</span><span class="p">,</span>
+        <span class="ss">activex: </span><span class="p">[</span>
+          <span class="p">{</span>
+            <span class="ss">clsid: </span><span class="s1">'{D27CDB6E-AE6D-11cf-96B8-444553540000}'</span><span class="p">,</span>
+            <span class="ss">method: </span><span class="s1">'LoadMovie'</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+	<span class="ss">os_name: </span><span class="sr">/win/i</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can also define target-specific requirements. This is also how the mixin is able to automatically select a target, and you can get it with the “get_target” method. Here’s an example of how to define target-specific requirements for IE8 on Win XP and IE 9 on Win 7:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s1">'BrowserRequirements'</span> <span class="o">=&gt;</span>
+  <span class="p">{</span>
+    <span class="ss">:source</span>   <span class="o">=&gt;</span> <span class="sr">/script|headers/i</span><span class="p">,</span>
+    <span class="s1">'ua_name'</span> <span class="o">=&gt;</span> <span class="no">HttpClients</span><span class="o">::</span><span class="no">IE</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="s1">'Targets'</span>             <span class="o">=&gt;</span>
+  <span class="p">[</span>
+    <span class="p">[</span> <span class="s1">'Automatic'</span><span class="p">,</span> <span class="p">{}</span> <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="s1">'Windows XP with IE 8'</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="ss">:os_name</span>    <span class="o">=&gt;</span> <span class="s1">'Windows XP'</span><span class="p">,</span>
+        <span class="s1">'ua_ver'</span>    <span class="o">=&gt;</span> <span class="s1">'8.0'</span><span class="p">,</span>
+        <span class="s1">'Rop'</span>       <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+        <span class="s1">'Offset'</span>    <span class="o">=&gt;</span> <span class="mh">0x100</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="s1">'Windows 7 with IE 9'</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="s1">'os_name'</span>   <span class="o">=&gt;</span> <span class="s1">'Windows 7'</span><span class="p">,</span>
+        <span class="s1">'ua_ver'</span>    <span class="o">=&gt;</span> <span class="s1">'9.0'</span><span class="p">,</span>
+        <span class="s1">'Rop'</span>       <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+        <span class="s1">'Offset'</span>    <span class="o">=&gt;</span> <span class="mh">0x200</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">]</span>
+</code></pre></div></div>
+
+<p>You can use these for <strong>:os_name</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Constant</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS</td>
+      <td>Match all versions of Windows</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_95</td>
+      <td>Match Windows 95</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_98</td>
+      <td>Match Windows 98</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_ME</td>
+      <td>Match Windows ME</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_NT3</td>
+      <td>Match Windows NT 3</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_NT4</td>
+      <td>Match Windows NT 4</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_2000</td>
+      <td>Match Windows 2000</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_XP</td>
+      <td>Match Windows XP</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_2003</td>
+      <td>Match Windows Server 2003</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_VISTA</td>
+      <td>Match Windows Vista</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_2008</td>
+      <td>Match Windows Server 2008</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_7</td>
+      <td>Match Windows 7</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_2012</td>
+      <td>Match Windows 2012</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_8</td>
+      <td>Match Windows 8</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::WINDOWS_81</td>
+      <td>Match Windows 8.1</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::LINUX</td>
+      <td>Match a Linux distro</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::MAC_OSX</td>
+      <td>Match Mac OSX</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::FREEBSD</td>
+      <td>Match FreeBSD</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::NETBSD</td>
+      <td>Match NetBSD</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::OPENBSD</td>
+      <td>Match OpenBSD</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::VMWARE</td>
+      <td>Match VMWare</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::ANDROID</td>
+      <td>Match Android</td>
+    </tr>
+    <tr>
+      <td>OperatingSystems::Match::APPLE_IOS</td>
+      <td>Match Apple IOS</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You can use these for <strong>:ua_name</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Constant</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HttpClients::IE</td>
+      <td>“MSIE”</td>
+    </tr>
+    <tr>
+      <td>HttpClients::FF</td>
+      <td>“Firefox”</td>
+    </tr>
+    <tr>
+      <td>HttpClients::SAFARI</td>
+      <td>“Safari”</td>
+    </tr>
+    <tr>
+      <td>HttpClients::OPERA</td>
+      <td>“Opera”</td>
+    </tr>
+    <tr>
+      <td>HttpClients::CHROME</td>
+      <td>“Chrome”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>More of these constants can be found here:
+https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/constants.rb</p>
+
+<p>All currently supported requirements by the mixin can be found here (see REQUIREMENT_KEY_SET):
+https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/remote/browser_exploit_server.rb#L46</p>
+
+<h3 id="set-up-a-listener">Set up a listener</h3>
+
+<p>After the detection stage and the requirement check, the mixin will trigger the “on_request_exploit” callback method, that’s where you handle the HTTP request, craft the HTML, and send back the exploit response. Here’s an example of how to set up “on_request_exploit”:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#</span>
+<span class="c1"># Listens for the HTTP request</span>
+<span class="c1"># cli is the socket</span>
+<span class="c1"># request is the Rex::Proto::Http::Request object</span>
+<span class="c1"># target_info is a hash that contains all the browser info (aka the profile)</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">on_request_exploit</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_info</span><span class="p">)</span>
+	<span class="n">print_status</span><span class="p">(</span><span class="s2">"Here's what I know about the target: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">.</span><span class="nf">inspect</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="crafting-html-with-browserexploitserver">Crafting HTML with BrowserExploitServer</h3>
+
+<p>There are two coding styles the BrowserExploitServer mixin supports: The good old HTML, or <a href="http://ruby-doc.org/stdlib-2.1.3/libdoc/erb/rdoc/ERB.html">ERB</a> template. The first is pretty self-explanatory:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">on_request_exploit</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_info</span><span class="p">)</span>
+	<span class="n">html</span> <span class="o">=</span> <span class="sx">%Q|
+	&lt;html&gt;
+	Hello, world!
+	&lt;/html&gt;
+	|</span>
+	<span class="n">send_exploit_html</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+<span class="k">end</span> 
+</code></pre></div></div>
+
+<p><a href="http://ruby-doc.org/stdlib-2.1.3/libdoc/erb/rdoc/ERB.html">ERB</a> is a new way to write Metasploit browser exploits. If you’ve written one or two web applications, this is no stranger to you. When you’re using the BrowserExploitServer mixin to write an exploit, what really happens is you’re writing a rails template. Here’s an example of using of this feature:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">on_request_exploit</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_info</span><span class="p">)</span>
+	<span class="n">html</span> <span class="o">=</span> <span class="sx">%Q|
+	&lt;html&gt;
+	Do you feel lucky, punk?&lt;br&gt;
+	&lt;% if [true, false].sample %&gt;
+	Lucky!&lt;br&gt;
+	&lt;% else %&gt;
+	Bad luck, bro!&lt;Br&gt;
+	&lt;% end %&gt;
+	&lt;/html&gt;
+	|</span>
+	<span class="n">send_exploit_html</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>If you want to access local variables or arguments, make sure to pass the binding object to send_exploit_html:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">exploit_template1</span><span class="p">(</span><span class="n">target_info</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+	<span class="n">txt2</span> <span class="o">=</span> <span class="s2">"I can use local vars!"</span>
+
+	<span class="n">template</span> <span class="o">=</span> <span class="sx">%Q|
+	&lt;% msg = "This page is generated by an exploit" %&gt;
+	&lt;%=msg%&gt;&lt;br&gt;
+	&lt;%=txt%&gt;&lt;br&gt;
+	&lt;%=txt2%&gt;&lt;br&gt;
+	&lt;p&gt;&lt;/p&gt;
+	Data gathered from source: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:source</span><span class="p">]</span><span class="si">}</span><span class="sx">&lt;br&gt;
+	OS name: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:os_name</span><span class="p">]</span><span class="si">}</span><span class="sx">&lt;br&gt;
+	UA name: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:ua_name</span><span class="p">]</span><span class="si">}</span><span class="sx">&lt;br&gt;
+	UA version: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:ua_ver</span><span class="p">]</span><span class="si">}</span><span class="sx">&lt;br&gt;
+	Java version: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:java</span><span class="p">]</span><span class="si">}</span><span class="sx">&lt;br&gt;
+	Office version: </span><span class="si">#{</span><span class="n">target_info</span><span class="p">[</span><span class="ss">:office</span><span class="p">]</span><span class="si">}</span><span class="sx">
+	|</span>
+
+	<span class="k">return</span> <span class="n">template</span><span class="p">,</span> <span class="nb">binding</span><span class="p">()</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">on_request_exploit</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_info</span><span class="p">)</span>
+	<span class="n">send_exploit_html</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">exploit_template</span><span class="p">(</span><span class="n">target_info</span><span class="p">,</span> <span class="n">txt</span><span class="p">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The BrowserExploitServer mixin also offers plenty of other things useful while crafting the exploit. For example: it can generate a target-specific payload when you call the “get_payload” method. It also gives you access to the RopDb mixin, which contains a collection of ROPs to bypass DEP (Data Execution Prevention). Make sure to check out the API documentation for more information.</p>
+
+<p>To get thing started, here’s a code example you can use start developing your browser exploit:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">##</span>
+<span class="c1"># This module requires Metasploit: http://metasploit.com/download</span>
+<span class="c1"># Current source: https://github.com/rapid7/metasploit-framework</span>
+<span class="c1">##</span>
+
+<span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span>
+  <span class="no">Rank</span> <span class="o">=</span> <span class="no">NormalRanking</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span><span class="o">::</span><span class="no">BrowserExploitServer</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s2">"BrowserExploitServer Example"</span><span class="p">,</span>
+      <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+        This is an example of building a browser exploit using the BrowserExploitServer mixin
+      }</span><span class="p">,</span>
+      <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+      <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'sinn3r'</span> <span class="p">],</span>
+      <span class="s1">'References'</span>     <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'URL'</span><span class="p">,</span> <span class="s1">'http://metasploit.com'</span> <span class="p">]</span>
+        <span class="p">],</span>
+      <span class="s1">'Platform'</span>       <span class="o">=&gt;</span> <span class="s1">'win'</span><span class="p">,</span>
+      <span class="s1">'BrowserRequirements'</span> <span class="o">=&gt;</span>
+        <span class="p">{</span>
+          <span class="ss">:source</span> <span class="o">=&gt;</span> <span class="sr">/script|headers/i</span><span class="p">,</span>
+        <span class="p">},</span>
+      <span class="s1">'Targets'</span>        <span class="o">=&gt;</span>
+        <span class="p">[</span>
+          <span class="p">[</span> <span class="s1">'Automatic'</span><span class="p">,</span> <span class="p">{}</span> <span class="p">],</span>
+          <span class="p">[</span>
+            <span class="s1">'Windows XP with IE 8'</span><span class="p">,</span>
+            <span class="p">{</span>
+              <span class="s1">'os_name'</span>   <span class="o">=&gt;</span> <span class="s1">'Windows XP'</span><span class="p">,</span>
+              <span class="s1">'ua_name'</span>   <span class="o">=&gt;</span> <span class="s1">'MSIE'</span><span class="p">,</span>
+              <span class="s1">'ua_ver'</span>    <span class="o">=&gt;</span> <span class="s1">'8.0'</span>
+            <span class="p">}</span>
+          <span class="p">],</span>
+          <span class="p">[</span>
+            <span class="s1">'Windows 7 with IE 9'</span><span class="p">,</span>
+            <span class="p">{</span>
+              <span class="s1">'os_name'</span>   <span class="o">=&gt;</span> <span class="s1">'Windows 7'</span><span class="p">,</span>
+              <span class="s1">'ua_name'</span>   <span class="o">=&gt;</span> <span class="s1">'MSIE'</span><span class="p">,</span>
+              <span class="s1">'ua_ver'</span>    <span class="o">=&gt;</span> <span class="s1">'9.0'</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+        <span class="p">],</span>
+      <span class="s1">'Payload'</span>        <span class="o">=&gt;</span> <span class="p">{</span> <span class="s1">'BadChars'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span> <span class="p">},</span>
+      <span class="s1">'DisclosureDate'</span> <span class="o">=&gt;</span> <span class="s2">"Apr 1 2013"</span><span class="p">,</span>
+      <span class="s1">'DefaultTarget'</span>  <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exploit_template</span><span class="p">(</span><span class="n">target_info</span><span class="p">)</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="sx">%Q|
+    Data source: &lt;%=target_info[:source]%&gt;&lt;br&gt;
+    OS name: &lt;%=target_info[:os_name]%&gt;&lt;br&gt;
+    UA name: &lt;%=target_info[:ua_name]%&gt;&lt;br&gt;
+    UA version: &lt;%=target_info[:ua_ver]%&gt;&lt;br&gt;
+    Java version: &lt;%=target_info[:java]%&gt;&lt;br&gt;
+    Office version: &lt;%=target_info[:office]%&gt;
+    |</span>
+
+    <span class="k">return</span> <span class="n">template</span><span class="p">,</span> <span class="nb">binding</span><span class="p">()</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">on_request_exploit</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">target_info</span><span class="p">)</span>
+    <span class="n">send_exploit_html</span><span class="p">(</span><span class="n">cli</span><span class="p">,</span> <span class="n">exploit_template</span><span class="p">(</span><span class="n">target_info</span><span class="p">))</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="javascript-obfuscation">JavaScript Obfuscation</h3>
+
+<p>BrowserExploitServer relies on the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/jsobfu.rb">JSObfu mixin</a> to support JavaScript obfuscation. When you’re writing JavaScript, you should always write it like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span> <span class="o">=</span> <span class="n">js_obfuscate</span><span class="p">(</span><span class="n">your_code</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">#js_obfuscate</code> will return a <code class="highlighter-rouge">Rex::Exploitation::JSObfu</code> object. To get the obfuscated JavaScript, call the <code class="highlighter-rouge">#to_s</code> method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">js</span><span class="p">.</span><span class="nf">to_s</span>
+</code></pre></div></div>
+
+<p>If you need to access an obfuscated symbol name, you can use then <code class="highlighter-rouge">#sym</code> method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Get the obfuscated version of function name test()</span>
+<span class="n">var_name</span> <span class="o">=</span> <span class="n">js</span><span class="p">.</span><span class="nf">sym</span><span class="p">(</span><span class="s1">'test'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Note that by default, even though your module is calling the <code class="highlighter-rouge">#js_obfuscate</code> method, obfuscation will not kick in unless the user sets the JsObfuscate datastore option. This option is an OptInt, which allows you to set the number of times to obfuscate (default is 0).</p>
+
+<p>If your BES-based exploit does not want obfuscation at all, always make sure you call the <code class="highlighter-rouge">#deregister_options</code> and remove the JsObfuscate option. Like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">deregister_options</span><span class="p">(</span><span class="s1">'JsObfuscate'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>To learn more about Metasploit’s JavaScript obfuscation capabilities, please read <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-obfuscate-JavaScript-in-Metasploit">How to obfuscate JavaScript in Metasploit</a>.</p>
+
+<h3 id="related-articles">Related Articles:</h3>
+<ul>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-browser-exploit-using-HttpServer</li>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/Information-About-Unmet-Browser-Exploit-Requirements</li>
+</ul>
+:ET

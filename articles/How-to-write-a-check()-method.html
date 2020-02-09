@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to write a check() method</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2015-09-02T05:36:51+01:00" itemprop="datePublished">Sep 2, 2015
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In Metasploit, exploits and auxiliary modules support the check command that allows the user to be able to determine the vulnerable state before using the module. This feature is handy for those who need to verify the vulnerability without actually popping a shell, and used to quickly identify all vulnerable, or possibly exploitable machines on the network.</p>
+
+<p>Although vulnerability checks aren’t the focus of Metasploit, because it isn’t a vulnerability scanner like Nexpose, we do actually encourage people to implement the check() method anyway to add more value to the module. If you do write one, make sure to keep these guidelines in mind:</p>
+
+<h2 id="check-method-output">Check Method Output</h2>
+
+<p>Modules messages are important to the user, because they keep him/her informed about what the module is doing, and usually make the module more debuggable. However, you do also want to keep your messages in verbose mode because it becomes really noisy if the check is used against multiple targets. Ideally, you only should be using these print methods:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>vprint_line()</strong></td>
+      <td>verbose version of print_line</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_status()</strong></td>
+      <td>verbose version of print_status that begins with “[*]”</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_error()</strong></td>
+      <td>verbose version of print_error that begins with “[x]”</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_warning()</strong></td>
+      <td>verbose version of print_warning that begins with “[!]”, in yellow</td>
+    </tr>
+    <tr>
+      <td><strong>vprint_debug()</strong></td>
+      <td>verbose versino of print_debug that begins with “[!]”, in blue</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note: You shouldn’t be printing if a target is vulnerable or not, as this is automatically handled by the framework when your method returns a check code.</p>
+
+<h2 id="check-codes">Check Codes</h2>
+
+<p>Once you have determined the vulnerable state, you should return a check code. Check codes are constants defined in Msf::Exploit::CheckCode, and these are the ones you can use:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Checkcode</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Exploit::CheckCode::Unknown</strong></td>
+      <td>Used if the module fails to retrieve enough information from the target machine, such as due to a timeout.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Safe</strong></td>
+      <td>Used if the check fails to trigger the vulnerability, or even detect the service.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Detected</strong></td>
+      <td>The target is running the service in question, but the check fails to determine whether the target is vulnerable or not.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Appears</strong></td>
+      <td>This is used if the vulnerability is determined based on passive reconnaissance. For example: version, banner grabbing, or simply having the resource that’s known to be vulnearble.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Vulnerable</strong></td>
+      <td>Only used if the check is able to actually take advantage of the bug, and obtain some sort of hard evidence. For example: for a command execution type bug, get a command output from the target system. For a directory traversal, read a file from the target, etc. Since this level of check is pretty aggressive in nature, you should not try to DoS the host as a way to prove the vulnerability.</td>
+    </tr>
+    <tr>
+      <td><strong>Exploit::CheckCode::Unsupported</strong></td>
+      <td>The exploit does not support the check method. If this is the case, then you don’t really have to add the check method.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="remote-check-example">Remote Check Example</h2>
+
+<p>Here’s an abstract example of how a Metasploit check might be written:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#</span>
+<span class="c1"># Returns a check code that indicates the vulnerable state on an app running on OS X</span>
+<span class="c1">#</span>
+<span class="k">def</span> <span class="nf">check</span>
+  <span class="k">if</span> <span class="n">exec_cmd_via_http</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span> <span class="o">=~</span> <span class="sr">/uid=\d+\(.+\)/</span>
+    <span class="c1"># Found the correct ID output, good indicating our command executed</span>
+    <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">end</span>
+
+  <span class="n">http_body</span> <span class="o">=</span> <span class="n">get_http_body</span>
+  <span class="k">if</span> <span class="n">http_body</span>
+    <span class="k">if</span> <span class="n">http_body</span> <span class="o">=~</span> <span class="sr">/Something CMS v1\.0/</span>
+      <span class="c1"># We are able to find the version thefore more precise about the vuln state</span>
+      <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Appears</span>
+    <span class="k">elsif</span> <span class="n">http_body</span> <span class="o">=~</span> <span class="sr">/Something CMS/</span>
+      <span class="c1"># All we can tell the vulnerable app is running, but no more info to</span>
+      <span class="c1"># determine the vuln</span>
+      <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Detected</span>
+    <span class="k">end</span>
+  <span class="k">else</span>
+    <span class="n">vprint_error</span><span class="p">(</span><span class="s2">"Unable to determine due to a HTTP connection timeout"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Unknown</span>
+  <span class="k">end</span>
+
+  <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Safe</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Note: If you are writing an auxiliary module with the <code class="highlighter-rouge">Msf::Auxiliary::Scanner</code> mixin, you should declare your check method like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check_host</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+  <span class="c1"># Do your thing</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="local-exploit-check-example">Local Exploit Check Example</h3>
+
+<p>Most local exploit checks are done by checking the version of the vulnerable file, which is considered passive, therefore they should be flagging Exploit::CheckCode::Appears. Passive local exploit checks don’t necessarily mean they are less reliable, in fact, they are not bad. But to qualify for Exploit::CheckCode::Vulnerable, your check should do the extra mile, which means either you somehow make the program return a vulnerable response, or you inspect the vulnerable code.</p>
+
+<p>An example of making the program return a vulnerable response is ShellShock (the following is specific for VMWare):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check</span>
+  <span class="n">check_str</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Text</span><span class="p">.</span><span class="nf">rand_text_alphanumeric</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="c1"># ensure they are vulnerable to bash env variable bug</span>
+  <span class="k">if</span> <span class="n">cmd_exec</span><span class="p">(</span><span class="s2">"env x='() { :;}; echo </span><span class="si">#{</span><span class="n">check_str</span><span class="si">}</span><span class="s2">' bash -c echo"</span><span class="p">).</span><span class="nf">include?</span><span class="p">(</span><span class="n">check_str</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+     <span class="n">cmd_exec</span><span class="p">(</span><span class="s2">"file '</span><span class="si">#{</span><span class="n">datastore</span><span class="p">[</span><span class="s1">'VMWARE_PATH'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span> <span class="o">!~</span> <span class="sr">/cannot open/</span>
+
+     <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">else</span>
+    <span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Safe</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>One way to inspect the vulnerable code is to come up with a signature, and see if it exists in the vulnerable process. Here’s an example with adobe_sandbox_adobecollabsync.rb:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 'AdobeCollabSyncTriggerSignature' =&gt; "\x56\x68\xBC\x00\x00\x00\xE8\xF5\xFD\xFF\xFF"</span>
+<span class="c1"># 'AdobeCollabSyncTrigger' =&gt; 0x18fa0</span>
+
+<span class="k">def</span> <span class="nf">check_trigger</span>
+  <span class="n">signature</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">railgun</span><span class="p">.</span><span class="nf">memread</span><span class="p">(</span><span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">+</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTrigger'</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTriggerSignature'</span><span class="p">].</span><span class="nf">length</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">signature</span> <span class="o">==</span> <span class="n">target</span><span class="p">[</span><span class="s1">'AdobeCollabSyncTriggerSignature'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="k">return</span> <span class="kp">false</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">check</span>
+  <span class="vi">@addresses</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">acrord32</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">railgun</span><span class="p">.</span><span class="nf">kernel32</span><span class="o">.</span><span class="no">GetModuleHandleA</span><span class="p">(</span><span class="s2">"AcroRd32.exe"</span><span class="p">)</span>
+  <span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">=</span> <span class="n">acrord32</span><span class="p">[</span><span class="s2">"return"</span><span class="p">]</span>
+  <span class="k">if</span> <span class="vi">@addresses</span><span class="p">[</span><span class="s1">'AcroRd32.exe'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Unknown</span>
+  <span class="k">elsif</span> <span class="n">check_trigger</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Vulnerable</span>
+  <span class="k">else</span>
+    <span class="k">return</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">CheckCode</span><span class="o">::</span><span class="no">Detected</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Another possible way to inspect is grab the vulnerable file, and use Metasm. But of course, this is a lot slower and generates more network traffic.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-write-a-check()-method.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

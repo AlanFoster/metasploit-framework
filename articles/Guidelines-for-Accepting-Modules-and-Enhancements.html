@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Guidelines for Accepting Modules and Enhancements</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-08T19:47:05+00:00" itemprop="datePublished">Jan 8, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="acceptance-guidelines">Acceptance Guidelines</h1>
+
+<p>Contributions from the open source community are the soul of Metasploit, and we love evaluating and landing pull requests that add new Framework features and content. Metasploit Framework has many tens of thousands of users who rely on daily, consistent, and error-free updates. Because of this, Metasploit’s core developers have adopted a fairly high standard for pull requests that add new Framework functionality and Metasploit modules. In order to encourage open and transparent development, this document outlines some general guidelines for Metasploit contributors and developers. Adhering to these guidelines maximizes the chances that your work will be merged into the official Metasploit distribution packages.</p>
+
+<h2 id="module-additions">Module Additions</h2>
+
+<p>Most open source community support for Metasploit comes in the form of Metasploit modules. The following should be considered for acceptance; note that these are guidelines and not categorical imperatives (“should”s, not “must”s), since there are always exceptions to the norm—especially when it comes to novel new attacks and techniques.</p>
+
+<p>Modules should pass <a href="https://github.com/rapid7/metasploit-framework/blob/master/tools/dev/msftidy.rb">msftidy.rb</a> and adhere to the <a href="https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> guidelines. Both are distributed with Metasploit. See [[Style Tips]] for some information on how to take some of the headache out of whitespace issues.</p>
+
+<p>Modules should have a clear and obvious goal: Exploits should result in a shell. Post modules should result in privilege escalation or loot. Auxiliary modules are an “Everything else” category, but even they should be limited to a well-defined task—(e.g., information gathering to enable an exploit or a post module).</p>
+
+<p>Modules should not launch other modules, given the complexity of setting multiple payloads. Such actions are usually automation tasks for an external UI.</p>
+
+<p>Denial of Service modules should be asymmetric and at least have some interesting feature. If it’s comparable to a synflood, it shouldn’t be included. If it’s comparable to Baliwicked, it should be included. Modules that hover the line, such as slowloris, may be included with some justification.</p>
+
+<p>Modules should be able to function as expected with minimal configuration. Defaults should be sensible and usually correct. Modules should not depend on exact timing, uncontrollable heap states, system DLLs, etc. All memory addresses (ie. a JMP ESP, or a ROP gadget) should be part of the metadata under ‘Targets’, and documented (what instructions it points to, and what DLL). If the exploit is against a specific hardware (e.g., routers, PLCs, etc), or against a software that’s not free (and no trial/demo available), please remember to submit a binary packet capture (pcap-formatted) along with the module that demonstrates the exploit actually works.</p>
+
+<p>Please don’t use the alphanum encoder as a way to avoid BadChar analysis. Modules which set the <code class="highlighter-rouge">EncoderType</code> field in the payload as a way to avoid doing real BadChar analysis will be rejected. These modules are nearly always unreliable in the real world.</p>
+
+<p>Exploit ranking definitions can be found on the [[Exploit Ranking]] page.</p>
+
+<p>Exploit modules should implement a <code class="highlighter-rouge">check()</code> function when this is trivial to do so. Versions exposed through banners or network protocols should always result in a <code class="highlighter-rouge">check()</code> routine when a patch is available that changes this version.</p>
+
+<p>If a module (auxiliary or post) obtains some sort of information from the victim machine, it should store that data using one (or more) of the following methods:</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">store_loot()</code>: Used to store both stolen files (both text and binary) and “screencaps” of commands such as a <code class="highlighter-rouge">ps -ef</code> and <code class="highlighter-rouge">ifconfig</code>. The file itself need not be of forensic-level integrity – they may be parsed by a post module to extract only the relevant information for a penetration tester.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">report_auth_info()</code>: Used to store working credentials that are immediately reusable by another module. For example, a module dumping the local SMB hashes would use this, as would a module which reads username:password combinations for a specific host and service. Specifically, merely “likely” usernames and passwords should use <code class="highlighter-rouge">store_loot()</code> instead.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">report_vuln()</code>: Auxiliary and post modules that exercise a particular vulnerability should <code class="highlighter-rouge">report_vuln()</code> upon success. Note that exploit modules automatically <code class="highlighter-rouge">report_vuln()</code> as part of opening a session (there is no need to call it especially).</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">report_note()</code>: Modules should make an effort to avoid <code class="highlighter-rouge">report_note()</code> when one of the above methods would be a better fit, but there are often cases where “loot” or “cred” or “vuln” classifications are not immediately appropriate. <code class="highlighter-rouge">report_note()</code> calls should always set a OID-style dotted <code class="highlighter-rouge">:type</code>, such as <code class="highlighter-rouge">domain.hosts</code>, so other modules may easily find them in the database.</p>
+  </li>
+</ul>
+
+<p>Modules should take advantage of the normal Metasploit APIs. For example, they should not attempt to create their own TCP sockets or application protocols with native Ruby; they should mediate sockets through <code class="highlighter-rouge">Rex</code> and <code class="highlighter-rouge">Rex::Proto</code> methods instead. This ensures compatibility with the full set of Framework features, such as pivoting and proxy chaining.</p>
+
+<p>Web application attacks are generally uninteresting (SQLi, XSS, CSRF), unless the module can reliably result in a shell or exercise some kind of useful information leak. Even in that case, the module should “just work,” as above.</p>
+
+<p>Web application attacks should be limited only to popular, widely deployed applications. For example, a SQLi module against a popular CMS that results in a shell on the CMS machine would be welcome. A module that causes a private Facebook profile to become public would not (Facebook has exactly one deployed instance).</p>
+
+<p>Web application attacks should implement an HttpFingerprint constant.</p>
+
+<p>Modules should only list targets that <strong>you</strong> actually tested the exploit on. Avoid assuming it works on a specific system if it has never been tested on it. Comments above the target entry indicating additional information about a given target (language pack, patch level, etc) greatly assist other developers in creating additional targets and improving your module.</p>
+
+<p>Modules can exercise unpatched and undisclosed vulnerabilities. However, Rapid7 is happy to assist with the disclosure process by following the Rapid7 policy. This policy provides a fixed 90-day window from when the vendor is contacted until the exploit is released. All vulnerabilities found by Rapid7 staff follow this process. The submitter will receive full credit for the vulnerability and the resulting exploit module regardless of how disclosure is handled.</p>
+
+<h2 id="framework-enhancements">Framework Enhancements</h2>
+
+<p>Generally, new functionality to the Metasploit Framework should start life as a plugin. If the functionality becomes useful and popular, we can integrate it more closely, add RPC API exposure, and so on, but it should be well-tested by the community before then.</p>
+
+<p>Automating a series of discrete functions is generally /not/ the responsibility of the Framework. Automation should be accomplished through the API (see Metasploit Community/Pro, MSFGUI, etc). Past efforts with in-Framework automation prove this out. Components such as <code class="highlighter-rouge">db_autopwn</code> and <code class="highlighter-rouge">browser_autopwn</code> rarely did what users expected, and configuring these tools became a nightmare through increasingly complex sets of options and arguments. Automating the Framework is easy and should stay easy, but the automation itself should live in resource scripts and other external front-ends to the Framework itself.</p>
+
+<p>Console functionality should have a focus on exploit and security tool development, with the exploit developer as the typical user. End users should be pointed to an interface such as the Community Edition or MSFGUI and should not expect much in terms of user-friendliness from the console. The console should be considered a debug mode for Metasploit and as close to bare-metal functionality as possible.</p>
+
+<p>External tools, such <code class="highlighter-rouge">msfpayload</code> and <code class="highlighter-rouge">msfvenom</code>, are designed to make exploit development easier and exercise specific techniques. We are happy to continue evaluating tools of this nature for inclusion in the Framework; these should be accompanied by documentation (!), how-to tutorials for quick start, and other helpful text.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Guidelines-for-Accepting-Modules-and-Enhancements.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

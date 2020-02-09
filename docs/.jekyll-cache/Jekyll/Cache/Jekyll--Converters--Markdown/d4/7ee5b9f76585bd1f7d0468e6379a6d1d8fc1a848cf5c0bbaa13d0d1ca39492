@@ -1,0 +1,68 @@
+I"<h1 id="install-oracle-instantclient">Install oracle InstantClient</h1>
+
+<p>InstantClient 10 is recommneded to allow you to talk with 8,9,10,&amp;11 server versions.</p>
+
+<p>Go to http://www.oracle.com/technology/software/tech/oci/instantclient/index.html</p>
+
+<p>Grab these:</p>
+<ul>
+  <li>Instant Client Package - Basic</li>
+  <li>Instant Client Package - SDK (devel)</li>
+  <li>Instant Client Package - SQL*Plus (not needed for Metasploit but useful to have)</li>
+</ul>
+
+<p>unzip into /opt/oracle</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /opt/oracle
+unzip /opt/oracle/oracle-instantclient-basic-10.2.0.4-1.i386.zip
+unzip /opt/oracle/oracle-instantclient-sqlplus-10.2.0.4-1.i386.zip
+unzip /opt/oracle/oracle-instantclient-devel-10.2.0.4-1.i386.zip
+</code></pre></div></div>
+
+<p>Now set up a symlink so the gem installation can find the right lib:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ln</span> <span class="nt">-s</span> libclntsh.so.10.1 libclntsh.so
+</code></pre></div></div>
+<h1 id="set-up-your-environment">Set up your environment</h1>
+
+<p>You can either create .sh file to make the appropriate changes when you need it or just add it to your .bashrc</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/opt/oracle/instantclient_10_2
+<span class="nb">export </span><span class="nv">SQLPATH</span><span class="o">=</span>/opt/oracle/instantclient_10_2
+<span class="nb">export </span><span class="nv">TNS_ADMIN</span><span class="o">=</span>/opt/oracle/instantclient_10_2
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/opt/oracle/instantclient_10_2
+<span class="nb">export </span><span class="nv">ORACLE_HOME</span><span class="o">=</span>/opt/oracle/instantclient_10_2
+</code></pre></div></div>
+
+<h1 id="additional-steps-for-kali-linux">Additional steps for Kali Linux</h1>
+
+<p>If you are using Kali Linux, you need to perform a couple of additional steps before the Oracle client gem will build properly. First, set your path to prefer the correct version of ruby so that Metasploit can use it:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@kali:~/ruby-oci8-ruby-oci8-2.1.8# export PATH=/opt/metasploit/ruby/bin:$PATH
+</code></pre></div></div>
+
+<p>Next, install libgmp (needed to build the gem):</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@kali:~/ruby-oci8-ruby-oci8-2.1.8# apt-get install libgmp-dev
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+Suggested packages:
+  libgmp10-doc libmpfr-dev
+The following NEW packages will be installed:
+  libgmp-dev
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 0 B/610 kB of archives.
+After this operation, 1,740 kB of additional disk space will be used.
+Selecting previously unselected package libgmp-dev:amd64.
+(Reading database ... 322643 files and directories currently installed.)
+Unpacking libgmp-dev:amd64 (from .../libgmp-dev_2%3a5.0.5+dfsg-2_amd64.deb) ...
+Setting up libgmp-dev:amd64 (2:5.0.5+dfsg-2) ...
+</code></pre></div></div>
+
+<h1 id="install-the-gem">Install the gem</h1>
+
+<p>Back in your Metasploit directory, copy <code class="highlighter-rouge">Gemfile.local.example</code> to <code class="highlighter-rouge">Gemfile.local</code>, then add the following line to the <code class="highlighter-rouge">:local</code> group</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">gem</span> <span class="s1">'ruby-oci8'</span>
+</code></pre></div></div>
+
+<p>Update gems:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nt">--gemfile</span> Gemfile.local
+</code></pre></div></div>
+:ET

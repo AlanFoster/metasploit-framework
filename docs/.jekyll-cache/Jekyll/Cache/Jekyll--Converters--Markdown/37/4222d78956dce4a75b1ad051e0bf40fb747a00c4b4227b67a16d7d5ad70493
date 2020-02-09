@@ -1,0 +1,56 @@
+I"ë<h1 id="current-design">Current Design</h1>
+
+<p>Metasploit payload modules are Ruby <code class="highlighter-rouge">Modules</code> and come in three types:</p>
+<ul>
+  <li><code class="highlighter-rouge">Payload::Type::Single</code></li>
+  <li><code class="highlighter-rouge">Payload::Type::Stage</code></li>
+  <li><code class="highlighter-rouge">Payload::Type::Stager</code></li>
+</ul>
+
+<p>Payloads are created by creating an anonymous <code class="highlighter-rouge">Class</code> and including
+mixins for a <code class="highlighter-rouge">Handler</code> and either a single-stage payload or both a stage
+and stager, like so:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">build_payload</span><span class="p">(</span><span class="o">*</span><span class="n">modules</span><span class="p">)</span>
+  <span class="n">klass</span> <span class="o">=</span> <span class="no">Class</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="no">Payload</span><span class="p">)</span>
+
+  <span class="c1"># Remove nil modules</span>
+  <span class="n">modules</span><span class="p">.</span><span class="nf">compact!</span>
+
+  <span class="c1"># Include the modules supplied to us with the mad skillz</span>
+  <span class="c1"># spoonfu style</span>
+  <span class="n">klass</span><span class="p">.</span><span class="nf">include</span><span class="p">(</span><span class="o">*</span><span class="n">modules</span><span class="p">.</span><span class="nf">reverse</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">klass</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The result is a <code class="highlighter-rouge">Class</code> for each combination of stage + stager +
+handler.  E.g., <code class="highlighter-rouge">windows/meterpreter/reverse_tcp</code> includes
+<code class="highlighter-rouge">Msf::Handler::ReverseTcp</code> and the <code class="highlighter-rouge">Module</code>s defined in
+<code class="highlighter-rouge">modules/payloads/stagers/windows/reverse_tcp</code> and
+<code class="highlighter-rouge">modules/payloads/stages/windows/meterpreter</code>. As a corollary, this
+means that stages and stagers are intricately linked with each other and
+their handlers.</p>
+
+<h1 id="what-we-need">What we need</h1>
+
+<p>For the Uberhandler to function, it needs to:</p>
+<ul>
+  <li>Track how many exploits currently need its services</li>
+  <li>Be independent of the payload modules that use it</li>
+</ul>
+
+<p>The stagers need to:</p>
+<ul>
+  <li>Communicate to the handler what kind of stage to send</li>
+</ul>
+
+<p>From a userâ€™s perspective, we need some way to indicate a generic
+payload type along with the handler.  The generic handlers were an
+early attempt at providing this same concept.  Perhaps something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set PAYLOAD uber/meterpreter/reverse_tcp
+</code></pre></div></div>
+
+:ET

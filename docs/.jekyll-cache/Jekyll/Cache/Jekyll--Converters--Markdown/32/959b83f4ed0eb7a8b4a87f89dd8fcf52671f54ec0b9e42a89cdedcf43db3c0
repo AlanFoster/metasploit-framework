@@ -1,0 +1,24 @@
+I"î<h1 id="how-to-zip-files-with-msfutilexeto_zip">How to zip files with Msf::Util::EXE.to_zip</h1>
+<p>Compressing files into zip format is very easy with Metasploit. For most purposes, you can use <code class="highlighter-rouge">Msf::Util::EXE.to_zip()</code> to compress data into a zip file.</p>
+
+<p>Note that the former <code class="highlighter-rouge">Rex::Zip::Archive()</code> should no longer be used.</p>
+
+<h2 id="usage">Usage:</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">files</span> <span class="o">=</span>
+  <span class="p">[</span>
+    <span class="p">{</span><span class="ss">data: </span><span class="s1">'AAAA'</span><span class="p">,</span> <span class="ss">fname: </span><span class="s1">'test1.txt'</span><span class="p">,</span> <span class="ss">comment: </span><span class="s1">'my comment'</span><span class="p">},</span>
+    <span class="p">{</span><span class="ss">data: </span><span class="s1">'BBBB'</span><span class="p">,</span> <span class="ss">fname: </span><span class="s1">'test2.txt'</span><span class="p">}</span>
+  <span class="p">]</span>
+
+<span class="n">zip</span> <span class="o">=</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Util</span><span class="o">::</span><span class="no">EXE</span><span class="p">.</span><span class="nf">to_zip</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>If saved as a file, the above example will extract to the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ unzip test.zip 
+Archive:  test.zip
+ extracting: test1.txt               
+ extracting: test2.txt
+</code></pre></div></div>
+:ET

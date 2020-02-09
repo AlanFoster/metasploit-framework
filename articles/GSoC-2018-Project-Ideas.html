@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">GSoC 2018 Project Ideas</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-03-15T19:50:50+00:00" itemprop="datePublished">Mar 15, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>GSoC Project Ideas in no particular order. When you’ve picked one, take a look at [[GSoC-2018-Student-Proposal]] for how to make a proposal.</p>
+
+<p>Mentors: <a href="@busterb">@busterb</a>, <a href="@zerosteiner">@zerosteiner</a>, <a href="@timwr">@timwr</a>, <a href="@asoto-r7">@asoto-r7</a>, <a href="@jmartin-r7">@jmartin-r7</a>, <a href="@pbarry-r7">@pbarry-r7</a>, <a href="@mkienow-r7">@mkienow-r7</a>, <a href="@jbarnett-r7">@jbarnett-r7</a></p>
+
+<h2 id="enhance-metasploit-framework">Enhance Metasploit Framework</h2>
+
+<h3 id="improving-the-post-exploit--meterpreter-functionality">Improving the Post-exploit / Meterpreter functionality</h3>
+
+<p>Examples could include:</p>
+<ul>
+  <li>Sending keystrokes and mouse movement to a Meterpreter session</li>
+  <li>HTML based VNC style session control
+  e.g https://github.com/rapid7/metasploit-framework/pull/9196 but accepting user input from the browser</li>
+  <li>Playing (streaming?) sounds to a Meterpreter session</li>
+  <li>Implementing the streaming record mechanism from more Meterpreter sessions</li>
+  <li>Text-to-speech and volume control</li>
+  <li>Fun behaviors
+    <ul>
+      <li>Ejecting the CD-ROM drive</li>
+      <li>Flipping the screen upside down</li>
+      <li>Changing screen colors</li>
+      <li>Turning the monitor on/off</li>
+      <li>Ordering donuts</li>
+    </ul>
+  </li>
+  <li>MessageBox or live chat functionality
+ (e.g “This machine is vulnerable to MS17-010, you must run Windows Update!”)</li>
+  <li>Overlaying an image or even HTML on the user interface</li>
+</ul>
+
+<p>Difficulty: Varies</p>
+
+<h3 id="improving-post-exploit-api-to-be-more-consistent-work-smoothly-across-session-types">Improving post-exploit API to be more consistent, work smoothly across session types</h3>
+
+<p>The Metasploit post-exploitation API is intended to provide a unified interface between different Meterpreter, shell, powershell, mainframe, and other session types. However, there are areas where the implementation is not consistent, and could use improvements:</p>
+
+<ul>
+  <li>Shell sessions do not implement the filesystem API that Meterpreter sessions have</li>
+  <li>When a shell session is in a different language, e.g. Windows in French, the post API does not find the expected output. Add localization support for these.</li>
+  <li>Simple commands like ‘cmd_exec’ are fast in Shell sessions but are relatively slow in Meterpreter sessions. Add an API to make Meterpreter run simple commands more easily.</li>
+</ul>
+
+<p>Difficulty: Varies</p>
+
+<h2 id="add-meta-shell-commands">Add meta-shell commands</h2>
+
+<p>Shell sessions typically expose a direct connection to a remote shell, but are lacking a number of nice features such as the ability to stop a remote command, background a command (this could be advanced or depend on the underlying session), or to even lock the session. This project would implement some pre-processing hooks to shell sessions so that job control could be added by default (allowing backgrounding of commands), meta-commands like ‘background’ and ‘sessions’ could be added as well.</p>
+
+<p>Difficulty: 3/5</p>
+
+<h3 id="improve-the-web-vulnerability-api">Improve the web vulnerability API</h3>
+
+<p>This would follow up on the Arachni plugin PR https://github.com/rapid7/metasploit-framework/pull/8618 and improve the Metasploit data model to better represent  modern web vulnerabilities. This project would require knowledge of data models, types of modern web vulnerabilities, and experience with web app security scanners.</p>
+
+<p>Difficulty: 4/5</p>
+
+<h3 id="session-style-module-interaction">Session-style module interaction</h3>
+
+<p>Metasploit has the concept of ‘sessions’ where a connection context can define its own set of console operations. E.g. if you interact with a session, Metasploit switches to a specific subconsole for interaction. It would be nice as an alternative to ‘action’ for auxiliary modules, or as a way to merge related modules, to simply interact with the module.</p>
+
+<p>Difficulty: 3/5</p>
+
+<h3 id="integration-plugin-with-a-3rd-party-post-exploit-framework">Integration plugin with a 3rd-party post-exploit framework</h3>
+
+<p>Connect a 3rd-party post-exploitation framework with Metasploit, such as Empire, Pupy, or Koadic, so that Metasploit can view and interact with sessions outside of its own types. Being able to use outside stagers in exploits, or adding the ability to ‘upgrade’ a session to an outside session type are other possibilities.</p>
+
+<p>Difficulty 3/5</p>
+
+<h2 id="enhance-metasploitable3">Enhance Metasploitable3</h2>
+
+<h3 id="create-a-simulated-active-directory-domain">Create a Simulated Active Directory Domain</h3>
+
+<p>Expand functionality of the existing Windows 2008 VM to act as a domain controller. The setup should include a number of users of varying roles, multiple group policy objects and settings, and logon scripts or application deployments. Considerations should be taken on how and where to include purposeful vulnerabilities within these settings.</p>
+
+<p>Difficulty 2/5</p>
+
+<h3 id="configure-a-mock-corporate-network">Configure a Mock Corporate Network</h3>
+
+<p>Currently metasploitable3 consists of two separate virtual machines with all currently configured vulnerable services available with a simple network connection. This should be expanded to include a larger number of VMs with services spread across them to better simulate a real world environment. Considerations must be taken for deploying this on systems with varying hardware availability, or look into different cloud providers.</p>
+
+<p>Difficulty 4/5</p>
+
+<h3 id="add-monitoring-capabilities-between-vms">Add Monitoring Capabilities Between VMs</h3>
+
+<p>Metasploitable3 is already a playground from an attacker’s point of view, but how can we make it valuable from a defender’s perspective. Research various network monitoring and detections solutions and implement them across the mock network. Set up a new “NOC” VM for keeping track of activity and watching for intrusion. This goal is to make it fairly simple for anyone to set up a red team vs blue team mock environment.</p>
+
+<p>Difficulty 5/5</p>
+
+<h2 id="goliath">Goliath</h2>
+
+<h3 id="data-visualization">Data Visualization</h3>
+
+<p>Enhance existing Metasploit Goliath dashboard that allows observation of an active engagement. Data visualization would include, but not be limited to: host node graph with activity indicators and heat maps.</p>
+
+<p><a href="https://www.youtube.com/watch?v=hvuy6A-ie1g&amp;feature=youtu.be&amp;t=176">Metasploit ‘Goliath’ Demo (msf-red)</a></p>
+
+<p>Difficulty 3/5</p>
+
+<h3 id="elasticsearch-datastore">Elasticsearch Datastore</h3>
+<p>Write Goliath data to Elasticsearch. Explore data visualization using Kibana.</p>
+
+<p>Difficulty 3/5</p>
+
+<h2 id="submit-your-own">Submit your own</h2>
+
+<p>If you want to suggest your own idea, please discuss it with us first on <a href="https://groups.google.com/forum/#!forum/metasploit-hackers">our mailing list</a> to make sure it is a reasonable amount of work for a summer and that it fits the goals of the project.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/GSoC-2018-Project-Ideas.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

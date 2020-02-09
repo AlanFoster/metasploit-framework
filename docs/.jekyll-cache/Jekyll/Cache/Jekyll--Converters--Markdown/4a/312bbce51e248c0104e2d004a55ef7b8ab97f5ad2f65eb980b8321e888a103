@@ -1,0 +1,28 @@
+I"%<p>When the Metasploit Payloads has a new merge appear in <code class="highlighter-rouge">master</code>, a new Ruby gem is built and automatically pushed up to <a href="https://rubygems.org/gems/metasploit-payloads/">RubyGems</a>. This new version needs to be merged into the Metasploit Framework repository for those changes to be included.</p>
+
+<p>To do this, committers must:</p>
+
+<ul>
+  <li>Create a new branch in the Metasploit Framework repository.</li>
+  <li>Name it something useful like <code class="highlighter-rouge">metasploit-payloads-&lt;version&gt;</code>.</li>
+  <li>Modify <code class="highlighter-rouge">metasploit-framework.gemspec</code>, so that the new version number is specified for the <code class="highlighter-rouge">metasploit-payloads</code> gem.</li>
+  <li>Run <code class="highlighter-rouge">bundle install</code>.</li>
+  <li>Remove any test/development binaries from <code class="highlighter-rouge">data/meterpreter</code>.</li>
+  <li>Run <code class="highlighter-rouge">tools/modules/update_payload_cached_sizes.rb</code>.</li>
+  <li>Make sure that <code class="highlighter-rouge">Gemfile.lock</code> only contains changes that are related to Metasploit Payloads.</li>
+  <li>Stage the following for commit in <code class="highlighter-rouge">git</code>:
+    <ul>
+      <li><code class="highlighter-rouge">Gemfile.lock</code></li>
+      <li><code class="highlighter-rouge">metasploit-framework.gemspec</code></li>
+      <li>Any payload modules that have had an updated payload size (usually this includes stageless payloads only)</li>
+    </ul>
+  </li>
+  <li>Commit the staged files.</li>
+  <li>Push the branch to github.</li>
+  <li>Create the Pull Request.</li>
+</ul>
+
+<p>Done!</p>
+
+<p>A sample update PR/commit can be found here: https://github.com/rapid7/metasploit-framework/pull/7666/files</p>
+:ET

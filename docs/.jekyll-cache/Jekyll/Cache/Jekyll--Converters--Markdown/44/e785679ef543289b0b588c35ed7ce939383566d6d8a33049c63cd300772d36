@@ -1,0 +1,124 @@
+I"x"<p>If you’re in the business of writing or collecting Metasploit modules that aren’t part of the standard distribution, then you need a convenient way to load those modules in Metasploit. Never fear, it’s pretty easy, using Metasploit’s default local module search path, <code class="highlighter-rouge">$HOME/.msf4/modules</code>, and there are just a couple caveats:</p>
+
+<h2 id="mirror-the-real-metasploit-module-paths">Mirror the “real” Metasploit module paths</h2>
+
+<p>You must first set up a directory structure that fits with Metasploit’s expectations of path names. What this typically means is that you should first create an “exploits” directory structure, like so:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits
+</code></pre></div></div>
+
+<p>If you are using <code class="highlighter-rouge">auxiliary</code> or <code class="highlighter-rouge">post</code> modules, or are writing <code class="highlighter-rouge">payloads</code> you’ll want to <code class="highlighter-rouge">mkdir</code> those as well.</p>
+
+<h2 id="create-an-appropriate-category">Create an appropriate category</h2>
+
+<p>Modules are sorted by (somewhat arbitrary) categories. These can be anything you like; I usually use <code class="highlighter-rouge">test</code> or <code class="highlighter-rouge">private</code>, but if you are developing a module with an eye toward providing it to the main Metasploit distribution, you will want to mirror the real module path. For example:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/windows/fileformat
+</code></pre></div></div>
+
+<p>… if you are developing a file format exploit for Windows.</p>
+
+<h2 id="create-the-module">Create the module</h2>
+
+<p>Once you have a directory to place it in, feel free to download or start writing your module.</p>
+
+<h2 id="test-it-all-out">Test it all out</h2>
+
+<p>If you already have msfconsole running, use a <code class="highlighter-rouge">reload_all</code> command to pick up your new modules. If not, just start msfconsole and they’ll be picked up automatically. If you’d like to test with something generic, I have a module posted up as a gist, here: https://gist.github.com/todb-r7/5935519 , so let’s give it a shot:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/test
+curl <span class="nt">-Lo</span> ~/.msf4/modules/exploits/test/test_module.rb https://gist.github.com/todb-r7/5935519/raw/17f7e40ab9054051c1f7e0655c6f8c8a1787d4f5/test_module.rb
+todb@ubuntu:~<span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.msf4/modules/exploits/test
+todb@ubuntu:~<span class="nv">$ </span>curl <span class="nt">-Lo</span> ~/.msf4/modules/exploits/test/test_module.rb https://gist.github.com/todb-r7/5935519/raw/6e5d2da61c82b0aa8cec36825363118e9dd5f86b/test_module.rb 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1140    0  1140    0     0   3607      0 <span class="nt">--</span>:--:-- <span class="nt">--</span>:--:-- <span class="nt">--</span>:--:--  7808
+</code></pre></div></div>
+
+<p>Then, in my msfconsole window:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; reload_all
+[*] Reloading modules from all module paths...
+IIIIII    dTb.dTb        _.---._
+  II     4'  v  'B   .'"".'/|\`.""'.
+  II     6.     .P  :  .' / | \ `.  :
+  II     'T;. .;P'  '.'  /  |  \  `.'
+  II      'T; ;P'    `. /   |   \ .'
+IIIIII     'YvP'       `-.__|__.-'
+
+I love shells --egypt
+
+
+       =[ metasploit v4.6.2-2013052901 [core:4.6 api:1.0]
++ -- --=[ 1122 exploits - 707 auxiliary - 192 post
++ -- --=[ 307 payloads - 30 encoders - 8 nops
+
+msf &gt; use exploit/test/test_module 
+msf exploit(test_module) &gt; info
+
+       Name: Fake Test Module
+     Module: exploit/test/test_module
+    Version: 0
+   Platform: Windows
+ Privileged: No
+    License: Metasploit Framework License (BSD)
+       Rank: Excellent
+
+Provided by:
+  todb &lt;todb@metasploit.com&gt;
+
+Available targets:
+  Id  Name
+  --  ----
+  0   Universal
+
+Basic options:
+  Name  Current Setting  Required  Description
+  ----  ---------------  --------  -----------
+  DATA  Hello, world!    yes       The output data
+
+Payload information:
+
+Description:
+  If this module loads, you know you're doing it right.
+
+References:
+  http://cvedetails.com/cve/1970-0001/
+
+msf exploit(test_module) &gt; exploit
+
+[*] Started reverse handler on 192.168.145.1:4444 
+[+] Hello, world!
+msf exploit(test_module) &gt; 
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>That’s really all there is to it. The most common problems that people (including myself) run into are:</p>
+
+<ul>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/modules/</code>. This won’t work because you need to specify if it’s an exploit or a payload or something. Check <code class="highlighter-rouge">ls /opt/metasploit/apps/pro/msf3/modules/</code> (or where your install of Metasploit lives).</li>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/modules/auxiliary/</code>. This won’t work because you need at least one level of categorization. It can be new, like <code class="highlighter-rouge">auxiliary/0day/</code>, or existing, like <code class="highlighter-rouge">auxiliary/scanner/scada/</code>.</li>
+  <li>Attempting to create a module in <code class="highlighter-rouge">$HOME/.msf4/exploit/</code> or <code class="highlighter-rouge">$HOME/.msf4/posts/</code>. Note the pluralization of the directory names; they’re different for different things. Exploits, payloads, encoders, and nops are plural, while auxiliary and post are singular.</li>
+</ul>
+
+<h3 id="metasploit-community-and-pro-editions">Metasploit Community and Pro editions</h3>
+
+<p>Note that the <code class="highlighter-rouge">$HOME</code> directory for Metasploit Community Edition is going to be <code class="highlighter-rouge">root</code> and not your own user directory, so if you are expecting modules to show up in the Metasploit CE (or Express, or Pro) web UIs, you will want to stash your external modules in <code class="highlighter-rouge">/root/.msf4/modules</code>. Of course, this means you need root access to the machine in question, but hey, you’re a l33t Metasploit user, so that shouldn’t be too hard.</p>
+
+<p>Also note that if your modules are not displaying in the web UI, you should restart Pro service.</p>
+
+<h3 id="windows">Windows</h3>
+
+<p>For Windows users, the above is all true, except for accessing the modules from the web GUI. Sadly, you’re a little out of luck; the module load paths on Windows are a little more restrictive and don’t allow for external modules. However, the Console2-based Metasploit Console (Start &gt; Programs &gt; Metasploit &gt; Metasploit Console) will work out just fine.</p>
+
+<h3 id="new-mixins-and-protocols">New mixins and protocols</h3>
+
+<p>Any module that requires on changes to core library functions, such as new protocol parsers or other library mixins, aren’t going to work out for you this way – you’re going to end up spewing errors all over the place as your module tries to load these classes. It’s possible to write modules as completely self-contained in nearly all cases (thanks to Ruby’s open class architecture), but such modules nearly always get refactored later to make the protocol and other mixin bits available to other modules.</p>
+
+<p>In this case, it would be better to work with modules like that using a proper GitHub checkout with a development branch – see the <a href="https://github.com/rapid7/metasploit-framework/wiki/Setting-Up-a-Metasploit-Development-Environment">dev environment setup docs</a> for tons more on that.</p>
+
+<h2 id="a-final-warning">A final warning</h2>
+
+<p>If you are loading new and exciting Metasploit modules, know that these things will tend to have access to anything you have access to; doubly so if you’re dropping them in root. Metasploit modules are plain text Ruby, so you can read them – but please be careful, and only add external modules from trusted sources; don’t just go grabbing any old thing you see on the Internet, because you may find yourself backdoored (or worse) in short order.</p>
+:ET

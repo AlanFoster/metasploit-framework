@@ -1,0 +1,565 @@
+I"�j<p><strong>Note: This documentation may need to be vetted.</strong></p>
+
+<h1 id="how-to-send-an-http-request-using-rexprotohttpclient">How to send an HTTP request using Rex::Proto::Http::Client</h1>
+<p>The Rex library (Ruby Extension Library) is the most fundamental piece of the Metasploit Framework architecture. Modules normally do not interact with Rex directly, instead they depend on the framework core and its mixins for better code sharing. If you are a Metasploit module developer, the <a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core">lib/msf/core</a> directory should be more than enough for most of your needs. If you are writing a module that speaks HTTP, then the <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient">Msf::Exploit::Remote::HttpClient</a> mixin (which is found in <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/exploit/http/client.rb">lib/msf/core/exploit/http/client</a>) is most likely the one you want.</p>
+
+<p>However, in some scenarios, you actually can’t use the HttpClient mixin. The most common is actually when writing a form-based login module using the <a href="https://github.com/rapid7/metasploit-framework/wiki/Creating-Metasploit-Framework-LoginScanners">LoginScanner API</a>. If you find yourself in that situation, use <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/proto/http/client.rb">Rex::Proto::Http::Client</a>.</p>
+
+<h2 id="initializing-rexprotohttpclient">Initializing Rex::Proto::Http::Client</h2>
+
+<p>The Rex::Proto::Http::Client initializer creates a new HTTP client instance, and the most important piece is this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">ssl</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">ssl_version</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">proxies</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">username</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>As you can use, only the host argument is required, the rest are optional. But let’s go over all of them right quick:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Argument name</th>
+      <th>Data type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>host</td>
+      <td>String</td>
+      <td>Target host IP</td>
+    </tr>
+    <tr>
+      <td>port</td>
+      <td>Fixnum</td>
+      <td>Target host port</td>
+    </tr>
+    <tr>
+      <td>context</td>
+      <td>Hash</td>
+      <td>Determines what is responsible for requesting that a socket can be created</td>
+    </tr>
+    <tr>
+      <td>ssl</td>
+      <td>Boolean</td>
+      <td>True to enable it</td>
+    </tr>
+    <tr>
+      <td>ssl_version</td>
+      <td>String</td>
+      <td>SSL2, SSL3, or TLS1</td>
+    </tr>
+    <tr>
+      <td>proxies</td>
+      <td>String</td>
+      <td>Configure a proxy</td>
+    </tr>
+    <tr>
+      <td>username</td>
+      <td>String</td>
+      <td>Username for automatic authentication</td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td>String</td>
+      <td>Password for automatic authentication</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Code example of initialing Rex::Proto::Http::Client:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cli</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Proto</span><span class="o">::</span><span class="no">Http</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">rhost</span><span class="p">,</span> <span class="n">rport</span><span class="p">,</span> <span class="p">{},</span> <span class="kp">true</span><span class="p">,</span> <span class="mi">8181</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="s1">'username'</span><span class="p">,</span> <span class="s1">'password'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="making-an-http-request">Making an HTTP request</h2>
+
+<p>Even though our main topic of this documentation is about Rex::Proto::Http::Client, it does not know how to make HTTP requests. Instead, <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/proto/http/client_request.rb">Rex::Proto::Http::ClientRequest</a> is actually the mother of all Metasploit’s HTTP requests.</p>
+
+<p>So how does Rex::Proto::Http::ClientRequest give birth to an HTTP request? Well, you see son, it all begins when Rex::Proto::Http::Client asks for one with either the #request_cgi or the #request_raw method. The difference is that if #request_cgi is used, the request is meant to be CGI compatible, and in most cases this is what you want. If #request_raw is used, technically it means less options, less CGI compatible.</p>
+
+<p>A raw HTTP request supports the following options:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option/key name</th>
+      <th>Data type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>query</td>
+      <td>String</td>
+      <td>Raw GET query string</td>
+    </tr>
+    <tr>
+      <td>data</td>
+      <td>String</td>
+      <td>Raw POST data string</td>
+    </tr>
+    <tr>
+      <td>uri</td>
+      <td>String</td>
+      <td>Raw URI string</td>
+    </tr>
+    <tr>
+      <td>ssl</td>
+      <td>Boolean</td>
+      <td>True to use https://, otherwise http://</td>
+    </tr>
+    <tr>
+      <td>agent</td>
+      <td>String</td>
+      <td>User-Agent. Default is: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)</td>
+    </tr>
+    <tr>
+      <td>method</td>
+      <td>String</td>
+      <td>HTTP method</td>
+    </tr>
+    <tr>
+      <td>proto</td>
+      <td>String</td>
+      <td>Protocol</td>
+    </tr>
+    <tr>
+      <td>version</td>
+      <td>String</td>
+      <td>Version</td>
+    </tr>
+    <tr>
+      <td>vhost</td>
+      <td>String</td>
+      <td>Host header</td>
+    </tr>
+    <tr>
+      <td>port</td>
+      <td>Fixnum</td>
+      <td>Port for the host header</td>
+    </tr>
+    <tr>
+      <td>authorization</td>
+      <td>String</td>
+      <td>The authorization header</td>
+    </tr>
+    <tr>
+      <td>cookie</td>
+      <td>String</td>
+      <td>The cookie header</td>
+    </tr>
+    <tr>
+      <td>connection</td>
+      <td>String</td>
+      <td>The connection header</td>
+    </tr>
+    <tr>
+      <td>headers</td>
+      <td>Hash</td>
+      <td>A hash of custom headers. Safer than raw_headers</td>
+    </tr>
+    <tr>
+      <td>raw_headers</td>
+      <td>String</td>
+      <td>A string of raw headers</td>
+    </tr>
+    <tr>
+      <td>ctype</td>
+      <td>String</td>
+      <td>Content type</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An example of using #request_raw’s options:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cli is a Rex::Proto::Http::Client object</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">request_raw</span><span class="p">({</span>
+	<span class="s1">'uri'</span>    <span class="o">=&gt;</span><span class="s1">'/test.php'</span><span class="p">,</span>
+	<span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'POST'</span><span class="p">,</span>
+	<span class="s1">'data'</span>   <span class="o">=&gt;</span> <span class="s1">'A=B'</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><strong>#request_cgi inherits all the above</strong>, and more:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option/key name</th>
+      <th>Data type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>pad_get_params</td>
+      <td>Boolean</td>
+      <td>Enable padding for GET parameters</td>
+    </tr>
+    <tr>
+      <td>pad_get_params_count</td>
+      <td>Fixnum</td>
+      <td>Number of random GET parameters. You also need pad_get_params for this</td>
+    </tr>
+    <tr>
+      <td>vars_get</td>
+      <td>Hash</td>
+      <td>A hash of GET parameters</td>
+    </tr>
+    <tr>
+      <td>encode_params</td>
+      <td>Boolean</td>
+      <td>Enable URI encoding for GET or POST parameters</td>
+    </tr>
+    <tr>
+      <td>pad_post_params</td>
+      <td>Boolean</td>
+      <td>Enable padding for POST parameters</td>
+    </tr>
+    <tr>
+      <td>pad_post_params_count</td>
+      <td>Fixnum</td>
+      <td>Number of random POST parameters. You also need pad_post_params for this</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An example of using one of #request_cgi options:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cli is a Rex::Proto::Http::Client object</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">request_cgi</span><span class="p">({</span>
+	<span class="s1">'uri'</span>      <span class="o">=&gt;</span><span class="s1">'/test.php'</span><span class="p">,</span>
+	<span class="s1">'vars_get'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+		<span class="s1">'param1'</span> <span class="o">=&gt;</span> <span class="s1">'value'</span><span class="p">,</span>
+		<span class="s1">'param2'</span> <span class="o">=&gt;</span> <span class="s1">'value'</span>
+	<span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h2 id="sending-an-http-request">Sending an HTTP request</h2>
+
+<p>Here are examples of how to actually speak to an HTTP server with either #request_cgi or #request_raw:</p>
+
+<p><strong>#request_cgi</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cli</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Proto</span><span class="o">::</span><span class="no">Http</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">rhost</span><span class="p">),</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">connect</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">request_cgi</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="s1">'/'</span><span class="p">})</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">send_recv</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">close</span>
+</code></pre></div></div>
+
+<p><strong>#request_raw</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cli</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Proto</span><span class="o">::</span><span class="no">Http</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">rhost</span><span class="p">),</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">connect</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">request_raw</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="s1">'/'</span><span class="p">})</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">send_recv</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">close</span>
+</code></pre></div></div>
+
+<h2 id="configuring-advanced-options">Configuring advanced options</h2>
+
+<p><strong>Evasion Options</strong></p>
+
+<p>Rex::Proto::Http::Client also comes with its own collection of evasion options. You can set them either when you’re asking Rex::Proto::Http::ClientRequest to make the HTTP request, or you can set them with a #set_config method. The main difference is that if you are using #set_config, you should make these options user-configurable.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Data type</th>
+      <th>Default</th>
+      <th>Known configurable option</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>encode_params</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>encode</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>uri_encode_mode</td>
+      <td>String</td>
+      <td>hex-normal</td>
+      <td>HTTP::uri_encode_mode</td>
+    </tr>
+    <tr>
+      <td>uri_encode_count</td>
+      <td>Fixnum</td>
+      <td>1</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>uri_full_url</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_full_url</td>
+    </tr>
+    <tr>
+      <td>pad_method_uri_count</td>
+      <td>Fixnum</td>
+      <td>1</td>
+      <td>HTTP::pad_method_uri_count</td>
+    </tr>
+    <tr>
+      <td>pad_uri_version_count</td>
+      <td>Fixnum</td>
+      <td>1</td>
+      <td>HTTP::pad_uri_version_count</td>
+    </tr>
+    <tr>
+      <td>pad_method_uri_type</td>
+      <td>String</td>
+      <td>space</td>
+      <td>HTTP::pad_method_uri_type</td>
+    </tr>
+    <tr>
+      <td>pad_uri_version_type</td>
+      <td>String</td>
+      <td>space</td>
+      <td>HTTP::pad_uri_version_type</td>
+    </tr>
+    <tr>
+      <td>method_random_valid</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::method_random_valid</td>
+    </tr>
+    <tr>
+      <td>method_random_invalid</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::method_random_invalid</td>
+    </tr>
+    <tr>
+      <td>method_random_case</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::method_random_case</td>
+    </tr>
+    <tr>
+      <td>version_random_valid</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>version_random_invalid</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>version_random_case</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>uri_dir_self_reference</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_dir_self_reference</td>
+    </tr>
+    <tr>
+      <td>uri_dir_fake_relative</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_dir_fake_relative</td>
+    </tr>
+    <tr>
+      <td>uri_use_backslashes</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_use_backslashes</td>
+    </tr>
+    <tr>
+      <td>pad_fake_headers</td>
+      <td>Boolean</td>
+      <td>pad_fake_headers</td>
+      <td>HTTP::pad_fake_headers</td>
+    </tr>
+    <tr>
+      <td>pad_fake_headers_count</td>
+      <td>Fixnum</td>
+      <td>16</td>
+      <td>HTTP::pad_fake_headers_count</td>
+    </tr>
+    <tr>
+      <td>pad_get_params</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::pad_get_params</td>
+    </tr>
+    <tr>
+      <td>pad_get_params_count</td>
+      <td>Boolean</td>
+      <td>8</td>
+      <td>HTTP::pad_get_params_count</td>
+    </tr>
+    <tr>
+      <td>pad_post_params</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::pad_post_params</td>
+    </tr>
+    <tr>
+      <td>pad_post_params_count</td>
+      <td>Fixnum</td>
+      <td>8</td>
+      <td>HTTP::pad_post_params_count</td>
+    </tr>
+    <tr>
+      <td>uri_fake_end</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_fake_end</td>
+    </tr>
+    <tr>
+      <td>uri_fake_params_start</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::uri_fake_params_start</td>
+    </tr>
+    <tr>
+      <td>header_folding</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>HTTP::header_folding</td>
+    </tr>
+    <tr>
+      <td>chunked_size</td>
+      <td>Fixnum</td>
+      <td>0</td>
+      <td>N/A</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>NTLM Options</strong></p>
+
+<p>HTTP authentication is automatic in Rex::Proto::Http::Client, and when it comes to the NTLM provider, it gets its own options. You MUST use the #set_config method to set them:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Data type</th>
+      <th>Default</th>
+      <th>Known configurable option</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>usentlm2_session</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>NTLM::UseNTLM2_session</td>
+    </tr>
+    <tr>
+      <td>use_ntlmv2</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>NTLM::UseNTLMv2</td>
+    </tr>
+    <tr>
+      <td>send_lm</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>NTLM::SendLM</td>
+    </tr>
+    <tr>
+      <td>send_ntlm</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>NTLM::SendNTLM</td>
+    </tr>
+    <tr>
+      <td>SendSPN</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>NTLM::SendSPN</td>
+    </tr>
+    <tr>
+      <td>UseLMKey</td>
+      <td>Boolean</td>
+      <td>false</td>
+      <td>NTLM::UseLMKey</td>
+    </tr>
+    <tr>
+      <td>domain</td>
+      <td>String</td>
+      <td>WORKSTATION</td>
+      <td>DOMAIN</td>
+    </tr>
+    <tr>
+      <td>DigestAuthIIS</td>
+      <td>Boolean</td>
+      <td>true</td>
+      <td>DigestAuthIIS</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note: “Known configuration options” means there is a datastore option for it from HttpClient. If you can’t use HttpClient, then you will have to consider register them yourself.</p>
+
+<h2 id="uri-parsing">URI Parsing</h2>
+
+<p>Rex::Proto::Http::Client actually does not support URI parsing, so for URI format validation and normalization, you are on your own, and you should probably do it.</p>
+
+<p>For URI format validation, we recommend using Ruby’s URI module. You can use HttpClient’s #<a href="https://github.com/rapid7/metasploit-framework/blob/a65ee6cf30e6f671985876f83457cfcbea008e49/lib/msf/core/exploit/http/client.rb#L335">target_uri</a> method as an example.</p>
+
+<p>For URI normalization, we recommend HttpClient’s #<a href="https://github.com/rapid7/metasploit-framework/blob/a65ee6cf30e6f671985876f83457cfcbea008e49/lib/msf/core/exploit/http/client.rb#L360">normalize_uri</a> method as an example.</p>
+
+<h2 id="full-example">Full Example</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cli</span> <span class="o">=</span> <span class="no">Rex</span><span class="o">::</span><span class="no">Proto</span><span class="o">::</span><span class="no">Http</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">rhost</span><span class="p">,</span> <span class="n">rport</span><span class="p">,</span> <span class="p">{},</span> <span class="n">ssl</span><span class="p">,</span> <span class="n">ssl_version</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">pass</span><span class="p">)</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">set_config</span><span class="p">(</span>
+  <span class="s1">'vhost'</span> <span class="o">=&gt;</span> <span class="n">vhost</span><span class="p">,</span>
+  <span class="s1">'agent'</span> <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'UserAgent'</span><span class="p">],</span>
+  <span class="s1">'uri_encode_mode'</span>        <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_encode_mode'</span><span class="p">],</span>
+  <span class="s1">'uri_full_url'</span>           <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_full_url'</span><span class="p">],</span>
+  <span class="s1">'pad_method_uri_count'</span>   <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_method_uri_count'</span><span class="p">],</span>
+  <span class="s1">'pad_uri_version_count'</span>  <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_uri_version_count'</span><span class="p">],</span>
+  <span class="s1">'pad_method_uri_type'</span>    <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_method_uri_type'</span><span class="p">],</span>
+  <span class="s1">'pad_uri_version_type'</span>   <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_uri_version_type'</span><span class="p">],</span>
+  <span class="s1">'method_random_valid'</span>    <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::method_random_valid'</span><span class="p">],</span>
+  <span class="s1">'method_random_invalid'</span>  <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::method_random_invalid'</span><span class="p">],</span>
+  <span class="s1">'method_random_case'</span>     <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::method_random_case'</span><span class="p">],</span>
+  <span class="s1">'uri_dir_self_reference'</span> <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_dir_self_reference'</span><span class="p">],</span>
+  <span class="s1">'uri_dir_fake_relative'</span>  <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_dir_fake_relative'</span><span class="p">],</span>
+  <span class="s1">'uri_use_backslashes'</span>    <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_use_backslashes'</span><span class="p">],</span>
+  <span class="s1">'pad_fake_headers'</span>       <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_fake_headers'</span><span class="p">],</span>
+  <span class="s1">'pad_fake_headers_count'</span> <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_fake_headers_count'</span><span class="p">],</span>
+  <span class="s1">'pad_get_params'</span>         <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_get_params'</span><span class="p">],</span>
+  <span class="s1">'pad_get_params_count'</span>   <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_get_params_count'</span><span class="p">],</span>
+  <span class="s1">'pad_post_params'</span>        <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_post_params'</span><span class="p">],</span>
+  <span class="s1">'pad_post_params_count'</span>  <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::pad_post_params_count'</span><span class="p">],</span>
+  <span class="s1">'uri_fake_end'</span>           <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_fake_end'</span><span class="p">],</span>
+  <span class="s1">'uri_fake_params_start'</span>  <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::uri_fake_params_start'</span><span class="p">],</span>
+  <span class="s1">'header_folding'</span>         <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'HTTP::header_folding'</span><span class="p">],</span>
+  <span class="s1">'usentlm2_session'</span>       <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::UseNTLM2_session'</span><span class="p">],</span>
+  <span class="s1">'use_ntlmv2'</span>             <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::UseNTLMv2'</span><span class="p">],</span>
+  <span class="s1">'send_lm'</span>                <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::SendLM'</span><span class="p">],</span>
+  <span class="s1">'send_ntlm'</span>              <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::SendNTLM'</span><span class="p">],</span>
+  <span class="s1">'SendSPN'</span>                <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::SendSPN'</span><span class="p">],</span>
+  <span class="s1">'UseLMKey'</span>               <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'NTLM::UseLMKey'</span><span class="p">],</span>
+  <span class="s1">'domain'</span>                 <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'DOMAIN'</span><span class="p">],</span>
+  <span class="s1">'DigestAuthIIS'</span>          <span class="o">=&gt;</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'DigestAuthIIS'</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">connect</span>
+<span class="n">req</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">request_cgi</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="s1">'/'</span><span class="p">})</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">cli</span><span class="p">.</span><span class="nf">send_recv</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+<span class="n">cli</span><span class="p">.</span><span class="nf">close</span>
+</code></pre></div></div>
+:ET

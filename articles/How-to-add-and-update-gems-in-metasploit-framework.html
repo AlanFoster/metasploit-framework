@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to add and update gems in metasploit framework</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-10T19:28:15+00:00" itemprop="datePublished">Jan 10, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><strong>Update:</strong> We have automated this process (it runs every Thursday at noon US Central Time), and 99.9% of the time you will not need to follow any of the below steps. That said, if you need to update a gem in a PR, this is still a good procedure to follow.</p>
+
+<p>Sometimes you might want to pull in a new Ruby library or update an existing one to get more functionality. Metasploit leverages <a href="http://bundler.io">Bundler</a> to manage <a href="https://rubygems.org/">Ruby gems</a> and make dependencies easy. This document goes over the things you need to know when updating or adding gems to Metasploit.</p>
+
+<h5 id="the-gemfile">The Gemfile</h5>
+
+<p>Gems that are only <em>sometimes</em> used (say, only in test mode, or only when running with a database) are listed in a relevant Bundler group (<code class="highlighter-rouge">test</code> or <code class="highlighter-rouge">db</code> respectively) in the <a href="https://github.com/rapid7/metasploit-framework/blob/master/Gemfile">root Gemfile</a>.</p>
+
+<h5 id="the-metasploit-frameworkgemspec-file">The metasploit-framework.gemspec file</h5>
+
+<p>Gems that are <em>always needed</em> by Metasploit are kept in the <a href="https://github.com/rapid7/metasploit-framework/blob/master/metasploit-framework.gemspec">metasploit-framework.gemspec</a> file (this file is actually pulled into the Gemfile when calculating dependencies).</p>
+
+<h5 id="the-lock-file">The Lock File</h5>
+
+<p>The <a href="https://github.com/rapid7/metasploit-framework/blob/master/Gemfile.lock">Gemfile.lock file</a> holds the absolute versions of the Gems we want and keeps track of all the subdependencies. You should never need to manually edit this file: bundler will do it for you when you run <code class="highlighter-rouge">bundle install</code> after adding a gem. We keep this committed in the repo to ensure that all users are always on the same gem versions.</p>
+
+<h5 id="updating-or-adding-a-gem">Updating or adding a gem</h5>
+
+<p>If the gem is needed only for a specific Bundler group (like <code class="highlighter-rouge">test</code> or <code class="highlighter-rouge">db</code>), you should update the <a href="https://github.com/rapid7/metasploit-framework/blob/master/Gemfile">Gemfile</a>:</p>
+
+<ol>
+  <li>
+    <p>Add the Gem you want to the correct Group, or just update the version constraint. Check <a href="http://bundler.io/gemfile.html">Bundler’s docs</a> for the various ways to express version constraints:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> gem 'my_favorite', '~&gt; 1.0'
+</code></pre></div>    </div>
+  </li>
+  <li>Run <code class="highlighter-rouge">bundle install</code></li>
+  <li>Commit any changes to the <code class="highlighter-rouge">Gemfile.lock</code> file</li>
+</ol>
+
+<p>If the gem is needed any time metasploit-framework is used, you should update the <a href="https://github.com/rapid7/metasploit-framework/blob/master/metasploit-framework.gemspec">metasploit-framework.gemspec</a> file:</p>
+
+<ol>
+  <li>
+    <p>Add the gem as a runtime dependency, or just update the version constraint. Check <a href="http://bundler.io/gemfile.html">Bundler’s docs</a> for the various ways to express version constraints:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> spec.add_runtime_dependency 'my_favorite_gem', '~&gt; 3.0.1'
+</code></pre></div>    </div>
+  </li>
+  <li>Run <code class="highlighter-rouge">bundle install</code></li>
+  <li>Commit any changes to the <code class="highlighter-rouge">Gemfile.lock</code> file.</li>
+</ol>
+
+<h5 id="gemfilelocal">Gemfile.local</h5>
+
+<p>A Gemfile.local file is useful for adding temporary gems to the metasploit-framework, like pry-stack-explorer or other handy debugging libs; you don’t want to commit these gems into the repo, but might need them from time to time. To use a Gemfile.local file:</p>
+
+<ol>
+  <li>Rename the <a href="https://github.com/rapid7/metasploit-framework/blob/master/Gemfile.local.example">Gemfile.local.example</a> file in the repo root to <code class="highlighter-rouge">Gemfile.local</code></li>
+  <li>Add the temporary gems you want to this file</li>
+  <li>Run <code class="highlighter-rouge">bundle install</code></li>
+  <li>Make sure you <em>do not</em> commit the Gemfile.lock: <code class="highlighter-rouge">git checkout -- Gemfile.lock</code></li>
+</ol>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-add-and-update-gems-in-metasploit-framework.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

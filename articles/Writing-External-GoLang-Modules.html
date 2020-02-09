@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Writing External GoLang Modules</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-12-12T16:22:02+00:00" itemprop="datePublished">Dec 12, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Contributing modules in <a href="https://golang.org/">GO</a> can be achieved in a few simple steps as outlined below.  As for supported GO version, we have tested with 1.11.2, no promised for version 2.</p>
+
+<h4 id="1-location">1. Location</h4>
+<ul>
+  <li>Select the appropriate <a href="https://github.com/rapid7/metasploit-framework/tree/master/modules">module</a> path based on the type of module you are trying to contribute</li>
+  <li>Be sure to include appropriate module documentation under <a href="https://github.com/rapid7/metasploit-framework/tree/master/documentation/modules">here</a></li>
+  <li>Test your documentation is correct by executing <code class="highlighter-rouge">info -d</code></li>
+</ul>
+
+<h4 id="2-execution">2. Execution</h4>
+<ul>
+  <li>Include this line at the top of your module: <code class="highlighter-rouge">//usr/bin/env go run "$0" "$@"; exit "$?"</code></li>
+  <li>Ensure your file <strong>is</strong> an executable file</li>
+</ul>
+
+<h4 id="3-setup">3. Setup</h4>
+<ul>
+  <li>Initialize your module with the module metadata:
+    <blockquote>
+
+      <p>import “metasploit/module”
+  func main() {
+    metadata := &amp;module.Metadata{
+      Name: “&lt;module name”,
+      Description: “<describe>",
+      Authors: []string{"&lt;author 1&gt;", "&lt;author 2&gt;"},
+      Date: "&lt;date module written",
+      Type:"<module type="">",
+      Privileged:  &lt;true|false&gt;,
+      References:  []module.Reference{},
+      Options: map[string]module.Option{	
+        "&lt;option 1":     {Type: "<type>", Description: "<description>", Required: &lt;true|false&gt;, Default: "<default>"},		
+        "&lt;option 2":     {Type: "<type>", Description: "<description>", Required: &lt;true|false&gt;, Default: "<default>"},
+    }}</default></description></type></default></description></type></module></describe></p>
+    </blockquote>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module.Init(metadata, &lt;the entry method to your module&gt;)   } **[FULL EXAMPLE](https://github.com/rapid7/metasploit-framework/blob/master/modules/auxiliary/scanner/msmail/exchange_enum.go)**
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong><em>Note: Above does not outline the full potential list of metadata options</em></strong></p>
+
+<p><strong>Currently supported <em>module types</em>:</strong></p>
+<ul>
+  <li>remote_exploit</li>
+  <li>remote_exploit_cmd_stager</li>
+  <li>capture_server</li>
+  <li>dos</li>
+  <li>single_scanner</li>
+  <li>single_host_login_scanner</li>
+  <li>multi_scanner</li>
+</ul>
+
+<h4 id="4-shared-code">4. Shared Code</h4>
+<ul>
+  <li>For code that is shared specific to your module create a directory in your module directory:
+<code class="highlighter-rouge">shared/src/</code> metasploit will automatically add these to the GOPATH</li>
+  <li>For code that you think could be used across modules, add code <a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core/modules/external/go/src/metasploit">here</a></li>
+  <li>3rd party libs aren’t currently supported but we welcome patches</li>
+</ul>
+
+<h4 id="5-finalize">5. Finalize</h4>
+<ul>
+  <li>Test your Pull Request</li>
+  <li>Create a <a href="https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md#pull-requests">Pull Request</a></li>
+  <li>No coding standard here, be sure to <a href="https://blog.golang.org/go-fmt-your-code">gofmt</a></li>
+</ul>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Writing-External-GoLang-Modules.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+I"9<p>Every exploit module has been assigned a rank based on its potential impact to the target system. Users can search, categorize, and prioritize exploits based on rankings.</p>
+
+<p>The ranking is implemented by adding a <code class="highlighter-rouge">Rank</code> constant at the top of the class declaration in a module:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span>
+    <span class="no">Rank</span> <span class="o">=</span> <span class="no">LowRanking</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+        <span class="o">...</span>
+    <span class="k">end</span>
+    <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The ranking values are one of the following, in descending order of reliability:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ranking</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>ExcellentRanking</strong></td>
+      <td>The exploit will never crash the service. This is the case for SQL Injection, CMD execution, RFI, LFI, etc. No typical memory corruption exploits should be given this ranking unless there are extraordinary circumstances (<a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/browser/ms06_001_wmf_setabortproc.rb">WMF Escape()</a>).</td>
+    </tr>
+    <tr>
+      <td><strong>GreatRanking</strong></td>
+      <td>The exploit has a default target AND either auto-detects the appropriate target or uses an application-specific return address AFTER a version check.</td>
+    </tr>
+    <tr>
+      <td><strong>GoodRanking</strong></td>
+      <td>The exploit has a default target and it is the “common case” for this type of software (English, Windows 7 for a desktop app, 2012 for server, etc).</td>
+    </tr>
+    <tr>
+      <td><strong>NormalRanking</strong></td>
+      <td>The exploit is otherwise reliable, but depends on a specific version and can’t (or doesn’t) reliably autodetect.</td>
+    </tr>
+    <tr>
+      <td><strong>AverageRanking</strong></td>
+      <td>The exploit is generally unreliable or difficult to exploit.</td>
+    </tr>
+    <tr>
+      <td><strong>LowRanking</strong></td>
+      <td>The exploit is nearly impossible to exploit (or under 50% success rate) for common platforms.</td>
+    </tr>
+    <tr>
+      <td><strong>ManualRanking</strong></td>
+      <td>The exploit is unstable or difficult to exploit and is basically a DoS. This ranking is also used when the module has no use unless specifically configured by the user (e.g.: <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/unix/webapp/php_eval.rb">exploit/unix/webapp/php_eval</a>).</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The ranking value is available the module Class object as well as instances:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">modcls</span> <span class="o">=</span> <span class="n">framework</span><span class="p">.</span><span class="nf">exploits</span><span class="p">[</span><span class="s2">"windows/browser/ie_createobject"</span><span class="p">]</span>
+<span class="n">modcls</span><span class="p">.</span><span class="nf">rank</span>      <span class="c1"># =&gt; 600</span>
+<span class="n">modcls</span><span class="p">.</span><span class="nf">rank_to_s</span> <span class="c1"># =&gt; "excellent"</span>
+
+<span class="n">mod</span> <span class="o">=</span> <span class="n">modcls</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">mod</span><span class="p">.</span><span class="nf">rank</span>      <span class="c1"># =&gt; 600</span>
+<span class="n">mod</span><span class="p">.</span><span class="nf">rank_to_s</span> <span class="c1"># =&gt; "excellent"</span>
+</code></pre></div></div>
+:ET

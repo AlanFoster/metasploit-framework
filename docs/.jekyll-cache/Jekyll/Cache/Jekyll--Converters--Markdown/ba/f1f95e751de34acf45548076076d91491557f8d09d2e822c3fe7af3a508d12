@@ -1,0 +1,47 @@
+I"R<ul>
+  <li>
+    <p><strong>store_loot()</strong> - Used to store both stolen files (both text and binary) and “screencaps” of commands such as a <code class="highlighter-rouge">ps -ef</code> and <code class="highlighter-rouge">ifconfig</code>. The file itself need not be of forensic-level integrity – they may be parsed by a post module to extract only the relevant information for a penetration tester.</p>
+  </li>
+  <li>
+    <p><strong>report_auth_info()</strong> - Used to store working credentials that are immediately reusable by another module. For example, a module dumping the local SMB hashes would use this, as would a module which reads username:password combinations for a specific host and service. Specifically, merely “likely” usernames and passwords should use store_loot() instead.</p>
+  </li>
+  <li>
+    <p><strong>report_vuln()</strong> - Auxiliary and post modules that exercise a particular vulnerability should report_vuln() upon success. Note that exploit modules automatically report_vuln() as part of opening a session (there is no need to call it especially).</p>
+  </li>
+  <li>
+    <p><strong>report_note()</strong> - Modules should make an effort to avoid report_note() when one of the above methods would be a better fit, but there are often cases where “loot” or “cred” or “vuln” classifications are not immediately appropriate. report_note() calls should always set a OID-style dotted :type, such as domain.hosts, so other modules may easily find them in the database.</p>
+  </li>
+  <li>
+    <p><strong>report_host()</strong> - Reports a host’s liveness and attributes such as operating system and service pack. This is less common because other reporting methods already do this, such as <code class="highlighter-rouge">report_service</code>, <code class="highlighter-rouge">report_exploit_success</code>, <code class="highlighter-rouge">report_client</code>, <code class="highlighter-rouge">report_note</code>, <code class="highlighter-rouge">report_host_tag</code>, <code class="highlighter-rouge">report_vuln</code>, <code class="highlighter-rouge">report_event</code>, <code class="highlighter-rouge">report_loot</code>, etc. Try not to repeat it.</p>
+  </li>
+  <li>
+    <p><strong>report_service()</strong> - Reports a new service (port) that’s been detected by your module.</p>
+  </li>
+  <li>
+    <p><strong>report_client()</strong> - Reports a client running a host, such as a web browser.</p>
+  </li>
+  <li>
+    <p><strong>report_web_site()</strong> - Reports a website, and must be tied to an existing <code class="highlighter-rouge">:service</code>. If there is no <code class="highlighter-rouge">:service</code>, you will have to supply <code class="highlighter-rouge">:host</code>, <code class="highlighter-rouge">:port</code>, <code class="highlighter-rouge">:ssl</code>.</p>
+  </li>
+  <li>
+    <p><strong>report_web_page()</strong> - You can use this if your module discovers a webpage that look interesting.</p>
+  </li>
+  <li>
+    <p><strong>report_web_form()</strong> - You can use this if your module discovers web forms that look interesting.</p>
+  </li>
+  <li>
+    <p><strong>report_web_vuln()</strong> - Reports a web application vulnerability. Exploits don’t really need to use this. It’s more suitable for auxiliary modules that exploit a bug that determines that it is vulnerable.</p>
+  </li>
+  <li>
+    <p><strong>report_loot()</strong> - Very rarely, modules might actually want to export loots without using store_loot(). Typically they do this with Ruby’s file IO, but this won’t be logged in the database so can’t be tracked by Metasploit Framework. In that case, a <code class="highlighter-rouge">report_loot()</code> is needed. However, 99.9% of the time you should be using <code class="highlighter-rouge">store_loot()</code>.</p>
+  </li>
+</ul>
+
+<h3 id="references">References</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/wiki/Guidelines-for-Accepting-Modules-and-Enhancements</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/auxiliary/report.rb</p>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/db.rb</p>
+:ET

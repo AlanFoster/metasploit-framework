@@ -1,0 +1,192 @@
+I"�6<h1 id="deprecation-notice">Deprecation notice!</h1>
+
+<p>Please see <a href="https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for an authoritative coding guide. This document has fallen out of date. We don’t write bad code any more! Hooray!</p>
+
+<p>This is a collection of all the bad code we often see in Metasploit modules.  You should avoid them, too.</p>
+
+<p>Note: Some of these examples use puts() for demo purposes, but you should always use print_status / print_error when writing a module.</p>
+
+<h3 id="bad-examples-you-should-not-follow">Bad Examples You Should NOT Follow:</h3>
+
+<ol>
+  <li>Not checking the return value of a Metasploit API</li>
+  <li>Ruby 1.9.3 vs 1.8.7… gotcha!</li>
+  <li>Not checking the return value when using match()</li>
+  <li>Not checking nil before accessing a method</li>
+  <li>Using exception handling to shut an error up</li>
+  <li>Not taking advantage of the ‘ensure’ block</li>
+  <li>Adding the ‘VERBOSE’ option</li>
+  <li>Neglecting to use ‘vars_post’ for send_request_cgi() when crafting a POST request</li>
+  <li>Bad variable naming style</li>
+  <li>Using global variables</li>
+  <li>Modifying the datastore during execution</li>
+</ol>
+
+<p><strong>1. Not checking the return value of a Metasploit API</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span> <span class="o">=</span> <span class="n">send_request_cgi</span><span class="p">({</span>
+  <span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'GET'</span><span class="p">,</span>
+  <span class="s1">'uri'</span> <span class="o">=&gt;</span> <span class="s1">'/app/index.php'</span>
+<span class="p">})</span>
+
+<span class="c1"># There's a bug here, because res can return nil (due to a timeout or other reasons)</span>
+<span class="c1"># If that happens, you will hit a "undefined method `code' for nil:NilClass" error.</span>
+<span class="c1"># The correct way should be: if res &amp;&amp; res.code == 200</span>
+<span class="k">if</span> <span class="n">res</span><span class="p">.</span><span class="nf">code</span> <span class="o">==</span> <span class="mi">200</span>
+  <span class="n">print_status</span><span class="p">(</span><span class="s2">"Response looks good"</span><span class="p">)</span>
+<span class="k">else</span>
+  <span class="n">print_error</span><span class="p">(</span><span class="s2">"Unexpected response"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>2. Ruby 1.9.3 vs 1.8.7… gotcha!</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">some_string</span> <span class="o">=</span> <span class="s2">"ABC"</span>
+
+<span class="c1"># This can cause unexpected results to your module.</span>
+<span class="c1"># Better to always do: char = some_string[1, 1]</span>
+<span class="n">char</span> <span class="o">=</span> <span class="n">some_string</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">char</span> <span class="o">==</span> <span class="s1">'B'</span>
+  <span class="nb">puts</span> <span class="s2">"You will see this message in Ruby 1.9.3"</span>
+<span class="k">elsif</span> <span class="n">char</span> <span class="o">==</span> <span class="mi">66</span>
+  <span class="nb">puts</span> <span class="s2">"You will see this message in Ruby 1.8.7"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 1.9 allows a comma after the last argument when calling</span>
+<span class="c1"># a method while 1.8 does not.  The most common place to</span>
+<span class="c1"># see this error is in the update_info() section in a</span>
+<span class="c1"># module's constructor.</span>
+<span class="n">some_method</span><span class="p">(</span>
+  <span class="s2">"arg1"</span><span class="p">,</span>
+  <span class="s2">"arg2"</span><span class="p">,</span>  <span class="c1"># &lt;-- This comma is a syntax error on 1.8.x</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>3. Not checking the return value when using match()</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span> <span class="o">=</span> <span class="s2">"dragon! drag on! Not lizard, I don't do that tongue thing"</span>
+
+<span class="c1"># This tries to print "Not snake", but it's not in the string,</span>
+<span class="c1"># so you'll get this error: "undefined method `[]' for nil:NilClass"</span>
+<span class="nb">puts</span> <span class="n">str</span><span class="p">.</span><span class="nf">match</span><span class="p">(</span><span class="sr">/(Not snake)/</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># The above is better written as:</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">str</span> <span class="o">=~</span> <span class="sr">/(Not snake)/</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="vg">$1</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>4. Not checking nil first before accessing a method</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span> <span class="o">=</span> <span class="s2">"These things are round and tasty, let's call them... tastycles!"</span>
+
+<span class="n">food</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="nf">scan</span><span class="p">(</span><span class="sr">/donut holes/</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># food is nil, and nil has no method called "empty".</span>
+<span class="c1"># This will throw an error: "undefined method `empty?' for nil:NilClass"</span>
+<span class="k">if</span> <span class="n">food</span><span class="p">.</span><span class="nf">empty?</span> <span class="n">or</span> <span class="n">food</span><span class="p">.</span><span class="nf">nil?</span>
+  <span class="nb">puts</span> <span class="s2">"I don't know what it's called"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>5. Using exception handling to shut an error up</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">begin</span>
+  <span class="c1"># This block has 2 issues:</span>
+  <span class="c1"># Issue #1: sample() is not a method in 1.8.7</span>
+  <span class="c1"># Issue #2: Divided by 0 (race condition)</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">].</span><span class="nf">sample</span>
+  <span class="mi">1</span><span class="o">/</span><span class="n">n</span>
+<span class="k">rescue</span>
+  <span class="c1"># If the user reports a bug saying this code isn't</span>
+  <span class="c1"># working, it can be hard to debug exactly what went</span>
+  <span class="c1"># wrong for the user without a backtrace.</span>
+  <span class="c1"># When you do this, the error also won't be logged in</span>
+  <span class="c1"># framework.log, either.</span>
+  <span class="c1"># Note that rescuing ::Exception is especially harmful</span>
+  <span class="c1"># because it can even hide syntax errors.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p><strong>6. Not taking advantage of the ‘ensure’ block</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># You should use the ensure block to make sure x always has a value,</span>
+<span class="c1"># which also avoids repeating code</span>
+<span class="k">begin</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">].</span><span class="nf">sample</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">n</span>
+<span class="k">rescue</span> <span class="no">ZeroDivisionError</span> <span class="o">=&gt;</span> <span class="n">e</span>
+  <span class="nb">puts</span> <span class="s2">"Are you smarter than a 5th grader? </span><span class="si">#{</span><span class="n">e</span><span class="p">.</span><span class="nf">message</span><span class="si">}</span><span class="s2">"</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Can put this in the ensure block</span>
+<span class="k">rescue</span> <span class="no">NoMethodError</span>
+  <span class="nb">puts</span> <span class="s2">"You must be using an older Ruby"</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Can put this in the ensure block</span>
+<span class="k">end</span>
+
+<span class="nb">puts</span> <span class="s2">"Value is </span><span class="si">#{</span><span class="n">x</span><span class="p">.</span><span class="nf">to_s</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p><strong>7. Adding the ‘VERBOSE’ option</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">register_options</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="c1"># You already have this. Just type 'show advanced' and you'll see it.</span>
+    <span class="c1"># So no need to register again</span>
+    <span class="no">OptBool</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"VERBOSE"</span><span class="p">,</span> <span class="p">[</span><span class="kp">false</span><span class="p">,</span> <span class="s1">'Enable detailed status messages'</span><span class="p">,</span> <span class="kp">false</span><span class="p">])</span>
+  <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>8. Neglecting to use send_request_cgi()’s vars_get or vars_get when crafting a POST/GET request</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data_post</span> <span class="o">=</span> <span class="s1">'user=jsmith&amp;pass=hello123'</span>
+
+<span class="c1"># You should use the 'vars_post' key instead of 'data',</span>
+<span class="c1"># unless you're trying to avoid the API escaping your</span>
+<span class="c1"># parameter names</span>
+<span class="n">send_request_cgi</span><span class="p">({</span>
+  <span class="s1">'method'</span> <span class="o">=&gt;</span> <span class="s1">'POST'</span><span class="p">,</span>
+  <span class="s1">'uri'</span>    <span class="o">=&gt;</span> <span class="s1">'/'</span><span class="p">,</span>
+  <span class="s1">'data'</span>   <span class="o">=&gt;</span> <span class="n">data_post</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><strong>9. Bad variable naming style</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># What's this, Java?</span>
+<span class="c1"># The proper naming style in this case should be: my_string</span>
+<span class="n">myString</span> <span class="o">=</span> <span class="s2">"hello, world"</span>
+</code></pre></div></div>
+
+<p><strong>10. Using global variables</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># $msg is a global variable that can be accessed anywhere within the program.</span>
+<span class="c1"># This can induce bugs to other modules or mixins that are hard to debug.</span>
+<span class="c1"># Use @instance variables instead.</span>
+<span class="c1"># This is also mentioned in your HACKING file :-)</span>
+
+<span class="k">class</span> <span class="nc">Opinion</span>
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="c1"># This variable shouldn't be shared with other classes</span>
+    <span class="vg">$msg</span> <span class="o">=</span> <span class="s2">"It's called the Freedom of Information Act. The Hippies finally got something right."</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Metasploit3</span>
+  <span class="k">def</span> <span class="nf">initialize</span>
+    <span class="nb">puts</span> <span class="vg">$msg</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">Opinion</span><span class="p">.</span><span class="nf">new</span>
+<span class="no">Metasploit3</span><span class="p">.</span><span class="nf">new</span>
+</code></pre></div></div>
+
+<p><strong>11. Modifying the datastore during execution</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># https://github.com/rapid7/metasploit-framework/issues/3853</span>
+<span class="n">datastore</span><span class="p">[</span><span class="s1">'BAD'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'This is bad.'</span>
+</code></pre></div></div>
+:ET

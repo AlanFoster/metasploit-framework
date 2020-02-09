@@ -1,0 +1,201 @@
+I"�2<p>This document talks about how to parse an HTTP response body in the cleanest way possible.</p>
+
+<h2 id="getting-a-response">Getting a response</h2>
+
+<p>To get a response, you can either use <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-send-an-HTTP-request-using-Rex%3A%3AProto%3A%3AHttp%3A%3AClient">Rex::Proto::Http::Client</a>, or the <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient">HttpClient</a> mixin to make an HTTP request. If you are writing a module, you should use the mixin.</p>
+
+<p>The following is an example of using the #send_request_cgi method from HttpClient:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span> <span class="o">=</span> <span class="n">send_request_cgi</span><span class="p">({</span><span class="s1">'uri'</span><span class="o">=&gt;</span><span class="s1">'/index.php'</span><span class="p">})</span>
+</code></pre></div></div>
+
+<p>The return value for <code class="highlighter-rouge">res</code> is a Rex::Proto::Http::Response object, but it’s also possible you get a NilClass due to a connection/response timeout.</p>
+
+<h2 id="getting-the-response-body">Getting the response body</h2>
+
+<p>With a Rex::Proto::Http::Response object, here’s how you can retrieve the HTTP body:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">body</span>
+</code></pre></div></div>
+
+<p>If you want to get the raw HTTP response (including the response message/code, headers, body, etc), then you can simply do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">raw_res</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">to_s</span>
+</code></pre></div></div>
+
+<p>However, in this documentation we are only focusing on <code class="highlighter-rouge">res.body</code>.</p>
+
+<h2 id="choosing-the-right-parser">Choosing the right parser</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Format</th>
+      <th>Parser</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTML</td>
+      <td>Nokogiri</td>
+    </tr>
+    <tr>
+      <td>XML</td>
+      <td>Nokogiri</td>
+    </tr>
+    <tr>
+      <td>JSON</td>
+      <td>JSON</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If the format you need to parse isn’t on the list, then fall back to <code class="highlighter-rouge">res.body</code>.</p>
+
+<h2 id="parsing-html-with-nokogiri">Parsing HTML with Nokogiri</h2>
+
+<p>When you have a Rex::Proto::Http::Response with HTML in it, the method to call is:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+</code></pre></div></div>
+
+<p>This will give you a Nokogiri::HTML::Document, which allows you use the Nokogiri API.</p>
+
+<p>There are two common methods in Nokogiri to find elements: #at and #search. The main difference is that the #at method will only return the first result, while the #search will return all found results (in an array).</p>
+
+<p>Consider the following example as your HTML response:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Hello, World!<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+	<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"greetings"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"english"</span><span class="nt">&gt;</span>Hello<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"spanish"</span><span class="nt">&gt;</span>Hola<span class="nt">&lt;/div&gt;</span>
+		<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"french"</span><span class="nt">&gt;</span>Bonjour<span class="nt">&lt;/div&gt;</span>
+	<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+</code></pre></div></div>
+
+<p><strong>Basic usage of #at</strong></p>
+
+<p>If the #at method is used to find a DIV element:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'div'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then the <code class="highlighter-rouge">greeting</code> variable should be a Nokogiri::XML::Element object that gives us this block of HTML (again, because the #at method only returns the first result):</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"greetings"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"english"</span><span class="nt">&gt;</span>Hello<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"spanish"</span><span class="nt">&gt;</span>Hola<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"french"</span><span class="nt">&gt;</span>Bonjour<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p><strong>Grabbing an element from a specific element tree</strong></p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'div//div'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then the <code class="highlighter-rouge">greeting</code> variable should give us this block of HTML:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"english"</span><span class="nt">&gt;</span>Hello<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<p><strong>Grabbing an element with a specific attribute</strong></p>
+
+<p>Let’s say I don’t want the English Hello, I want the Spanish one. Then we can do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'div[@id="spanish"]'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Grabbing an element with a specific text</strong></p>
+
+<p>Let’s say I only know there’s a DIV element that says “Bonjour”, and I want to grab it, then I can do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'//div[contains(text(), "Bonjour")]'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Or let’s say I don’t know what element the word “Bonjour” is in, then I can be a little vague about this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'[text()*="Bonjour"]'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Basic usage of #search</strong></p>
+
+<p>The #search method returns an array of elements. Let’s say we want to find all the DIV elements, then here’s how:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">divs</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="s1">'div'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Accessing text</strong></p>
+
+<p>When you have an element, you can always call the #text method to grab the text. For example:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">greeting</span> <span class="o">=</span> <span class="n">html</span><span class="p">.</span><span class="nf">at</span><span class="p">(</span><span class="s1">'[text()*="Bonjour"]'</span><span class="p">)</span>
+<span class="n">print_status</span><span class="p">(</span><span class="n">greeting</span><span class="p">.</span><span class="nf">text</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The #text method can also be used as a trick to strip all the HTML tags:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">html</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_html_document</span>
+<span class="n">print_line</span><span class="p">(</span><span class="n">html</span><span class="p">.</span><span class="nf">text</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above will print:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"\n\nHello, World!\n\n\n\nHello\nHola\nBonjour\n\n\n" 
+</code></pre></div></div>
+
+<p>If you actually want to keep the HTML tags, then instead of calling #text, call #inner_html.</p>
+
+<p><strong>Accessing attributes</strong></p>
+
+<p>With an element, simply call #attributes.</p>
+
+<p><strong>Walking a DOM tree</strong></p>
+
+<p>Use the #next method to move on to the next element.</p>
+
+<p>Use the #previous method to roll back to the previous element.</p>
+
+<p>Use the #parent method to find the parent element.</p>
+
+<p>Use the #children method to get all the child elements.</p>
+
+<p>Use the #traverse method for complex parsing.</p>
+
+<h2 id="parsing-xml">Parsing XML</h2>
+
+<p>To get the XML body from Rex::Proto::Http::Response, do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">xml</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_xml_document</span>
+</code></pre></div></div>
+
+<p>The rest should be pretty similar to parsing HTML.</p>
+
+<h2 id="parsing-json">Parsing JSON</h2>
+
+<p>To get the JSON body from Rex::Proto::Http::Response, do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">json</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="nf">get_json_document</span>
+</code></pre></div></div>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li>http://www.nokogiri.org/tutorials/parsing_an_html_xml_document.html</li>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/How-to-send-an-HTTP-request-using-Rex%3A%3AProto%3A%3AHttp%3A%3AClient</li>
+  <li>https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient</li>
+</ul>
+:ET

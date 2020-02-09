@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Meterpreter Configuration</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-19T15:31:06+00:00" itemprop="datePublished">Dec 19, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Meterpreter has always had the need to be configured on the fly so that it knows how to talk to Metasploit. For many years, this configuration management was achieved by hot-patching a copy of the <code class="highlighter-rouge">metsrv</code> DLL/binary using a simple “string replace” approach. This worked well enough to support a number of situations, but restricted the flexibility of Meterpreter and its support for handling multiple transports.</p>
+
+<p>It wasn’t just transports that were locked down, but the ability to provide payloads that contained way more than the core Meterpreter (metsrv) itself. It was also not easy to pass other forms of information on the fly to the Meterpreter instance because the stagers were only able to pass in a copy of the active socket handle.</p>
+
+<p>Recent modifications to Meterpreter have done away with this old method and have replaced with with a dynamic configuration block that can be used to alleviate these problems and provide the flexibility for other more interesting things down the track.</p>
+
+<p>This document contains information on the structure and layout of the new configuration block, along with how it is used by Meterpreter.</p>
+
+<h2 id="how-the-configuration-is-found">How the configuration is found</h2>
+
+<p>In the past Meterpreter has required that the stager (or stage0 as some like to call it) pass in a handle to the active socket so that it can take over communications without creating a new socket (at least in the case of <code class="highlighter-rouge">TCP</code> connections). While this feature is still required, it doesn’t happen in the way that it used to. Instead, Meterpreter now requires that the stager pass in a pointer to the start of the configuration block. The configuration block can be anywhere in memory, so long as the memory region is marked as <code class="highlighter-rouge">RWX</code>.</p>
+
+<h3 id="loading-configuration-in-windows-meterpreter">Loading configuration in Windows Meterpreter</h3>
+
+<p>Stage 1 of loading Windows Meterpreter now utilises a new loader, called <code class="highlighter-rouge">meterpreter_loader</code> (<a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/payload/windows/meterpreter_loader.rb">Win x86</a>, <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/payload/windows/x64/meterpreter_loader.rb">Win x64</a>), which does the following:</p>
+
+<ul>
+  <li>Loads the <code class="highlighter-rouge">metsrv</code> DLL from disk.</li>
+  <li>Patches the DOS header of the DLL so that it contains executable shellcode that correctly initialises <code class="highlighter-rouge">metsrv</code> and calculates the location that points to the end of <code class="highlighter-rouge">metsrv</code> in memory. It also takes any existing socket value (found in <code class="highlighter-rouge">edi</code> or <code class="highlighter-rouge">rdi</code> depending on the architecture) and writes that directly to the configuration (more on this later).</li>
+  <li>Generates a configuration block and appends this to the <code class="highlighter-rouge">metsrv</code> binary.</li>
+</ul>
+
+<p>The result is that the payload has the following structure once it has been prepared:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  | Patched DOS  |
+  |    header    |
+  +--------------+
+  |              |
+  .              .
+  .  metsrv dll  .
+  .              .
+  |              |
+  +--------------+
+  | config block |
+  +--------------+
+</code></pre></div></div>
+
+<h3 id="loading-configuration-in-posix-meterpreter-mettle">Loading configuration in POSIX Meterpreter (Mettle)</h3>
+
+<p>All of the configuration for the POSIX Meterpreter is able to be passed via command line arguments to the payload. When generating a payload with a specific configuration, a simulated command line is patched into a static variable in the main startup code. Generate a payload and see <code class="highlighter-rouge">./mettle -h</code> for a full description of available arguments.</p>
+
+<h2 id="windows-meterpreter-configuration-block-structure">Windows Meterpreter Configuration Block Structure</h2>
+
+<p>In order to pass information to Meterpreter and not have it break, a known format of configuration is required. This format needs to be consistent on each invocation much like you would expect with any configuration. In the case of binary Meterpreter (POSIX and Windows), this configuration block contains the following:</p>
+
+<ul>
+  <li>One Session configuration block.</li>
+  <li>One or more Transport Configuration blocks, followed by a terminator.</li>
+  <li>One or more Extension configuration blocks, followed by a terminator.</li>
+</ul>
+
+<p>Each of these blocks are described in detail in the sections below.</p>
+
+<h3 id="session-configuration-block">Session configuration block</h3>
+
+<p>The notion of a session configuration block is used to wrap up the following values:</p>
+
+<ul>
+  <li>Socket handle - When Meterpreter is invoked with TCP communications, an active socket is already in use. This socket handle is intended to be reused by Meterpreter when <code class="highlighter-rouge">metsrv</code> executes. This socket handle is written to the configuration block on the fly by the loader. It is stored in the Session configuration block so that it has a known location. This value is always a 32-bit DWORD, even on 64-bit platforms.</li>
+  <li>Exit func - This value is a 32-bit DWORD value that identifies the method that should be used when terminating the Meterpreter session. This value is the equivalent of the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/rex/text.rb#L1685">Block API Hash</a> that represents the function to be invoked. Meterpreter used to delegate the responsibility of handling this to the stager that had invoked it. Meterpreter no longer does this, instead it handles the closing of the Meterpreter session by itself, and hence the chosen method for termination must be made known in the configuration.</li>
+  <li>Session expiry value - This is a 32-bit DWORD that contains the number of seconds that the Meterpreter session should last for. While Meterpreter is running, this value is continually checked, and if the session expiry time is reached, then Meterpreter shuts itself down. For more information, please read the <strong>Timeout documentation</strong> (link coming soon).</li>
+  <li>UUID - This is a 16-byte value that represents a payload UUID. A UUID is a new concept that has come to Metasploit with a goal of tracking payload type and origin, and validing that sessions received by Metasploit are intended for use by the current installation. For more information, please read the <strong>UUID documentation</strong> (link coming soon).</li>
+</ul>
+
+<p>The layout of this block in memory looks like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  |Socket Handle |
+  +--------------+
+  |  Exit func   |
+  +--------------+
+  |Session Expiry|
+  +--------------+
+  |              |
+  |     UUID     |
+  |              |
+  |              |
+  +--------------+
+
+  | &lt;- 4 bytes -&gt;|
+</code></pre></div></div>
+
+<p>With this structure in place, Meterpreter knows that the session configuration block is exactly <code class="highlighter-rouge">28</code> bytes in size.</p>
+
+<p>The Session configuration block description can be found in the <a href="https://github.com/rapid7/meterpreter/blob/master/source/common/config.h#L25">Meterpreter source</a>.</p>
+
+<h3 id="transport-configuration-block">Transport configuration block</h3>
+
+<p>The Transport configuration block is a term used to refer to the group of transport configurations that are present in the payload. Meterpreter now supports multiple transports, and so the configuration should support multiple transports too.</p>
+
+<p>There are two main issues when dealing with transport configurations:</p>
+
+<ol>
+  <li>The configuration should allow for many transport configurations to be specified.</li>
+  <li>The configuration should allow for each transport to be of a different type and size.</li>
+</ol>
+
+<p>Meterpreter’s current transport implementations provide two main “classes” of transport, those being <code class="highlighter-rouge">HTTP(S)</code> and <code class="highlighter-rouge">TCP</code>. Each of these transport classes require different configuration values, as well as common values, in order to function.</p>
+
+<h4 id="common-configuration-values">Common configuration values</h4>
+
+<p>The values that are common to both <code class="highlighter-rouge">HTTP(S)</code> and <code class="highlighter-rouge">TCP</code> transports are:</p>
+
+<ul>
+  <li>URL - This value is a meta-description of the transport and is used not only as a configuration element for the transport itself but also as a way of determining exactly what type of transport this block represents. The field is a total of <code class="highlighter-rouge">512</code> <em>characters</em> (Windows Meterpreter uses <code class="highlighter-rouge">wchar_t</code>, while POSIX Meterpreter uses <code class="highlighter-rouge">char</code>). Transport types are specified by the scheme element in the URL, and the body of the URL specifies key information such as host and port information. Meterpreter inspects this to determine what type of transport block is in use, and hence from there is able to determine the size of the block. Valid values look like the following:
+    <ul>
+      <li><code class="highlighter-rouge">tcp://&lt;host&gt;:&lt;port&gt;</code> - indicates that this payload is a <em>reverse</em> <strong>IPv4</strong> <code class="highlighter-rouge">TCP</code> connection.</li>
+      <li><code class="highlighter-rouge">tcp6://&lt;host&gt;:&lt;port&gt;?&lt;scope&gt;</code> - indicates that this payload is a <em>reverse</em> <strong>IPv6</strong> <code class="highlighter-rouge">TCP</code> connection.</li>
+      <li><code class="highlighter-rouge">tcp://:&lt;port&gt;</code> - indicates that this payload is a <em>bind</em> payload listening on the specified port (note that no host is specifed).</li>
+      <li><code class="highlighter-rouge">http://&lt;host&gt;:&lt;port&gt;/&lt;uri&gt;</code> - indicates that this payload is an HTTP connection (can only be <em>reverse</em>).</li>
+      <li><code class="highlighter-rouge">https://&lt;host&gt;:&lt;port&gt;/&lt;uri&gt;</code> - indicates that this payload is an HTTPS connection (can only be <em>reverse</em>).</li>
+    </ul>
+  </li>
+  <li>Communications expiry - This value is another 32-bit DWORD value that represents the number of seconds to wait between successful packet/receive calls. For more information, please read the <strong>Timeout documentation</strong> (link coming soon).</li>
+  <li>Retry total - This value is 32-bit DWORD value that represents the number of seconds that Meterpreter should continue to attempt to reconnect on this transport before giving up. For more information, please read the <strong>Timeout documentation</strong> (link coming soon).</li>
+  <li>Retry wait - This value is 32-bit DWORD value that represents the number of seconds between each attempt that Meterpreter makes to reconnect on this transport. For more information, please read the <strong>Timeout documentation</strong> (link coming soon).</li>
+</ul>
+
+<p>The layout of this block in memory looks like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  |              |
+  |      URL     |
+  .              .
+  .              .  512 characters worth
+  .              .  (POSIX -&gt; ASCII -&gt; char)
+  .              .  (Windows -&gt; wide char -&gt; wchar_t)
+  .              .
+  |              |
+  +--------------+
+  |  Comms T/O   |
+  +--------------+
+  |  Retry Total |
+  +--------------+
+  |  Retry Wait  |
+  +--------------+
+
+  | &lt;- 4 bytes -&gt;|
+</code></pre></div></div>
+
+<p>The common transport configuration block description can be found in the <a href="https://github.com/rapid7/meterpreter/blob/master/source/common/config.h#L33">Meterpreter source</a>.</p>
+
+<h4 id="tcp-configuration-values">TCP configuration values</h4>
+
+<p>At this time, there are no <code class="highlighter-rouge">TCP</code>-specific configuration values, as the common configuration block caters for all of the needs of <code class="highlighter-rouge">TCP</code> transports. This may change down the track.</p>
+
+<h4 id="https-configuration-values">HTTP/S configuration values</h4>
+
+<p><code class="highlighter-rouge">HTTP</code> and <code class="highlighter-rouge">HTTPS</code> connections have a number of extra configuration values that are required in order to make it function correctly in various environments. Those values are:</p>
+
+<ul>
+  <li>Proxy host - In environments where proxies are required to be set manually, this field contains the detail of the proxy to use. The field is <code class="highlighter-rouge">128</code> characters in size (<code class="highlighter-rouge">wchar_t</code> only, given that we don’t yet have <code class="highlighter-rouge">HTTP/S</code> transport in POSIX), and can be in one of the following formats:
+    <ul>
+      <li><code class="highlighter-rouge">http://&lt;proxy ip&gt;:&lt;proxy port&gt;</code> in the case of <code class="highlighter-rouge">HTTP</code> proxies.</li>
+      <li><code class="highlighter-rouge">socks=&lt;socks ip&gt;:&lt;sock port&gt;</code> in the case of <code class="highlighter-rouge">socks</code> proxies.</li>
+    </ul>
+  </li>
+  <li>Proxy user name - Some proxies require authentication. In such cases, this value contains the username that should be used to authenticate with the given proxy. This field is <code class="highlighter-rouge">64</code> characters in size (<code class="highlighter-rouge">wchar_t</code>).</li>
+  <li>Proxy password - This value will accompany the user name field in the case where proxy authentication is required. It contains the password used to authenticate with the proxy, and is also <code class="highlighter-rouge">64</code> characters in size (<code class="highlighter-rouge">wchar_t</code>).</li>
+  <li>User agent string - Customisable user agent string. This changes the user agent that is used when <code class="highlighter-rouge">HTTP/S</code> requests are made to Metasploit. This field is <code class="highlighter-rouge">256</code> characters in size (<code class="highlighter-rouge">wchar_t</code>).</li>
+  <li>Expected SSL certificate hash - Meterpreter has the capability of validating the SSL certificate that Metasploit presents when using <code class="highlighter-rouge">HTTPS</code>. This value contains the <code class="highlighter-rouge">20</code>-byte SHA1 hash of the expected certificate. For more information, please read the <strong>SSL certificate validation documentation</strong> (link coming soon).</li>
+</ul>
+
+<p>All values that are shown above need to be specified in the configuration, including SSL certificate validation for plain <code class="highlighter-rouge">HTTP</code> connections. Values that are not used should be zeroed out.</p>
+
+<p>The structure of the <code class="highlighter-rouge">HTTP/S</code> configuration is as follows.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  |              |
+  |  Proxy host  |
+  .              .  128 characters worth (wchar_t)
+  |              |
+  +--------------+
+  |              |
+  |  Proxy user  |
+  .              .  64 characters worth (wchar_t)
+  |              |
+  +--------------+
+  |              |
+  |  Proxy pass  |
+  .              .  64 characters worth (wchar_t)
+  |              |
+  +--------------+
+  |              |
+  |  User agent  |
+  .              .  256 characters worth (wchar_t)
+  |              |
+  +--------------+
+  |              |
+  |   SSL cert   |
+  |   SHA1 hash  |
+  |              |
+  |              |
+  +--------------+
+
+  | &lt;- 4 bytes -&gt;|
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">HTTP/S</code> transport configuration block description can be found in the <a href="https://github.com/rapid7/meterpreter/blob/master/source/common/config.h#L48">Meterpreter source</a>.</p>
+
+<h4 id="transport-configuration-list">Transport configuration list</h4>
+
+<p>As already mentioned, more than one of these transport configuration blocks can be specified. In order to facilitate this, Meterpreter needs to know when the “list” of transports has ended. Using the <code class="highlighter-rouge">URL</code>, Meterpreter can determine the size of the block, and can move to the next block depending on the type that is discovered. As soon as Meterpreter detects a transport configuration <code class="highlighter-rouge">URL</code> value that has a string length of zero (ie. a single <code class="highlighter-rouge">NULL</code> ASCII char in POSIX and a single <code class="highlighter-rouge">NULL</code> multi-byte char in Windows) it assumes that the transport list has been terminated. The byte immediately following this is deemed to be the start of the Extension configuration, which is documented in the next section.</p>
+
+<h3 id="extension-configuration-block">Extension configuration block</h3>
+
+<p>The extension configuration block is designed to allow Meterpreter payloads to contain any extra extensions that the user wants to bundle in. The goal is to provide the ability to have <strong>Stageless payloads</strong> (link coming soon), and to provide the means for sharing of extensions during migration (though this hasn’t been implemented yet). Each of the extensions must have been compiled with <a href="https://github.com/rapid7/ReflectiveDLLInjection/">Reflective DLL Injection</a> support, as this is the mechanism that is used to load the extensions when Meterpreter starts. For more information on this facility, please see the <strong>Stageless payloads</strong> (link coming soon) documentation.</p>
+
+<p>The extension configuration block also functions as a “list” to allow for an arbitrary number of extensions to be included. Each extension entry needs to contain the following:</p>
+
+<ul>
+  <li>Size - This is the exact size, in bytes, of the extension DLL itself. The value is a 32-bit DWORD.</li>
+  <li>Extension binary - This is the full binary directly copied from the DLL. This value needs to be exactly the same length as what is specified in the Size field.</li>
+</ul>
+
+<p>When loading the extensions from the configuration, Meterpreter will continue to parse entries until it finds a <code class="highlighter-rouge">size</code> value of <code class="highlighter-rouge">0</code>. At this point Meterpreter assumes it has reached the end of the extension list and will stop parsing.</p>
+
+<p>The structure is simply laid out like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  |  Ext. Size   |
+  +--------------+
+  | Ext. content |
+  +--------------+
+  |  NULL term.  |
+  |   (4 bytes)  |
+  +--------------+
+</code></pre></div></div>
+
+<h2 id="configuration-block-overview">Configuration Block Overview</h2>
+
+<p>To summarise, the following shows the layout of a full configuration:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  +--------------+
+  |Socket Handle |
+  +--------------+
+  |  Exit func   |
+  +--------------+
+  |Session Expiry|
+  +--------------+
+  |              |
+  |     UUID     |
+  |              |
+  |              |
+  +--------------+
+  |  Transport 1 |
+  |  tcp://...   |
+  .              .
+  |              |
+  +--------------+
+  |  Comms T/O   |
+  +--------------+
+  |  Retry Total |
+  +--------------+
+  |  Retry Wait  |
+  +--------------+
+  |  Transport 2 |
+  |  http://...  |
+  .              .
+  |              |
+  +--------------+
+  |  Comms T/O   |
+  +--------------+
+  |  Retry Total |
+  +--------------+
+  |  Retry Wait  |
+  +--------------+
+  |              |
+  |  Proxy host  |
+  |              |
+  +--------------+
+  |              |
+  |  Proxy user  |
+  |              |
+  +--------------+
+  |              |
+  |  Proxy pass  |
+  |              |
+  +--------------+
+  |              |
+  |  User agent  |
+  |              |
+  +--------------+
+  |              |
+  |   SSL cert   |
+  |   SHA1 hash  |
+  |              |
+  +--------------+
+  |  NULL term.  |
+  |(1 or 2 bytes)|
+  +--------------+
+  | Ext 1. Size  |
+  +--------------+
+  |Ext 1. content|
+  +--------------+
+  | Ext 2. Size  |
+  +--------------+
+  |Ext 2. content|
+  +--------------+
+  |  NULL term.  |
+  +--------------+
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Meterpreter-Configuration.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

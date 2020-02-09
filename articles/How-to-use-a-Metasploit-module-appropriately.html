@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to use a Metasploit module appropriately</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2014-11-06T01:52:40+00:00" itemprop="datePublished">Nov 6, 2014
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>As an user, one thing we love Metasploit the most is it allows something really technically difficult to understand or engineer into something really easy to use, literally within a few clicks away to make you look like <a href="http://en.wikipedia.org/wiki/Neo_(The_Matrix)">Neo</a> from the Matrix. It makes hacking super easy. However, if you’re new to Metasploit, know this: <a href="https://www.youtube.com/watch?v=3vlzKaH4mpw">Nobody makes their first jump</a>. You are expected to make mistakes, sometimes small, sometimes catastrophic… hopefully not. You’re very likely to fall on your face with your first exploit, just like Neo. Obviously, to become The One you must learn to use these modules appropriately, and we will teach you how.</p>
+
+<p>In this documentation, understand that we require you no exploit development knowledge. Some programming knowledge would be nice, of course. The whole point is that there is actually “homework” before using an exploit, and you should always do your homework.</p>
+
+<h2 id="loading-a-metasploit-module">Loading a Metasploit module</h2>
+
+<p>Each Metasploit module comes with some metadata that explains what it’s about, and to see that you must load it first. An example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; use exploit/windows/smb/ms08_067_netapi
+</code></pre></div></div>
+
+<h2 id="read-the-module-description-and-references">Read the module description and references</h2>
+
+<p>This may sound surprising, but sometimes we get asked questions that are already explained in the module. You should always look for the following in the description or the references it provides before deciding whether it’s appropriate to use the exploit or not:</p>
+
+<ul>
+  <li>
+    <p><strong>What products and versions are vulnerable</strong>: This is the most basic thing you should know about a vulnerability.</p>
+  </li>
+  <li>
+    <p><strong>What type of vulnerability and how it works</strong>: Basically, you are learning the exploit’s side-effects. For example, if you’re exploiting a memory corruption, if it fails due to whatever reason, you may crash the service. Even if it doesn’t, when you’re done with the shell and type “exit”, it’s still possible to crash it too. High level bugs are generally safer, but not 100%. For example, maybe it needs to modify a config file or install something that can cause the application to be broken, and may become permanent.</p>
+  </li>
+  <li>
+    <p><strong>Which ones have been tested</strong>: When a module is developed, usually the exploit isn’t tested against every single setup if there are too many. Usually the developers will just try to test whatever they can get their hands on. So if your target isn’t mentioned here, keep in mind there is no guarantee it’s going to work 100%. The safest thing to do is to actually recreate the environment your target has, and test the exploit before hitting the real thing.</p>
+  </li>
+  <li>
+    <p><strong>What conditions the server must meet in order to be exploitable</strong>: Quite often, a vulnerability requires multiple conditions to be exploitable. In some cases you can rely on the exploit’s <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-check%28%29-method">check command</a>, because when Metasploit flags something as vulnerable, it actually exploited the bug. For browser exploits using the BrowserExploitServer mixin, it will also check exploitable requirements before loading the exploit. But automation isn’t always there, so you should try to find this information before running that “exploit” command. Sometimes it’s just common sense, really. For example: a web application’s file upload feature might be abused to upload a web-based backdoor, and stuff like that usually requires the upload folder to be accessible for the user. If your target doesn’t meet the requirement(s), there is no point to try.</p>
+  </li>
+</ul>
+
+<p>You can use the info command to see the module’s description:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms08_067_netapi) &gt; info
+</code></pre></div></div>
+
+<h2 id="read-the-target-list">Read the target list</h2>
+
+<p>Every Metasploit exploit has a target list. Basically this is a list of setups the developers have tested before making the exploit publicly available. If your target machine isn’t on the list, it’s better to assume the exploit has never been tested on that particular setup.</p>
+
+<p>If the exploit supports automatic targeting, it is always the first item on the list (or index 0). The first item is also almost always the default target. What this means is that you should never assume the exploit will automatically select a target for you if you’ve never used it before, and that the default setup might not be the one you’re testing against.</p>
+
+<p>The “show options” command will tell you which target is selected. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms08_067_netapi) &gt; show options
+</code></pre></div></div>
+
+<p>The “show targets” command will give you a list of targets supported:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms08_067_netapi) &gt; show targets
+</code></pre></div></div>
+
+<h2 id="check-all-the-options">Check all the options</h2>
+
+<p>All Metasploit modules come with most datastore options pre-configured. However, they may not be suitable for the particular setup you’re testing. To do a quick double-check, usually the “show options” command is enough:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms08_067_netapi) &gt; show options
+</code></pre></div></div>
+
+<p>However, “show options” only shows you all the basic options. It does not show you the evasive or advanced options (try “show evasion” and “show advanced”), the command you should use that shows you all the datastore options is actually the “set” command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms08_067_netapi) &gt; set
+</code></pre></div></div>
+
+<h2 id="find-the-modules-pull-request">Find the module’s pull request</h2>
+
+<p>The Metasploit repository is hosted on Github (duh… you’re on it right now), and the developers/contributors rely on it heavily for development. Before a module is made public, it is submitted as a <a href="https://help.github.com/articles/using-pull-requests/">pull request</a> for final testing and review. In there, you will find pretty much everything you need to know about the module, and probably things you won’t learn from reading the module’s description or some random blog post. The information is like gold, really.</p>
+
+<p>Things you might learn from reading a pull request:</p>
+
+<ul>
+  <li>Steps on how to set up the vulnerable environment.</li>
+  <li>What targets were actually tested.</li>
+  <li>How the module is meant to be used.</li>
+  <li>How the module was verified.</li>
+  <li>What problems were identified. Problems you might want to know.</li>
+  <li>Demonstrations.</li>
+  <li>Other surprises.</li>
+</ul>
+
+<p>There are mainly two ways to find the pull request of the module you’re using:</p>
+
+<ul>
+  <li><strong>Via the pull request number</strong>: If you actually know the pull request number, this is the easiest. Simply go:</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://github.com/rapid7/metasploit-framework/pull/[PULL REQUEST NUMBER HERE]
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Via filters</strong>: This is most likely how you find the pull request. First off, you should go here: <a href="https://github.com/rapid7/metasploit-framework/pulls">https://github.com/rapid7/metasploit-framework/pulls</a>. At the top, you will see a search input box with the default filters: <code class="highlighter-rouge">is:pr is:open</code>. These default ones mean you’re looking at pull requests, and you’re looking at the ones that are still pending - still waiting to be merged to Metasploit. Well, since you’re finding the one that’s already merged, you should do these:</li>
+</ul>
+
+<ol>
+  <li>Click on “Closed”.</li>
+  <li>Select label “module”.</li>
+  <li>In the search box, enter additional keywords related to the module. The module’s title probably provides the best keywords.</li>
+</ol>
+
+<p>Note: If the module was written before Nov 2011, you WILL NOT find the pull request for it.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-use-a-Metasploit-module-appropriately.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

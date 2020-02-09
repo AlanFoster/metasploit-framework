@@ -1,0 +1,76 @@
+I"<p>You can now generate documentation for modules on the fly using the <code class="highlighter-rouge">info -d</code> command.</p>
+
+<p>Module documentation allows you to see the help for a particular module from a web page, instead of from the command line.</p>
+
+<p>The help page includes:</p>
+
+<ul>
+  <li>The PR history related to a particular module, if you have a <a href="https://help.github.com/articles/creating-an-access-token-for-command-line-use/">GitHub access token</a> set up.</li>
+  <li>The basic usage instructions for a module.</li>
+  <li>The advanced usage instructions for a module, if it’s available.</li>
+</ul>
+
+<h3 id="how-to-use-it">How to use it</h3>
+<p>After you load a module, you can type <code class="highlighter-rouge">info -d</code> to generate a help page that provides basic usage information and displays the PR history for the module.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf&gt; use auxiliary/scanner/smb/smb_login
+msf (smb_login)&gt; info -d
+</code></pre></div></div>
+
+<p>Additionally, if it’s available, the help page will also include a KB that contains advanced usage information, such as vulnerable target details, caveats, and sample usage. The content in the KB is contained in a markdown file in the <code class="highlighter-rouge">metasploit-framework/documentation/modules</code> directory.  Its purpose is to provide supplemental information that is outside of the scope of general documentation.</p>
+
+<h3 id="add-an-access-token-to-see-pr-history">Add an access token to see PR history</h3>
+
+<p>In order for you to be able to view the PR history for a module, you’ll need add your GitHub access token to the environment variable <code class="highlighter-rouge">GITHUB_OAUTH_TOKEN="&lt;your token here&gt;"</code> in <code class="highlighter-rouge">.bash_profile</code>.</p>
+
+<p>To generate a GitHub access token, check out this <a href="https://help.github.com/articles/creating-an-access-token-for-command-line-use/">page</a>. The token will need to have a scope for repos.</p>
+
+<h3 id="how-you-can-write-kbs">How you can write KBs</h3>
+
+<p>Generally, the person who creates the module will write the initial KB for it, but anyone can write or contribute to it.</p>
+
+<p>Before you write a KB, you should take a look at the sample template, <a href="https://github.com/rapid7/metasploit-framework/blob/master/documentation/modules/module_doc_template.md">module_doc_template.md</a>, or take a look at any of the KBs that are already available.</p>
+
+<p>To write a KB, you’ll need to:</p>
+
+<ol>
+  <li>Create an markdown (.md) file.</li>
+  <li>Write the content.</li>
+  <li>Save the file and name it after the module name. For example, the filename for <code class="highlighter-rouge">ms08_067_netapi.rb</code> is called <code class="highlighter-rouge">ms08_067_netapi.md</code>.</li>
+  <li>Place it in the <code class="highlighter-rouge">metasploit-framework/documentation/modules</code> directory as directed below.</li>
+</ol>
+
+<h3 id="where-to-put-the-kb-files">Where to put the KB files</h3>
+
+<p>If you go to <code class="highlighter-rouge">metasploit-framework/documentation/modules</code>, you’ll see that there are documentation directories for each module type: <code class="highlighter-rouge">auxiliary</code>, <code class="highlighter-rouge">exploit</code>, <code class="highlighter-rouge">payload</code>, and <code class="highlighter-rouge">post</code>. To figure out where you need to put the file, you’ll need to look at the module name.</p>
+
+<ol>
+  <li>Start msfconsole.</li>
+  <li>Type <code class="highlighter-rouge">use &lt;module name&gt;</code>.</li>
+  <li>Type <code class="highlighter-rouge">info</code>.</li>
+  <li>When the module name appears, look at the Module field. You’ll see a file path for the module. That’s the path where the KB needs to be added.</li>
+</ol>
+
+<p>For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf&gt; use auxiliary/scanner/smb/smb_login
+msf (smb_login)&gt; info
+
+Name: SMB Login Check Scanner
+Module: auxiliary/scanner/smb/smb_login
+....
+</code></pre></div></div>
+
+<p>If you were creating a KB for the smb login scanner, you’d add it to <code class="highlighter-rouge">metasploit-framework/documentation/modules/auxiliary/scanner/smb</code>.</p>
+
+<h3 id="sections-you-should-include-in-the-kb">Sections you should include in the KB</h3>
+
+<p>These are just suggestions, but it’d be nice if the KB had these sections:</p>
+
+<ul>
+  <li><strong>Vulnerable Applications</strong> - Tells users what targets (version numbers) are vulnerable to the module and provides instructions on how to access vulnerable targets for testing.  If possible provide a download link and any setup instructions to configure the software appropriately.</li>
+  <li><strong>Verification Steps</strong> - Tells users how to use the module and what the expected results are from running the module.</li>
+  <li><strong>Options</strong> - Provides descriptions of all the options that can be run with the module. Additionally, clearly identify the options that are required.</li>
+  <li><strong>Scenarios</strong> - Provides sample usage and describes caveats that the user may need to be aware of when running the module. Include the version number and OS so that this setup can be replicated at a later date.</li>
+</ul>
+:ET

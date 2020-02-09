@@ -1,0 +1,72 @@
+I""<p>Metasploit has a very specific way to deprecate a module. To do so, you must be using the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/module/deprecated.rb">Msf::Module::Deprecated</a> mixin. The reason you must be using this mixin is because two things:</p>
+
+<ol>
+  <li>You are required to set a deprecation date. That way we know when to remove it, which is done manually.</li>
+  <li>You are required to set a replacement of the module you wish to deprecate.</li>
+</ol>
+
+<h2 id="usage">Usage</h2>
+
+<p>To use the <code class="highlighter-rouge">Msf::Module::Deprecated</code>, here’s how:</p>
+
+<p>1 - Under <code class="highlighter-rouge">class MetasploitModule</code> of your module, include the following:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Module</span><span class="o">::</span><span class="no">Deprecated</span>
+</code></pre></div></div>
+
+<p>2a - Use the <code class="highlighter-rouge">deprecated</code> method to assign a deprecation date and replacement module:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">deprecated</span><span class="p">(</span><span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="s1">'exploit/linux/http/dlink_upnp_exec_noauth'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>2b - Alternatively, define the <code class="highlighter-rouge">DEPRECATION_DATE</code> and <code class="highlighter-rouge">DEPRECATION_REPLACEMENT</code> constants:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">DEPRECATION_DATE</span> <span class="o">=</span> <span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span> <span class="c1"># Sep 21</span>
+<span class="c1"># The new module is exploit/linux/http/dlink_upnp_exec_noauth</span>
+<span class="no">DEPRECATION_REPLACEMENT</span> <span class="o">=</span> <span class="s1">'exploit/linux/http/dlink_upnp_exec_noauth'</span>
+</code></pre></div></div>
+
+<p>When the user loads that module, they should see a warning like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; use exploit/windows/misc/test 
+
+[!] ************************************************************************
+[!] *             The module windows/misc/test is deprecated!              *
+[!] *              It will be removed on or about 2014-09-21               *
+[!] *        Use exploit/linux/http/dlink_upnp_exec_noauth instead        *
+[!] ************************************************************************
+</code></pre></div></div>
+
+<h2 id="code-example">Code example</h2>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'msf/core'</span>
+
+<span class="k">class</span> <span class="nc">MetasploitModule</span> <span class="o">&lt;</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Exploit</span><span class="o">::</span><span class="no">Remote</span>
+  <span class="no">Rank</span> <span class="o">=</span> <span class="no">ExcellentRanking</span>
+
+  <span class="kp">include</span> <span class="no">Msf</span><span class="o">::</span><span class="no">Module</span><span class="o">::</span><span class="no">Deprecated</span>
+
+  <span class="n">deprecated</span><span class="p">(</span><span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="s1">'exploit/linux/http/dlink_upnp_exec_noauth'</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+      <span class="s1">'Name'</span>        <span class="o">=&gt;</span> <span class="s1">'Msf::Module::Deprecated Example'</span><span class="p">,</span>
+      <span class="s1">'Description'</span> <span class="o">=&gt;</span> <span class="sx">%q{
+        This shows how to use Msf::Module::Deprecated.
+      }</span><span class="p">,</span>
+      <span class="s1">'Author'</span>      <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'sinn3r'</span> <span class="p">],</span>
+      <span class="s1">'License'</span>     <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+      <span class="s1">'References'</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="p">[</span> <span class="s1">'URL'</span><span class="p">,</span> <span class="s1">'http://metasploit.com'</span> <span class="p">]</span> <span class="p">],</span>
+      <span class="s1">'DisclosureDate'</span> <span class="o">=&gt;</span> <span class="s1">'Apr 01 2014'</span><span class="p">,</span>
+      <span class="s1">'Targets'</span>        <span class="o">=&gt;</span> <span class="p">[</span> <span class="p">[</span> <span class="s1">'Automatic'</span><span class="p">,</span> <span class="p">{</span> <span class="p">}</span> <span class="p">]</span> <span class="p">],</span>
+      <span class="s1">'DefaultTarget'</span>  <span class="o">=&gt;</span> <span class="mi">0</span>
+    <span class="p">))</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">exploit</span>
+    <span class="n">print_debug</span><span class="p">(</span><span class="s2">"Code example"</span><span class="p">)</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+</code></pre></div></div>
+:ET

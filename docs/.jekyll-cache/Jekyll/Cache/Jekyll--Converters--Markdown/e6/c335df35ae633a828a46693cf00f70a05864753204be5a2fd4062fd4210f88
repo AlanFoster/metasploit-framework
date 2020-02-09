@@ -1,0 +1,39 @@
+I"�<h1 id="what-does-my-rexprotosmb-error-mean">What does my Rex::Proto::SMB Error mean?</h1>
+<p>All SMB error codes are explained in the following MSDN documentation:</p>
+
+<p><a href="http://msdn.microsoft.com/en-us/library/ee441884.aspx">http://msdn.microsoft.com/en-us/library/ee441884.aspx</a></p>
+
+<p>The following is a list of commonly seen errors when using an Metasploit module that involves SMB:</p>
+
+<ul>
+  <li><strong>STATUS_ACCESS_DENIED</strong></li>
+</ul>
+
+<p>If you are testing against newer Windows systems such as Windows 7, by default you will see STATUS_ACCESS_DENIED because these systems no longer allow remote access to the share. To change this, that target machine will need to manually change the LocalAccountTokenFilterPolicy setting to 1 in the registry:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
+"LocalAccountTokenFilterPolicy"=dword:00000001
+</code></pre></div></div>
+
+<ul>
+  <li><strong>STATUS_LOGON_FAILURE</strong></li>
+</ul>
+
+<p>Invalid SMBUSER or SMBPASS datastore option.</p>
+
+<p>Or, in Local Security Settings, you should probably set <strong>Network access:Sharing and security model for local accounts</strong> to “<strong>Local users authenticate as themselves</strong>”.</p>
+
+<ul>
+  <li><strong>STATUS_BAD_NETWORK_NAME</strong></li>
+</ul>
+
+<p>Invalid SMB share datastore option.</p>
+
+<ul>
+  <li><strong>STATUS_LOGON_TYPE_NOT_GRANTED</strong></li>
+</ul>
+
+<p>On Windows, in Local Security Settings, Network access:Sharing and security model for local accounts to “Local users authenticate as themselves”.</p>
+:ET

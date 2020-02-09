@@ -1,0 +1,74 @@
+I"�<p>Since the Metasploit-framework repository’s master branch is the bleeding edge of development, occasionally mistakes happen. This page will attempt to give some guidance on how to roll back a bad merge.</p>
+
+<h1 id="whats-a-bad-merge">What’s a bad merge?</h1>
+
+<ul>
+  <li>Anything that causes <a href="travis-ci.org/rapid7/metasploit-framework/builds">Travis-CI</a> to fail rspec tests consistently.</li>
+  <li>Anything that hits untested code that otherwise causes problems with <code class="highlighter-rouge">msfconsole</code>, <code class="highlighter-rouge">msfcli</code>, <code class="highlighter-rouge">msfvenom</code>, and other console commands.</li>
+</ul>
+
+<p>Sometimes, Travis-CI does choke up, due to network weather. Every build is a fresh clone, and all gems have to be reinstalled every time. Also, some rspec tests require network connections to assets on the Internet. Sometimes, Travis-CI itself is under a lot of load, and builds time out.</p>
+
+<p>The best way to diagnose these problems is simply to restart the build. Note, only <a href="https://github.com/rapid7/metasploit-framework/wiki/Committer-Rights">Committers</a> have rights to do this. If that doesn’t clear things up, or if it’s obvious that there are real failures (since you’ve read the rspec results and have read the tests), the first order of business is to undo your bad commit.</p>
+
+<p><strong>Note</strong>: in branches other than <code class="highlighter-rouge">master</code>, you can usually just fix things normally with new commits. There are plenty of “whoops” commit messages in our history.</p>
+
+<h1 id="a-merge-revert-example">A merge revert example</h1>
+
+<p>Once, there was a bad merge on <a href="https://github.com/rapid7/metasploit-framework/pull/2320">PR #2320</a>. The fellow landing this pull request ran into a merge conflict while landing, thought he fixed it, and pushed the results, which ended up breaking about a dozen Rspec tests. Whoops. That was a bad merge. <a href="https://github.com/rapid7/metasploit-framework/pull/2624">PR #2624</a> fixed it. Here’s the procedure used.</p>
+
+<h3 id="figure-out-what-broke-things">Figure out what broke things.</h3>
+
+<p>In this case, the failed build was pretty obvious: <a href="https://travis-ci.org/rapid7/metasploit-framework/builds/13816889">Build #5216</a> was red, and rerunning Travis-CI didn’t solve. Reading the build log, we can see this was <a href="http://github.com/rapid7/metasploit-framework/commit/3996557ec61a6eeefaa3448480012205b8825374">merge commit 3996557</a>.</p>
+
+<h3 id="check-out-the-bad-merge-tip">Check out the bad merge tip.</h3>
+
+<p>These commands will put the local repo back to the bad merge, and create a local branch as such:</p>
+
+<p><code class="highlighter-rouge">git checkout 3996557</code>
+<code class="highlighter-rouge">git checkout -b bad-merge</code></p>
+
+<p>You can inspect exactly what commits are contained in this merge with the following:</p>
+
+<p><code class="highlighter-rouge">git log bad-merge...bad-merge~ --oneline</code></p>
+
+<p>Like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log bad-merge...bad-merge~ --oneline
+3996557 Fix conflcit lib/msf/util/exe.rb
+6296c4f Merge pull request #9 from tabassassin/retab/pr/2320
+d0a3ea6 Retab changes for PR #2320
+bff7d0e Merge for retab
+4c9e6a8 Default to exe-small
+</code></pre></div></div>
+
+<p>The syntax is a little wacky, but this is saying, “Show me all the commit hashes that occur from the <code class="highlighter-rouge">bad-merge</code> point to one back from <code class="highlighter-rouge">bad-merge</code> (iow, from right before <code class="highlighter-rouge">bad-merge</code> was merged). That’s what the tilde (~) means. You could also use <code class="highlighter-rouge">bad-merge^</code> or <code class="highlighter-rouge">bad-merge^1</code>, they’re all equivalent.</p>
+
+<p>You can see the diff with the following command. Note the reverse placement of the <code class="highlighter-rouge">bad-merge</code> and <code class="highlighter-rouge">bad-merge~</code> commit points!</p>
+
+<p><code class="highlighter-rouge">git diff bad-merge~ bad-merge</code></p>
+
+<p>Take a look at that, confirm that yes, this is exactly what you want to revert, and then pull the trigger.</p>
+
+<h3 id="revert-the-merge">Revert the merge</h3>
+
+<p><code class="highlighter-rouge">git revert -m 1 bad-merge</code></p>
+
+<p>The <code class="highlighter-rouge">-m 1</code> bit is important, because that specifies that you want the branch to return to the point from before the merge – I have never had reason to revert a merge and throw out the other side of the merge, but I imagine it comes up often enough for other people to not have it be the default behavior.</p>
+
+<p>Note that this does /not/ reach into the repo and change history; for that, you would need to git push –force, and you <a href="www.reddit.com/r/programming/comments/1qefox/jenkins_developers_accidentally_do_git_push_force/">never want to do that on the master branch</a>. Instead, you are generating a new commit that reverses the contents of the merge commit. As usual, you will want to edit the commit message to be meaningful – mention the affected commit hash and the affected pull request.</p>
+
+<p>You will also want to <code class="highlighter-rouge">git commit -S --amend</code> after this to sign the commit; <code class="highlighter-rouge">git revert</code> does not take a <code class="highlighter-rouge">-S</code> option. Bummer.</p>
+
+<h3 id="create-a-new-pr">Create a new PR.</h3>
+
+<p>You will now create a new PR with your revert commit. That’s simple enough. Again, be sure that the affected PRs are also informed; they may think their material landed, and while it technically did, it’s no longer there; they will need to open new PRs and figure out how to resubmit their changes (hopefully, this time without causing merge conflicts).</p>
+
+<h3 id="bug-the-committers-until-your-revert-lands">Bug the committers until your revert lands.</h3>
+
+<p>Until your revert commit lands, master will remain broken, so dealing with this situation should be blocking basically anything else. Be vocal.</p>
+
+<h2 id="thats-it">That’s it!</h2>
+
+<p>If you have suggestions for fixes on this page, please bother <a href="https://github.com/todb-r7">@todb-r7</a> with them.</p>
+:ET

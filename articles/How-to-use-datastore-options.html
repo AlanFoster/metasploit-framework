@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to use datastore options</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-09-23T06:54:20+01:00" itemprop="datePublished">Sep 23, 2016
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><strong>Note: This documentation may need to be vetted</strong></p>
+
+<p>A datastore option is a type of variable that can be set by the user, allowing various components of Metasploit to be more configurable during use. For example, in msfconsole, you can set the ConsoleLogging option in order to log all the console input/output - something that’s kind of handy for documentation purposes during a pentest. When you load a module, there will be a lot more options registered by the mixin(s) or the module. Some common ones include: RHOST and RPORT for a server-side exploit or auxiliary module, SRVHOST for a client-side module, etc. The best way to find out exactly what datastore options you can set is by using these commands:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">show options</code> - Shows you all the basic options.</li>
+  <li><code class="highlighter-rouge">show advanced</code> - Shows you all the advanced options.</li>
+  <li><code class="highlighter-rouge">show missing</code> - Shows you all the required options you have not configured.</li>
+  <li><code class="highlighter-rouge">set</code> - Shows you everything. Obviously you also use this command to set an option.</li>
+</ul>
+
+<h3 id="option-sources-moduledatastore-active_module-session-and-framework">Option sources: ModuleDataStore, active_module, session, and framework</h3>
+
+<p><strong>How users look at datastore options:</strong></p>
+
+<p>On the user’s side, datastore options are seen as global or module-level: Global means all the modules can use that option, which can be set by using the <code class="highlighter-rouge">setg</code> command. Module-level means only that particular module you’re using remembers that datastore option, no other components will know about it. You are setting a module-level option if you load a module first, and then use the <code class="highlighter-rouge">set</code> command, like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf &gt; use exploit/windows/smb/ms08_067_netapi 
+msf exploit(ms08_067_netapi) &gt; set rhost 10.0.1.3
+rhost =&gt; 10.0.1.3
+</code></pre></div></div>
+
+<p><strong>How Metasploit developers look at datastore options:</strong></p>
+
+<p>On the development side, things are a little crazier. Datastore options actually can be found in at least four different sources: the ModuleDataStore object, active_module, session object, or the framework object.</p>
+
+<p>If you’re just doing module development, the best source you can trust is the ModuleDataStore object. This object has a specific load order before handing you the option you want: if the option can be found in the module’s datastore, it will give you that. If not found, it will give you the one from framework. The following is an example of how to read a datastore option in a module:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">current_host</span> <span class="o">=</span> <span class="n">datastore</span><span class="p">[</span><span class="s1">'RHOST'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>If your dev work is outside the module realm, there is a good possibility that you don’t even have the ModuleDataStore object. But in some cases, you still might be able to read from the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/ui/console/driver.rb#L607">active_module accessor</a> from the driver. Or if you have access to <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/ui/console/module_command_dispatcher.rb#L28">ModuleCommandDispatcher</a>, there is a <code class="highlighter-rouge">mod</code> method too that gives you the same thing, and sometimes mixins pass this around in a <code class="highlighter-rouge">run_simple</code> method while dispatching a module. One example you can look at is the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/ui/console/command_dispatcher/auxiliary.rb">Msf::Ui::Console::CommandDispatcher::Auxiliary</a> class.</p>
+
+<p>In some cases such as running a script in post exploitation, you might not have ModuleDataStore or even active_module, but you should still have a session object. There should be an <code class="highlighter-rouge">exploit_datastore</code> that gives you all the datastore options:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">session</span><span class="p">.</span><span class="nf">exploit_datastore</span>
+</code></pre></div></div>
+
+<p>If you don’t have access to the module, or to a session object, the last source is obviously the framework object, and there is ALWAYS a framework object. However, like we said earlier, if the user sets a module-level option, no other components will see it, this includes the framework object:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">framework</span><span class="p">.</span><span class="nf">datastore</span>
+</code></pre></div></div>
+
+<p>So now you know there are multiple sources of datastore options. And hopefully at this point you are well aware that not all sources necessarily share the same thing. If you have to try everything, as a general rule, this should be your load order:</p>
+
+<ol>
+  <li>Try from the ModuleDataStore</li>
+  <li>Try from active_module</li>
+  <li>Try from session</li>
+  <li>Try from framework</li>
+</ol>
+
+<h3 id="core-option-types">Core option types</h3>
+
+<p>All all core datastore option types are defined in the <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/option_container.rb">option_container.rb</a> file as classes. You should always pick the most appropriate one because each has its own input validator.</p>
+
+<p>When you initialize an option during datastore registration, it should be in the following format:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptSomething</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">option_name</span><span class="p">,</span> <span class="p">[</span><span class="n">boolean</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">value</span><span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>option_name</strong> - Clearly means the name of the datastore option.</li>
+  <li><strong>boolean</strong> - The first attribute, true means this is a required option, false means optional.</li>
+  <li><strong>description</strong> - A short description about this option</li>
+  <li><strong>value</strong> - A default value. Note if the first attribute is false, you don’t need to provide a value, it’ll be set to nil automatically.</li>
+</ul>
+
+<p>Now let’s talk about what classes are available:</p>
+
+<ul>
+  <li><strong>OptString</strong> - Typically for a string option. If the input begins with “file://”, OptString will also automatically assume this is a file, and read from it. However, there is no file path validation when this happens, so if you want to load a file, you should use the OptPath instead, and then read the file yourself. Code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'MYTEST'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a MYTEST option'</span><span class="p">,</span> <span class="s1">'This is a default value'</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><strong>OptRaw</strong> - It actually functions exactly the same as OptString.</p>
+  </li>
+  <li>
+    <p><strong>OptBool</strong> - Boolean option. It will validate if the input is a variant of either true or false. For example: y, yes, n, no, 0, 1, etc. Code example:</p>
+  </li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptBool</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'BLAH'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a BLAH option'</span><span class="p">,</span> <span class="kp">false</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptEnum</strong> - Basically this will limit the input to specific choices. For example, if you want the input to be either “apple”, or “orange”, and nothing else, then OptEnum is the one for you. Code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Choices are: apple or range, defaults to apple</span>
+<span class="no">OptEnum</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'FRUIT'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a fruit'</span><span class="p">,</span> <span class="s1">'apple'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">]])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptPort</strong> - For an input that’s meant to be used as a port number. This number should be between 0 - 65535. Code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptPort</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'RPORT'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a port'</span><span class="p">,</span> <span class="mi">21</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptAddress</strong> - An input that is an IPv4 address. Code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptAddress</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'IP'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set an IP'</span><span class="p">,</span> <span class="s1">'10.0.1.3'</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li>OptAddressRange - An input that is a range of IPv4 addresses, for example: 10.0.1.1-10.0.1.20, or 10.0.1.1/24. You can also supply a file path instead of a range, and it will automatically treat that file as a list of IPs. Or, if you do the rand:3 syntax, with 3 meaning 3 times, it will generate 3 random IPs for you. Basic code example:</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptAddressRange</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Range'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set an IP range'</span><span class="p">,</span> <span class="s1">'10.0.1.3-10.0.1.23'</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptPath</strong> - If your datastore option is asking for a local file path, then use this.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptPath</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'FILE'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Load a local file'</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptInt</strong> - This can be either a hex value, or decimal.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptInt</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'FILE'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'A hex or decimal'</span><span class="p">,</span> <span class="mi">1024</span> <span class="p">])</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>OptRegexp</strong> - Datastore option is a regular expression.</li>
+</ul>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">OptRegexp</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'PATTERN'</span><span class="p">,</span> <span class="p">[</span><span class="kp">true</span><span class="p">,</span> <span class="s1">'Match a name'</span><span class="p">,</span> <span class="s1">'^alien'</span><span class="p">]),</span>
+</code></pre></div></div>
+
+<p><strong>Other types:</strong></p>
+
+<p>In some cases, there might not be a well-suited datastore option type for you. The best example is an URL: even though there’s no such thing as a OptUrl, what you can do is use the OptString type, and then in your module, do some validation for it, like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">valid?</span><span class="p">(</span><span class="n">input</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">input</span> <span class="o">=~</span> <span class="sr">/^http:\/\/.+/i</span>
+		<span class="k">return</span> <span class="kp">true</span>
+	<span class="k">else</span>
+		<span class="c1"># Here you can consider raising OptionValidateError</span>
+		<span class="k">return</span> <span class="kp">false</span>
+	<span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">if</span> <span class="n">valid?</span><span class="p">(</span><span class="n">datastore</span><span class="p">[</span><span class="s1">'URL'</span><span class="p">])</span>
+	<span class="c1"># We can do something with the URL</span>
+<span class="k">else</span>
+	<span class="c1"># Not the format we're looking for. Refuse to do anything.</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="the-register_options-method">The register_options method</h3>
+
+<p>The <code class="highlighter-rouge">register_options</code> method can register multiple basic datastore options. Basic datastore options are the ones that either must be configured, such as the RHOST option in a server-side exploit. Or it’s very commonly used, such as various username/password options found in a login module.</p>
+
+<p>The following is an example of registering multiple datastore options in a module:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">register_options</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'SUBJECT'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a subject'</span> <span class="p">]),</span>
+    <span class="no">OptString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'MESSAGE'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a message'</span> <span class="p">])</span>
+  <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="the-register_advanced_options-method">The register_advanced_options method</h3>
+
+<p>The <code class="highlighter-rouge">register_advanced_options</code> method can register multiple advanced datastore options. Advanced datastore options are the ones that never require the user to configure before using the module. For example, the Proxies option is almost always considered as “advanced”. But of course, it can also mean that’s something that most user will find difficult to configure.</p>
+
+<p>An example of register an advanced option:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">register_advanced_options</span><span class="p">(</span>
+  <span class="p">[</span>
+    <span class="no">OptInt</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'TIMEOUT'</span><span class="p">,</span> <span class="p">[</span> <span class="kp">true</span><span class="p">,</span> <span class="s1">'Set a timeout, in seconds'</span><span class="p">,</span> <span class="mi">60</span> <span class="p">])</span>
+  <span class="p">],</span> <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="changing-the-default-value-for-a-datastore-option">Changing the default value for a datastore option</h3>
+
+<p>When a datastore option is already registered by a mixin, there are still ways to change the default value from the module. You can either use the <code class="highlighter-rouge">register_options</code> method, or adding a DefaultOptions key in the module’s metadata.</p>
+
+<p><strong>Using register_options to change the default value:</strong></p>
+
+<p>One of the advantages of using <code class="highlighter-rouge">register_options</code> is that if the datastore option is advanced, this allows it to be on the basic option menu, meaning when people do “show options” on msfconsole, that option will be there instead. You also get to change the option description, and whether it should be required or not with this method.</p>
+
+<p><strong>Using DefaultOptions to change the default value:</strong></p>
+
+<p>When Metasploit initializes a module, an <code class="highlighter-rouge">import_defaults</code> method is <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/module.rb#L581">called</a>. This method will update all existing datastore options (which is why <code class="highlighter-rouge">register_options</code> can be used to update default values), and then it will specifically check the DefaultOptions key from the module’s metadata, and update again.</p>
+
+<p>Here’s an example of an exploit module’s initialize portion with the DefaultOptions key:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="p">{})</span>
+  <span class="k">super</span><span class="p">(</span><span class="n">update_info</span><span class="p">(</span><span class="n">info</span><span class="p">,</span>
+    <span class="s1">'Name'</span>           <span class="o">=&gt;</span> <span class="s2">"Module name"</span><span class="p">,</span>
+    <span class="s1">'Description'</span>    <span class="o">=&gt;</span> <span class="sx">%q{
+      This is an example of setting the default value of RPORT using the DefaultOptions key
+    }</span><span class="p">,</span>
+    <span class="s1">'License'</span>        <span class="o">=&gt;</span> <span class="no">MSF_LICENSE</span><span class="p">,</span>
+    <span class="s1">'Author'</span>         <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">'Name'</span> <span class="p">],</span>
+    <span class="s1">'References'</span>     <span class="o">=&gt;</span>
+      <span class="p">[</span>
+        <span class="p">[</span> <span class="s1">'URL'</span><span class="p">,</span> <span class="s1">''</span> <span class="p">]</span>
+      <span class="p">],</span>
+    <span class="s1">'Platform'</span>       <span class="o">=&gt;</span> <span class="s1">'win'</span><span class="p">,</span>
+    <span class="s1">'Targets'</span>        <span class="o">=&gt;</span>
+      <span class="p">[</span>
+        <span class="p">[</span> <span class="s1">'Windows'</span><span class="p">,</span> <span class="p">{</span> <span class="s1">'Ret'</span> <span class="o">=&gt;</span> <span class="mh">0x41414141</span> <span class="p">}</span> <span class="p">]</span>
+      <span class="p">],</span>
+    <span class="s1">'Payload'</span>        <span class="o">=&gt;</span>
+      <span class="p">{</span>
+        <span class="s1">'BadChars'</span> <span class="o">=&gt;</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span>
+      <span class="p">},</span>
+    <span class="s1">'DefaultOptions'</span> <span class="o">=&gt;</span>
+      <span class="p">{</span>
+        <span class="s1">'RPORT'</span> <span class="o">=&gt;</span> <span class="mi">8080</span>
+      <span class="p">},</span>
+    <span class="s1">'Privileged'</span>     <span class="o">=&gt;</span> <span class="kp">false</span><span class="p">,</span>
+    <span class="s1">'DisclosureDate'</span> <span class="o">=&gt;</span> <span class="s2">""</span><span class="p">,</span>
+    <span class="s1">'DefaultTarget'</span>  <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">))</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="the-deregister_options-method">The deregister_options method</h3>
+
+<p>The <code class="highlighter-rouge">deregister_options</code> method can deregister either basic or advanced options. Usage is really straight-forward:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">deregister_options</span><span class="p">(</span><span class="s1">'OPTION1'</span><span class="p">,</span> <span class="s1">'OPTION2'</span><span class="p">,</span> <span class="s1">'OPTION3'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="modifying-datastore-options-at-run-time">Modifying datastore options at run-time</h3>
+
+<p>Currently, the safest way to modify a datastore option at run-time is to override a method. For example, some mixins retrieve the RPORT option like this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rport</span>
+	<span class="n">datastore</span><span class="p">[</span><span class="s1">'RPORT'</span><span class="p">]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>In that scenario, you can override this rport method from your module, and return a different value:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rport</span>
+	<span class="mi">80</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This way, when a mixin wants that information, it will end up with the value 80, and not whatever is actually in <code class="highlighter-rouge">datastore['RPORT']</code>.</p>
+
+<h3 id="ideal-datastore-naming">Ideal datastore naming</h3>
+
+<p>Normal options are always UPPERCASE, advanced options are CamelCase, evasion options are Prefixed::CamelCase</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-use-datastore-options.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

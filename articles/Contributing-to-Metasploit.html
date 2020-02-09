@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Contributing to Metasploit</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-19T16:34:03+00:00" itemprop="datePublished">Dec 19, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="like-hacking-things-start-here">Like hacking things? Start here.</h1>
+
+<p>Every so often, we’ll get a request along the lines of, “Hey, I’m new to Metasploit, and I want to help!” The usual answer is something like, “Great! Here’s our <a href="https://github.com/rapid7/metasploit-framework/issues">framework bug tracker</a>, get crackin!”</p>
+
+<p>However, tackling core Metasploit Framework bugs or particularly squirrelly exploits probably isn’t the right place for the new contributor. Believe me, everyone was a newbie once, there’s no shame in that. Those bugs and vulns are usually complicated, and there are so many to choose from that it’s hard to get started. Here are some ideas to get you started.</p>
+
+<p>Metasploit is a tool by and for hackers, but the hackers that maintain it also happen to be software engineers. So, we have some hopefully easy-to-remember Do’s and Don’ts in <a href="https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>. Read up on those.</p>
+
+<h1 id="server-exploits">Server exploits</h1>
+
+<p>Server exploits are always in demand; why bother with complicated social engineering campaigns when you can go straight to the pain point of a vulnerable network. Here are some search queries to get you started:</p>
+
+<ul>
+  <li><a href="https://www.exploit-db.com/?type=remote">Remote exploits</a> from Exploit-DB</li>
+</ul>
+
+<h1 id="client-exploits">Client Exploits</h1>
+
+<p>Client exploits generally run as an “evil service” that a remote client will connect to. They nearly always require some kind of user interaction to trigger, such a viewing a web page, downloading a file, or otherwise connecting to the service controlled by the attacker.</p>
+
+<ul>
+  <li><a href="https://www.google.com/#bav=on.2,or.r_cp.r_qf.&amp;q=site:securityfocus.com+%22Firefox%22+OR+%22Internet+Explorer%22+OR+%22Chrome%22+OR+%22Safari%22+OR+%22Opera%22+-%22Retired%22&amp;safe=off">Browser Vulns</a> from SecurityFocus via Google search terms</li>
+</ul>
+
+<h1 id="local-and-privilege-escalation-exploits">Local and Privilege Escalation Exploits</h1>
+
+<p>Privilege escalation exploits tend to require the attacker already have an account on a target computer. They are nearly always going to be implemented as Metasploit exploit modules under one of the <a href="https://github.com/rapid7/metasploit-framework/tree/master/modules/exploits/windows/local">local</a> trees (platform dependent), but sometimes they’re better off as <a href="https://github.com/rapid7/metasploit-framework/tree/master/modules/post">post modules</a>. This is especially true for privilege escalation bugs.</p>
+
+<ul>
+  <li><a href="https://www.exploit-db.com/?type=local">Local Vulns</a> from Exploit-DB</li>
+</ul>
+
+<h1 id="unstable-modules">Unstable modules</h1>
+
+<p>Want to pick up where someone else left off? Super! Just check the guide on rescuing [[Unstable Modules]] and push these poor, unloved modules over the finish line with decent testing and code cleanup.</p>
+
+<h1 id="framework-bugs-and-features">Framework bugs and features</h1>
+
+<p>If exploit dev isn’t your thing, but more straightforward Ruby development is, then here are some good places to get started:</p>
+
+<ul>
+  <li><a href="https://github.com/rapid7/metasploit-framework/issues?q=is%3Aissue+is%3Aopen+label%3Abug">Recent Bugs</a>, which tend to be either very easy or very hard to fix (not a lot of middle ground).</li>
+  <li><a href="https://github.com/rapid7/metasploit-framework/issues?q=is%3Aissue+is%3Aopen+label%3Afeature">Feature requests</a>, which is often in the same boat.</li>
+</ul>
+
+<p>Along these same lines is a perennial need for better automated testing, down in the <a href="https://github.com/rapid7/metasploit-framework/tree/master/spec">spec directory</a>. If you have a talent for exploring strange and wonderful code bases, pick out a chunk of the Metasploit core code and define out what you expect for working behavior.</p>
+
+<h1 id="non-code">Non-code</h1>
+
+<p>We can always use better documentation. Those guys over at Offensive Security do a great job with <a href="http://www.offensive-security.com/metasploit-unleashed/Main_Page">Metasploit Unleashed</a>, but as with all complex bodies of work, there are surely bugs to be found. If you have ideas on how to make the documentation on Metasploit clear and more accessible to more people, go nuts.</p>
+
+<p>Write wiki articles in your fork (hint, <a href="https://github.com/gollum/gollum">Gollum</a> is excellent for this) and let someone know about them, we’ll be happy to reflect them here and maintain your credit. If you’re interested in working with us on documentation long-term, that’s even better; reach out on <a href="https://metasploit.com/slack">Slack</a> for info on how best to make changes.</p>
+
+<p>Ditto with YouTube screencasts of particular common tasks. Narration while you do it is great. People seem to love YouTube videos of this stuff – there are over <a href="http://www.youtube.com/results?search_query=metasploit&amp;oq=metasploit">40,000</a> of the things out there, and we’d love for someone to step up and curate a top 10 or top 100 of those that we can promote here for new and experienced users.</p>
+
+<p>For developer types: we are slowly but surely converting all of Metasploit to use standardized commenting using <a href="yardoc.org">YARD</a>, so we could always use more accurate and more comprehensive YARD documentation for pretty much anything found in <code class="highlighter-rouge">lib</code>. We will happily take pull requests that contain nothing but comment docs!</p>
+
+<p>Again, there’s always room on #metasploit on Freenode. Be helpful with the questions there, and people are more likely to help you in the future. Same goes for the <a href="https://metasploit.com/slack">Metasploit Slack team</a>, where all sorts of new and proficient users and devs are looking for help and camaraderie.</p>
+
+<h1 id="the-usual-warnings">The Usual Warnings</h1>
+
+<p>You probably shouldn’t run proof of concept exploit code you find on the Internet on a machine you care about in a network you care about. That is generally considered a Bad Idea. You also probably shouldn’t use your usual computer as a target for exploit development, since you are intentionally inducing unstable behavior.</p>
+
+<p>Our preferred method of module submission is via a git pull request from a feature branch on your own fork of Metasploit.  You can learn how to create one here:
+https://github.com/rapid7/metasploit-framework/wiki/Landing-Pull-Requests</p>
+
+<p>Also, please take a peek at our guides on using git and our acceptance guidelines for new modules in case you’re not familiar with them:
+https://github.com/rapid7/metasploit-framework/wiki</p>
+
+<p>If you get stuck, try to explain your specific problem as best you can on our <a href="https://freenode.net/">Freenode IRC</a> channel, #metasploit (joining requires a <a href="https://freenode.net/kb/answer/registration">registered nick</a>). Someone should be able to lend a hand. Apparently, some of those people never sleep.</p>
+
+<h1 id="thank-you">Thank you</h1>
+
+<p>In case nobody’s said it yet: Thanks for your interest and support! Exploit developers from the open source community are the soul of Metasploit, and by contributing your time and talent, you are helping advance the state of the art for intelligent IT defense. We simply couldn’t do all of this without you.</p>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Contributing-to-Metasploit.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

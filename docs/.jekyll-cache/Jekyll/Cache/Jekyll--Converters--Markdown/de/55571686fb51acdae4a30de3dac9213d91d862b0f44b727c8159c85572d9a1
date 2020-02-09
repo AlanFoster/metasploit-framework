@@ -1,0 +1,35 @@
+I"å<h1 id="how-to-use-msfauxiliaryauthbrute-to-write-a-bruteforcer">How to use Msf::Auxiliary::AuthBrute to write a bruteforcer</h1>
+<p>The <code class="highlighter-rouge">Msf::Auxiliary::AuthBrute</code> mixin should no longer be used to write a login module, you should try our <a href="https://github.com/rapid7/metasploit-framework/wiki/Creating-Metasploit-Framework-LoginScanners">LoginScanner API</a> instead. However, some of the datastore options are still needed, so letâ€™s go over them right quick.</p>
+
+<h3 id="regular-options">Regular options</h3>
+
+<ul>
+  <li><strong>USERNAME</strong> - (String) A specific username to authenticate as.</li>
+  <li><strong>PASSWORD</strong> - (String) A specific password to authenticate with.</li>
+  <li><strong>USER_FILE</strong> - (String) File containing usernames, one per line.</li>
+  <li><strong>PASS_FILE</strong> - (String) File containing passwords, one per line.</li>
+  <li><strong>USERPASS_FILE</strong> - (String) File containing users and passwords separated by space, one pair per line.</li>
+  <li><strong>BRUTEFORCE_SPEED</strong> - (Integer) How fast to bruteforce, from 0 to 5.</li>
+  <li><strong>VERBOSE</strong> - (Boolean) Whether to print output for all attempts.</li>
+  <li><strong>BLANK_PASSWORDS</strong> - (Boolean) Try blank passwords for all users.</li>
+  <li><strong>USER_AS_PASS</strong> - (Boolean) Try the username as the password for all users.</li>
+  <li><strong>DB_ALL_CREDS</strong> - (Boolean) Try each user/password couple stored in the current database.</li>
+  <li><strong>DB_ALL_USERS</strong> - (Boolean) Add all users in the current database to the list.</li>
+  <li><strong>STOP_ON_SUCCESS</strong> - (Boolean) Stop guessing when a credential works for a host.</li>
+</ul>
+
+<h3 id="advanced-options">Advanced options</h3>
+
+<ul>
+  <li><strong>REMOVE_USER_FILE</strong> - (Boolean) Automatically delete the USER_FILE on module completion.</li>
+  <li><strong>REMOVE_PASS_FILE</strong> - (Boolean) Automatically delete the PASS_FILE on module completion.</li>
+  <li><strong>REMOVE_USERPASS_FILE</strong> - (Boolean) Automatically delete the USERPASS_FILE on module completion.</li>
+  <li><strong>MaxGuessesPerService</strong> - (Integer) Maximum number of credentials to try per service instance. If set to zero or a non-number, this option will not be used.</li>
+  <li><strong>MaxMinutesPerService</strong> - (Integer) Maximum time in minutes to bruteforce the service instance. If set to zero or a non-number, this option will not be used.</li>
+  <li><strong>MaxGuessesPerUser</strong> - (Integer) Maximum guesses for a particular username for the service instance. Note that users are considered unique among different services, so a user at 10.1.1.1:22 is different from one at 10.2.2.2:22, and both will be tried up to the MaxGuessesPerUser limit.	If set to zero or a non-number, this option will not be used.</li>
+</ul>
+
+<h3 id="reference">Reference</h3>
+
+<p>https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/auxiliary/auth_brute.rb</p>
+:ET

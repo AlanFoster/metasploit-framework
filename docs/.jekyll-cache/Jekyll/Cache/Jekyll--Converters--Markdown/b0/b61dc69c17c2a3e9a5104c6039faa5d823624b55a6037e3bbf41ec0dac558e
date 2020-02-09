@@ -1,0 +1,22 @@
+I"�<p>Of the many recent changes to Meterpreter, reliable network communication is one of the more welcomed ones. For a long time, Meterpreter’s communication with Metasploit has been relatively easy to break. Once broken, the session was officially dead, and the only way to get a session back was to replay the original exploitation path and establish a whole new session.</p>
+
+<p>In the case of HTTP/S transports, some resiliency features were present. Thanks to its stateless nature, HTTP/S transports would continue to attempt to talk to Metasploit after network outages or other unexpected problems as each command request/response is transmitted over a fresh connection. TCP based transports had nothing that would attempt to reconnect should some kind of network issue occur.</p>
+
+<p>Revamped <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Transport-Control">transport</a> implementations have provided support for resiliency even for TCP based communcations. Any session that isn’t properly terminated by Metasploit will continue to function behind the scenes while Meterpreter attempts to re-establish communications with Metasploit.</p>
+
+<p>It is also possible to control the behaviour of this functionality a little via the use of the various timeout values that can be specified when adding transports to the session, and also on the fly for the current transport. For full details, please see the <a href="https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Timeout-Control">timeout documentation</a> for details on those timeout values.</p>
+
+<p>Behind the scenes, Meterpreter now maintains a circular linked list of transports in memory while running. When a transport fails, Meterpreter will shut down and clean up the current transport mechanism resources, and will move onto the next one in the list. From there, Meterpreter will use this transport configuration to attempt to reconnect to Metasploit. It will continue to make these attempts until one of the following occurs:</p>
+
+<ul>
+  <li>The overall session timeout value is reached, at which point the session is terminated.</li>
+  <li>The <code class="highlighter-rouge">Retry Total</code> time for the transport is reached, at which point Meterpreter will move on to the next transport.</li>
+  <li>The connection attempt is successful, and communications is re-established with Metasploit.</li>
+</ul>
+
+<p>If Meterpreter has a single transport configured, then it will continue to retry on that single transport repeatedly until the session timeout is reached, or a session is successfully created.</p>
+
+<h2 id="important-note-about-resilient-transports">Important note about resilient transports</h2>
+
+<p>Now that both <code class="highlighter-rouge">TCP</code> and <code class="highlighter-rouge">HTTP/S</code> payloads contain resiliency features, it’s important to know that exiting Metasploit using <code class="highlighter-rouge">exit -y</code> no longer terminates <code class="highlighter-rouge">TCP</code> sessions like it used to. If Metasploit is closed using <code class="highlighter-rouge">exit -y</code> without terminating existing sessions, both <code class="highlighter-rouge">TCP</code> and <code class="highlighter-rouge">HTTP/S</code> Meterpreter sessions will continue to run behind the scenes, attempting to connect back to Metasploit on the specified transports. If your intention is to exit Metasploit <em>and</em> terminate all of your sessions, then make sure you run <code class="highlighter-rouge">sessions -K</code> first.</p>
+:ET

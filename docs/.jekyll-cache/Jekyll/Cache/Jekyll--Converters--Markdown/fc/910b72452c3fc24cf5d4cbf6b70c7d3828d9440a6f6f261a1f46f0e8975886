@@ -1,0 +1,69 @@
+I"x<p>Contributing modules in <a href="https://golang.org/">GO</a> can be achieved in a few simple steps as outlined below.  As for supported GO version, we have tested with 1.11.2, no promised for version 2.</p>
+
+<h4 id="1-location">1. Location</h4>
+<ul>
+  <li>Select the appropriate <a href="https://github.com/rapid7/metasploit-framework/tree/master/modules">module</a> path based on the type of module you are trying to contribute</li>
+  <li>Be sure to include appropriate module documentation under <a href="https://github.com/rapid7/metasploit-framework/tree/master/documentation/modules">here</a></li>
+  <li>Test your documentation is correct by executing <code class="highlighter-rouge">info -d</code></li>
+</ul>
+
+<h4 id="2-execution">2. Execution</h4>
+<ul>
+  <li>Include this line at the top of your module: <code class="highlighter-rouge">//usr/bin/env go run "$0" "$@"; exit "$?"</code></li>
+  <li>Ensure your file <strong>is</strong> an executable file</li>
+</ul>
+
+<h4 id="3-setup">3. Setup</h4>
+<ul>
+  <li>Initialize your module with the module metadata:
+    <blockquote>
+
+      <p>import “metasploit/module”
+  func main() {
+    metadata := &amp;module.Metadata{
+      Name: “&lt;module name”,
+      Description: “<describe>",
+      Authors: []string{"&lt;author 1&gt;", "&lt;author 2&gt;"},
+      Date: "&lt;date module written",
+      Type:"<module type="">",
+      Privileged:  &lt;true|false&gt;,
+      References:  []module.Reference{},
+      Options: map[string]module.Option{	
+        "&lt;option 1":     {Type: "<type>", Description: "<description>", Required: &lt;true|false&gt;, Default: "<default>"},		
+        "&lt;option 2":     {Type: "<type>", Description: "<description>", Required: &lt;true|false&gt;, Default: "<default>"},
+    }}</default></description></type></default></description></type></module></describe></p>
+    </blockquote>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module.Init(metadata, &lt;the entry method to your module&gt;)   } **[FULL EXAMPLE](https://github.com/rapid7/metasploit-framework/blob/master/modules/auxiliary/scanner/msmail/exchange_enum.go)**
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p><strong><em>Note: Above does not outline the full potential list of metadata options</em></strong></p>
+
+<p><strong>Currently supported <em>module types</em>:</strong></p>
+<ul>
+  <li>remote_exploit</li>
+  <li>remote_exploit_cmd_stager</li>
+  <li>capture_server</li>
+  <li>dos</li>
+  <li>single_scanner</li>
+  <li>single_host_login_scanner</li>
+  <li>multi_scanner</li>
+</ul>
+
+<h4 id="4-shared-code">4. Shared Code</h4>
+<ul>
+  <li>For code that is shared specific to your module create a directory in your module directory:
+<code class="highlighter-rouge">shared/src/</code> metasploit will automatically add these to the GOPATH</li>
+  <li>For code that you think could be used across modules, add code <a href="https://github.com/rapid7/metasploit-framework/tree/master/lib/msf/core/modules/external/go/src/metasploit">here</a></li>
+  <li>3rd party libs aren’t currently supported but we welcome patches</li>
+</ul>
+
+<h4 id="5-finalize">5. Finalize</h4>
+<ul>
+  <li>Test your Pull Request</li>
+  <li>Create a <a href="https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md#pull-requests">Pull Request</a></li>
+  <li>No coding standard here, be sure to <a href="https://blog.golang.org/go-fmt-your-code">gofmt</a></li>
+</ul>
+:ET

@@ -1,0 +1,25 @@
+I"Ë<h1 id="how-to-decrypt-rc4-with-metasploitframeworkcompiler">How to decrypt RC4 with Metasploit::Framework::Compiler</h1>
+
+<p>The Metasploit C compiler has built-in support for RC4 encryption and decryption, which is implemented as the <code class="highlighter-rouge">rc4.h</code> header.</p>
+
+<h1 id="code-example">Code Example</h1>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;Windows.h&gt;
+#include &lt;rc4.h&gt;
+</span>
+<span class="cp">#define PAYLOADSIZE 12
+#define RC4KEY "4ASMkFslyhwXehNZw048cF1Vh1ACzyyA"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">payload</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"</span><span class="se">\xd8\xb0\xe9\x5a\x89\xc2\xee\x43\xb9\x30\xd0\x86</span><span class="s">"</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">lpBufSize</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">PAYLOADSIZE</span><span class="p">;</span>
+  <span class="n">LPVOID</span> <span class="n">lpBuf</span> <span class="o">=</span> <span class="n">VirtualAlloc</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">lpBufSize</span><span class="p">,</span> <span class="n">MEM_COMMIT</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">);</span>
+  <span class="n">memset</span><span class="p">(</span><span class="n">lpBuf</span><span class="p">,</span> <span class="sc">'\0'</span><span class="p">,</span> <span class="n">lpBufSize</span><span class="p">);</span>
+  <span class="n">RC4</span><span class="p">(</span><span class="n">RC4KEY</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">lpBuf</span><span class="p">,</span> <span class="n">PAYLOADSIZE</span><span class="p">);</span>
+  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">lpBuf</span><span class="p">,</span> <span class="s">"Test"</span><span class="p">,</span> <span class="n">MB_OK</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To compile, use <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Metasploit%3A%3AFramework%3A%3ACompiler%3A%3AWindows-to-compile-C-code">Metasploit::Framework::Compiler::Windows.compile_c</a>.</p>
+:ET

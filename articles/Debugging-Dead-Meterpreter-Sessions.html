@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Git Reference Sites | Metasploit spike</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Git Reference Sites" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Learning Git" />
+<meta property="og:description" content="Learning Git" />
+<link rel="canonical" href="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:url" content="/metasploit-framework/articles/Git-Reference-Sites.html" />
+<meta property="og:site_name" content="Metasploit spike" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2012-01-12T17:14:28+00:00" />
+<script type="application/ld+json">
+{"description":"Learning Git","headline":"Git Reference Sites","dateModified":"2012-01-12T17:14:28+00:00","datePublished":"2012-01-12T17:14:28+00:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"/metasploit-framework/articles/Git-Reference-Sites.html"},"url":"/metasploit-framework/articles/Git-Reference-Sites.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/metasploit-framework/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/metasploit-framework/feed.xml" title="Metasploit spike" /></head>
+<body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/metasploit-framework/">Metasploit spike</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger">
+            <a class="page-link" href="/metasploit-framework/">Articles</a><a class="page-link" href="/metasploit-framework/modules/">Modules</a></div>
+        </nav></div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Debugging Dead Meterpreter Sessions</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-19T16:55:10+00:00" itemprop="datePublished">Dec 19, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Dead shells. Nobody likes them. Yet, despite the advances made in the Metasploit stagers and Meterperter itself, we still see them regularly.</p>
+
+<p>There are many reasons why shells refuse to connect, or die after they’re established. The goal of this post is to help people understand <em>why</em>. Hopefully, by the end, the most common causes will be understood, and users can fix things themselves. If there are cases that are missed in this post, then please let us know and we’ll add them.</p>
+
+<p>Over time, this post should become a canonical resource for debugging sessions.</p>
+
+<h1 id="background-knowledge">Background Knowledge</h1>
+
+<p>Prior to diving into the possible breakages and their causes, it’s important to have some background knowledge of stagers, and how Meterpreter works. Please be sure to read the following articles prior to reading the rest of this post:</p>
+
+<ul>
+  <li>[[Meterpreter Stageless Mode]] - Covers the exploitation process, and how Meterpreter sessions are established. This is important because understanding how the different components interact, and what, allows for easier debugging later.</li>
+  <li>[[Meterpreter Configuration]] - Covers how configuration works in Meterpreter. This is important because it highlights the separation of configuration in stagers and Meterpreter. This alone is the key to many breakages, especially in HTTP/S payloads.</li>
+  <li>[[The ins and outs of HTTP and HTTPS communications in Meterpreter and Metasploit Stagers]] - Covers the detail of HTTP/S based communications in the stagers and in Meterpreter itself.</li>
+</ul>
+
+<h1 id="stagers-stages-and-handlers">Stagers, Stages, and Handlers</h1>
+
+<p>Each exploit and handler is made up of multiple things, and they’re all independent:</p>
+
+<ul>
+  <li><strong>Stager</strong>: This is the small bit of code that is first executed by the target. It contains it’s own bundled implementation of a communications channel. It has the goal of establishing communication with Metasploit, downloading the <strong>stage</strong>, and invoking it. It has it’s <em>own configuration</em>.</li>
+  <li><strong>Stage</strong>: This is the second payload that is executed by the target. It is sent to the target via the communications channel that was opened by the <strong>stage</strong>. Once downloaded, it is invoked and from there it takes over. It has it’s <em>own configuration</em>.</li>
+  <li><strong>Handler</strong>: This is the code that runs on the attacker’s machine. It is responsible for handling the attacker-side of the communications channel that is established by the <strong>stager</strong>. It is responsible for uploading the <strong>stage</strong>. It is responsible for handling communication between the attacker and the target once the stage has taken over from the stager.</li>
+</ul>
+
+<p>In some cases there might be multiple stages (as is the case with POSIX Meterpreter). This is called an <strong>intermediate</strong> stage. Usually these stages are slightly bigger than the stager and can do more work to help establish communications. In the context of this article, they aren’t too important.</p>
+
+<p>The most important thing to remember is that both the <strong>stager</strong> and the <strong>stage</strong> have their own configurations that are <strong>independent</strong>. <em>THE MOST COMMON</em> cause of dead shells is the result of the <strong>stage</strong> not having the correct configuration (ie. it’s different to that specified in the <strong>stager</strong>).</p>
+
+<h1 id="lhost-and-lport">LHOST and LPORT</h1>
+
+<p>Any user of Metasploit will tell you that they know what <code class="highlighter-rouge">LHOST</code> and <code class="highlighter-rouge">LPORT</code> mean, yet it’s incredibly common to find out that their understanding isn’t 100% correct. To prevent dead sessions that are related to misconfiguration of these values, we need to make sure we understand what they mean.</p>
+
+<h2 id="lhost">LHOST</h2>
+
+<p><code class="highlighter-rouge">LHOST</code> is short for <em>Local Host</em>. This value represents the IP address or host name that <strong>stagers</strong> and <strong>stages</strong> should attempt to connect to. It is where the <strong>handler</strong> can be reached. This doesn’t mean that this is where the handler actually <em>exists</em>.</p>
+
+<p><code class="highlighter-rouge">LHOST</code> is a value that meaning from the perspective of the target machine. This value is passed along as part of the configuration for <strong>stagers</strong> and <strong>stages</strong>, and tells the target machine where to go to reach the handler, and so this has to map to a value that <em>is reachable by the target</em>.</p>
+
+<p>A <strong>handler</strong> obviously needs to listen on a host/IP for the incoming connection. In cases where the <code class="highlighter-rouge">LHOST</code> value (ie. the address that the target is able to reach) is the <em>same</em> as that which the host can listen on, no extra work has to be done. The <code class="highlighter-rouge">LHOST</code> value is used by the handler.</p>
+
+<p>However, if some kind of NAT or port forward is enabled, or if the handler is behind a firewall, etc, then setting <code class="highlighter-rouge">LHOST</code> isn’t enough. In order to listen on the appropriate interface, another setting must be used called <code class="highlighter-rouge">ReverseListenerBindHost</code>. This value tells the <strong>handler</strong> to listen on a different interface/IP, but it doesn’t change the fact that the <code class="highlighter-rouge">LHOST</code> value is given to the target when the <strong>stage</strong> is uploaded.</p>
+
+<p>In short, <code class="highlighter-rouge">LHOST</code> must always remain the IP/host that is routable from the target, and if this value is not the same as what the listener needs to bind to, then change the <code class="highlighter-rouge">ReverseListenerBindHost</code> value. If you’re attacking something across the Internet and you specify an internal IP in <code class="highlighter-rouge">LHOST</code>, you’re doing it wrong.</p>
+
+<h2 id="lport">LPORT</h2>
+
+<p>The principles of <code class="highlighter-rouge">LHOST</code> / <code class="highlighter-rouge">ReverseListenerBindHost</code> can be applied to <code class="highlighter-rouge">LPORT</code> and <code class="highlighter-rouge">ReverseListenerBindPort</code> as well. If you have port forwarding in place, and your listener needs to bind to a different port, then you need to make use of the <code class="highlighter-rouge">ReverseListenerBindPort</code> setting.</p>
+
+<p>The classic example of this case is where an attacker wants to make use of port <code class="highlighter-rouge">443</code>, but rightfully doesn’t want to run Metasploit as <code class="highlighter-rouge">root</code> just so they can directly bind to ports lower than <code class="highlighter-rouge">1024</code>. Instead, the set up a port forward (on their router, or using <code class="highlighter-rouge">iptables</code>) so that <code class="highlighter-rouge">443</code> forwards to <code class="highlighter-rouge">8443</code>, with a goal of accepting connections on that port instead.</p>
+
+<p>To accommodate this scenario, the <code class="highlighter-rouge">LHOST</code> value must <strong>still contain <code class="highlighter-rouge">443</code></strong>, as this is the port that the target machine needs to establish communications on; <code class="highlighter-rouge">443</code> is the value that needs to go out with the <strong>stager</strong> and the <strong>stage</strong> configurations. Metasploit needs to bind locally to port <code class="highlighter-rouge">8443</code>, and so the <strong>handler</strong> is configured so that <code class="highlighter-rouge">ReverseListenerBindPort</code> has this value instead.</p>
+
+<p>When the handler launches, it binds to <code class="highlighter-rouge">8443</code> and handles any connections it receives. When a stage is generated, it uses <code class="highlighter-rouge">443</code> from <code class="highlighter-rouge">LHOST</code> value to populate the configuration.</p>
+
+<p>If the attacker makes the mistake of either setting <code class="highlighter-rouge">LPORT</code> to <code class="highlighter-rouge">8443</code>, or leaving <code class="highlighter-rouge">LPORT</code> as <code class="highlighter-rouge">443</code> and not using <code class="highlighter-rouge">ReverseListenerBindPort</code>, then the result is either a dead shell after the first stage, or no connect back at all.</p>
+
+<h1 id="dead-shells---what-to-check-for">Dead Shells - What to check for?</h1>
+
+<h2 id="quick-things-to-check">Quick things to check</h2>
+
+<ul>
+  <li>Make sure that <code class="highlighter-rouge">LHOST</code> is set to a routable address from the target, and not a local listen address.</li>
+  <li>Make sure that <code class="highlighter-rouge">LPORT</code> is set to the port number that the target needs to connect to.</li>
+  <li>Make sure that <code class="highlighter-rouge">ReverseListenerBindPort</code> is set if port forwarding is enabled and the traffic is being routed to a different port.</li>
+  <li>Make sure that your listener’s configuration matches that of the target from an architecture perspective. If you mix x64 listeners with x86 payloads (and vice versa), things will go bad.</li>
+</ul>
+
+<h2 id="not-so-quick-things-to-check">Not so quick things to check</h2>
+
+<ul>
+  <li>If the target is running AntiVirus there’s a chance that the <strong>stage</strong> (ie. <code class="highlighter-rouge">metsrv</code>) is being caught while being uploaded. <code class="highlighter-rouge">reverse_tcp</code> and <code class="highlighter-rouge">reverse_http</code> <strong>stagers</strong> download <code class="highlighter-rouge">metsrv</code> <em>without</em> any encryption, and so the content of the DLL is visible to anything watching on the wire. <code class="highlighter-rouge">reverse_https</code> can still get caught in cases where AV is doing MITM content inspection. In this case, consider encoding your payloads, or if possible using <em>stageless</em> meterpreter instead.</li>
+</ul>
+
+
+  </div><a class="u-url" href="/metasploit-framework/articles/Debugging-Dead-Meterpreter-Sessions.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/metasploit-framework/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Metasploit spike</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Metasploit spike</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/metasploit-framework/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

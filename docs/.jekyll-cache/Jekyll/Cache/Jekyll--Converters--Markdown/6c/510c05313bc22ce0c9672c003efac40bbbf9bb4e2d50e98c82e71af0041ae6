@@ -1,0 +1,55 @@
+I"I<p>Meterpreter is an advanced payload that has been part of Metasploit since 2004. Originally written in C by Matt “skape” Miller, dozens of contributors have provided additional code, including implementations in PHP, Python, and Java. The payload continues to be frequently updated as part of Metasploit development.</p>
+
+<p>Meterpreter development occurs in <a href="https://github.com/rapid7/metasploit-payloads">the metasploit-payloads repository</a> and the compiled results are published as part of the <a href="https://rubygems.org/gems/metasploit-payloads">metasploit-payloads gem</a>. For a detailed understanding of the Meterpreter architecture, please review the <a href="https://dev.metasploit.com/documents/meterpreter.pdf">original specification</a>.</p>
+
+<p>Additional documentation about Meterpreter can be found on this wiki:</p>
+<ul>
+  <li>[[Meterpreter Reliable Network Communication]]</li>
+  <li>[[Meterpreter Transport Control]]</li>
+  <li>[[Meterpreter HTTP Communication]]</li>
+  <li>[[Meterpreter Timeout Control]]</li>
+  <li>[[Meterpreter Sleep Control]]</li>
+  <li>[[Meterpreter Stageless Mode]]</li>
+  <li>[[Meterpreter Unicode Support]]</li>
+  <li>[[Meterpreter Configuration]]</li>
+  <li>[[Payload UUID]]</li>
+</ul>
+
+<p>Extension-specific documentation:</p>
+<ul>
+  <li>[[Python Extension]]</li>
+  <li>[[Powershell Extension]]</li>
+</ul>
+
+<p>A wishlist of features is maintained at the [[Meterpreter Wishlist]] page.</p>
+
+<p>Examples of specific use cases can also be found on this wiki:</p>
+<ul>
+  <li>[[Meterpreter Paranoid Mode]]</li>
+</ul>
+
+<p>Those interested in the technical details of Meterpeter, along with rationale behind some of the implementations, should read the following:</p>
+<ul>
+  <li>[[The ins and outs of HTTP and HTTPS communications in Meterpreter and Metasploit Stagers]]</li>
+</ul>
+
+<p>Got dead Meterpreter sessions? Read this: [[Debugging Dead Meterpreter Sessions]].</p>
+
+<h1 id="architecture">Architecture</h1>
+
+<p>To avoid confusion, the victim running meterpreter is always called the server and the ruby side controlling it is always called the client, regardless of the direction of the network transport connection.</p>
+
+<p>The Meterpreter server is broken into several pieces:</p>
+<ul>
+  <li><code class="highlighter-rouge">metsrv.dll</code> and <code class="highlighter-rouge">meterpreter.{jar,php,py}</code> - this is the heart of meterpreter where the protocol and extension systems are implemented.</li>
+  <li><code class="highlighter-rouge">ext_server_stdapi.{dll,jar,php,py}</code> - this extension implements most of the commands familiar to users.</li>
+  <li><code class="highlighter-rouge">ext_server_*.{dll,jar,php,py}</code> - other extensions provide further functionality and can be specific to particular environments.</li>
+</ul>
+
+<h2 id="delivering-meterpreter">Delivering Meterpreter</h2>
+
+<ol>
+  <li>Using a technique developed by Stephen Fewer called Reflective DLL Injection (RDI), metsrv.dll’s header is modified to be usable as shellcode. From there, Metasploit can embed it in an executable or run it via an exploit like any other shellcode.</li>
+</ol>
+
+:ET

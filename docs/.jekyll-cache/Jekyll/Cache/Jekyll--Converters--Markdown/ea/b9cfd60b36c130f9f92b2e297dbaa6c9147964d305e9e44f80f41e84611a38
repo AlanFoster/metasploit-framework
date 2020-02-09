@@ -1,0 +1,23 @@
+I"˜<h1 id="how-to-xor-with-metasploitframeworkcompiler">How to XOR with Metasploit::Framework::Compiler</h1>
+
+<p>The Metasploit C compiler has built-in support for XOR encoding and decoding, which is implemented as the <code class="highlighter-rouge">xor.h</code> header.</p>
+
+<h1 id="code-example">Code Example</h1>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;Windows.h&gt;
+#include &lt;String.h&gt;
+#include &lt;xor.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">args</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">xorStr</span> <span class="o">=</span> <span class="s">"NNNN"</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="n">xorKey</span> <span class="o">=</span> <span class="mh">0x0f</span><span class="p">;</span>
+  <span class="n">LPVOID</span> <span class="n">lpBuf</span> <span class="o">=</span> <span class="n">VirtualAlloc</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">strlen</span><span class="p">(</span><span class="n">xorStr</span><span class="p">),</span> <span class="n">MEM_COMMIT</span><span class="p">,</span> <span class="n">PAGE_EXECUTE_READWRITE</span><span class="p">);</span>
+  <span class="n">memset</span><span class="p">(</span><span class="n">lpBuf</span><span class="p">,</span> <span class="sc">'\0'</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">xorStr</span><span class="p">));</span>
+  <span class="n">xor</span><span class="p">((</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">lpBuf</span><span class="p">,</span> <span class="n">xorStr</span><span class="p">,</span> <span class="n">xorKey</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">xorStr</span><span class="p">));</span>
+  <span class="n">MessageBox</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">lpBuf</span><span class="p">,</span> <span class="s">"Test"</span><span class="p">,</span> <span class="n">MB_OK</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To compile, use <a href="https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Metasploit%3A%3AFramework%3A%3ACompiler%3A%3AWindows-to-compile-C-code">Metasploit::Framework::Compiler::Windows.compile_c</a></p>
+:ET
