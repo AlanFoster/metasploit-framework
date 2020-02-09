@@ -1,9 +1,11 @@
 ---
 layout: post
-title:  "Setting up metasploit dev"
-date:   2020-02-08 11:31:53 +0000
+title:  "Setting Up a Metasploit Development Environment"
+date:   "2019-07-16 16:19:32 -0500"
 categories: article
 ---
+
+<sup>*The shortlink to this wiki page is https://r-7.co/MSF-DEV*</sup>
 
 This is a guide for setting up a developer environment to contribute modules, documentation, and fixes to the Metasploit Framework. If you just want to use Metasploit for legal, authorized hacking, we recommend instead you:
 

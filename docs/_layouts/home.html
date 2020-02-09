@@ -12,7 +12,8 @@ layout: default
   {%- if site.articles.size > 0 -%}
     <h2 class="post-list-heading">{{ page.list_title | default: "Articles" }}</h2>
     <ul class="post-list">
-      {%- for article in site.articles -%}
+      {%- assign sorted_articles = site.articles | sort: 'date' | reverse -%}
+      {%- for article in sorted_articles -%}
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ article.date | date: date_format }}</span>
