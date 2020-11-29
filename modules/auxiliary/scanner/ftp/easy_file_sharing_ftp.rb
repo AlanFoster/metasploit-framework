@@ -26,7 +26,7 @@ class MetasploitModule < Msf::Auxiliary
         [
           [ 'CVE', '2017-6510']
         ],
-      'DisclosureDate' => 'Mar 07 2017'
+      'DisclosureDate' => '2017-03-07'
     ))
 
     register_options(
@@ -97,10 +97,10 @@ class MetasploitModule < Msf::Auxiliary
 
     rescue ::Rex::ConnectionRefused, ::Rex::HostUnreachable, ::Rex::ConnectionTimeout => e
       vprint_error(e.message)
-      elog("#{e.class} #{e.message} #{e.backtrace * "\n"}")
+      elog(e)
     rescue ::Timeout::Error, ::Errno::EPIPE => e
       vprint_error(e.message)
-      elog("#{e.class} #{e.message} #{e.backtrace * "\n"}")
+      elog(e)
     ensure
       data_disconnect
       disconnect

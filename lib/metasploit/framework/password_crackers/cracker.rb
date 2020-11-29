@@ -84,35 +84,35 @@ module Metasploit
         #   @return [String] The file path to the wordlist to use
         attr_accessor :wordlist
 
-        validates :config, :'Metasploit::Framework::File_path' => true, if: 'config.present?'
+        validates :config, :'Metasploit::Framework::File_path' => true, if: -> { config.present? }
 
         validates :cracker, inclusion: {in: %w[john hashcat]}
 
-        validates :cracker_path, :'Metasploit::Framework::Executable_path' => true, if: 'cracker_path.present?'
+        validates :cracker_path, :'Metasploit::Framework::Executable_path' => true, if: -> { cracker_path.present? }
 
         validates :fork,
                   numericality: {
                       only_integer:             true,
                       greater_than_or_equal_to: 1
-                  }, if: 'fork.present?'
+                  }, if: -> { fork.present? }
 
-        validates :hash_path, :'Metasploit::Framework::File_path' => true, if: 'hash_path.present?'
+        validates :hash_path, :'Metasploit::Framework::File_path' => true, if: -> { hash_path.present? }
 
-        validates :pot, :'Metasploit::Framework::File_path' => true, if: 'pot.present?'
+        validates :pot, :'Metasploit::Framework::File_path' => true, if: -> { pot.present? }
 
         validates :max_runtime,
                   numericality: {
                       only_integer:             true,
                       greater_than_or_equal_to: 0
-                  }, if: 'max_runtime.present?'
+                  }, if: -> { max_runtime.present? }
 
         validates :max_length,
                   numericality: {
                       only_integer:             true,
                       greater_than_or_equal_to: 0
-                  }, if: 'max_length.present?'
+                  }, if: -> { max_length.present? }
 
-        validates :wordlist, :'Metasploit::Framework::File_path' => true, if: 'wordlist.present?'
+        validates :wordlist, :'Metasploit::Framework::File_path' => true, if: -> { wordlist.present? }
 
         # @param attributes [Hash{Symbol => String,nil}]
         def initialize(attributes={})
@@ -182,6 +182,30 @@ module Metasploit
             '110'
           when 'android-md5'
             '10'
+          when 'hmac-md5'
+            '10200'
+          when 'dynamic_82'
+            '1710'
+          when 'ssha'
+            '111'
+          when 'raw-sha512'
+            '1700'
+          when 'raw-sha1'
+            '100'
+          when 'raw-md5'
+            '0'
+          when 'smd5'
+            '6300'
+          when 'ssha256'
+            '1411'
+          when 'ssha512'
+            '1711'
+          when 'mscash'
+              '1100'
+          when 'mscash2'
+              '2100'
+          when 'Raw-MD5u'
+              '30'
           else
             nil
           end
@@ -411,7 +435,7 @@ module Metasploit
             # https://hashcat.net/wiki/doku.php?id=frequently_asked_questions#what_is_the_maximum_supported_password_length_for_optimized_kernels
             # Optimized Kernels has a large impact on speed.  Here are some stats from Hashcat 5.1.0:
 
-            # Kali Linux on Dell Precision M3800            
+            # Kali Linux on Dell Precision M3800
             ## hashcat -b -w 2 -m 0
             # * Device #1: Quadro K1100M, 500/2002 MB allocatable, 2MCU
             # Speed.#1.........:   185.9 MH/s (11.15ms) @ Accel:64 Loops:16 Thr:1024 Vec:1

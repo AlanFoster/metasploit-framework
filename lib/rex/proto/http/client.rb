@@ -42,7 +42,7 @@ class Client
 
     # XXX: This info should all be controlled by ClientRequest
     self.config_types = {
-      'uri_encode_mode'        => ['hex-normal', 'hex-all', 'hex-random', 'u-normal', 'u-random', 'u-all'],
+      'uri_encode_mode'        => ['hex-normal', 'hex-all', 'hex-random', 'hex-noslashes', 'u-normal', 'u-random', 'u-all'],
       'uri_encode_count'       => 'integer',
       'uri_full_url'           => 'bool',
       'pad_method_uri_count'   => 'integer',
@@ -93,7 +93,7 @@ class Client
       # config.
 
       if(typ == 'bool')
-        val = (val =~ /^(t|y|1)/i ? true : false || val === true)
+        val = (val == true || val.to_s =~ /^(t|y|1)/i)
       end
 
       if(typ == 'integer')
@@ -123,38 +123,36 @@ class Client
   # @option opts 'vhost'         [String] Host header value
   #
   # @return [ClientRequest]
-  def request_raw(opts={})
+  def request_raw(opts = {})
     opts = self.config.merge(opts)
 
-    opts['ssl']         = self.ssl
-    opts['cgi']         = false
-    opts['port']        = self.port
+    opts['cgi'] = false
+    opts['port'] = self.port
+    opts['ssl'] = self.ssl
 
-    req = ClientRequest.new(opts)
+    ClientRequest.new(opts)
   end
-
 
   #
   # Create a CGI compatible request
   #
   # @param (see #request_raw)
   # @option opts (see #request_raw)
-  # @option opts 'ctype'         [String] Content-Type header value, default: +application/x-www-form-urlencoded+
+  # @option opts 'ctype'         [String] Content-Type header value, default for POST requests: +application/x-www-form-urlencoded+
   # @option opts 'encode_params' [Bool]   URI encode the GET or POST variables (names and values), default: true
   # @option opts 'vars_get'      [Hash]   GET variables as a hash to be translated into a query string
   # @option opts 'vars_post'     [Hash]   POST variables as a hash to be translated into POST data
   #
   # @return [ClientRequest]
-  def request_cgi(opts={})
+  def request_cgi(opts = {})
     opts = self.config.merge(opts)
 
-    opts['ctype']       ||= 'application/x-www-form-urlencoded'
-    opts['ssl']         = self.ssl
-    opts['cgi']         = true
-    opts['port']        = self.port
+    opts['cgi'] = true
+    opts['port'] = self.port
+    opts['ssl'] = self.ssl
+    opts['ctype'] ||= 'application/x-www-form-urlencoded' if opts['method'] == 'POST'
 
-    req = ClientRequest.new(opts)
-    req
+    ClientRequest.new(opts)
   end
 
   #

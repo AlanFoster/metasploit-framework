@@ -3,6 +3,7 @@ require 'rex/io/stream_abstraction'
 require 'rex/sync/ref'
 require 'rex/payloads/meterpreter/uri_checksum'
 require 'rex/post/meterpreter'
+require 'rex/post/meterpreter/core_ids'
 require 'rex/socket/x509_certificate'
 require 'msf/core/payload/windows/verify_ssl'
 require 'rex/user_agent'
@@ -71,7 +72,8 @@ module ReverseHttp
         OptString.new('HttpUserAgent',
           'The user-agent that the payload should use for communication',
           default: Rex::UserAgent.shortest,
-          aliases: ['MeterpreterUserAgent']
+          aliases: ['MeterpreterUserAgent'],
+          max_length: Rex::Payloads::Meterpreter::Config::UA_SIZE - 1
         ),
         OptString.new('HttpServerName',
           'The server header that the handler will send in response to requests',
@@ -366,8 +368,7 @@ protected
         # was generated on the fly. This means we form a new session for each.
 
         # Hurl a TLV back at the caller, and ignore the response
-        pkt = Rex::Post::Meterpreter::Packet.new(Rex::Post::Meterpreter::PACKET_TYPE_RESPONSE,
-                                                 'core_patch_url')
+        pkt = Rex::Post::Meterpreter::Packet.new(Rex::Post::Meterpreter::PACKET_TYPE_RESPONSE, Rex::Post::Meterpreter::COMMAND_ID_CORE_PATCH_URL)
         pkt.add_tlv(Rex::Post::Meterpreter::TLV_TYPE_TRANS_URL, conn_id + "/")
         resp.body = pkt.to_r
 

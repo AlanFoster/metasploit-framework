@@ -37,6 +37,10 @@ def hash_to_hashcat(cred)
       #         legacy MD5
       # T: = 160 characters
       #         PBKDF2-based SHA512 hash specific to 12C (12.1.0.2+)
+    when /hmac-md5/
+      data = cred.private.data.split('#')
+      password = Rex::Text.encode_base64("#{cred.public.username} #{data[1]}")
+      return "$cram_md5$#{Rex::Text.encode_base64(data[0])}$#{password}"
     when /raw-sha1|oracle11/ # oracle 11, hash-mode: 112
       if cred.private.data =~ /S:([\dA-F]{60})/ # oracle 11
         # hashcat wants a 40 character string, : 20 character string
@@ -55,13 +59,16 @@ def hash_to_hashcat(cred)
       if cred.private.jtr_format.start_with?('des') # 'des,oracle', not oracle11/12c, hash-mode: 3100
         return "#{cred.private.data}"
       end
+    when /dynamic_82/
+      return cred.private.data.sub('$HEX$', ':').sub('$dynamic_82$','')
     when /mysql-sha1/
       # lowercase, and remove the first character if its a *
       return cred.private.data.downcase.sub('*','')
     when /md5|des|bsdi|crypt|bf/, /mssql|mssql05|mssql12|mysql/, /sha256|sha-256/,
          /sha512|sha-512/, /xsha|xsha512|PBKDF2-HMAC-SHA512/,
          /mediawiki|phpass|PBKDF2-HMAC-SHA1/,
-         /android-sha1/, /android-samsung-sha1/, /android-md5/
+         /android-sha1/, /android-samsung-sha1/, /android-md5/,
+         /ssha/, /raw-sha512/
       #            md5(crypt), des(crypt), b(crypt), sha256, sha512, xsha, xsha512, PBKDF2-HMAC-SHA512
       # hash-mode: 500          1500        3200      7400    1800   122   1722       7100
       #            mssql, mssql05, mssql12, mysql, mysql-sha1
@@ -70,7 +77,18 @@ def hash_to_hashcat(cred)
       # hash-mode: 3711,      400,    12001
       #            android-sha1
       # hash-mode: 5800
+      #            ssha, raw-sha512
+      # hash-mode: 111,  1700
       return cred.private.data
+    when /^mscash$/
+      # hash-mode: 1100
+      data = cred.private.data.split(':').first
+      if /^M\$(?<salt>[[:print:]]+)#(?<hash>[\da-fA-F]{32})/ =~ data
+        return "#{hash}:#{salt}"
+      end
+    when /^mscash2$/
+      # hash-mode: 2100
+      return cred.private.data.split(':').first
     end
   end
   nil

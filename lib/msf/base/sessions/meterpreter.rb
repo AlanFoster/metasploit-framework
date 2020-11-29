@@ -497,7 +497,7 @@ class Meterpreter < Rex::Post::Meterpreter::Client
         # there
         return if !(framework.db && framework.db.active)
 
-        ::ActiveRecord::Base.connection_pool.with_connection {
+        ::ApplicationRecord.connection_pool.with_connection {
           wspace = framework.db.find_workspace(workspace)
 
           # Account for finding ourselves on a different host
@@ -559,7 +559,7 @@ class Meterpreter < Rex::Post::Meterpreter::Client
     rescue ::Exception => e
       # Log the error but otherwise ignore it so we don't kill the
       # session if reporting failed for some reason
-      elog("Error loading sysinfo: #{e.class}: #{e}")
+      elog('Error loading sysinfo', error: e)
       dlog("Call stack:\n#{e.backtrace.join("\n")}")
     end
   end

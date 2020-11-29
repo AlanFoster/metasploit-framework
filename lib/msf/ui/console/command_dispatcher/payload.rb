@@ -11,6 +11,7 @@ module Msf
         ###
         class Payload
           include Msf::Ui::Console::ModuleCommandDispatcher
+          include Msf::Ui::Console::ModuleOptionTabCompletion
 
           # Load supported formats
           @@supported_formats = \
@@ -31,6 +32,7 @@ module Msf
             "-k" => [ false, "Preserve the template behavior and inject the payload as a new thread" ],
             "-o" => [ true,  "The output file name (otherwise stdout)" ],
             "-O" => [ true,  "Deprecated: alias for the '-o' option" ],
+            "-v" => [ false, "Verbose output (display stage in addition to stager)" ],
             "-h" => [ false, "Show this message" ],
           )
 
@@ -48,11 +50,13 @@ module Msf
             handler = framework.modules.create('exploit/multi/handler')
 
             handler_opts = {
-              'Payload'        => mod.refname,
-              'LocalInput'     => driver.input,
-              'LocalOutput'    => driver.output,
-              'ExitOnSession'  => false,
-              'RunAsJob'       => true
+              'Payload'     => mod.refname,
+              'LocalInput'  => driver.input,
+              'LocalOutput' => driver.output,
+              'RunAsJob'    => true,
+              'Options'     => {
+                'ExitOnSession' => false,
+              }
             }
 
             handler.datastore.merge!(mod.datastore)
@@ -96,6 +100,7 @@ module Msf
             template     = nil
             plat         = nil
             keep         = false
+            verbose      = false
 
             @@generate_opts.parse(args) do |opt, _idx, val|
               case opt
@@ -131,6 +136,8 @@ module Msf
                 plat = val
               when '-x'
                 template = val
+              when '-v'
+                verbose = true
               when '-h'
                 cmd_generate_help
                 return false
@@ -161,7 +168,8 @@ module Msf
                 'Template'    => template,
                 'Platform'    => plat,
                 'KeepTemplateWorking' => keep,
-                'Iterations' => iter
+                'Iterations' => iter,
+                'Verbose' => verbose
               )
             rescue
               log_error("Payload generation failed: #{$ERROR_INFO}")
@@ -180,6 +188,9 @@ module Msf
             true
           end
 
+          #
+          # Tab completion for the generate command
+          #
           def cmd_generate_tabs(str, words)
             fmt = {
               '-b' => [ true                                              ],
@@ -194,9 +205,12 @@ module Msf
               '-p' => [ true                                              ],
               '-k' => [ nil                                               ],
               '-x' => [ :file                                             ],
-              '-i' => [ true                                              ]
+              '-i' => [ true                                              ],
+              '-v' => [ nil                                               ]
             }
-            tab_complete_generic(fmt, str, words)
+            flags = tab_complete_generic(fmt, str, words)
+            options = tab_complete_option(str, words)
+            flags + options
           end
         end
       end

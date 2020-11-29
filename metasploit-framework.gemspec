@@ -53,7 +53,7 @@ Gem::Specification.new do |spec|
   # Needed for config.action_view for view plugin compatibility for Pro
   spec.add_runtime_dependency 'actionpack', *Metasploit::Framework::RailsVersionConstraint::RAILS_VERSION
   # Needed for some admin modules (cfme_manageiq_evm_pass_reset.rb)
-  spec.add_runtime_dependency 'bcrypt', '3.1.12'
+  spec.add_runtime_dependency 'bcrypt'
   # Needed for Javascript obfuscation
   spec.add_runtime_dependency 'jsobfu'
   # Needed for some admin modules (scrutinizer_add_user.rb)
@@ -61,18 +61,18 @@ Gem::Specification.new do |spec|
   # Metasm compiler/decompiler/assembler
   spec.add_runtime_dependency 'metasm'
   # Metasploit::Concern hooks
-  spec.add_runtime_dependency 'metasploit-concern', '~> 2.0.0'
+  spec.add_runtime_dependency 'metasploit-concern'
   # Metasploit::Credential database models
-  spec.add_runtime_dependency 'metasploit-credential', '~> 3.0.0'
+  spec.add_runtime_dependency 'metasploit-credential'
   # Database models shared between framework and Pro.
-  spec.add_runtime_dependency 'metasploit_data_models', '~> 3.0.10'
+  spec.add_runtime_dependency 'metasploit_data_models'
   # Things that would normally be part of the database model, but which
   # are needed when there's no database
-  spec.add_runtime_dependency 'metasploit-model', '~> 2.0.4'
+  spec.add_runtime_dependency 'metasploit-model'
   # Needed for Meterpreter
-  spec.add_runtime_dependency 'metasploit-payloads', '1.3.84'
+  spec.add_runtime_dependency 'metasploit-payloads', '2.0.23'
   # Needed for the next-generation POSIX Meterpreter
-  spec.add_runtime_dependency 'metasploit_payloads-mettle', '0.5.16'
+  spec.add_runtime_dependency 'metasploit_payloads-mettle', '1.0.2'
   # Needed by msfgui and other rpc components
   spec.add_runtime_dependency 'msgpack'
   # get list of network interfaces, like eth* from OS.
@@ -88,7 +88,7 @@ Gem::Specification.new do |spec|
   # Used by the Metasploit data model, etc.
   # bound to 0.2x for Activerecord 4.2.8 deprecation warnings:
   # https://github.com/ged/ruby-pg/commit/c90ac644e861857ae75638eb6954b1cb49617090
-  spec.add_runtime_dependency 'pg', '~> 0.20'
+  spec.add_runtime_dependency 'pg'
   # Run initializers for metasploit-concern, metasploit-credential, metasploit_data_models Rails::Engines
   spec.add_runtime_dependency 'railties'
   # required for OS fingerprinting
@@ -125,6 +125,8 @@ Gem::Specification.new do |spec|
   # Needed by auxiliary/gather/http_pdf_authors module
   spec.add_runtime_dependency 'pdf-reader'
   spec.add_runtime_dependency 'ruby-macho'
+  # Needed for mongodb/bson
+  spec.add_runtime_dependency 'bson'
 
   #
   # Protocol Libraries
@@ -134,7 +136,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'net-ssh'
   spec.add_runtime_dependency 'ed25519' # Adds ed25519 keys for net-ssh
   spec.add_runtime_dependency 'bcrypt_pbkdf'
-  spec.add_runtime_dependency 'ruby_smb'
+  spec.add_runtime_dependency 'ruby_smb', '~> 2.0'
+  spec.add_runtime_dependency 'net-ldap'
 
   #
   # REX Libraries
@@ -198,6 +201,10 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'faker'
   # Pinned as a dependency of i18n to the last working version
   spec.add_runtime_dependency 'concurrent-ruby','1.0.5'
+  # SSH server library
+  spec.add_runtime_dependency 'hrr_rb_ssh', '0.3.0.pre2'
+  # Needed for irb internal command
+  spec.add_runtime_dependency 'irb'
 
   # AWS enumeration modules
   spec.add_runtime_dependency 'aws-sdk-s3'
@@ -209,6 +216,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'eventmachine'
 
   # Earlier than latest Faraday gem is used to prevent upstream Octokit errors
-  spec.add_runtime_dependency 'faraday', '<= 0.17.0'
+  spec.add_runtime_dependency 'faraday'
 
 end

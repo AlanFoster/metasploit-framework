@@ -42,7 +42,7 @@ private
   end
 
   def opts_to_hosts(opts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     wspace = find_workspace(opts[:workspace])
     hosts  = []
     if opts[:host] or opts[:address]
@@ -63,7 +63,7 @@ private
   end
 
   def opts_to_services(hosts,opts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     wspace = find_workspace(opts[:workspace])
     services = []
     if opts[:host] or opts[:address] or opts[:addresses]
@@ -105,7 +105,7 @@ private
   end
 
   def get_notes(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     notes = []
 
@@ -255,7 +255,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.creds', {})
   def rpc_creds(xopts)
-    ::ActiveRecord::Base.connection_pool.with_connection {
+    ::ApplicationRecord.connection_pool.with_connection {
       ret = {}
       ret[:creds] = []
       opts, wspace = init_db_opts_workspace(xopts)
@@ -279,15 +279,15 @@ public
         end
 
         updated_at = nil
-        pass = nil   
+        pass = nil
         type = nil
-        
+
         unless cred.private.nil?
-          updated_at = cred.private.updated_at.to_i   
+          updated_at = cred.private.updated_at.to_i
           pass = cred.private.data.to_s
           type = cred.private.type.to_s
         else
-          updated_at = cred.public.updated_at.to_i        
+          updated_at = cred.public.updated_at.to_i
         end
 
         ret[:creds] << {
@@ -302,6 +302,67 @@ public
         }
       end
       ret
+    }
+  end
+
+
+  # Delete credentials from a specific workspace.
+  #
+  # @param [Hash] xopts Options:
+  # @option xopts [String] :workspace Name of the workspace.
+  # @raise [Msf::RPC::ServerException] You might get one of these errors:
+  #  * 500 ActiveRecord::ConnectionNotEstablished. Try: rpc.call('console.create').
+  #  * 500 Database not loaded. Try: rpc.call('console.create')
+  #  * 500 Invalid workspace.
+  # @return [Hash] Credentials with the following hash key:
+  #  * 'result' [String] A message that says 'success'.
+  #  * 'deleted' [Array<Hash>] An array of credentials. Each hash in the array will have the following:
+  #    * 'user' [String] Username.
+  #    * 'pass' [String] Password.
+  #    * 'updated_at' [Integer] Last updated at.
+  #    * 'type' [String] Password type.
+  #    * 'host' [String] Host.
+  #    * 'port' [Integer] Port.
+  #    * 'proto' [String] Protocol.
+  #    * 'sname' [String] Service name.
+  # @example Here's how you would use this from the client:
+  #  rpc.call('db.del_creds', {})
+  def rpc_del_creds(xopts)
+    ::ApplicationRecord.connection_pool.with_connection {
+      deleted = []
+      ret = {}
+      ret[:creds] = []
+      opts, wspace = init_db_opts_workspace(xopts)
+      limit = opts.delete(:limit) || 100
+      offset = opts.delete(:offset) || 0
+      query = Metasploit::Credential::Core.where(
+        workspace_id: wspace
+      ).offset(offset).limit(limit)
+      query.each do |cred|
+        host = ''
+        port = 0
+        proto = ''
+        sname = ''
+        unless cred.logins.empty?
+          login = cred.logins.first
+          host = login.service.host.address.to_s
+          sname = login.service.name.to_s if login.service.name.present?
+          port = login.service.port.to_i
+          proto = login.service.proto.to_s
+        end
+        ret[:creds] << {
+                :user => cred.public.username.to_s,
+                :pass => cred.private.data.to_s,
+                :updated_at => cred.private.updated_at.to_i,
+                :type => cred.private.type.to_s,
+                :host => host,
+                :port => port,
+                :proto => proto,
+                :sname => sname}
+        deleted << ret
+        cred.destroy
+      end
+      return { :result => 'success', :deleted => deleted }
     }
   end
 
@@ -331,7 +392,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.hosts', {})
   def rpc_hosts(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
 
     conditions = {}
@@ -391,7 +452,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.services', {})
   def rpc_services( xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -448,7 +509,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.vulns', {})
   def rpc_vulns(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -569,7 +630,7 @@ public
   #  # This will set the current workspace to 'default'
   #  rpc.call('db.set_workspace', 'default')
   def rpc_set_workspace(wspace)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     workspace = find_workspace(wspace)
     if workspace
@@ -593,7 +654,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.del_workspace', 'temp_workspace')
   def rpc_del_workspace(wspace)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     # Delete workspace
     workspace = find_workspace(wspace)
@@ -625,7 +686,7 @@ public
   # @example Here's how you would use this from the client:
   #  * rpc.call('db.add_workspace', 'my_new_workspace')
   def rpc_add_workspace(wspace)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     wspace = self.framework.db.add_workspace(wspace)
     return { 'result' => 'success' } if wspace
@@ -662,7 +723,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.get_host', {:workspace => 'default', :host => ip})
   def rpc_get_host(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
 
     ret = {}
@@ -709,7 +770,7 @@ public
   # @example Here's how you would use this from the client:
   #  rpc.call('db.analyze_host', {:workspace => 'default', :host => ip})
 def rpc_analyze_host(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     _opts, _wspace = init_db_opts_workspace(xopts)
 
     ret = {}
@@ -761,7 +822,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_host', {:host => ip})
   def rpc_report_host(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
 
     res = self.framework.db.report_host(opts)
@@ -789,7 +850,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_service', {:host=>ip, :port=>8181, :proto=>'tcp', :name=>'http'})
   def rpc_report_service(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     res = self.framework.db.report_service(opts)
     return { :result => 'success' } if res
@@ -821,7 +882,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.get_service', {:workspace=>'default', :proto=>'tcp', :port=>443})
   def rpc_get_service(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
 
     ret = {}
@@ -940,7 +1001,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.get_client', {:workspace=>'default', :ua_string=>user_agent, :host=>ip})
   def rpc_get_client(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     ret = {}
     ret[:client] = []
@@ -980,7 +1041,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_client', {:workspace=>'default', :ua_string=>user_agent, :host=>ip})
   def rpc_report_client(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     res = self.framework.db.report_client(opts)
     return { :result => 'success' } if res
@@ -1012,7 +1073,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_note', {:type=>'http_data', :host=>'192.168.1.123', :data=>'data'})
   def rpc_report_note(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     if (opts[:host] or opts[:address]) and opts[:port] and opts[:proto]
       addr = opts[:host] || opts[:address]
@@ -1057,7 +1118,7 @@ end
   #  # This gives you all the notes.
   #  rpc.call('db.notes', {})
   def rpc_notes(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -1098,7 +1159,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.get_ref', ref_name)
   def rpc_get_ref(name)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     self.framework.db.get_ref(name)
   }
@@ -1129,7 +1190,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.del_vuln', {:host=>ip, :port=>445, :proto=>'tcp'})
   def rpc_del_vuln(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     opts[:workspace] = opts[:workspace].name
     hosts  = []
@@ -1263,7 +1324,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.del_service', {:host=>ip})
   def rpc_del_service(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     hosts  = []
     services = []
@@ -1336,7 +1397,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.del_host', {:host=>ip})
   def rpc_del_host(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     opts = fix_options(xopts)
     wspace = find_workspace(opts[:workspace])
@@ -1383,7 +1444,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_vuln', {:host=>ip, :name=>'file upload'})
   def rpc_report_vuln(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     opts = fix_options(xopts)
     opts[:workspace] = find_workspace(opts[:workspace]) if opts[:workspace]
@@ -1416,7 +1477,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.events', {})
   def rpc_events(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -1455,7 +1516,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_event', {:username => username, :host=>ip})
   def rpc_report_event(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     res = self.framework.db.report_event(opts)
     { :result => 'success' } if res
@@ -1486,7 +1547,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.report_loot', {})
   def rpc_report_loot(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     if opts[:host] && opts[:port] && opts[:proto]
       opts[:service] = self.framework.db.find_or_create_service(opts)
@@ -1522,7 +1583,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.loots', {})
   def rpc_loots(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -1595,7 +1656,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.import_data', {'data'=>nexpose_scan_results})
   def rpc_import_data(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     self.framework.db.import(opts)
     return { :result => 'success' }
@@ -1628,7 +1689,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.get_vuln', {:host => ip, :proto => 'tcp'})
   def rpc_get_vuln(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
 
     ret = {}
@@ -1700,7 +1761,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.clients', {})
   def rpc_clients(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     opts, wspace = init_db_opts_workspace(xopts)
     limit = opts.delete(:limit) || 100
     offset = opts.delete(:offset) || 0
@@ -1749,7 +1810,7 @@ end
   # @example Here's how you would use this from the client:
   #  rpc.call('db.del_client', {})
   def rpc_del_client(xopts)
-  ::ActiveRecord::Base.connection_pool.with_connection {
+  ::ApplicationRecord.connection_pool.with_connection {
     db_check
     opts = fix_options(xopts)
     wspace = find_workspace(opts[:workspace])
@@ -1879,7 +1940,7 @@ end
 
     cdb = ""
     if framework.db.connection_established?
-      ::ActiveRecord::Base.connection_pool.with_connection { |conn|
+      ::ApplicationRecord.connection_pool.with_connection { |conn|
         if conn.respond_to? :current_database
           cdb = conn.current_database
         else

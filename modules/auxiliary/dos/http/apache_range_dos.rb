@@ -27,8 +27,8 @@ class MetasploitModule < Msf::Auxiliary
       'License'        => MSF_LICENSE,
       'Actions'        =>
         [
-          ['DOS'],
-          ['CHECK']
+          ['DOS', 'Description' => 'Trigger Denial of Service against target'],
+          ['CHECK', 'Description' => 'Check if target is vulnerable']
         ],
       'DefaultAction'  => 'DOS',
       'References'     =>
@@ -38,7 +38,7 @@ class MetasploitModule < Msf::Auxiliary
           [ 'EDB', '17696'],
           [ 'OSVDB', '74721' ],
         ],
-      'DisclosureDate' => 'Aug 19 2011'
+      'DisclosureDate' => '2011-08-19'
     ))
 
     register_options(

@@ -31,7 +31,7 @@ class MetasploitModule < Msf::Auxiliary
           [ 'CVE', '2015-7603'],
           [ 'URL', 'http://shinnai.altervista.org/exploits/SH-0024-20150922.html']
         ],
-      'DisclosureDate' => 'Sep 22 2015'
+      'DisclosureDate' => '2015-09-22'
     ))
 
     register_options(
@@ -102,10 +102,10 @@ class MetasploitModule < Msf::Auxiliary
 
     rescue ::Rex::ConnectionRefused, ::Rex::HostUnreachable, ::Rex::ConnectionTimeout => e
       vprint_error(e.message)
-      elog("#{e.class} #{e.message} #{e.backtrace * "\n"}")
+      elog(e)
     rescue ::Timeout::Error, ::Errno::EPIPE => e
       vprint_error(e.message)
-      elog("#{e.class} #{e.message} #{e.backtrace * "\n"}")
+      elog(e)
     ensure
       data_disconnect
       disconnect

@@ -112,8 +112,8 @@ module Parser
             @state[:proto] = @text.split('(')[1].split('/')[1].split(')')[0]
             record_service unless @state[:name].nil?
           elsif @text.index('/')
-            @state[:port] = @text.split('/')[0]
-            @state[:proto] = @text.split('/')[1]
+            @state[:port] = @text.split('/')[0].strip
+            @state[:proto] = @text.split('/')[1].strip
             record_service unless @state[:port] == 'general'
           end
         end
@@ -138,34 +138,27 @@ module Parser
       return
     end
 
+    references = []
     if @state[:cves] and @state[:cves] != "NOCVE" and !@state[:cves].empty?
       @state[:cves].split(',').each do |cve|
-        vuln_info = {}
-        vuln_info[:host] = @state[:host]
-        vuln_info[:refs] = normalize_references([{ :source => "CVE", :value => cve}])
-        vuln_info[:name] = @state[:vuln_name]
-        vuln_info[:info] = @state[:vuln_desc]
-        vuln_info[:port] = @state[:port]
-        vuln_info[:proto] = @state[:proto]
-        vuln_info[:workspace] = @args[:workspace]
-
-        db_report(:vuln, vuln_info)
+        references.append({ :source => "CVE", :value => cve})
       end
     end
     if @state[:bid] and @state[:bid] != "NOBID" and !@state[:bid].empty?
       @state[:bid].split(',').each do |bid|
-        vuln_info = {}
-        vuln_info[:host] = @state[:host]
-        vuln_info[:refs] = normalize_references([{ :source => "BID", :value => bid}])
-        vuln_info[:name] = @state[:vuln_name]
-        vuln_info[:info] = @state[:vuln_desc]
-        vuln_info[:port] = @state[:port]
-        vuln_info[:proto] = @state[:proto]
-        vuln_info[:workspace] = @args[:workspace]
-
-        db_report(:vuln, vuln_info)
+        references.append({ :source => "BID", :value => bid})
       end
     end
+
+    vuln_info = {}
+    vuln_info[:host] = @state[:host]
+    vuln_info[:refs] = normalize_references(references)
+    vuln_info[:name] = @state[:vuln_name]
+    vuln_info[:info] = @state[:vuln_desc]
+    vuln_info[:port] = @state[:port]
+    vuln_info[:proto] = @state[:proto]
+    vuln_info[:workspace] = @args[:workspace]
+    db_report(:vuln, vuln_info)
   end
 
   def record_service

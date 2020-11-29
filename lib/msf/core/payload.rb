@@ -210,7 +210,9 @@ class Payload < Msf::Module
     pl = nil
     begin
       pl = generate()
-    rescue NoCompatiblePayloadError, Metasploit::Framework::Compiler::Mingw::UncompilablePayloadError
+    rescue Metasploit::Framework::Compiler::Mingw::UncompilablePayloadError
+    rescue NoCompatiblePayloadError
+    rescue PayloadItemSizeError
     end
     pl ||= ''
     pl.length
@@ -277,29 +279,6 @@ class Payload < Msf::Module
   #
   def symbol_lookup
     module_info['SymbolLookup']
-  end
-
-  #
-  # Checks to see if the supplied convention is compatible with this
-  # payload's convention.
-  #
-  def compatible_convention?(conv)
-    # If we don't have a convention or our convention is equal to
-    # the one supplied, then we know we are compatible.
-    if ((self.convention == nil) or
-        (self.convention == conv))
-      true
-    # On the flip side, if we are a stager and the supplied convention is
-    # nil, then we know it's compatible.
-    elsif ((payload_type == Type::Stager) and
-           (conv == nil))
-      true
-    # Otherwise, the conventions don't match in some way or another, and as
-    # such we deem ourself as not being compatible with the supplied
-    # convention.
-    else
-      false
-    end
   end
 
   #
@@ -688,7 +667,6 @@ protected
   # Merge the name to prefix the existing one and separate them
   # with a comma
   #
-
   def merge_name(info, val)
     if (info['Name'])
       info['Name'] = val + ',' + info['Name']
