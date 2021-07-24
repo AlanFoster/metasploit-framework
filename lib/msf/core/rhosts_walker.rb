@@ -140,8 +140,8 @@ module Msf
               results << datastore.merge(overrides)
             end
           end
-        rescue StandardError => e
-          results << Msf::RhostsWalker::Error.new(value, cause: e)
+        # rescue StandardError => e
+        #   results << Msf::RhostsWalker::Error.new(value, cause: e)
         end
       end
     end
@@ -166,12 +166,11 @@ module Msf
         domain, user = uri.user.split(';')
         result['SMBDomain'] = domain
         result['SMBUser'] = user
+        set_username(datastore, uri.password)
       elsif uri.user
-        result['SMBUser'] = uri.user
+        set_username(datastore, uri.password)
       end
-      if uri.password
-        result['SMBPass'] = CGI.unescape(uri.password)
-      end
+      set_password(datastore, uri.password) if uri.password
 
       # Handle paths of the format:
       #    /
@@ -210,8 +209,8 @@ module Msf
       result['URI'] = target_uri if datastore.options.include?('URI')
 
       result['VHOST'] = uri.hostname unless Rex::Socket.is_ip_addr?(uri.hostname)
-      result['HttpUsername'] = uri.user if uri.user
-      result['HttpPassword'] = CGI.unescape(uri.password) if uri.password
+      set_username(datastore, uri.user) if uri.user
+      set_password(datastore, uri.password) if uri.password
 
       result
     end
@@ -229,9 +228,29 @@ module Msf
       result['RHOSTS'] = uri.hostname
       result['RPORT'] = uri.port || 3306
 
-      result['USERNAME'] = uri.user if uri.user
-      result['PASSWORD'] = CGI.unescape(uri.password) if uri.password
+      set_username(datastore, uri.user) if uri.user
+      set_password(datastore, uri.password) if uri.password
       result
+    end
+
+    protected
+
+    def set_username(datastore, username)
+      password_option_names = %w[HttpUsername SmbUser FtpUser Username USERNAME username]
+      password_option_names.each do |option_name|
+        if datastore.options.include?(option_name)
+          datastore[option_name] = username
+        end
+      end
+    end
+
+    def set_password(datastore, password)
+      password_option_names = %w[HttpPassword SmbPass FtpPass Password PASSWORD password]
+      password_option_names.each do |option_name|
+        if datastore.options.include?(option_name)
+          datastore[option_name] = password
+        end
+      end
     end
   end
 end
