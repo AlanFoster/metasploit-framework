@@ -235,8 +235,11 @@ module Msf
 
     protected
 
+    # TODO: There's a problem where HttpUsername, and user might mean different things
+    # TODO: Confirm if httpusername always gets sent accidentally across the wire, i.e. when a web login user/pass is required, but not basic auth
+    # modules/exploits/linux/http/suitecrm_log_file_rce.rb
     def set_username(datastore, username)
-      password_option_names = %w[HttpUsername SmbUser FtpUser Username USERNAME username]
+      password_option_names = %w[HttpUsername SmbUser FtpUser Username user USERNAME username]
       password_option_names.each do |option_name|
         if datastore.options.include?(option_name)
           datastore[option_name] = username
@@ -245,7 +248,7 @@ module Msf
     end
 
     def set_password(datastore, password)
-      password_option_names = %w[HttpPassword SmbPass FtpPass Password PASSWORD password]
+      password_option_names = %w[HttpPassword SmbPass FtpPass Password pass PASSWORD password]
       password_option_names.each do |option_name|
         if datastore.options.include?(option_name)
           datastore[option_name] = password
