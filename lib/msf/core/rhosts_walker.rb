@@ -10,6 +10,17 @@ module Msf
   #
   ###
   class RhostsWalker
+    SUPPORTED_SCHEMAS = %w[
+      cidr
+      file
+      http
+      https
+      mysql
+      postgres
+      smb
+      ssh
+    ]
+    private_constant :SUPPORTED_SCHEMAS
 
     ###
     # An error which additionally keeps track of a particular rhost substring which resulted in an error when enumerating
@@ -101,27 +112,6 @@ module Msf
                 results << result
               end
             end
-          elsif value.start_with?('smb:')
-            smb_options = parse_smb_uri(value, datastore)
-            Rex::Socket::RangeWalker.new(smb_options['RHOSTS']).each_ip do |ip|
-              results << datastore.merge(
-                smb_options.merge('RHOSTS' => ip, 'TODO_RHOST_SCHEMA_VALUE' => value)
-              )
-            end
-          elsif value.start_with?('http:') || value.start_with?('https:')
-            http_options = parse_http_uri(value, datastore)
-            Rex::Socket::RangeWalker.new(http_options['RHOSTS']).each_ip do |ip|
-              results << datastore.merge(
-                http_options.merge('RHOSTS' => ip, 'TODO_RHOST_SCHEMA_VALUE' => value)
-              )
-            end
-          elsif value.start_with?('mysql:')
-            mysql_options = parse_mysql_uri(value, datastore)
-            Rex::Socket::RangeWalker.new(mysql_options['RHOSTS']).each_ip do |ip|
-              results << datastore.merge(
-                mysql_options.merge('RHOSTS' => ip, 'TODO_RHOST_SCHEMA_VALUE' => value)
-              )
-            end
           elsif value =~ /^cidr:(.*)/
             range, value = Regexp.last_match(1).split(':', 2)
 
@@ -131,6 +121,14 @@ module Msf
               Rex::Socket::RangeWalker.new(host_with_cidr).each_ip do |rhost|
                 results << result.merge('RHOSTS' => rhost, 'TODO_RHOST_SCHEMA_VALUE' => value)
               end
+            end
+          elsif value =~ /^(?<schema>\w+):.*/ && SUPPORTED_SCHEMAS.include?(Regexp.last_match(:schema))
+            parse_method = "parse_#{Regexp.last_match(:schema)}_uri"
+            parsed_options = send(parse_method, value, datastore)
+            Rex::Socket::RangeWalker.new(parsed_options['RHOSTS']).each_ip do |ip|
+              results << datastore.merge(
+                parsed_options.merge('RHOSTS' => ip, 'TODO_RHOST_SCHEMA_VALUE' => value)
+              )
             end
           else
             Rex::Socket::RangeWalker.new(value).each_host do |rhost|
@@ -191,7 +189,7 @@ module Msf
     #
     # @param value [String] the http string
     # @return [Hash] A hash where keys match the required datastore options associated with
-    #   the http uri value
+    #   the uri value
     def parse_http_uri(value, datastore)
       uri = ::Addressable::URI.parse(value)
       result = {}
@@ -215,13 +213,13 @@ module Msf
       result
     end
 
-    # Parses a uri mysql connection string such as mysql://user:password@example.com into a hash
+    # Parses a mysql uri string such as mysql://user:password@example.com into a hash
     # which can safely be merged with a [Msf::DataStore] datastore for setting mysql options.
     #
-    # @param value [String] the mysql uri connection string
+    # @param value [String] the uri string
     # @return [Hash] A hash where keys match the required datastore options associated with
-    #   the http uri value
-    def parse_mysql_uri(value, _datastore)
+    #   the uri value
+    def parse_mysql_uri(value, datastore)
       uri = ::Addressable::URI.parse(value)
       result = {}
 
@@ -230,6 +228,43 @@ module Msf
 
       set_username(datastore, uri.user) if uri.user
       set_password(datastore, uri.password) if uri.password
+      result
+    end
+
+    # Parses a postgres uri string such as mysql://user:password@example.com into a hash
+    # which can safely be merged with a [Msf::DataStore] datastore for setting mysql options.
+    #
+    # @param value [String] the uri string
+    # @return [Hash] A hash where keys match the required datastore options associated with
+    #   the uri value
+    def parse_postgres_uri(value, datastore)
+      uri = ::Addressable::URI.parse(value)
+      result = {}
+
+      result['RHOSTS'] = uri.hostname
+      result['RPORT'] = uri.port || 5432
+
+      set_username(datastore, uri.user) if uri.user
+      set_password(datastore, uri.password) if uri.password
+      result
+    end
+
+    # Parses a smb uri string such as ssh://user:password@example.com into a hash
+    # which can safely be merged with a [Msf::DataStore] datastore for setting mysql options.
+    #
+    # @param value [String] the uri string
+    # @return [Hash] A hash where keys match the required datastore options associated with
+    #   the uri value
+    def parse_ssh_uri(value, datastore)
+      uri = ::Addressable::URI.parse(value)
+      result = {}
+
+      result['RHOSTS'] = uri.hostname
+      result['RPORT'] = uri.port || 22
+
+      set_username(datastore, uri.user) if uri.user
+      set_password(datastore, uri.password) if uri.password
+
       result
     end
 
