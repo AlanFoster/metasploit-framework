@@ -1,3 +1,9 @@
+---
+layout: "default"
+title: "Code Of Conduct"
+nav_order: 1
+---
+
 # Contributor Code of Conduct
 
 As contributors and maintainers of this project, and in the interest of

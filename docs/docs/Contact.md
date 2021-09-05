@@ -1,3 +1,8 @@
+---
+layout: "default"
+title: "Contact"
+---
+
 # Chat
 
 A lot of our discussion happens on IRC in #metasploit on Freenode.
