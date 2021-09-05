@@ -31,4 +31,4 @@ int main() {
 }
 ```
 
-To compile, use [[How to use Metasploit::Framework::Compiler::Windows to compile C code|How to use Metasploit Framework Compiler Windows to compile C code]]
+To compile, use [How to use Metasploit::Framework::Compiler::Windows to compile C code]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})

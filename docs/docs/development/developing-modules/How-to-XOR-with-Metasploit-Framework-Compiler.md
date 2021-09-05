@@ -27,4 +27,4 @@ int main(int args, char** argv) {
 }
 ```
 
-To compile, use [[Metasploit::Framework::Compiler::Windows.compile_c|How to use Metasploit Framework Compiler Windows to compile C code]]
+To compile, use [Metasploit::Framework::Compiler::Windows.compile_c]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})

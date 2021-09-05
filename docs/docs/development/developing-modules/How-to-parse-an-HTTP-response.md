@@ -9,7 +9,7 @@ This document talks about how to parse an HTTP response body in the cleanest way
 
 ## Getting a response
 
-To get a response, you can either use [[Rex::Proto::Http::Client|How to send an HTTP request using Rex Proto Http Client]], or the [HttpClient]({% link docs/development/developing-modules/How-to-Send-an-HTTP-Request-Using-HttpClient.md %}) mixin to make an HTTP request. If you are writing a module, you should use the mixin.
+To get a response, you can either use [Rex::Proto::Http::Client]({% link docs/development/developing-modules/How-to-send-an-HTTP-request-using-Rex-Proto-Http-Client.md %}), or the [HttpClient]({% link docs/development/developing-modules/How-to-Send-an-HTTP-Request-Using-HttpClient.md %}) mixin to make an HTTP request. If you are writing a module, you should use the mixin.
 
 The following is an example of using the #send_request_cgi method from HttpClient:
 
