@@ -25,7 +25,7 @@ Now on to the good stuff! The Metasploit development community has read thousand
 
 ## General Rules
 * Ensure the platform you're reporting the issue for is supported. We do not, for instance, support Termux currently. If your platform is not officially supported, the community may still have resources to help, but you should search for and ask about those outside Metasploit's issue tracker.
-* When possible, it helps if you are running the latest stable version of Metasploit Framework, or the latest release of Kali, BlackArch Linux, or your other favorite security distribution that ships with Metasploit. Metasploit's [nightly installers are here](https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers) and typically offer the latest Framework release.
+* When possible, it helps if you are running the latest stable version of Metasploit Framework, or the latest release of Kali, BlackArch Linux, or your other favorite security distribution that ships with Metasploit. Metasploit's [nightly installers are here]({% link docs/using-metasploit/Nightly-Installers.md %}) and typically offer the latest Framework release.
 * Review our [code of conduct](https://github.com/rapid7/metasploit-framework/blob/master/CODE_OF_CONDUCT.md) before submitting issues.
 * Use a specific title so we can understand immediately which part of Metasploit is causing the unexpected behavior. "NoMethodError raised on smb_login module" is a great title. "Problem with Metasploit target" is not.
 * Redact any private or sensitive data, such as target IPs or URLs, passwords, or personally identifying information.
@@ -76,9 +76,9 @@ You may not be the first person to notice the problem you're seeing as a Framewo
 * GitHub pull requests frequently contain a LOT of conversation and context. If a bug already has a pull request associated with it, check the pull request conversation for other information that might be useful to you.
 
 ## PRs Accepted!
-If you're a superhero and you figured out the root cause of a bug AND found a way to fix it, you can send your Metasploit fixes and improvements our way! The best way to get your fix into Metasploit quickly is to patch your own fork and submit a [pull request](https://github.com/rapid7/metasploit-framework/wiki/Metasploit-Development-Environment#wiki-pull) to Metasploit. You get extra gratitude from all of us when you do this, and you'll also get a shout-out in the [weekly Metasploit wrap-up](https://blog.rapid7.com/tag/metasploit-weekly-wrapup/).
+If you're a superhero and you figured out the root cause of a bug AND found a way to fix it, you can send your Metasploit fixes and improvements our way! The best way to get your fix into Metasploit quickly is to patch your own fork and submit a [pull request]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}#wiki-pull) to Metasploit. You get extra gratitude from all of us when you do this, and you'll also get a shout-out in the [weekly Metasploit wrap-up](https://blog.rapid7.com/tag/metasploit-weekly-wrapup/).
 
-You can find a guide on setting up your own [Metasploit Development Environment here](https://github.com/rapid7/metasploit-framework/wiki/Metasploit-Development-Environment).
+You can find a guide on setting up your own [Metasploit Development Environment here]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}).
 
 ## Public Discussion
 Some projects and companies don't like discussing bugs in the bug report itself. Some even have policies of not doing this. Metasploit is not one of those projects. We greatly prefer public communication over private communication because it makes community knowledge accessible and searchable to everyone. That said, if you have specific privacy or security concerns, we're always happy to speak privately. You can get in touch with us at msfdev@metasploit.com. 

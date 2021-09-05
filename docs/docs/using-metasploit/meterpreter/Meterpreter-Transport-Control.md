@@ -17,7 +17,7 @@ grand_parent: "Using Metasploit"
 
 The Meterpreter that we have known and loved for years has always had the ability to specify the type of transport that is to be used for the session. `reverse_tcp` and `reverse_https` are the favorites. Previously,  the flexibility for transport selection is only available at the time the payloads are created, or when the exploit is launched, effectively locking the Meterpreter session into a single type of transport for the lifetime of the session.
 
-Recent modifications to Meterpreter have changed this. Meterpreter has a new [configuration system](https://github.com/rapid7/metasploit-framework/wiki/Meterpreter%27s-Configuration) that supports multiple transports and it now supports the addition of new transports while the session is still running. With the extra transports configured, Meterpreter allows the user to cycle through those transports without shutting down the session.
+Recent modifications to Meterpreter have changed this. Meterpreter has a new [configuration system]({% link docs/using-metasploit/meterpreter/Meterpreter-Configuration.md %}) that supports multiple transports and it now supports the addition of new transports while the session is still running. With the extra transports configured, Meterpreter allows the user to cycle through those transports without shutting down the session.
 
 Not only that, but Meterpreter will cycle through these transports automatically when communication fails. For more information on the session resiliency features, please view the [Meterpreter Reliable Network Communication][].
 
@@ -357,7 +357,7 @@ The session is back up and running as if nothing had gone wrong.
 
 In the case where Meterpreter is configured with only a single transport mechanism, this process still takes place. Meterpreter's transport list implementation is a cyclic linked-list, and once the end of the list has been reached, it simply starts from the beginning again. This means that if there's a list of one transport then Meterpreter will continually attempt to use that one transport until the session expires. This works for both `TCP` and `HTTP/S`.
 
-For important detail on network resiliency, please see the [reliable network communication documentation](https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Reliable-Network-Communication).
+For important detail on network resiliency, please see the [reliable network communication documentation]({% link docs/using-metasploit/meterpreter/Meterpreter-Reliable-Network-Communication.md %}).
 
 ## Supported Meterpreters
 
@@ -370,5 +370,5 @@ The following Meterpreter implementations currently support the transport comman
  * Java
  * Python
 
-  [Timeout documentation]: https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Timeout-Control
-  [Reliable Network documentation]: https://github.com/rapid7/metasploit-framework/wiki/Meterpreter-Reliable-Network-Communication
+  [Timeout documentation]: {% link docs/using-metasploit/meterpreter/Meterpreter-Timeout-Control.md %}
+  [Reliable Network documentation]: {% link docs/using-metasploit/meterpreter/Meterpreter-Reliable-Network-Communication.md %}

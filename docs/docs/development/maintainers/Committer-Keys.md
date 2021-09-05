@@ -123,7 +123,7 @@ Enter passphrase: [...]
 
 Using `git c` and `git m` from now on will sign every commit with your `DEADBEEF` key. However, note that rebasing or cherry-picking commits will change the commit hash, and therefore, unsign the commit -- to resign the most recent, use `git c --amend`.
 
-[msf-committers]:https://github.com/rapid7/metasploit-framework/wiki/Committer-Rights
+[msf-committers]:{% link docs/development/maintainers/Committer-Rights.md %}
 [pro-sharing]:https://filippo.io/on-keybase-dot-io-and-encrypted-private-key-sharing/
 [con-sharing]:https://www.tbray.org/ongoing/When/201x/2014/03/19/Keybase#p-5
 [tracking]:https://github.com/keybase/keybase-issues/issues/100

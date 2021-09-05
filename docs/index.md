@@ -10,7 +10,7 @@ Are you a Metasploit user who wants to get started or get better at hacking stuf
 
 If you're using [Kali Linux](https://kali.org/), Metasploit is already pre-installed. See the [Kali documentation](https://kali.org/docs/tools/starting-metasploit-framework-in-kali/) for how to get started using Metasploit in Kali Linux.
 
-Are you anxious to get your [Metasploit Development Environment]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}) set up so you can start [Landing Pull Requests]({% link docs/development/maintainers/Landing-Pull-Requests.md %}) and contributing excellent exploit code? If so, you're in the right place. If you're an exploit developer, you will want to review our [Guidelines for Accepting Modules and Enhancements]({% link docs/development/maintainers/Guidelines-for-Accepting-Modules-and-Enhancements.md %}) to find out what we expect when we see pull requests for new Metasploit modules. No idea what you should start working on? Check out the guidelines for [contributing to Metasploit]({% link docs/development/getting-started/Contributing-to-Metasploit.md %}), and dive into [Setting Up a Metasploit Development Environment]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}).
+Are you anxious to get your [Metasploit Development Environment](https://github.com/rapid7/metasploit-framework/wiki/Setting-Up-a-Metasploit-Development-Environment) set up so you can start [Landing Pull Requests]({% link docs/development/maintainers/Landing-Pull-Requests.md %}) and contributing excellent exploit code? If so, you're in the right place. If you're an exploit developer, you will want to review our [Guidelines for Accepting Modules and Enhancements]({% link docs/development/maintainers/Guidelines-for-Accepting-Modules-and-Enhancements.md %}) to find out what we expect when we see pull requests for new Metasploit modules. No idea what you should start working on? Check out the guidelines for [contributing to Metasploit]({% link docs/development/getting-started/Contributing-to-Metasploit.md %}), and dive into [Setting Up a Metasploit Development Environment]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}).
 
 # Getting Started #
 
@@ -64,7 +64,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 - [How to write a check() method]({% link docs/development/developing-modules/How-to-write-a-check()-method.md %})
 - [How to write a HTTP LoginScanner Module]({% link docs/development/developing-modules/How-to-write-a-HTTP-LoginScanner-Module.md %})
 - [How to write a module using HttpServer and HttpClient]({% link docs/development/developing-modules/How-to-write-a-module-using-HttpServer-and-HttpClient.md %})
-- [How to zip files with Msf::Util::EXE.to_zip]({% link docs/uncategorized/How-to-zip-files-with-Msf-Util-EXE.to_zip.md %})
+- [How to zip files with Msf::Util::EXE.to_zip](https://github.com/rapid7/metasploit-framework/wiki/How-to-zip-files-with-Msf-Util-EXE.to_zip)
 - [How to use Metasploit Framework Compiler Windows to compile C code]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})
 - [How to use Metasploit Framework Obfuscation CRandomizer]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Obfuscation-CRandomizer.md %})
 - [How to decrypt RC4 with Metasploit Framework Compiler]({% link docs/development/developing-modules/How-to-decrypt-RC4-with-Metasploit-Framework-Compiler.md %})
@@ -96,7 +96,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 # Other Metasploit Resources #
 
 - [Metasploit 5.0 Release Notes]({% link docs/development/roadmap/Metasploit-5.0-Release-Notes.md %})
-- [Downloads by Version]({% link docs/uncategorized/Downloads-by-Version.md %})
+- [Downloads by Version]({% link docs/uncategorized/Downloads-by-Version.textile %})
 - [Evading Anti Virus]({% link docs/using-metasploit/Evading-Anti-Virus.md %})
 - [How to use a Metasploit module appropriately]({% link docs/using-metasploit/How-to-use-a-Metasploit-module-appropriately.md %})
 - [How to use a reverse shell in Metasploit]({% link docs/using-metasploit/How-to-use-a-reverse-shell-in-Metasploit.md %})

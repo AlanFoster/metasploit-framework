@@ -7,7 +7,7 @@ grand_parent: "Development"
 
 This is a step-by-step guide on how to write a HTTP login module using the latest LoginScanner and Credential APIs.
 
-Before we begin, it's probably a good idea to read [Creating Metasploit Framework LoginScanners](https://github.com/rapid7/metasploit-framework/wiki/Creating-Metasploit-Framework-LoginScanners), which explains about the APIs in-depth. The LoginScanner API can be found in the [lib/metasploit/framework/loginscanner](https://github.com/rapid7/metasploit-framework/tree/master/lib/metasploit/framework/login_scanner) directory, and the Credential API can found as a [metasploit-credential gem here](https://github.com/rapid7/metasploit-credential). You will most likely want to read them while writing the login module.
+Before we begin, it's probably a good idea to read [Creating Metasploit Framework LoginScanners]({% link docs/development/developing-modules/Creating-Metasploit-Framework-LoginScanners.md %}), which explains about the APIs in-depth. The LoginScanner API can be found in the [lib/metasploit/framework/loginscanner](https://github.com/rapid7/metasploit-framework/tree/master/lib/metasploit/framework/login_scanner) directory, and the Credential API can found as a [metasploit-credential gem here](https://github.com/rapid7/metasploit-credential). You will most likely want to read them while writing the login module.
 
 ## Step 1: Set up your target environment
 
@@ -144,7 +144,7 @@ Notice that:
 
 Ok, now let's talk about building this #do_login method. This is where we send the same HTTP request we sampled earlier.
 
-If you're already familiar with writing a Metasploit module that sends an HTTP request, the first thing that comes to mind is probably using the [HttpClient](https://github.com/rapid7/metasploit-framework/wiki/How-to-Send-an-HTTP-Request-Using-HTTPClient). Well, you can't do that at all over here, so we have to fall back to [Rex::Proto::Http::Client](https://github.com/rapid7/metasploit-framework/wiki/How-to-send-an-HTTP-request-using-Rex%3A%3AProto%3A%3AHttp%3A%3AClient). Fortunately for you, we made all this a little bit easier by creating another request called #send_request, here's an example of how to use that:
+If you're already familiar with writing a Metasploit module that sends an HTTP request, the first thing that comes to mind is probably using the [HttpClient]({% link docs/development/developing-modules/How-to-Send-an-HTTP-Request-Using-HttpClient.md %}). Well, you can't do that at all over here, so we have to fall back to [[Rex::Proto::Http::Client|How to send an HTTP request using Rex Proto Http Client]]. Fortunately for you, we made all this a little bit easier by creating another request called #send_request, here's an example of how to use that:
 
 
 ```ruby

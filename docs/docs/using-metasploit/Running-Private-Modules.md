@@ -35,8 +35,8 @@ Once you have a directory to place it in, feel free to download or start writing
 External modules, most commonly written in Python/Go, need to additionally be marked as executable in order to be loaded by Metasploit.
 
 For full details:
-- https://github.com/rapid7/metasploit-framework/wiki/Writing-External-Python-Modules
-- https://github.com/rapid7/metasploit-framework/wiki/Writing-External-GoLang-Modules
+- {% link docs/development/developing-modules/Writing-External-Python-Modules.md %}
+- {% link docs/development/developing-modules/Writing-External-GoLang-Modules.md %}
 
 ## Test it all out
 
@@ -132,7 +132,7 @@ For Windows users, the above is all true, except for accessing the modules from 
 
 Any module that requires on changes to core library functions, such as new protocol parsers or other library mixins, aren't going to work out for you this way -- you're going to end up spewing errors all over the place as your module tries to load these classes. It's possible to write modules as completely self-contained in nearly all cases (thanks to Ruby's open class architecture), but such modules nearly always get refactored later to make the protocol and other mixin bits available to other modules.
 
-In this case, it would be better to work with modules like that using a proper GitHub checkout with a development branch -- see the [dev environment setup docs](https://github.com/rapid7/metasploit-framework/wiki/Setting-Up-a-Metasploit-Development-Environment) for tons more on that.
+In this case, it would be better to work with modules like that using a proper GitHub checkout with a development branch -- see the [dev environment setup docs]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}) for tons more on that.
 
 ## A final warning
 

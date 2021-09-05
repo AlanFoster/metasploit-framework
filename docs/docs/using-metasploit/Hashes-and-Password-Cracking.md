@@ -6,7 +6,7 @@ parent: "Using Metasploit"
 
 # Intro
 
-This article will discuss the various libraries, dependencies, and functionality built in to metasploit for dealing with password hashes, and cracking them.  In general, this will not cover storing credentials in the database, which can be read about [here](https://github.com/rapid7/metasploit-framework/wiki/Creating-Metasploit-Framework-LoginScanners#the-scan-block).  Metasploit currently support cracking passwords with [John the Ripper](https://github.com/rapid7/metasploit-framework/tree/master/modules/auxiliary/analyze) and  [hashcat](https://github.com/rapid7/metasploit-framework/pull/11695).
+This article will discuss the various libraries, dependencies, and functionality built in to metasploit for dealing with password hashes, and cracking them.  In general, this will not cover storing credentials in the database, which can be read about [here]({% link docs/development/developing-modules/Creating-Metasploit-Framework-LoginScanners.md %}#the-scan-block).  Metasploit currently support cracking passwords with [John the Ripper](https://github.com/rapid7/metasploit-framework/tree/master/modules/auxiliary/analyze) and  [hashcat](https://github.com/rapid7/metasploit-framework/pull/11695).
 
 # Hashes
 
@@ -194,5 +194,5 @@ Only hashes which were found in Metasploit were added to the hash id library, an
 1. Find the hashcat hash mode, and add a JTR name to hashcat hash mode lookup: https://github.com/rapid7/metasploit-framework/blob/master/lib/metasploit/framework/password_crackers/cracker.rb#L129 
 1. If hashcat uses a different format for the hash string, add a JTR to hashcat hash format conversion to https://github.com/rapid7/metasploit-framework/blob/master/lib/metasploit/framework/password_crackers/hashcat/formatter.rb
 1. Update this Wiki
-    1. add the JTR to hashcat conversion https://github.com/rapid7/metasploit-framework/wiki/Hashes-and-Password-Cracking#hash-setting
-    1. add example hash(es) https://github.com/rapid7/metasploit-framework/wiki/Hashes-and-Password-Cracking#example-hashes
+    1. add the JTR to hashcat conversion {% link docs/using-metasploit/Hashes-and-Password-Cracking.md %}#hash-setting
+    1. add example hash(es) {% link docs/using-metasploit/Hashes-and-Password-Cracking.md %}#example-hashes

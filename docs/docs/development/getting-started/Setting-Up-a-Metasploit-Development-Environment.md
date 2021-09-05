@@ -204,7 +204,7 @@ We're excited to see your upcoming contributions of new modules, documentation, 
 Finally, we welcome your feedback on this guide, so feel free to reach out to us on [Slack] or open a [new issue].  For their significant contributions to this guide, we would like to thank [@kernelsmith], [@corelanc0d3r], and [@ffmike].
 
 [commercial-installer]:http://metasploit.com/download
-[open-source-installer]:https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers
+[open-source-installer]:{% link docs/using-metasploit/Nightly-Installers.md %}
 [kali-user-instructions]:https://docs.kali.org/general-use/starting-metasploit-framework-in-kali
 [parrot-user-instructions]:https://docs.parrotsec.org/doku.php/metasploit-framework#start-metasploit
 [CONTRIBUTING.md]:https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md
@@ -227,10 +227,10 @@ Finally, we welcome your feedback on this guide, so feel free to reach out to us
 [find]:https://linux.die.net/man/1/find
 [$PATH]:https://askubuntu.com/questions/109381/how-to-add-path-of-a-program-to-path-environment-variable
 
-[msf-web-service]:https://github.com/rapid7/metasploit-framework/wiki/Metasploit-Web-Service
+[msf-web-service]:{% link docs/using-metasploit/Metasploit-Web-Service.md %}
 
 [git-horror]:https://mikegerwitz.com/papers/git-horror-story#trust-ensure
-[signing-howto]:https://github.com/rapid7/metasploit-framework/wiki/Committer-Keys#signing-howto
+[signing-howto]:{% link docs/development/maintainers/Committer-Keys.md %}#signing-howto
 
 [git aliases]:https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases
 [rspec]:https://www.rubyguides.com/2018/07/rspec-tutorial/

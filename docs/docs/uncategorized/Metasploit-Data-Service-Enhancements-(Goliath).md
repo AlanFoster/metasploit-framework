@@ -47,4 +47,4 @@ This approach enables us to:
 
 ## Usage
 
-For more information on setting up the web service and using the data services see [Metasploit Web Service](https://github.com/rapid7/metasploit-framework/wiki/Metasploit-Web-Service).
+For more information on setting up the web service and using the data services see [Metasploit Web Service]({% link docs/using-metasploit/Metasploit-Web-Service.md %}).

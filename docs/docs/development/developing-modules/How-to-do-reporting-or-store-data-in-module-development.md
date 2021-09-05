@@ -31,6 +31,6 @@ grand_parent: "Development"
 
 ### References
 
-https://github.com/rapid7/metasploit-framework/wiki/Guidelines-for-Accepting-Modules-and-Enhancements
+{% link docs/development/maintainers/Guidelines-for-Accepting-Modules-and-Enhancements.md %}
 
 https://github.com/rapid7/metasploit-framework/blob/master/lib/msf/core/auxiliary/report.rb
