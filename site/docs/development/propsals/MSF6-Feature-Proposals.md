@@ -56,7 +56,7 @@ E.g. could we just use routersploit or wpsploit directly from within framework a
 
 ## Changing module structure on disk
 
-Currently a non-trivial exploit module will require adding code to 4 different subdirectories (lib, modules, documentation, external) which makes it both hard to follow all of the moving pieces, but also makes it harder to extract modules for independent use. See {% link docs/development/propsals/Bundled-Modules-Proposal.md %} for a more detailed proposal.
+Currently a non-trivial exploit module will require adding code to 4 different subdirectories (lib, modules, documentation, external) which makes it both hard to follow all of the moving pieces, but also makes it harder to extract modules for independent use. See [Bundled Modules Proposal]({% link docs/development/propsals/Bundled-Modules-Proposal.md %}) for a more detailed proposal.
 
 # Data Model
 

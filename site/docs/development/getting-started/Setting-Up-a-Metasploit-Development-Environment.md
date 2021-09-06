@@ -5,7 +5,7 @@ parent: "Getting Started"
 grand_parent: "Development"
 ---
 
-<sup>*The shortlink to this wiki page is https://r-7.co/MSF-DEV*</sup>
+<sup>*The shortlink to this wiki page is <https://r-7.co/MSF-DEV>*</sup>
 
 This is a guide for setting up a developer environment to contribute modules, documentation, and fixes to the Metasploit Framework. If you just want to use Metasploit for legal, authorized hacking, we recommend instead you:
 
@@ -112,7 +112,7 @@ Congratulations! You have now set up a development environment and the latest ve
 
 ## Optional: Set up the REST API and PostgreSQL database
 
-<details><summary>The following optional section describes how to manually install PostgreSQL and set up the Metasploit database.  Alternatively, use our Omnibus installer which handles this more reliably.  Click to expand.</summary>
+The following optional section describes how to manually install PostgreSQL and set up the Metasploit database.  Alternatively, use our Omnibus installer which handles this more reliably.  Click to expand.
 
 1. Confirm that the PostgreSQL server and client are installed:
 
@@ -140,11 +140,9 @@ $ ./msfconsole -qx "db_status; exit"
 
 Congratulations! You have now set up the [Metasploit Web Service (REST API)][msf-web-service] and the backend database.
 
-</details>
-
 ## Optional: Tips to speed up common workflows
 
-<details><summary>The following section is optional but may improve your efficiency.  Click to expand.</summary>
+The following section is optional but may improve your efficiency.  Click to expand.
 
 - Making sure you're in the right directory to run `msfconsole` can become tedious, so consider using the following Bash alias:
 
@@ -194,8 +192,6 @@ rake spec
 ```
 
 You should see over 9000 tests run, mostly resulting in green dots, a few in yellow stars, and no red errors.
-
-</details>
  
 # Great!  Now what?
 
@@ -206,12 +202,12 @@ Finally, we welcome your feedback on this guide, so feel free to reach out to us
 [commercial-installer]:http://metasploit.com/download
 [open-source-installer]:{% link docs/using-metasploit/getting-started/Nightly-Installers.md %}
 [kali-user-instructions]:https://docs.kali.org/general-use/starting-metasploit-framework-in-kali
-[parrot-user-instructions]:https://docs.parrotsec.org/doku.php/metasploit-framework#start-metasploit
+[parrot-user-instructions]:https://parrotsec.org/docs/installation.html
 [CONTRIBUTING.md]:https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md
 
 [Ubuntu]:https://www.ubuntu.com/download/desktop
 [Kali]:https://www.kali.org/downloads/
-[Parrot]:https://www.parrotsec.org/download-security.php
+[Parrot]:https://parrotsec.org/download/
 [ssh-key]:https://help.github.com/articles/generating-ssh-keys/
 [github-bootcamp]:https://help.github.com/articles/set-up-git/
 

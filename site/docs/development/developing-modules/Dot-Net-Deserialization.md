@@ -1,6 +1,6 @@
 ---
 layout: "default"
-title: ".NET Deserialization"
+title: "Dot Net Deserialization"
 parent: "Developing modules"
 grand_parent: "Development"
 ---

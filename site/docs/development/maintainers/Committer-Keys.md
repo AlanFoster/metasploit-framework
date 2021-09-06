@@ -6,7 +6,7 @@ grand_parent: "Development"
 ---
 
 This page lists the keys in use by [Metasploit committers][msf-committers] and
-can be used to verify merge commits made to https://github.com/rapid7/metasploit-framework.
+can be used to verify merge commits made to <https://github.com/rapid7/metasploit-framework>.
 
 # Keybase.io identities
 

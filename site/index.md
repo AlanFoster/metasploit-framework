@@ -77,7 +77,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 
 # Metasploit Payloads #
 
-- [How Payloads Work]({% link docs/development/developing-modules/How-payloads-work.md %})
+- [How Payloads Work]({% link docs/using-metasploit/How-payloads-work.md %})
 - [Merging Metasploit Payload Gem Updates]({% link docs/development/maintainers/Merging-Metasploit-Payload-Gem-Updates.md %})
 - [Meterpreter Configuration]({% link docs/using-metasploit/meterpreter/Meterpreter-Configuration.md %})
 - [Meterpreter HTTP Communication]({% link docs/using-metasploit/meterpreter/Meterpreter-HTTP-Communication.md %})

@@ -1,8 +1,7 @@
 ---
 layout: "default"
 title: "How payloads work"
-parent: "Developing modules"
-grand_parent: "Development"
+parent: "Using Metasploit"
 ---
 
 # How Payloads Work
