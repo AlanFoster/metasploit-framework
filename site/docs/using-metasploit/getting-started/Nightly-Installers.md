@@ -1,7 +1,9 @@
 ---
 layout: "default"
 title: "Nightly Installers"
-parent: "Using Metasploit"
+nav_order: 1
+parent: "Getting Started"
+grand_parent: "Using Metasploit"
 ---
 
 Installers are built nightly for macOS, Windows (64-bit) and Linux.  These installers include dependencies (like Ruby and PostgreSQL) and integrate with your package manager, so they're easy to update.

@@ -1,13 +1,14 @@
 ---
 layout: "default"
 title: "Downloads by Version"
-parent: "Uncategorized"
+parent: "Miscellaneous"
+grand_parent: "Development"
 ---
 
 ## Metasploit Framework Installers
 
 These include Metasploit Framework only. Updates are built about once a day.
-See [Nightly-Installers]({% link docs/using-metasploit/Nightly-Installers.md %}) for installation instructions for Windows, OS X and Linux.
+See [Nightly-Installers]({% link docs/using-metasploit/getting-started/Nightly-Installers.md %}) for installation instructions for Windows, OS X and Linux.
 
 ## Metasploit Pro Installers
 

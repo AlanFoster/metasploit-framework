@@ -1,7 +1,8 @@
 ---
 layout: "default"
 title: "Metasploit Data Service Enhancements (Goliath)"
-parent: "Uncategorized"
+parent: "Roadmap"
+grand_parent: "Development"
 ---
 
 Project Goliath came about primarilly around the need to enhance the current data service and data models to increase the value of data in metasploit to our end users.

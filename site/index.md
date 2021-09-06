@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Home"
-nav_order: 0
+nav_order: 1
 ---
 
 Welcome to Metasploit-land.
@@ -15,9 +15,9 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 # Getting Started #
 
 - [Setting Up a Metasploit Development Environment]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %})
-- [Using Metasploit]({% link docs/using-metasploit/Using-Metasploit.md %})
+- [Using Metasploit]({% link docs/using-metasploit/getting-started/Using-Metasploit.md %})
 - [Using Git]({% link docs/development/maintainers/Using-Git.md %})
-- [Reporting a Bug]({% link docs/using-metasploit/Reporting-a-Bug.md %})
+- [Reporting a Bug]({% link docs/using-metasploit/getting-started/Reporting-a-Bug.md %})
 - [Navigating and Understanding Metasploit's Codebase]({% link docs/development/developing-modules/Navigating-and-Understanding-Metasploit's-Codebase.md %})
 
 # Contributing
@@ -64,7 +64,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 - [How to write a check() method]({% link docs/development/developing-modules/How-to-write-a-check()-method.md %})
 - [How to write a HTTP LoginScanner Module]({% link docs/development/developing-modules/How-to-write-a-HTTP-LoginScanner-Module.md %})
 - [How to write a module using HttpServer and HttpClient]({% link docs/development/developing-modules/How-to-write-a-module-using-HttpServer-and-HttpClient.md %})
-- [How to zip files with Msf::Util::EXE.to_zip]({% link docs/uncategorized/How-to-zip-files-with-Msf-Util-EXE.to_zip.md %})
+- [How to zip files with Msf::Util::EXE.to_zip]({% link docs/development/developing-modules/How-to-zip-files-with-Msf-Util-EXE.to_zip.md %})
 - [How to use Metasploit Framework Compiler Windows to compile C code]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})
 - [How to use Metasploit Framework Obfuscation CRandomizer]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Obfuscation-CRandomizer.md %})
 - [How to decrypt RC4 with Metasploit Framework Compiler]({% link docs/development/developing-modules/How-to-decrypt-RC4-with-Metasploit-Framework-Compiler.md %})
@@ -96,12 +96,12 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 # Other Metasploit Resources #
 
 - [Metasploit 5.0 Release Notes]({% link docs/development/roadmap/Metasploit-5.0-Release-Notes.md %})
-- [Downloads by Version]({% link docs/uncategorized/Downloads-by-Version.md %})
+- [Downloads by Version]({% link docs/development/miscellaneous/Downloads-by-Version.md %})
 - [Evading Anti Virus]({% link docs/using-metasploit/Evading-Anti-Virus.md %})
 - [How to use a Metasploit module appropriately]({% link docs/using-metasploit/How-to-use-a-Metasploit-module-appropriately.md %})
 - [How to use a reverse shell in Metasploit]({% link docs/using-metasploit/How-to-use-a-reverse-shell-in-Metasploit.md %})
 - [Information About Unmet Browser Exploit Requirements]({% link docs/using-metasploit/Information-About-Unmet-Browser-Exploit-Requirements.md %})
-- [How to use msfvenom]({% link docs/using-metasploit/How-to-use-msfvenom.md %})
+- [How to use msfvenom]({% link docs/using-metasploit/getting-started/How-to-use-msfvenom.md %})
 - [What my Rex Proto SMB Error means]({% link docs/development/developing-modules/What-my-Rex-Proto-SMB-Error-means.md %})
 - [Why CVE Is Not Available]({% link docs/using-metasploit/Why-CVE-is-not-available.md %})
 

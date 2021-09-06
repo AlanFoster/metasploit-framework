@@ -1,7 +1,9 @@
 ---
 layout: "default"
 title: "Using Metasploit"
-parent: "Using Metasploit"
+nav_order: 2
+parent: "Getting Started"
+grand_parent: "Using Metasploit"
 ---
 
 - [Using Metasploit](#getting-started)

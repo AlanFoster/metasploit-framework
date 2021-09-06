@@ -1,7 +1,8 @@
 ---
 layout: "default"
 title: "Metasploit Loginpalooza"
-parent: "Uncategorized"
+parent: "Miscellaneous"
+grand_parent: "Development"
 ---
 
 The Loginpalooza contest is over! Congrats and thanks to [@TomSellers](https://www.github.com/TomSellers), [@ChrisTuncer](https://www.github.com/ChrisTuncer), and [@0a2940](https://www.github.com/0a2940)!

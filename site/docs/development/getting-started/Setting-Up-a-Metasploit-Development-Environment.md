@@ -204,7 +204,7 @@ We're excited to see your upcoming contributions of new modules, documentation, 
 Finally, we welcome your feedback on this guide, so feel free to reach out to us on [Slack] or open a [new issue].  For their significant contributions to this guide, we would like to thank [@kernelsmith], [@corelanc0d3r], and [@ffmike].
 
 [commercial-installer]:http://metasploit.com/download
-[open-source-installer]:{% link docs/using-metasploit/Nightly-Installers.md %}
+[open-source-installer]:{% link docs/using-metasploit/getting-started/Nightly-Installers.md %}
 [kali-user-instructions]:https://docs.kali.org/general-use/starting-metasploit-framework-in-kali
 [parrot-user-instructions]:https://docs.parrotsec.org/doku.php/metasploit-framework#start-metasploit
 [CONTRIBUTING.md]:https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md

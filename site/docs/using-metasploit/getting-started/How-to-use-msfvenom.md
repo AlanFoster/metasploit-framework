@@ -1,7 +1,9 @@
 ---
 layout: "default"
 title: "How to use msfvenom"
-parent: "Using Metasploit"
+nav_order: 3
+parent: "Getting Started"
+grand_parent: "Using Metasploit"
 ---
 
 Msfvenom is the combination of payload generation and encoding. It replaced msfpayload and msfencode on June 8th 2015.

@@ -1,7 +1,8 @@
 ---
 layout: "default"
 title: "Metasploit Hackathons"
-parent: "Uncategorized"
+parent: "Miscellaneous"
+grand_parent: "Development"
 ---
 
 ### 2016

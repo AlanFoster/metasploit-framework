@@ -1,7 +1,9 @@
 ---
 layout: "default"
 title: "Reporting a Bug"
-parent: "Using Metasploit"
+nav_order: 4
+parent: "Getting Started"
+grand_parent: "Using Metasploit"
 ---
 
 # Metasploit Bug Reporting
@@ -25,7 +27,7 @@ Now on to the good stuff! The Metasploit development community has read thousand
 
 ## General Rules
 * Ensure the platform you're reporting the issue for is supported. We do not, for instance, support Termux currently. If your platform is not officially supported, the community may still have resources to help, but you should search for and ask about those outside Metasploit's issue tracker.
-* When possible, it helps if you are running the latest stable version of Metasploit Framework, or the latest release of Kali, BlackArch Linux, or your other favorite security distribution that ships with Metasploit. Metasploit's [nightly installers are here]({% link docs/using-metasploit/Nightly-Installers.md %}) and typically offer the latest Framework release.
+* When possible, it helps if you are running the latest stable version of Metasploit Framework, or the latest release of Kali, BlackArch Linux, or your other favorite security distribution that ships with Metasploit. Metasploit's [nightly installers are here]({% link docs/using-metasploit/getting-started/Nightly-Installers.md %}) and typically offer the latest Framework release.
 * Review our [code of conduct](https://github.com/rapid7/metasploit-framework/blob/master/CODE_OF_CONDUCT.md) before submitting issues.
 * Use a specific title so we can understand immediately which part of Metasploit is causing the unexpected behavior. "NoMethodError raised on smb_login module" is a great title. "Problem with Metasploit target" is not.
 * Redact any private or sensitive data, such as target IPs or URLs, passwords, or personally identifying information.
