@@ -2,7 +2,7 @@
 layout: "default"
 title: "API"
 nav_order: 0
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

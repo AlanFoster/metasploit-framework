@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Dot Net Deserialization"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

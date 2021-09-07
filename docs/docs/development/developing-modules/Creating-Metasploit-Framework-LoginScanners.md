@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Creating Metasploit Framework LoginScanners"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

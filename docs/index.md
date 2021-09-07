@@ -18,7 +18,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 - [Using Metasploit]({% link docs/using-metasploit/getting-started/Using-Metasploit.md %})
 - [Using Git]({% link docs/development/maintainers/Using-Git.md %})
 - [Reporting a Bug]({% link docs/using-metasploit/getting-started/Reporting-a-Bug.md %})
-- [Navigating and Understanding Metasploit's Codebase]({% link docs/development/developing-modules/Navigating-and-Understanding-Metasploit's-Codebase.md %})
+- [Navigating and Understanding Metasploit's Codebase]({% link docs/development/developing-modules/Navigating-and-Understanding-Metasploits-Codebase.md %})
 
 # Contributing
 
@@ -61,7 +61,7 @@ Are you anxious to get your [Metasploit Development Environment]({% link docs/de
 - [How to use WbemExec for a write privilege attack on Windows]({% link docs/development/developing-modules/How-to-use-WbemExec-for-a-write-privilege-attack-on-Windows.md %})
 - [How to write a browser exploit using BrowserExploitServer]({% link docs/development/developing-modules/How-to-write-a-browser-exploit-using-BrowserExploitServer.md %})
 - [How to write a browser exploit using HttpServer]({% link docs/development/developing-modules/How-to-write-a-browser-exploit-using-HttpServer.md %})
-- [How to write a check() method]({% link docs/development/developing-modules/How-to-write-a-check()-method.md %})
+- [How to write a check() method]({% link docs/development/developing-modules/How-to-write-a-check-method.md %})
 - [How to write a HTTP LoginScanner Module]({% link docs/development/developing-modules/How-to-write-a-HTTP-LoginScanner-Module.md %})
 - [How to write a module using HttpServer and HttpClient]({% link docs/development/developing-modules/How-to-write-a-module-using-HttpServer-and-HttpClient.md %})
 - [How to zip files with Msf::Util::EXE.to_zip]({% link docs/development/developing-modules/How-to-zip-files-with-Msf-Util-EXE.to_zip.md %})

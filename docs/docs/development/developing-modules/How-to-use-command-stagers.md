@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to use command stagers"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

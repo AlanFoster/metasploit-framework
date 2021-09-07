@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to log in Metasploit"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

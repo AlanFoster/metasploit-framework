@@ -1,6 +1,6 @@
 ---
 layout: "default"
-title: "Metasploit Data Service Enhancements (Goliath)"
+title: "Metasploit Data Service"
 parent: "Roadmap"
 grand_parent: "Development"
 ---

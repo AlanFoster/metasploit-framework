@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "SQL Injection (SQLi) Libraries"
-parent: "Developing modules"
+title: "SQL Injection Libraries"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

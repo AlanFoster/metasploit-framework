@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to decrypt RC4 with Metasploit Framework Compiler"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

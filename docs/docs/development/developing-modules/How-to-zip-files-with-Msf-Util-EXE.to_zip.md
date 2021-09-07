@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to zip files with Msf Util EXE.to_zip"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

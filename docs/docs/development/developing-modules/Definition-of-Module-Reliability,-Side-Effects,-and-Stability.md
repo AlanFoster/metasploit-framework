@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Definition of Module Reliability, Side Effects, and Stability"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

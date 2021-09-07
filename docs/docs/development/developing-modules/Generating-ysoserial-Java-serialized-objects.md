@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Generating `ysoserial` Java serialized objects"
-parent: "Developing modules"
+title: "Generating ysoserial Java serialized objects"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

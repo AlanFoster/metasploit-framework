@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Writing External Python Modules"
-parent: "Developing modules"
+title: "Writing Python Modules"
+parent: "Developing External Modules"
 grand_parent: "Development"
 ---
 

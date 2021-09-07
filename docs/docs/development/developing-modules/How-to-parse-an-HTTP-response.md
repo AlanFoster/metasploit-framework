@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to parse an HTTP response"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

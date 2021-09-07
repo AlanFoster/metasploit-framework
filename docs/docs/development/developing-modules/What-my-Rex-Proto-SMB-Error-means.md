@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "What my Rex Proto SMB Error means"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to write a HTTP LoginScanner Module"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

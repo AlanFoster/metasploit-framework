@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to use WbemExec for a write privilege attack on Windows"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to use Msf Auxiliary AuthBrute to write a bruteforcer"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

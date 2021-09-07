@@ -1,6 +1,6 @@
 ---
 layout: "default"
-title: "msfdb: Database Features & How to Set up a Database for Metasploit"
+title: "Database Support"
 parent: "Using Metasploit"
 ---
 

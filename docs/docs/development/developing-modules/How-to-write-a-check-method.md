@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "How to write a check() method"
-parent: "Developing modules"
+title: "How to write a check method"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

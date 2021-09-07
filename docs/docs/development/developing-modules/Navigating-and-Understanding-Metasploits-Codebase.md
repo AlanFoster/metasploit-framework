@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Navigating and Understanding Metasploit's Codebase"
-parent: "Developing modules"
+title: "Navigating and Understanding Metasploits Codebase"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

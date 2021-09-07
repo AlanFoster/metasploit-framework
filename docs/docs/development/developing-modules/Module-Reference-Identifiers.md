@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Module Reference Identifiers"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

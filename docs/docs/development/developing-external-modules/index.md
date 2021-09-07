@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Developing Modules"
+title: "Developing External Modules"
 has_children: true
-nav_order: 2
+nav_order: 3
 parent: "Development"
 ---

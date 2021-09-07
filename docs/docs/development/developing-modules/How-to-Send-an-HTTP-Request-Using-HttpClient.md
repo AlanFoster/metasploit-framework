@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to Send an HTTP Request Using HttpClient"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

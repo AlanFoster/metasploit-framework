@@ -35,8 +35,8 @@ Once you have a directory to place it in, feel free to download or start writing
 External modules, most commonly written in Python/Go, need to additionally be marked as executable in order to be loaded by Metasploit.
 
 For full details:
-- [Writing External Python Modules]({% link docs/development/developing-modules/Writing-External-Python-Modules.md %})
-- [Writing External GoLang Modules]({% link docs/development/developing-modules/Writing-External-GoLang-Modules.md %})
+- [Writing External Python Modules]({% link docs/development/developing-external-modules/Writing-External-Python-Modules.md %})
+- [Writing External GoLang Modules]({% link docs/development/developing-external-modules/Writing-External-GoLang-Modules.md %})
 
 ## Test it all out
 

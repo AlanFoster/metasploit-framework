@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Writing External GoLang Modules"
-parent: "Developing modules"
+title: "Writing GoLang Modules"
+parent: "Developing External Modules"
 grand_parent: "Development"
 ---
 

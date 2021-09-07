@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "Handling Module Failures with `fail_with`"
-parent: "Developing modules"
+title: "Handling Module Failures with fail_with"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

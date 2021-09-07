@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to use Metasploit Framework Obfuscation CRandomizer"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

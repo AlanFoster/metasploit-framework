@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to do reporting or store data in module development"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

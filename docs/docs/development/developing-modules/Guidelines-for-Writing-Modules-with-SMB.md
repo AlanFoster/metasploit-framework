@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "Guidelines for Writing Modules with SMB"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

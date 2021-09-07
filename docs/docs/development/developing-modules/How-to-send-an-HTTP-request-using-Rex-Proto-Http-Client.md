@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to send an HTTP request using Rex Proto Http Client"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

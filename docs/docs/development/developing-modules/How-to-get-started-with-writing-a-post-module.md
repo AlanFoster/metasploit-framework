@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to get started with writing a post module"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

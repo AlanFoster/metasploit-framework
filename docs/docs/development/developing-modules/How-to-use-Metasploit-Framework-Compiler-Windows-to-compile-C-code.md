@@ -1,7 +1,7 @@
 ---
 layout: "default"
 title: "How to use Metasploit Framework Compiler Windows to compile C code"
-parent: "Developing modules"
+parent: "Developing Modules"
 grand_parent: "Development"
 ---
 

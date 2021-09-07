@@ -1,7 +1,8 @@
 ---
 layout: "default"
-title: "Writing External Metasploit Modules"
-parent: "Developing modules"
+title: "Overview"
+nav_order: 1
+parent: "Developing External Modules"
 grand_parent: "Development"
 ---
 
