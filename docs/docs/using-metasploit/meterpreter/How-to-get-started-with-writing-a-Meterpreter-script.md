@@ -9,4 +9,4 @@ grand_parent: "Using Metasploit"
 
 I tricked you. We don't let anybody write Meterpreter scripts anymore, therefore we will no longer teach you how.
 
-##[You should try writing post modules instead]({% link docs/development/developing-modules/How-to-get-started-with-writing-a-post-module.md %}).##
+[You should try writing post modules instead]({% link docs/development/developing-modules/How-to-get-started-with-writing-a-post-module.md %}).
