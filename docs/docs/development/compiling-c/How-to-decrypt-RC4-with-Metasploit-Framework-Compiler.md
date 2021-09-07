@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "How to decrypt RC4 with Metasploit Framework Compiler"
-parent: "Developing Modules"
+title: "RC4 Support"
+parent: "Compiling C"
 grand_parent: "Development"
 ---
 
@@ -29,4 +29,4 @@ int main(void) {
 }
 ```
 
-To compile, use [Metasploit::Framework::Compiler::Windows.compile_c]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %}).
+To compile, use [Metasploit::Framework::Compiler::Windows.compile_c]({% link docs/development/compiling-c/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %}).

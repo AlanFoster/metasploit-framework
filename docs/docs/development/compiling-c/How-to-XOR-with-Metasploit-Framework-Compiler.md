@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "How to XOR with Metasploit Framework Compiler"
-parent: "Developing Modules"
+title: "XOR Support"
+parent: "Compiling C"
 grand_parent: "Development"
 ---
 
@@ -27,4 +27,4 @@ int main(int args, char** argv) {
 }
 ```
 
-To compile, use [Metasploit::Framework::Compiler::Windows.compile_c]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})
+To compile, use [Metasploit::Framework::Compiler::Windows.compile_c]({% link docs/development/compiling-c/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})

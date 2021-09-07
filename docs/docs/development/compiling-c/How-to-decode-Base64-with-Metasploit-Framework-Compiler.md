@@ -1,7 +1,7 @@
 ---
 layout: "default"
-title: "How to decode Base64 with Metasploit Framework Compiler"
-parent: "Developing Modules"
+title: "Base64 Support"
+parent: "Compiling C"
 grand_parent: "Development"
 ---
 
@@ -31,4 +31,4 @@ int main() {
 }
 ```
 
-To compile, use [How to use Metasploit::Framework::Compiler::Windows to compile C code]({% link docs/development/developing-modules/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})
+To compile, use [How to use Metasploit::Framework::Compiler::Windows to compile C code]({% link docs/development/compiling-c/How-to-use-Metasploit-Framework-Compiler-Windows-to-compile-C-code.md %})
