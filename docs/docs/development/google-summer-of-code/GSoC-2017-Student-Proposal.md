@@ -2,7 +2,6 @@
 layout: "default"
 title: " 2017 Student Proposal"
 parent: "Google Summer of Code"
-grand_parent: "Development"
 ---
 
 Send the following to msfdev@metasploit.com

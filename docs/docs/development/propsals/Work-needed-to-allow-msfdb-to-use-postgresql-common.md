@@ -2,7 +2,6 @@
 layout: "default"
 title: "Work needed to allow msfdb to use postgresql common"
 parent: "Proposals"
-grand_parent: "Development"
 ---
 
 # Work needed to allow msfdb to use postgresql-common

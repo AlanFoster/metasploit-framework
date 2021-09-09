@@ -2,7 +2,6 @@
 layout: "default"
 title: "Writing Module Documentation"
 parent: "Quality"
-grand_parent: "Development"
 ---
 
 Adding and reviewing module documentation is a great way to contribute to the Metasploit Framework. 

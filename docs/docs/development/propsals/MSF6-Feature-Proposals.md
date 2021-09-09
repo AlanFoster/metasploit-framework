@@ -2,7 +2,6 @@
 layout: "default"
 title: "MSF6 Feature Proposals"
 parent: "Proposals"
-grand_parent: "Development"
 ---
 
 List of potential major features (things that would make major breaking changes) for MSF6:

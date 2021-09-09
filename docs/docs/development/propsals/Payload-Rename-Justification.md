@@ -2,7 +2,6 @@
 layout: "default"
 title: "Payload Rename Justification"
 parent: "Proposals"
-grand_parent: "Development"
 ---
 
 ### The Issue

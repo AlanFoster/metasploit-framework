@@ -2,7 +2,6 @@
 layout: "default"
 title: "Bundled Modules Proposal"
 parent: "Proposals"
-grand_parent: "Development"
 ---
 
 # Bundled Modules

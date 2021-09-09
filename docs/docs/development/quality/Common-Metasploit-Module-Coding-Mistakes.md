@@ -2,7 +2,6 @@
 layout: "default"
 title: "Common Metasploit Module Coding Mistakes"
 parent: "Quality"
-grand_parent: "Development"
 ---
 
 # Deprecation notice!

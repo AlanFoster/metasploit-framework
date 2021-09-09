@@ -2,7 +2,6 @@
 layout: "default"
 title: "Metasploit Data Service"
 parent: "Roadmap"
-grand_parent: "Development"
 ---
 
 Project Goliath came about primarilly around the need to enhance the current data service and data models to increase the value of data in metasploit to our end users.
@@ -48,4 +47,4 @@ This approach enables us to:
 
 ## Usage
 
-For more information on setting up the web service and using the data services see [Metasploit Web Service]({% link docs/using-metasploit/Metasploit-Web-Service.md %}).
+For more information on setting up the web service and using the data services see [Metasploit Web Service]({% link docs/using-metasploit/advanced/Metasploit-Web-Service.md %}).

@@ -2,7 +2,6 @@
 layout: "default"
 title: " 2018 Project Ideas"
 parent: "Google Summer of Code"
-grand_parent: "Development"
 ---
 
 GSoC Project Ideas in no particular order.

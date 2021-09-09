@@ -2,14 +2,13 @@
 layout: "default"
 title: "Committer Rights"
 parent: "Maintainers"
-grand_parent: "Development"
 ---
 
 # Metasploit Committers
 
 The term "Metasploit Committers" describes people who have direct write access to the [Rapid7 Metasploit-Framework fork](https://github.com/rapid7/metasploit-framework). These are the people who can land changes to this main fork of the Framework. However, it is not necessary to have committer rights in order to contribute to Metasploit. Much of our code comes from non-committers.
 
-We encourage anyone to fork the Metasploit project, make changes, fix bugs, and notify the core committers about those changes via [Pull Requests](http://github.com/rapid7/metasploit-framework/pulls). The process for getting started is most comprehensively documented in the [Metasploit Development Environment]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}) setup guide.
+We encourage anyone to fork the Metasploit project, make changes, fix bugs, and notify the core committers about those changes via [Pull Requests](http://github.com/rapid7/metasploit-framework/pulls). The process for getting started is most comprehensively documented in the [Metasploit Development Environment]({% link docs/development/get-started/Setting-Up-a-Metasploit-Development-Environment.md %}) setup guide.
 
 Metasploit committers are a mix of [Rapid7](http://rapid7.com) employees and outside contributors. Anyone can become a contributor, with the following expectations:
 
@@ -52,7 +51,7 @@ Breaches of trust in terms of malicious or malformed code, or the demonstration 
 
 # Useful Links for Committers
 
-  * [http://r-7.co/MSF-DEV]({% link docs/development/getting-started/Setting-Up-a-Metasploit-Development-Environment.md %}) is pretty much required reading.
+  * [http://r-7.co/MSF-DEV]({% link docs/development/get-started/Setting-Up-a-Metasploit-Development-Environment.md %}) is pretty much required reading.
   * So is [CONTRIBUTING.md](https://github.com/rapid7/metasploit-framework/blob/master/CONTRIBUTING.md)
   * Check out the Apache Software Foundation's [Guide for Committers](https://www.apache.org/dev/committers). It's illuminating.
   * [Producing Open Source Software](http://www.producingoss.com/gl/) by Ken Fogel is a must-read.

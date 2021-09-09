@@ -2,7 +2,6 @@
 layout: "default"
 title: "Style Tips"
 parent: "Quality"
-grand_parent: "Development"
 ---
 
 # Style Tips

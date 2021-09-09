@@ -2,7 +2,6 @@
 layout: "default"
 title: "Msftidy"
 parent: "Quality"
-grand_parent: "Development"
 ---
 
 ## Description
@@ -48,7 +47,7 @@ All modules should have a `.rb` file extension to be loaded by the framework.
 This check checks the file for syntax errors with old Ruby versions. By default this check will not run. To execute this check you need to set the environment variable `MSF_CHECK_OLD_RUBIES`.
 
 ## Ranking
-This check ensures you added the correct [Exploit Ranking]({% link docs/using-metasploit/Exploit-Ranking.md %}) to your module.
+This check ensures you added the correct [Exploit Ranking]({% link docs/using-metasploit/intermediate/Exploit-Ranking.md %}) to your module.
 
 ## Disclosure Date
 Date format needs to be `Month Day, YYYY`. Example: `Jan 01, 2014`

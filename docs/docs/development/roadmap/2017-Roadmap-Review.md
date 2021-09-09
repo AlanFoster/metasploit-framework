@@ -2,7 +2,6 @@
 layout: "default"
 title: "2017 Roadmap Review"
 parent: "Roadmap"
-grand_parent: "Development"
 ---
 
 # Metasploit's 2017 Roadmap Review

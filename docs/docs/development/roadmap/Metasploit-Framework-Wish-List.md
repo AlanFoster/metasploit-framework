@@ -2,7 +2,6 @@
 layout: "default"
 title: "Metasploit Framework Wish List"
 parent: "Roadmap"
-grand_parent: "Development"
 ---
 
 We are frequently asked what would be useful as a contribution to the project. There's evergreen advice below, as well as a few more specific wish list ideas from our team. 

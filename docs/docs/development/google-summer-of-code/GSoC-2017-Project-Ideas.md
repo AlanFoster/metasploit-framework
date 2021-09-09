@@ -2,7 +2,6 @@
 layout: "default"
 title: " 2017 Project Ideas"
 parent: "Google Summer of Code"
-grand_parent: "Development"
 ---
 
 GSoC Project Ideas in no particular order. When you've picked one, take a look at [GSoC 2017 Student Proposal]({% link docs/development/google-summer-of-code/GSoC-2017-Student-Proposal.md %}) for how to make a proposal.

@@ -2,7 +2,6 @@
 layout: "default"
 title: "Uberhandler"
 parent: "Proposals"
-grand_parent: "Development"
 ---
 
 # Current Design

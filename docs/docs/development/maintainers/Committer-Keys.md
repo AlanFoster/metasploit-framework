@@ -2,7 +2,6 @@
 layout: "default"
 title: "Committer Keys"
 parent: "Maintainers"
-grand_parent: "Development"
 ---
 
 This page lists the keys in use by [Metasploit committers][msf-committers] and

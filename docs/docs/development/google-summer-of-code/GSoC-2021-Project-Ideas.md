@@ -2,7 +2,6 @@
 layout: "default"
 title: " 2021 Project Ideas"
 parent: "Google Summer of Code"
-grand_parent: "Development"
 ---
 
 GSoC Project Ideas in no particular order. When you've picked one, take a look at [How-to-Apply-to-GSoC]({% link docs/development/google-summer-of-code/How-to-Apply-to-GSoC.md %}) for how to make a proposal.

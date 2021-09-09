@@ -2,7 +2,6 @@
 layout: "default"
 title: "Metasploit Breaking Changes"
 parent: "Roadmap"
-grand_parent: "Development"
 ---
 
 Occasionally, we have ideas or submissions that are absolutely awesome, but that require us to completely change how Metasploit does something, so the deployment of the feature must be done carefully.

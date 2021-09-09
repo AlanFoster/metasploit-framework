@@ -2,7 +2,6 @@
 layout: "default"
 title: " 2017 Mentor Organization Application"
 parent: "Google Summer of Code"
-grand_parent: "Development"
 ---
 
 ### This is how the application was submitted on 2017-02-08. Please make no more edits

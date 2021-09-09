@@ -2,7 +2,6 @@
 layout: "default"
 title: "Using Rubocop"
 parent: "Quality"
-grand_parent: "Development"
 ---
 
 # Rubocop
