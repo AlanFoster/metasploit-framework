@@ -58,8 +58,8 @@ function initSearch() {
   request.onload = function(){
     if (request.status >= 200 && request.status < 400) {
       var docs = JSON.parse(request.responseText);
-      
-      lunr.tokenizer.separator = /[\s/]+/
+
+      lunr.tokenizer.separator = /[\s\-/]+/
 
       var index = lunr(function(){
         this.ref('id');
@@ -100,12 +100,14 @@ function searchLoaded(index, docs) {
   var currentInput;
   var currentSearchIndex = 0;
 
+  var body = document.querySelector('body');
+
   function showSearch() {
-    document.documentElement.classList.add('search-active');
+    body.classList.add('search-active');
   }
 
   function hideSearch() {
-    document.documentElement.classList.remove('search-active');
+    body.classList.remove('search-active');
   }
 
   function update() {
@@ -236,7 +238,7 @@ function searchLoaded(index, docs) {
             var previewEnd = position[0] + position[1];
             var ellipsesBefore = true;
             var ellipsesAfter = true;
-            for (var k = 0; k < 3; k++) {
+            for (var k = 0; k < 5; k++) {
               var nextSpace = doc.content.lastIndexOf(' ', previewStart - 2);
               var nextDot = doc.content.lastIndexOf('. ', previewStart - 2);
               if ((nextDot >= 0) && (nextDot > nextSpace)) {
@@ -251,7 +253,7 @@ function searchLoaded(index, docs) {
               }
               previewStart = nextSpace + 1;
             }
-            for (var k = 0; k < 3; k++) {
+            for (var k = 0; k < 10; k++) {
               var nextSpace = doc.content.indexOf(' ', previewEnd + 1);
               var nextDot = doc.content.indexOf('. ', previewEnd + 1);
               if ((nextDot >= 0) && (nextDot < nextSpace)) {
@@ -311,7 +313,7 @@ function searchLoaded(index, docs) {
         resultLink.appendChild(resultPreviews);
 
         var content = doc.content;
-        for (var j = 0; j < Math.min(previewPositions.length, 2); j++) {
+        for (var j = 0; j < Math.min(previewPositions.length, 3); j++) {
           var position = previewPositions[j];
 
           var resultPreview = document.createElement('div');
@@ -433,11 +435,24 @@ jtd.setTheme = function(theme) {
   cssFile.setAttribute('href', '/metasploit-framework/assets/css/just-the-docs-' + theme + '.css');
 }
 
+// Scroll site-nav to ensure the link to the current page is visible
+
+function scrollNav() {
+  const href = document.location.pathname.replace(/(\/.*)\/+$/, "$1");
+  const siteNav = document.getElementById('site-nav');
+  const targetLink = siteNav.querySelector('a[href="' + href + '"], a[href="' + href + '/"]');
+  if(targetLink){
+    const rect = targetLink.getBoundingClientRect();
+    siteNav.scrollBy(0, rect.top - 3*rect.height);
+  }
+}
+
 // Document ready
 
 jtd.onReady(function(){
   initNav();
   initSearch();
+  scrollNav();
 });
 
 })(window.jtd = window.jtd || {});
