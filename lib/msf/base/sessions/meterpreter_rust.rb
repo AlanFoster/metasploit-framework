@@ -87,7 +87,7 @@ class Meterpreter_Rust_Rust < Msf::Sessions::Meterpreter
   def initialize(rstream, opts={})
     super
     self.base_platform = 'rust'
-    self.base_arch = ARCH_RUST
+    self.base_arch = Rex::Arch::ARCH_RUST
   end
 
   def lookup_error(error_code)

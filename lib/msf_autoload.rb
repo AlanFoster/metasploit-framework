@@ -229,6 +229,7 @@ class MsfAutoload
       'meterpreter_android' => 'Meterpreter_Java_Android',
       'meterpreter_zarch_linux' => 'Meterpreter_zarch_Linux',
       'meterpreter_python' => 'Meterpreter_Python_Python',
+      'meterpreter_rust' => 'Meterpreter_Rust_Rust',
       'meterpreter_ppce500v2_linux' => 'Meterpreter_ppce500v2_Linux',
       'meterpreter_x86_osx' => 'Meterpreter_x86_OSX',
       'meterpreter_armbe_linux' => 'Meterpreter_armbe_Linux',

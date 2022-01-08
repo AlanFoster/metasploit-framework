@@ -18,4 +18,7 @@ module Msf::Payload::Python
     cmd
   end
 
+  def py_create_exec_stub(cmd)
+    Msf::Payload::Python.create_exec_stub(cmd)
+  end
 end

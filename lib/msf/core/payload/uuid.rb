@@ -5,7 +5,10 @@ require 'rex/arch'
 
 # TODO: The global arch values are exposed from a separate gem
 # https://github.com/rapid7/rex-arch/blob/bcb4d0cfc4872943a135ca967cf9f13072666747/lib/rex/arch.rb
-ARCH_RUST = 'rust'
+module Rex::Arch
+  ARCH_RUST = 'rust'
+end
+
 Rex::Arch::ARCH_ALL << ARCH_RUST
 
 #
@@ -46,7 +49,7 @@ class Msf::Payload::UUID
     26 => Rex::Arch::ARCH_PPC64LE,
     27 => Rex::Arch::ARCH_R,
     28 => Rex::Arch::ARCH_PPCE500V2,
-    29 => ARCH_RUST
+    29 => Rex::Arch::ARCH_RUST
   }
 
   Platforms = {
