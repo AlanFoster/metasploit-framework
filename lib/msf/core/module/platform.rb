@@ -620,4 +620,11 @@ class Msf::Module::Platform
     Alias = "apple_ios"
   end
 
+  #
+  # Python
+  #
+  class Rust < Msf::Module::Platform
+    Rank = 100
+    Alias = "rust"
+  end
 end

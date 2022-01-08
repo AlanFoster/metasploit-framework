@@ -6,6 +6,23 @@
 #
 
 require 'pathname'
+
+class RustLog
+  def self.puts(*s)
+    # $stderr.puts(*s)
+  end
+
+  def self.info(*s)
+    # $stderr.puts(*s)
+  end
+
+  def self.detail(*s)
+    # $stderr.puts(*s)
+  end
+end
+
+$rust_log = RustLog
+
 begin
 
   # Silences warnings as they only serve to confuse end users

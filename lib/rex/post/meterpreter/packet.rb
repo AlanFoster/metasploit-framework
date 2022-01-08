@@ -314,90 +314,199 @@ class Tlv
     end
   end
 
+  def _tlv_type_string(type)
+    [
+      Rex::Post::Meterpreter,
+      Rex::Post::Meterpreter::Extensions::Stdapi
+    ].each do |clazz|
+      clazz.constants.each do |const|
+        next unless const.to_s.starts_with?('TLV_TYPE_') || const.to_s.starts_with?('PACKET_')
+        const_value = clazz.const_get(const)
+        if const_value == type
+          return const.to_s.gsub('TLV_TYPE_', '')
+        end
+      end
+    end
+
+    nil
+  end
+
   def inspect
     utype = type ^ TLV_META_TYPE_COMPRESSED
     group = false
-    meta = case (utype & TLV_META_MASK)
-      when TLV_META_TYPE_STRING; "STRING"
-      when TLV_META_TYPE_UINT; "INT"
-      when TLV_META_TYPE_RAW; "RAW"
-      when TLV_META_TYPE_BOOL; "BOOL"
-      when TLV_META_TYPE_QWORD; "QWORD"
-      when TLV_META_TYPE_GROUP; group=true; "GROUP"
-      when TLV_META_TYPE_COMPLEX; "COMPLEX"
-      else; 'unknown-meta-type'
-      end
-    stype = case type
-      when PACKET_TYPE_REQUEST; "Request"
-      when PACKET_TYPE_RESPONSE; "Response"
-      when TLV_TYPE_REQUEST_ID; "REQUEST-ID"
-      when TLV_TYPE_COMMAND_ID; "COMMAND-ID"
-      when TLV_TYPE_RESULT; "RESULT"
-      when TLV_TYPE_EXCEPTION; "EXCEPTION"
-      when TLV_TYPE_STRING; "STRING"
-      when TLV_TYPE_UINT; "UINT"
-      when TLV_TYPE_BOOL; "BOOL"
+    # meta = case (utype & TLV_META_MASK)
+    #   when TLV_META_TYPE_STRING; "STRING"
+    #   when TLV_META_TYPE_UINT; "INT"
+    #   when TLV_META_TYPE_RAW; "RAW"
+    #   when TLV_META_TYPE_BOOL; "BOOL"
+    #   when TLV_META_TYPE_QWORD; "QWORD"
+    #   when TLV_META_TYPE_GROUP; group=true; "GROUP"
+    #   when TLV_META_TYPE_COMPLEX; "COMPLEX"
+    #   else; 'unknown-meta-type'
+    #   end
+    # stype = case type
+    #   when PACKET_TYPE_REQUEST; "Request"
+    #   when PACKET_TYPE_RESPONSE; "Response"
+    #   when TLV_TYPE_REQUEST_ID; "REQUEST-ID"
+    #   when TLV_TYPE_COMMAND_ID; "COMMAND-ID"
+    #   when TLV_TYPE_RESULT; "RESULT"
+    #   when TLV_TYPE_EXCEPTION; "EXCEPTION"
+    #   when TLV_TYPE_STRING; "STRING"
+    #   when TLV_TYPE_UINT; "UINT"
+    #   when TLV_TYPE_BOOL; "BOOL"
+    #
+    #   when TLV_TYPE_LENGTH; "LENGTH"
+    #   when TLV_TYPE_DATA; "DATA"
+    #   when TLV_TYPE_FLAGS; "FLAGS"
+    #
+    #   when TLV_TYPE_CHANNEL_ID; "CHANNEL-ID"
+    #   when TLV_TYPE_CHANNEL_TYPE; "CHANNEL-TYPE"
+    #   when TLV_TYPE_CHANNEL_DATA; "CHANNEL-DATA"
+    #   when TLV_TYPE_CHANNEL_DATA_GROUP; "CHANNEL-DATA-GROUP"
+    #   when TLV_TYPE_CHANNEL_CLASS; "CHANNEL-CLASS"
+    #   when TLV_TYPE_CHANNEL_PARENTID; "CHANNEL-PARENTID"
+    #
+    #   when TLV_TYPE_SEEK_WHENCE; "SEEK-WHENCE"
+    #   when TLV_TYPE_SEEK_OFFSET; "SEEK-OFFSET"
+    #   when TLV_TYPE_SEEK_POS; "SEEK-POS"
+    #
+    #   when TLV_TYPE_EXCEPTION_CODE; "EXCEPTION-CODE"
+    #   when TLV_TYPE_EXCEPTION_STRING; "EXCEPTION-STRING"
+    #
+    #   when TLV_TYPE_LIBRARY_PATH; "LIBRARY-PATH"
+    #   when TLV_TYPE_TARGET_PATH; "TARGET-PATH"
+    #   when TLV_TYPE_MIGRATE_PID; "MIGRATE-PID"
+    #   when TLV_TYPE_MIGRATE_PAYLOAD; "MIGRATE-PAYLOAD"
+    #   when TLV_TYPE_MIGRATE_ARCH; "MIGRATE-ARCH"
+    #   when TLV_TYPE_MIGRATE_BASE_ADDR; "MIGRATE-BASE-ADDR"
+    #   when TLV_TYPE_MIGRATE_ENTRY_POINT; "MIGRATE-ENTRY-POINT"
+    #   when TLV_TYPE_MIGRATE_STUB; "MIGRATE-STUB"
+    #   when TLV_TYPE_MIGRATE_SOCKET_PATH; "MIGRATE-SOCKET-PATH"
+    #   when TLV_TYPE_LIB_LOADER_NAME; "LIB-LOADER-NAME"
+    #   when TLV_TYPE_LIB_LOADER_ORDINAL; "LIB-LOADER-ORDINAL"
+    #   when TLV_TYPE_TRANS_TYPE; "TRANS-TYPE"
+    #   when TLV_TYPE_TRANS_URL; "TRANS-URL"
+    #   when TLV_TYPE_TRANS_COMM_TIMEOUT; "TRANS-COMM-TIMEOUT"
+    #   when TLV_TYPE_TRANS_SESSION_EXP; "TRANS-SESSION-EXP"
+    #   when TLV_TYPE_TRANS_CERT_HASH; "TRANS-CERT-HASH"
+    #   when TLV_TYPE_TRANS_PROXY_HOST; "TRANS-PROXY-HOST"
+    #   when TLV_TYPE_TRANS_PROXY_USER; "TRANS-PROXY-USER"
+    #   when TLV_TYPE_TRANS_PROXY_PASS; "TRANS-PROXY-PASS"
+    #   when TLV_TYPE_TRANS_RETRY_TOTAL; "TRANS-RETRY-TOTAL"
+    #   when TLV_TYPE_TRANS_RETRY_WAIT; "TRANS-RETRY-WAIT"
+    #   when TLV_TYPE_MACHINE_ID; "MACHINE-ID"
+    #   when TLV_TYPE_UUID; "UUID"
+    #   when TLV_TYPE_SESSION_GUID; "SESSION-GUID"
+    #   when TLV_TYPE_RSA_PUB_KEY; "RSA-PUB-KEY"
+    #   when TLV_TYPE_SYM_KEY_TYPE; "SYM-KEY-TYPE"
+    #   when TLV_TYPE_SYM_KEY; "SYM-KEY"
+    #   when TLV_TYPE_ENC_SYM_KEY; "ENC-SYM-KEY"
+    #
+    #   when TLV_TYPE_PIVOT_ID; "PIVOT-ID"
+    #   when TLV_TYPE_PIVOT_STAGE_DATA; "PIVOT-STAGE-DATA"
+    #   when TLV_TYPE_PIVOT_NAMED_PIPE_NAME; "PIVOT-NAMED-PIPE-NAME"
+    #
+    #   else; "unknown-#{type}"
+    #   end
+   # end
 
-      when TLV_TYPE_LENGTH; "LENGTH"
-      when TLV_TYPE_DATA; "DATA"
-      when TLV_TYPE_FLAGS; "FLAGS"
+    stype = _tlv_type_string(type) || "unknown-#{type}"
+    stype ||= "unknown-#{type}"
 
-      when TLV_TYPE_CHANNEL_ID; "CHANNEL-ID"
-      when TLV_TYPE_CHANNEL_TYPE; "CHANNEL-TYPE"
-      when TLV_TYPE_CHANNEL_DATA; "CHANNEL-DATA"
-      when TLV_TYPE_CHANNEL_DATA_GROUP; "CHANNEL-DATA-GROUP"
-      when TLV_TYPE_CHANNEL_CLASS; "CHANNEL-CLASS"
-      when TLV_TYPE_CHANNEL_PARENTID; "CHANNEL-PARENTID"
+    # stype = case type
+    #   when PACKET_TYPE_REQUEST; "Request"
+    #   when PACKET_TYPE_RESPONSE; "Response"
+    #   when TLV_TYPE_REQUEST_ID; "REQUEST-ID"
+    #   when TLV_TYPE_METHOD; "METHOD"
+    #   when TLV_TYPE_RESULT; "RESULT"
+    #   when TLV_TYPE_EXCEPTION; "EXCEPTION"
+    #   when TLV_TYPE_STRING; "STRING"
+    #   when TLV_TYPE_UINT; "UINT"
+    #   when TLV_TYPE_BOOL; "BOOL"
+    #
+    #   when TLV_TYPE_LENGTH; "LENGTH"
+    #   when TLV_TYPE_DATA; "DATA"
+    #   when TLV_TYPE_FLAGS; "FLAGS"
+    #
+    #   when TLV_TYPE_CHANNEL_ID; "CHANNEL-ID"
+    #   when TLV_TYPE_CHANNEL_TYPE; "CHANNEL-TYPE"
+    #   when TLV_TYPE_CHANNEL_DATA; "CHANNEL-DATA"
+    #   when TLV_TYPE_CHANNEL_DATA_GROUP; "CHANNEL-DATA-GROUP"
+    #   when TLV_TYPE_CHANNEL_CLASS; "CHANNEL-CLASS"
+    #   when TLV_TYPE_CHANNEL_PARENTID; "CHANNEL-PARENTID"
+    #
+    #   when TLV_TYPE_SEEK_WHENCE; "SEEK-WHENCE"
+    #   when TLV_TYPE_SEEK_OFFSET; "SEEK-OFFSET"
+    #   when TLV_TYPE_SEEK_POS; "SEEK-POS"
+    #
+    #   when TLV_TYPE_EXCEPTION_CODE; "EXCEPTION-CODE"
+    #   when TLV_TYPE_EXCEPTION_STRING; "EXCEPTION-STRING"
+    #
+    #   when TLV_TYPE_LIBRARY_PATH; "LIBRARY-PATH"
+    #   when TLV_TYPE_TARGET_PATH; "TARGET-PATH"
+    #   when TLV_TYPE_MIGRATE_PID; "MIGRATE-PID"
+    #   when TLV_TYPE_MIGRATE_PAYLOAD_LEN; "MIGRATE-PAYLOAD-LEN"
+    #   when TLV_TYPE_MIGRATE_PAYLOAD; "MIGRATE-PAYLOAD"
+    #   when TLV_TYPE_MIGRATE_ARCH; "MIGRATE-ARCH"
+    #   when TLV_TYPE_MIGRATE_BASE_ADDR; "MIGRATE-BASE-ADDR"
+    #   when TLV_TYPE_MIGRATE_ENTRY_POINT; "MIGRATE-ENTRY-POINT"
+    #   when TLV_TYPE_MIGRATE_STUB_LEN; "MIGRATE-STUB-LEN"
+    #   when TLV_TYPE_MIGRATE_STUB; "MIGRATE-STUB"
+    #   when TLV_TYPE_MIGRATE_SOCKET_PATH; "MIGRATE-SOCKET-PATH"
+    #   when TLV_TYPE_TRANS_TYPE; "TRANS-TYPE"
+    #   when TLV_TYPE_TRANS_URL; "TRANS-URL"
+    #   when TLV_TYPE_TRANS_COMM_TIMEOUT; "TRANS-COMM-TIMEOUT"
+    #   when TLV_TYPE_TRANS_SESSION_EXP; "TRANS-SESSION-EXP"
+    #   when TLV_TYPE_TRANS_CERT_HASH; "TRANS-CERT-HASH"
+    #   when TLV_TYPE_TRANS_PROXY_HOST; "TRANS-PROXY-HOST"
+    #   when TLV_TYPE_TRANS_PROXY_USER; "TRANS-PROXY-USER"
+    #   when TLV_TYPE_TRANS_PROXY_PASS; "TRANS-PROXY-PASS"
+    #   when TLV_TYPE_TRANS_RETRY_TOTAL; "TRANS-RETRY-TOTAL"
+    #   when TLV_TYPE_TRANS_RETRY_WAIT; "TRANS-RETRY-WAIT"
+    #   when TLV_TYPE_MACHINE_ID; "MACHINE-ID"
+    #   when TLV_TYPE_UUID; "UUID"
+    #   when TLV_TYPE_SESSION_GUID; "SESSION-GUID"
+    #   when TLV_TYPE_RSA_PUB_KEY; "RSA-PUB-KEY"
+    #   when TLV_TYPE_SYM_KEY_TYPE; "SYM-KEY-TYPE"
+    #   when TLV_TYPE_SYM_KEY; "SYM-KEY"
+    #   when TLV_TYPE_ENC_SYM_KEY; "ENC-SYM-KEY"
+    #
+    #   when TLV_TYPE_PIVOT_ID; "PIVOT-ID"
+    #   when TLV_TYPE_PIVOT_STAGE_DATA; "PIVOT-STAGE-DATA"
+    #   when TLV_TYPE_PIVOT_STAGE_DATA_SIZE; "PIVOT-STAGE-DATA-SIZE"
+    #   when TLV_TYPE_PIVOT_NAMED_PIPE_NAME; "PIVOT-NAMED-PIPE-NAME"
+    #
+    #   #when Extensions::Stdapi::TLV_TYPE_NETWORK_INTERFACE; 'network-interface'
+    #   #when Extensions::Stdapi::TLV_TYPE_IP; 'ip-address'
+    #   #when Extensions::Stdapi::TLV_TYPE_NETMASK; 'netmask'
+    #   #when Extensions::Stdapi::TLV_TYPE_MAC_ADDRESS; 'mac-address'
+    #   #when Extensions::Stdapi::TLV_TYPE_MAC_NAME; 'interface-name'
+    #   #when Extensions::Stdapi::TLV_TYPE_IP6_SCOPE; 'address-scope'
+    #   #when Extensions::Stdapi::TLV_TYPE_INTERFACE_MTU; 'interface-mtu'
+    #   #when Extensions::Stdapi::TLV_TYPE_INTERFACE_FLAGS; 'interface-flags'
+    #   #when Extensions::Stdapi::TLV_TYPE_INTERFACE_INDEX; 'interface-index'
+    #
+    #   else; "unknown-#{type}"
+    #   end
 
-      when TLV_TYPE_SEEK_WHENCE; "SEEK-WHENCE"
-      when TLV_TYPE_SEEK_OFFSET; "SEEK-OFFSET"
-      when TLV_TYPE_SEEK_POS; "SEEK-POS"
-
-      when TLV_TYPE_EXCEPTION_CODE; "EXCEPTION-CODE"
-      when TLV_TYPE_EXCEPTION_STRING; "EXCEPTION-STRING"
-
-      when TLV_TYPE_LIBRARY_PATH; "LIBRARY-PATH"
-      when TLV_TYPE_TARGET_PATH; "TARGET-PATH"
-      when TLV_TYPE_MIGRATE_PID; "MIGRATE-PID"
-      when TLV_TYPE_MIGRATE_PAYLOAD; "MIGRATE-PAYLOAD"
-      when TLV_TYPE_MIGRATE_ARCH; "MIGRATE-ARCH"
-      when TLV_TYPE_MIGRATE_BASE_ADDR; "MIGRATE-BASE-ADDR"
-      when TLV_TYPE_MIGRATE_ENTRY_POINT; "MIGRATE-ENTRY-POINT"
-      when TLV_TYPE_MIGRATE_STUB; "MIGRATE-STUB"
-      when TLV_TYPE_MIGRATE_SOCKET_PATH; "MIGRATE-SOCKET-PATH"
-      when TLV_TYPE_LIB_LOADER_NAME; "LIB-LOADER-NAME"
-      when TLV_TYPE_LIB_LOADER_ORDINAL; "LIB-LOADER-ORDINAL"
-      when TLV_TYPE_TRANS_TYPE; "TRANS-TYPE"
-      when TLV_TYPE_TRANS_URL; "TRANS-URL"
-      when TLV_TYPE_TRANS_COMM_TIMEOUT; "TRANS-COMM-TIMEOUT"
-      when TLV_TYPE_TRANS_SESSION_EXP; "TRANS-SESSION-EXP"
-      when TLV_TYPE_TRANS_CERT_HASH; "TRANS-CERT-HASH"
-      when TLV_TYPE_TRANS_PROXY_HOST; "TRANS-PROXY-HOST"
-      when TLV_TYPE_TRANS_PROXY_USER; "TRANS-PROXY-USER"
-      when TLV_TYPE_TRANS_PROXY_PASS; "TRANS-PROXY-PASS"
-      when TLV_TYPE_TRANS_RETRY_TOTAL; "TRANS-RETRY-TOTAL"
-      when TLV_TYPE_TRANS_RETRY_WAIT; "TRANS-RETRY-WAIT"
-      when TLV_TYPE_MACHINE_ID; "MACHINE-ID"
-      when TLV_TYPE_UUID; "UUID"
-      when TLV_TYPE_SESSION_GUID; "SESSION-GUID"
-      when TLV_TYPE_RSA_PUB_KEY; "RSA-PUB-KEY"
-      when TLV_TYPE_SYM_KEY_TYPE; "SYM-KEY-TYPE"
-      when TLV_TYPE_SYM_KEY; "SYM-KEY"
-      when TLV_TYPE_ENC_SYM_KEY; "ENC-SYM-KEY"
-
-      when TLV_TYPE_PIVOT_ID; "PIVOT-ID"
-      when TLV_TYPE_PIVOT_STAGE_DATA; "PIVOT-STAGE-DATA"
-      when TLV_TYPE_PIVOT_NAMED_PIPE_NAME; "PIVOT-NAMED-PIPE-NAME"
-
-      else; "unknown-#{type}"
-      end
     val = value.inspect
     if val.length > 50
       val = val[0,50] + ' ..."'
     end
+
     group ||= (self.class.to_s =~ /Packet/)
     if group
-      tlvs_inspect = "tlvs=[\n"
+      tlvs_inspect = ""
+
+      if self.respond_to?(:session_guid)
+        begin
+          tlvs_inspect << "session=#{session_guid.unpack1('H*')}"
+        rescue => _e
+          tlvs_inspect << "session=broken"
+        end
+      end
+
+      tlvs_inspect <<= "tlvs=[\n"
       @tlvs.each { |t|
         tlvs_inspect << "  #{t.inspect}\n"
       }
@@ -735,6 +844,12 @@ class GroupTlv < Tlv
       raw << tlv.to_r
     }
 
+
+    $rust_log.puts "Group TLV results:"
+    $rust_log.puts "raw length: #{[(raw.length + HEADER_SIZE)].pack('N').chars.map(&:ord)}"
+    $rust_log.puts "type: #{[(self.type)].pack('N').chars.map(&:ord)}"
+    $rust_log.puts "Raw TLVs #{raw.chars.map(&:ord)}"
+
     [raw.length + HEADER_SIZE, self.type].pack("NN") + raw
   end
 
@@ -961,19 +1076,43 @@ class Packet < GroupTlv
   # scrambled data as the payload.
   #
   def to_r(session_guid = nil, key = nil)
-    xor_key = (rand(254) + 1).chr + (rand(254) + 1).chr + (rand(254) + 1).chr + (rand(254) + 1).chr
+    # xor_key = (rand(254) + 1).chr + (rand(254) + 1).chr + (rand(254) + 1).chr + (rand(254) + 1).chr
+    xor_key = 0.chr + 0.chr + 0.chr + 0.chr
 
     raw = (session_guid || NULL_GUID).dup
+
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts ""
+    $rust_log.puts "creating packet to raw"
+    $rust_log.puts "method: #{self.method}"
+    $rust_log.puts "xor key #{xor_key.chars.map(&:ord)}"
+    $rust_log.puts "guid? #{raw.chars.map(&:ord)}"
+
     tlv_data = GroupTlv.instance_method(:to_r).bind(self).call
 
     if key && key[:key] && (key[:type] == ENC_FLAG_AES128 || key[:type] == ENC_FLAG_AES256)
+      $rust_log.puts "Going down ENC_FLAG_AES256 and ENC_FLAG_AES256 route"
       # encrypt the data, but not include the length and type
       iv, ciphertext = aes_encrypt(key[:key], tlv_data[HEADER_SIZE..-1])
       # now manually add the length/type/iv/ciphertext
       raw << [key[:type], iv.length + ciphertext.length + HEADER_SIZE, self.type, iv, ciphertext].pack('NNNA*A*')
     else
+      $rust_log.puts "Going down ENC_FLAG_NONE route"
+
       raw << [ENC_FLAG_NONE, tlv_data].pack('NA*')
     end
+
+
+    $rust_log.puts "Raw bytes: #{raw.chars.map(&:ord)}"
 
     # return the xor'd result with the key
     xor_key + xor_bytes(xor_key, raw)
@@ -1009,8 +1148,13 @@ class Packet < GroupTlv
   def from_r(key=nil)
     self.parse_header!
     xor_key = self.raw.unpack('a4')[0]
+    $rust_log.puts "xor key? #{xor_key.chars.map(&:ord)}"
+
     data = xor_bytes(xor_key, self.raw[PACKET_HEADER_SIZE..-1])
     raw = decrypt_packet(key, self.encrypt_flags, data)
+
+    $rust_log.puts "raw response packet? #{raw.chars.map(&:ord)}"
+
     super([self.length, self.type, raw].pack('NNA*'))
   end
 

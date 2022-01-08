@@ -900,7 +900,15 @@ class ReadableText
       sess_tunnel  = session.tunnel_to_s + " (#{session.session_host})"
       sess_via     = session.via_exploit.to_s
       sess_type    = session.type.to_s
-      sess_uuid    = session.payload_uuid.to_s
+      sess_payload_uuid    = session.payload_uuid.to_s
+      sess_session_guid    = session.session_guid.unpack1("H*")
+      sess_session_guid    = [
+        sess_session_guid[0...8],
+        sess_session_guid[8...12],
+        sess_session_guid[12...16],
+        sess_session_guid[16...20],
+        sess_session_guid[20...32]
+      ].join('-')
       sess_luri    = session.exploit_datastore['LURI'] || "" if session.exploit_datastore
       sess_enc     = 'No'
       if session.respond_to?(:tlv_enc_key) && session.tlv_enc_key && session.tlv_enc_key[:key]
@@ -932,7 +940,8 @@ class ReadableText
       out << "      Tunnel: #{sess_tunnel}\n"
       out << "         Via: #{sess_via}\n"
       out << "   Encrypted: #{sess_enc}\n"
-      out << "        UUID: #{sess_uuid}\n"
+      out << "Payload UUID: #{sess_payload_uuid}\n"
+      out << "Session GUID: #{sess_session_guid}\n"
       out << "     CheckIn: #{sess_checkin}\n"
       out << "  Registered: #{sess_registration}\n"
       unless (sess_luri || '').empty?
@@ -1051,4 +1060,3 @@ class ReadableText
 end
 
 end end
-

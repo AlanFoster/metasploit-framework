@@ -2,17 +2,20 @@
 
 require 'rex/text'
 require 'rex/arch'
+
+# TODO: The global arch values are exposed from a separate gem
+# https://github.com/rapid7/rex-arch/blob/bcb4d0cfc4872943a135ca967cf9f13072666747/lib/rex/arch.rb
+ARCH_RUST = 'rust'
+Rex::Arch::ARCH_ALL << ARCH_RUST
+
 #
 # This class provides methods for calculating, extracting, and parsing
 # unique ID values used by payloads.
 #
 class Msf::Payload::UUID
-
-
   #
   # Constants
   #
-
   Architectures = {
      0 => nil,
      1 => Rex::Arch::ARCH_X86,
@@ -42,7 +45,8 @@ class Msf::Payload::UUID
     25 => Rex::Arch::ARCH_MIPS64,
     26 => Rex::Arch::ARCH_PPC64LE,
     27 => Rex::Arch::ARCH_R,
-    28 => Rex::Arch::ARCH_PPCE500V2
+    28 => Rex::Arch::ARCH_PPCE500V2,
+    29 => ARCH_RUST
   }
 
   Platforms = {
@@ -75,8 +79,9 @@ class Msf::Payload::UUID
     26 => 'juniper',
     27 => 'unifi',
     28 => 'brocade',
-    29 => 'mikrotik',
-    30 => 'arista'
+    # 29 => 'mikrotik',
+    # 30 => 'arista'
+    29 => 'rust',
   }
 
   # The raw length of the UUID structure

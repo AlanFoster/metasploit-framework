@@ -1333,6 +1333,7 @@ class Console::CommandDispatcher::Core
       print("Loading extension #{md}...")
 
       begin
+        # require 'pry'; binding.pry
         # Use the remote side, then load the client-side
         if (client.core.use(modulenameprovided) == true)
           add_extension_client(md)

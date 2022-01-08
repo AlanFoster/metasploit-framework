@@ -111,6 +111,7 @@ module PacketDispatcher
   # Sends a packet without waiting for a response.
   #
   def send_packet(packet, opts={})
+    $rust_log.detail("\n\e[1;31mSEND\e[0m: #{packet.inspect}\n")
     if self.pivot_session
       opts[:session_guid] = self.session_guid
       opts[:tlv_enc_key] = self.tlv_enc_key
@@ -136,6 +137,10 @@ module PacketDispatcher
     bytes = 0
     raw   = packet.to_r(session_guid, tlv_enc_key)
     err   = nil
+
+    $rust_log.puts "session_guid #{session_guid.chars.map(&ord).to_a}"
+    # $stderr.puts "tlv_env_key #{tlv_enc_key.session_guid.chars.map(&ord)}}"
+    $rust_log.puts "xor'd combo #{raw.chars.map(&:ord).to_a}"
 
     # Short-circuit send when using a passive dispatcher
     if self.passive_service
@@ -323,6 +328,7 @@ module PacketDispatcher
         begin
           rv = Rex::ThreadSafe.select([ self.sock.fd ], nil, nil, PING_TIME)
           if rv
+            $rust_log.puts "packet received"
             packet = receive_packet
             # Always enqueue the new packets onto the new packet queue
             @new_packet_queue << decrypt_inbound_packet(packet) if packet
@@ -579,8 +585,7 @@ module PacketDispatcher
   def dispatch_inbound_packet(packet)
     handled = false
 
-    # Uncomment this line if you want to see inbound packets in the console
-    # STDERR.puts("\n\e[1;32mRECV\e[0m: #{packet.inspect}\n")
+    $rust_log.detail("\n\e[1;32mRECV\e[0m: #{packet.inspect}\n")
 
     # Update our last reply time
     self.last_checkin = ::Time.now

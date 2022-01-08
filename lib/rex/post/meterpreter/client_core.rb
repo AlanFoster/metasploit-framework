@@ -243,6 +243,8 @@ class ClientCore < Extension
       load_flags |= LOAD_LIBRARY_FLAG_EXTENSION
     end
 
+    # require 'pry'; binding.pry
+
     # Create a request packet
     request = Packet.create_request(COMMAND_ID_CORE_LOADLIB)
 
@@ -365,6 +367,10 @@ class ClientCore < Extension
         end
       end
 
+      if client.binary_suffix == ['dylib']
+        path = ::File.expand_path('~/CLionProjects/rust-meterpreter/target/debug/libstdapi.dylib')
+      end
+
       if path.nil? and image.nil?
         error = Rex::Post::Meterpreter::ExtensionLoadError.new(name: mod.downcase)
         if Rex::Post::Meterpreter::ExtensionMapper.get_extension_names.include?(mod.downcase)
@@ -436,7 +442,9 @@ class ClientCore < Extension
     args = [request]
     args << timeout if timeout
 
+    $rust_log.puts "machine_id response"
     response = client.send_request(*args)
+
 
     mid = response.get_tlv_value(TLV_TYPE_MACHINE_ID)
 
@@ -719,6 +727,7 @@ class ClientCore < Extension
   # Shuts the session down
   #
   def shutdown
+    $rust_log.puts "Calling session shutdown!"
     request  = Packet.create_request(COMMAND_ID_CORE_SHUTDOWN)
 
     if client.passive_service
@@ -746,12 +755,18 @@ class ClientCore < Extension
   # Negotiates the use of encryption at the TLV level
   #
   def negotiate_tlv_encryption(timeout: client.comm_timeout)
+    $rust_log.puts caller
     sym_key = nil
     rsa_key = OpenSSL::PKey::RSA.new(2048)
     rsa_pub_key = rsa_key.public_key
 
+    $rust_log.puts "Starting packet for negotiate_tlv_encryption"
+
     request  = Packet.create_request(COMMAND_ID_CORE_NEGOTIATE_TLV_ENCRYPTION)
     request.add_tlv(TLV_TYPE_RSA_PUB_KEY, rsa_pub_key.to_der)
+
+    $rust_log.puts "tlv id TLV_TYPE_RSA_PUB_KEY=#{TLV_TYPE_RSA_PUB_KEY}"
+    $rust_log.puts "tlv value TLV_TYPE_RSA_PUB_KEY=#{rsa_pub_key.to_pem}"
 
     begin
       response = client.send_request(request, timeout)
@@ -959,4 +974,3 @@ private
 end
 
 end; end; end
-

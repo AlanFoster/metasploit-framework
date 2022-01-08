@@ -181,6 +181,8 @@ class Process < Rex::Post::Process
     channel_id = response.get_tlv_value(TLV_TYPE_CHANNEL_ID)
     channel    = nil
 
+    $rust_log.detail("got a channel response with: #{JSON.pretty_generate({ pid: pid, handle: handle, channel_id: channel_id })}")
+
     # If we were creating a channel out of this
     if (channel_id != nil)
       channel = Rex::Post::Meterpreter::Channels::Pools::StreamPool.new(client,

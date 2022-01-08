@@ -21,8 +21,8 @@ module Payload::Python::MeterpreterLoader
       'Name'          => 'Meterpreter & Configuration',
       'Description'   => 'Run Meterpreter & the configuration stub',
       'Author'        => [ 'Spencer McIntyre' ],
-      'Platform'      => 'python',
-      'Arch'          => ARCH_PYTHON,
+      # 'Platform'      => 'python',
+      # 'Arch'          => ARCH_PYTHON,
       'Stager'        => {'Payload' => ""}
     ))
 
