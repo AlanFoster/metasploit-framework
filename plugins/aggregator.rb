@@ -460,7 +460,7 @@ module Msf
         case os
           when /windows/i
             Msf::Module::Platform::Windows.realname.downcase
-          when /darwin/i
+          when /darwin/i, /macos/i
             Msf::Module::Platform::OSX.realname.downcase
           when /mac os ?x/i
             # this happens with java on OSX (for real!)

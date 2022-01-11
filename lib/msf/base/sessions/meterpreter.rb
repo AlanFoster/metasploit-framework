@@ -413,7 +413,7 @@ class Meterpreter < Rex::Post::Meterpreter::Client
     # when updating session information, we need to make sure we update the platform
     # in the UUID to match what the target is actually running on, but only for a
     # subset of platforms.
-    if ['java', 'python', 'php'].include?(self.platform)
+    if ['java', 'python', 'php', 'rust'].include?(self.platform)
       new_platform = guess_target_platform(sysinfo['OS'])
       if self.platform != new_platform
         self.payload_uuid.platform = new_platform
@@ -434,7 +434,7 @@ class Meterpreter < Rex::Post::Meterpreter::Client
     case os
     when /windows/i
       Msf::Module::Platform::Windows.realname.downcase
-    when /darwin/i
+    when /darwin/i, /macos/i
       Msf::Module::Platform::OSX.realname.downcase
     when /mac os ?x/i
       # this happens with java on OSX (for real!)
@@ -736,4 +736,3 @@ end
 
 end
 end
-
