@@ -783,6 +783,8 @@ protected
 
     data
   rescue EOFError
+    puts "read_file_meterpreter eof error, when the buffer had bytes:: #{data.bytes}"
+
     # Sometimes fd isn't marked EOF in time?
     ''
   rescue ::Rex::Post::Meterpreter::RequestError => e

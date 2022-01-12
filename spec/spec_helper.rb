@@ -1,44 +1,49 @@
 # -*- coding: binary -*-
 require 'stringio'
 require 'factory_bot'
+require 'rubocop'
+require 'rubocop/rspec/support'
+require 'faker'
 
 ENV['RAILS_ENV'] = 'test'
 
-# @note must be before loading config/environment because railtie needs to be loaded before
-#   `Metasploit::Framework::Application.initialize!` is called.
-#
-# Must be explicit as activerecord is optional dependency
-require 'active_record/railtie'
-require 'rubocop'
-require 'rubocop/rspec/support'
-require 'metasploit/framework/database'
-# check if database.yml is present
-unless Metasploit::Framework::Database.configurations_pathname.try(:to_path)
-  fail 'RSPEC currently needs a configured database'
-end
+load_framework = ENV.fetch('LOAD_FRAMEWORK', 'true') == 'true'
 
-require File.expand_path('../../config/environment', __FILE__)
+if load_framework
+  # @note must be before loading config/environment because railtie needs to be loaded before
+  #   `Metasploit::Framework::Application.initialize!` is called.
+  #
+  # Must be explicit as activerecord is optional dependency
+  require 'active_record/railtie'
+  require 'metasploit/framework/database'
+  # check if database.yml is present
+  unless Metasploit::Framework::Database.configurations_pathname.try(:to_path)
+    fail 'RSPEC currently needs a configured database'
+  end
 
-# Don't `require 'rspec/rails'` as it includes support for pieces of rails that metasploit-framework doesn't use
-require 'rspec/rails'
+  require File.expand_path('../../config/environment', __FILE__)
 
-require 'metasploit/framework/spec'
+  # Don't `require 'rspec/rails'` as it includes support for pieces of rails that metasploit-framework doesn't use
+  require 'rspec/rails'
 
-FILE_FIXTURES_PATH = File.expand_path(File.dirname(__FILE__)) + '/file_fixtures/'
+  require 'metasploit/framework/spec'
 
-# Load the shared examples from the following engines
-engines = [
-  Metasploit::Concern,
-  Rails
-]
+  FILE_FIXTURES_PATH = File.expand_path(File.dirname(__FILE__)) + '/file_fixtures/'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-engines.each do |engine|
-  support_glob = engine.root.join('spec', 'support', '**', '*.rb')
-  Dir[support_glob].each { |f|
-    require f
-  }
+  # Load the shared examples from the following engines
+  engines = [
+    Metasploit::Concern,
+    Rails
+  ]
+
+  # Requires supporting ruby files with custom matchers and macros, etc,
+  # in spec/support/ and its subdirectories.
+  engines.each do |engine|
+    support_glob = engine.root.join('spec', 'support', '**', '*.rb')
+    Dir[support_glob].each { |f|
+      require f
+    }
+  end
 end
 
 RSpec.configure do |config|
@@ -76,7 +81,9 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = :random
 
-  config.use_transactional_fixtures = true
+  if load_framework
+    config.use_transactional_fixtures = true
+  end
 
   # Seed global randomization in this process using the `--seed` CLI option.
   # Setting this allows you to use `--seed` to deterministically reproduce
@@ -117,7 +124,9 @@ RSpec.configure do |config|
   #     describe ThingsController, :type => :controller do
   #       # Equivalent to being in spec/controllers
   #     end
-  config.infer_spec_type_from_file_location!
+  if load_framework
+    config.infer_spec_type_from_file_location!
+  end
 
   if ENV['REMOTE_DB']
     require 'metasploit/framework/data_service/remote/managed_remote_data_service'
@@ -137,8 +146,10 @@ RSpec.configure do |config|
 
 end
 
-Metasploit::Framework::Spec::Constants::Suite.configure!
-Metasploit::Framework::Spec::Threads::Suite.configure!
+if load_framework
+  Metasploit::Framework::Spec::Constants::Suite.configure!
+  Metasploit::Framework::Spec::Threads::Suite.configure!
+end
 
 def get_stdout(&block)
   out = $stdout

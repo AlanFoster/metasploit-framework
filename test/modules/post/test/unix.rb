@@ -28,8 +28,12 @@ class MetasploitModule < Msf::Post
 
   def test_unix
     it "should list users" do
+      # TODO: PHP Meterpreter crashes on windows
+      return if session.platform == 'windows'
+
       ret = true
       users = get_users
+      # puts "got a users response: #{users}"
       ret &&= users.kind_of? Array
       ret &&= users.length > 0
       have_root = false
@@ -48,4 +52,3 @@ class MetasploitModule < Msf::Post
   end
 
 end
-

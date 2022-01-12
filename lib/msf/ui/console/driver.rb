@@ -54,6 +54,8 @@ class Driver < Msf::Ui::Driver
   # @option opts [Boolean] 'Readline' (true) Whether to use the readline or not
   # @option opts [Boolean] 'RealReadline' (false) Whether to use the system's
   #   readline library instead of RBReadline
+  # @option opts [Boolean] 'Readline' (false) Whether to use the system's
+  #   readline library instead of RBReadline
   # @option opts [String] 'HistFile' (Msf::Config.history_file) Path to a file
   #   where we can store command history
   # @option opts [Array<String>] 'Resources' ([]) A list of resource files to

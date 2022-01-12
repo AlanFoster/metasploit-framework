@@ -27,8 +27,9 @@ group :development do
   #gem 'metasploit-aggregator'
 end
 
-group :development, :test do
+# group :development, :test do
   # automatically include factories from spec/factories
+  gem 'test-prof'
   gem 'factory_bot_rails'
   # Make rspec output shorter and more useful
   gem 'fivemat'
@@ -38,8 +39,9 @@ group :development, :test do
   # environment is development
   gem 'rspec-rails'
   gem 'rspec-rerun'
+  gem "allure-rspec"
   gem 'rubocop'
-end
+# end
 
 group :test do
   # Manipulate Time.now in specs
