@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 #   spec.add_runtime_dependency '<name>', [<version requirements>]
 gemspec name: 'metasploit-framework'
 
+
+
 # separate from test as simplecov is not run on travis-ci
 group :coverage do
   # code coverage for tests
@@ -27,7 +29,7 @@ group :development do
   #gem 'metasploit-aggregator'
 end
 
-group :development, :test do
+# group :development, :test do
   # automatically include factories from spec/factories
   gem 'factory_bot_rails'
   # Make rspec output shorter and more useful
@@ -39,7 +41,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rspec-rerun'
   gem 'rubocop'
-end
+# end
 
 group :test do
   # Manipulate Time.now in specs
