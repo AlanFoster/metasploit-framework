@@ -31,6 +31,7 @@ end
 
 # group :development, :test do
   # automatically include factories from spec/factories
+  gem 'test-prof'
   gem 'factory_bot_rails'
   # Make rspec output shorter and more useful
   gem 'fivemat'

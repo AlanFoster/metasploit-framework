@@ -91,4 +91,11 @@ jobs:
 
       - name: acceptance
         run: |
-          bundle exec rspec spec/acceptance
+          bundle exec rspec spec/acceptance --format html --out tmp/${{ matrix.os }}-rspec.html
+
+      - name: Archive results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: acceptance-results.zip
+          path: tmp/${{ matrix.os }}-rspec.html

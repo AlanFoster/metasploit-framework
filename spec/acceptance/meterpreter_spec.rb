@@ -32,8 +32,6 @@ class ChildProcess
 
     self.stdin.sync = true
     self.stdout_and_stderr.sync = true
-
-    puts wait_thread.alive?
   end
 
   # @param [String|Regexp] delim
@@ -278,10 +276,33 @@ RSpec.describe "payloads" do
     next unless supported_platform?(config)
 
     describe "payload #{config[:name]}" do
-      it "passes meterpreter tests" do
+      # Driver instance, keeps track of all open processes/payloads/etc, so they can be closed cleanly
+      let_it_be(:driver) do
         driver = ConsoleDriver.new
+        driver
+      end
+
+      # Opens a test console with the test loadpath specified
+      let_it_be(:console) do
         console = driver.open_console
 
+        # Load the test modules
+        console.sendline("loadpath test/modules")
+        console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
+        console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
+        console.recvuntil(/\d+ exploit modules[^\n]*\n/)
+        console.recvuntil(/\d+ post modules[^\n]*\n/)
+        console.recvuntil(Console.prompt)
+
+        # Read the remaining console
+        # console.sendline "quit -y"
+        # console.recvall
+
+        console
+      end
+
+      # The shared payload session isntance that will be reused across the test run
+      let_it_be(:session_id) do
         payload = Payload.new(
           config[:name],
           lport: 6000 + i,
@@ -309,39 +330,34 @@ RSpec.describe "payloads" do
         session_id = session_message[session_opened_matcher, 1]
         expect(session_id).to_not be_nil
 
-        # Load the test modules
-        console.sendline("loadpath test/modules")
-        console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
-        console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
-        console.recvuntil(/\d+ exploit modules[^\n]*\n/)
-        console.recvuntil(/\d+ post modules[^\n]*\n/)
-        console.recvuntil(Console.prompt)
+        session_id
+      end
 
-        # Run payload test modules
-        aggregate_failures do
-          # TODO: Load this dynamically so new tests will automatically be picked up
-          %w[
-            test/cmd_exec
-            test/extapi
-            test/file
-            test/get_env
-            test/meterpreter
-            test/railgun
-            test/railgun_reverse_lookups
-            test/registry
-            test/search
-            test/services
-            test/unix
-          ].each do |test_module|
-            console.sendline("use #{test_module}")
-            console.recvuntil(Console.prompt)
+      # TODO: Load this dynamically so new tests will automatically be picked up
+      [
+        "test/cmd_exec",
+        "test/extapi",
+        "test/file",
+        "test/get_env",
+        "test/meterpreter",
+        "test/railgun",
+        "test/railgun_reverse_lookups",
+        "test/registry",
+        "test/search",
+        "test/services",
+        "test/unix",
+      ].each do |test_module|
+        it "passes #{test_module}" do
+          console.sendline("use #{test_module}")
+          console.recvuntil(Console.prompt)
 
-            console.sendline("run session=#{session_id} addentropy=true verbose=true")
+          console.sendline("run session=#{session_id} addentropy=true verbose=true")
 
-            # Expect happiness
-            test_result = console.recvuntil('Post module execution completed')
-            # Ensure there are no failures, and assert tests are complete
+          # Expect happiness
+          test_result = console.recvuntil('Post module execution completed')
+          # Ensure there are no failures, and assert tests are complete
 
+          aggregate_failures do
             test_result.lines.each do |test_line|
               # TODO: These tests fail on a lot of the payloads
               # test_line = uncolorize(test_line)
@@ -350,16 +366,10 @@ RSpec.describe "payloads" do
               # expect(test_line).to_not include('[-] Exception')
               # expect(test_line).to_not include('[-] ')
             end
-
-            expect(test_result).to include('Failed: 0')
           end
+
+          expect(test_result).to include('Failed: 0')
         end
-
-        # Read the remaining console
-        console.sendline "quit -y"
-        console.recvall
-
-        console.close
       end
     end
   end
