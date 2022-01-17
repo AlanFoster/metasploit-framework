@@ -42,26 +42,20 @@ class ChildProcess
     result = ""
 
     while alive?
-      ready = IO.select([stdout_and_stderr], nil, nil, 0.5)
-
-      puts "still no luck searching for #{delim} in #{buffer}"
-
-      if ready
-        reads, _writes, _errors = ready
-
-        reads.to_a.each do |_io|
-          buffer += recv(timeout: timeout)
-          has_delimiter = delim.is_a?(Regexp) ? buffer.match?(delim) : buffer.include?(delim)
-          if has_delimiter
-            result, matched_delim, remaining = buffer.partition(delim)
-            unless drop_delim
-              result += matched_delim
-            end
-            unrecv(remaining)
-
-            return result
-          end
+      data_chunk = recv(timeout: timeout)
+      if !data_chunk
+        next
+      end
+      buffer += data_chunk
+      has_delimiter = delim.is_a?(Regexp) ? buffer.match?(delim) : buffer.include?(delim)
+      if has_delimiter
+        result, matched_delim, remaining = buffer.partition(delim)
+        unless drop_delim
+          result += matched_delim
         end
+        unrecv(remaining)
+
+        return result
       end
     end
 
@@ -72,15 +66,11 @@ class ChildProcess
     result = ""
 
     while alive?
-      ready = IO.select([stdout_and_stderr], nil, nil, 0.1)
-
-      if ready
-        reads, _writes, _errors = ready
-
-        reads.to_a.each do |_io|
-          result += recv(timeout: timeout)
-        end
+      data_chunk = recv(timeout: timeout)
+      if !data_chunk
+        next
       end
+      result += data_chunk
     end
 
     result
@@ -88,19 +78,29 @@ class ChildProcess
 
   def unrecv(data)
     $stderr.puts "[unrecv] returning this back: #{data}"
-    buffer.ungetc(data)
+    buffer.write(data)
+    buffer.pos = [0, buffer.pos - data.length].max
   end
 
   def recv(size = 1024, timeout: 10)
     buffer_result = buffer.read(size)
     return buffer_result if buffer_result
 
-    data = stdout_and_stderr.read_nonblock(size)
-    @all_data.write(data)
-    puts("[debug read] #{data}")
-    data
-  rescue EOFError, Errno::EAGAIN
-    ''
+    result = nil
+    ready = IO.select([stdout_and_stderr], nil, nil, 0.5)
+    if ready
+      reads, _writes, _errors = ready
+
+      reads.to_a.each do |_io|
+        result = stdout_and_stderr.read_nonblock(size)
+        @all_data.write(result)
+        puts("[debug read] #{result}")
+      rescue EOFError, Errno::EAGAIN
+        nil
+      end
+    end
+
+    result
   end
 
   def write(data)
@@ -243,82 +243,124 @@ class Console < ChildProcess
   end
 end
 
+def current_platform
+  host_os = RbConfig::CONFIG['host_os']
+  case host_os
+  when /darwin/
+    :osx
+  when /mingw/
+    :windows
+  when /linux/
+    :linux
+  else
+    raise "unknown host_os #{host_os.inspect}"
+  end
+end
+
+def supported_platform?(config)
+  config[:platforms].include?(current_platform)
+end
+
 RSpec.describe "payloads" do
   def uncolorize(string)
     string.gsub(/\e\[\d+m/, '')
   end
 
-  describe "python meterpreter" do
-    it "opens sessions" do
-      driver = ConsoleDriver.new
-      console = driver.open_console
-
-      payload = Payload.new(
-        'python/meterpreter_reverse_tcp',
-        lport: 6000,
-        lhost: '127.0.0.1',
+  [
+    {
+      name: 'python/meterpreter_reverse_tcp',
+      platforms: [:osx, :linux, :windows],
+      options: {
         MeterpreterTryToFork: false
-      )
+      }
+    }
+  ].compact.each.with_index do |config, i|
+    next unless supported_platform?(config)
 
-      console.sendline "use #{payload.name}"
-      usage_data = console.recvuntil(Console.prompt)
+    describe "payload #{config[:name]}" do
+      it "passes meterpreter tests" do
+        driver = ConsoleDriver.new
+        console = driver.open_console
 
-      # Generate the payload
-      console.sendline payload.generate_command
-      generate_result = console.recvuntil(Console.prompt)
+        payload = Payload.new(
+          config[:name],
+          lport: 6000 + i,
+          lhost: '127.0.0.1',
+          **config[:options]
+        )
 
-      puts "buffer data:"
-      puts "--------------------------"
-      puts console.all_data.to_s
-      puts "--------------------------"
+        console.sendline "use #{payload.name}"
+        console.recvuntil(Console.prompt)
 
-      expect(generate_result.lines).to_not include(match("generation failed"))
-      expect(payload.size).to be > 0
+        # Generate the payload
+        console.sendline payload.generate_command
+        generate_result = console.recvuntil(Console.prompt)
 
-      console.sendline "to_handler"
-      console.recvuntil("Started reverse TCP handler")
+        expect(generate_result.lines).to_not include(match("generation failed"))
+        expect(payload.size).to be > 0
 
-      driver.run_payload(payload)
+        console.sendline "to_handler"
+        console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
 
-      session_opened_matcher = /Meterpreter session (\d+) opened/
-      session_message = console.recvuntil(session_opened_matcher)
-      session_id = session_message[session_opened_matcher, 1]
-      expect(session_id).to_not be_nil
+        driver.run_payload(payload)
 
-      # Load the test modules
-      console.sendline("loadpath test/modules")
-      console.recvuntil(/Loaded \d+ modules:/)
-      console.recvuntil(Console.prompt)
+        session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+        session_message = console.recvuntil(session_opened_matcher)
+        session_id = session_message[session_opened_matcher, 1]
+        expect(session_id).to_not be_nil
 
-      # Run a test module
-      console.sendline("use test/meterpreter")
-      console.recvuntil(Console.prompt)
+        # Load the test modules
+        console.sendline("loadpath test/modules")
+        console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
+        console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
+        console.recvuntil(/\d+ exploit modules[^\n]*\n/)
+        console.recvuntil(/\d+ post modules[^\n]*\n/)
+        console.recvuntil(Console.prompt)
 
-      console.sendline("run session=#{session_id}")
+        # Run payload test modules
+        aggregate_failures do
+          # TODO: Load this dynamically so new tests will automatically be picked up
+          %w[
+            test/cmd_exec
+            test/extapi
+            test/file
+            test/get_env
+            test/meterpreter
+            test/railgun
+            test/railgun_reverse_lookups
+            test/registry
+            test/search
+            test/services
+            test/unix
+          ].each do |test_module|
+            console.sendline("use #{test_module}")
+            console.recvuntil(Console.prompt)
 
-      # Expect happiness
-      test_result = console.recvuntil('Post module execution completed')
-      # Ensure there are no failures, and assert tests are complete
-      aggregate_failures do
-        test_result.lines.each do |test_line|
-          test_line = uncolorize(test_line)
+            console.sendline("run session=#{session_id} addentropy=true verbose=true")
 
-          # expect(test_line).to_not include('FAILED')
-          # expect(test_line).to_not include('[-] FAILED')
-          # expect(test_line).to_not include('[-] Exception')
-          # expect(test_line).to_not include('[-] ')
+            # Expect happiness
+            test_result = console.recvuntil('Post module execution completed')
+            # Ensure there are no failures, and assert tests are complete
+
+            test_result.lines.each do |test_line|
+              # TODO: These tests fail on a lot of the payloads
+              # test_line = uncolorize(test_line)
+              # expect(test_line).to_not include('FAILED')
+              # expect(test_line).to_not include('[-] FAILED')
+              # expect(test_line).to_not include('[-] Exception')
+              # expect(test_line).to_not include('[-] ')
+            end
+
+            expect(test_result).to include('Failed: 0')
+          end
         end
+
+        # Read the remaining console
+        console.sendline "quit -y"
+        console.recvall
+
+        console.close
       end
-
-      expect(test_result).to include('Failed: 0')
-
-      # Read the remaining console
-      console.sendline "quit -y"
-      console.recvall
-
-      console.close
-
-      expect(true).to be true
     end
   end
 end
