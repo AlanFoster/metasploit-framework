@@ -180,9 +180,10 @@ module Msf
               puts(buf)
             else
               print_status("Writing #{buf.length} bytes to #{ofile}...")
-              fd = File.open(ofile, "wb")
-              fd.write(buf)
-              fd.close
+              File.open(ofile, "wb") do |fd|
+                fd.write(buf)
+                fd.flush
+              end
             end
             true
           end

@@ -27,6 +27,11 @@ class ChildProcess
   def initialize
     super
 
+    @debug = true
+    @env ||= {}
+    @cmd ||= []
+    @options ||= {}
+
     @stdin = nil
     @stdout_and_stderr = nil
     @wait_thread = nil
@@ -50,7 +55,16 @@ class ChildProcess
 
     self.stdin.sync = true
     self.stdout_and_stderr.sync = true
+  rescue => e
+    $stderr.puts "popen failure #{e}"
+    raise
   end
+
+  def recvline(timeout: 10)
+    recvuntil($INPUT_RECORD_SEPARATOR)
+  end
+
+  alias readline recvline
 
   # @param [String|Regexp] delim
   def recvuntil(delim, timeout: 10, drop_delim: false)
@@ -113,7 +127,7 @@ class ChildProcess
       reads.to_a.each do |_io|
         result = stdout_and_stderr.read_nonblock(size)
         @all_data.write(result)
-        puts("[debug read] #{result}")
+        log("[read] #{result}")
       rescue EOFError, Errno::EAGAIN
         nil
       end
@@ -123,7 +137,7 @@ class ChildProcess
   end
 
   def write(data)
-    puts("[debug write] #{data}")
+    log("[write] #{data}")
     @all_data.write(data)
     stdin.write(data)
     stdin.flush
@@ -135,6 +149,41 @@ class ChildProcess
 
   def alive?
     wait_thread.alive?
+  end
+
+  # Interact with the current process, forwarding the console stdin to the process' stdin,
+  # and writing any output to stdout. Doesn't support using a PTY/raw mode.
+  def interact
+    puts
+    puts '[*] Opened interactive mode - enter "!next" to continue, or "!exit" to stop entirely'
+    puts
+
+    without_debugging do
+      while alive?
+        ready = IO.select([stdout_and_stderr, STDIN], [], [], 10)
+
+        if ready
+          reads, _, _ = ready
+
+          reads.to_a.each do |read|
+            case read
+            when STDIN
+              input = STDIN.gets
+              if input.chomp == '!continue'
+                return
+              elsif input.chomp == '!exit'
+                exit
+              end
+
+              write(input)
+            when stdout_and_stderr
+              STDOUT.write(recv(2048))
+              STDOUT.flush
+            end
+          end
+        end
+      end
+    end
   end
 
   def close
@@ -154,6 +203,20 @@ class ChildProcess
   attr_reader :buffer
   attr_writer :stdin, :stdout_and_stderr, :wait_thread
 
+  def log(s)
+    return unless @debug
+
+    puts s
+  end
+
+  def without_debugging
+    previous_debug_value = @debug
+    @debug = false
+    yield
+  ensure
+    @debug = previous_debug_value
+  end
+
   # Yields a timer object that can be used to request the remaining time available
   def with_countdown(timeout)
     countdown = Countdown.new(timeout)
@@ -167,7 +230,7 @@ class ChildProcess
 end
 
 class Payload
-  attr_reader :name, :execute_cmd, :generate_options, :payload_options, :file
+  attr_reader :name, :execute_cmd, :generate_options, :payload_options
 
   def initialize(options)
     @name = options.fetch(:name)
@@ -175,7 +238,15 @@ class Payload
     @generate_options = options.fetch(:generate_options)
     @payload_options = options.fetch(:payload_options)
     @executable = options.fetch(:executable, false)
-    @file = Tempfile.new("#{File.basename(__FILE__)}_#{name}".gsub(/[^a-zA-Z]/, '-'))
+
+    basename = "#{File.basename(__FILE__)}_#{name}".gsub(/[^a-zA-Z]/, '-')
+    extension = options.fetch(:extension, '')
+    # Generate a Dir::Tmpname instead of a Tempfile, otherwise windows won't allow the file to be executed
+    # as the current Ruby process will still have a handle to it
+    # TODO: Ensure this is deleted correctly
+    @file_path = Dir::Tmpname.create([basename, extension]) do |_path, _n, _opts, _origdir|
+      # noop
+    end
   end
 
   def executable?
@@ -183,11 +254,13 @@ class Payload
   end
 
   def path
-    file.path
+    @file_path
   end
 
   def size
-    file.size
+    File.size(path)
+  rescue => _e
+    0
   end
 
   def [](k)
@@ -196,7 +269,7 @@ class Payload
 
   def execute_command
     @execute_cmd.map do |val|
-      val.gsub('${payload_path}', file.path)
+      val.gsub('${payload_path}', path)
     end
   end
 
@@ -213,13 +286,16 @@ class Payload
 
   def as_readable_text
     <<~EOF
-      Name:
-      #{name}
+      ## Payload
+      use #{name}
 
-      Generate command:
+      ## Generate command
       #{generate_command}
 
-      Execute command:
+      ## Create listener
+      to_handler
+
+      ## Execute command
       #{Shellwords.join(execute_command)}
     EOF
   end
@@ -246,8 +322,8 @@ class ConsoleDriver
 
   # @param [Payload] payload
   def run_payload(payload)
-    if payload.executable? && !File.executable?(payload.file)
-      FileUtils.chmod("+x", payload.file)
+    if payload.executable? && !File.executable?(payload.path)
+      FileUtils.chmod("+x", payload.path)
     end
 
     payload_process = PayloadProcess.new(payload.execute_command)
@@ -286,7 +362,6 @@ class Console < ChildProcess
       'PATH' => "#{framework_root.shellescape}:#{ENV["PATH"]}"
     }
     @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--real-readline", '--quiet']
-    # @cmd = ["bundle", "exec", "ruby", "listener.rb"]
     @options = {
       chdir: framework_root
     }
@@ -297,6 +372,9 @@ class Console < ChildProcess
   end
 
   def reset
+    sendline("sessions -K")
+    recvuntil(Console.prompt)
+
     @all_data.reopen("")
   end
 end
@@ -342,16 +420,29 @@ def human_name_for_payload(config)
   details.join(" ")
 end
 
-RSpec.describe "payloads" do
-  def uncolorize(string)
-    string.gsub(/\e\[\d+m/, '')
-  end
+def uncolorize(string)
+  string.gsub(/\e\[\d+m/, '')
+end
 
+class TestProcess < ChildProcess
+  def initialize
+    super
+    @cmd = ["bundle", "exec", "ruby", "prompt.rb"]
+  end
+end
+
+# process = TestProcess.new
+# process.run
+# process.interact
+# exit(1)
+
+RSpec.describe "payloads" do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
     python: [
       {
         name: 'python/meterpreter_reverse_tcp',
+        extension: '.py',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['python', '${payload_path}'],
         generate_options: {
@@ -363,6 +454,7 @@ RSpec.describe "payloads" do
       },
       {
         name: 'python/meterpreter/reverse_tcp',
+        extension: '.py',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['python', '${payload_path}'],
         generate_options: {
@@ -376,6 +468,7 @@ RSpec.describe "payloads" do
     php: [
       {
         name: 'php/meterpreter_reverse_tcp',
+        extension: '.php',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['php', '${payload_path}'],
         generate_options: {
@@ -386,6 +479,7 @@ RSpec.describe "payloads" do
       },
       {
         name: 'php/meterpreter/reverse_tcp',
+        extension: '.php',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['php', '${payload_path}'],
         generate_options: {
@@ -398,6 +492,7 @@ RSpec.describe "payloads" do
     java: [
       {
         name: 'java/meterpreter/reverse_tcp',
+        extension: '.jar',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['java', '-jar', '${payload_path}'],
         generate_options: {
@@ -410,7 +505,8 @@ RSpec.describe "payloads" do
     ],
     mettle: [
       {
-        name: 'linux/x64/meterpreter_reverse_tcp',
+        name: 'linux/x64/meterpreter/reverse_tcp',
+        extension: '',
         platforms: [:linux],
         executable: true,
         execute_cmd: ['${payload_path}'],
@@ -420,11 +516,51 @@ RSpec.describe "payloads" do
         payload_options: {
           MeterpreterTryToFork: false
         }
+      },
+      {
+        name: 'linux/x64/meterpreter_reverse_tcp',
+        extension: '',
+        platforms: [:linux],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'elf',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
+        name: 'osx/x64/meterpreter_reverse_tcp',
+        extension: '',
+        platforms: [:osx],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'macho',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
+        name: 'osx/x64/meterpreter/reverse_tcp',
+        extension: '',
+        platforms: [:osx],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'macho',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
       }
     ],
     windows_meterpreter: [
       {
         name: 'windows/meterpreter/reverse_tcp',
+        extension: '.exe',
         platforms: [:windows],
         execute_cmd: ['${payload_path}'],
         executable: true,
@@ -437,6 +573,7 @@ RSpec.describe "payloads" do
       },
       {
         name: 'windows/meterpreter_reverse_tcp',
+        extension: '.exe',
         platforms: [:windows],
         execute_cmd: ['${payload_path}'],
         executable: true,
@@ -452,66 +589,59 @@ RSpec.describe "payloads" do
 
   let_it_be(:port_generator) { PortGenerator.new }
 
-  METERPRETER_PAYLOADS.slice(:php).each.with_index do |(name, configs)|
+  # Driver instance, keeps track of all open processes/payloads/etc, so they can be closed cleanly
+  let_it_be(:driver) do
+    driver = ConsoleDriver.new
+    driver
+  end
+
+  # Opens a test console with the test loadpath specified
+  let_it_be(:console) do
+    console = driver.open_console
+
+    # Load the test modules
+    console.sendline("loadpath test/modules")
+    console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
+    console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
+    console.recvuntil(/\d+ exploit modules[^\n]*\n/)
+    console.recvuntil(/\d+ post modules[^\n]*\n/)
+    console.recvuntil(Console.prompt)
+
+    # Read the remaining console
+    # console.sendline "quit -y"
+    # console.recvall
+
+    console
+  end
+
+  # Waits until the given expectations are all true. This function executes the given block,
+  # and if a failure occurs it will be retried `retry_count` times before finally failing.
+  # This is useful to expect against asynchronous/eventually consistent systems.
+  #
+  # @param retry_count [Integer] The total amount of times to retry the given expectation
+  # @param sleep_duration [Integer] The total amount of time to sleep before trying again
+  def wait_for_expect(retry_count = 40, sleep_duration = 0.5)
+    failure_count = 0
+
+    begin
+      yield
+    rescue RSpec::Expectations::ExpectationNotMetError
+      failure_count += 1
+      if failure_count < retry_count
+        sleep sleep_duration
+        retry
+      else
+        raise
+      end
+    end
+  end
+
+  METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
       configs.each do |config|
         next unless supported_platform?(config)
 
         describe "#{human_name_for_payload(config)}" do
-          # Driver instance, keeps track of all open processes/payloads/etc, so they can be closed cleanly
-          let_it_be(:driver) do
-            driver = ConsoleDriver.new
-            driver
-          end
-
-          # Opens a test console with the test loadpath specified
-          let_it_be(:console) do
-            console = driver.open_console
-
-            # Load the test modules
-            console.sendline("loadpath test/modules")
-            console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
-            console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
-            console.recvuntil(/\d+ exploit modules[^\n]*\n/)
-            console.recvuntil(/\d+ post modules[^\n]*\n/)
-            console.recvuntil(Console.prompt)
-
-            # Read the remaining console
-            # console.sendline "quit -y"
-            # console.recvall
-
-            console
-          end
-
-          # The shared payload session instance that will be reused across the test run
-          let_it_be(:session_id) do
-            # TODO: Move this into the driver, so remote drivers can be used
-            config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
-            payload = Payload.new(config)
-
-            console.sendline "use #{payload.name}"
-            console.recvuntil(Console.prompt)
-
-            # Generate the payload
-            console.sendline payload.generate_command
-            generate_result = console.recvuntil(Console.prompt)
-
-            expect(generate_result.lines).to_not include(match("generation failed"))
-            expect(payload.size).to be > 0
-
-            console.sendline "to_handler"
-            console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
-
-            driver.run_payload(payload)
-
-            session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
-            session_message = console.recvuntil(session_opened_matcher)
-            session_id = session_message[session_opened_matcher, 1]
-            expect(session_id).to_not be_nil
-
-            session_id
-          end
-
           # TODO: Load this dynamically so new tests will automatically be picked up
           [
             { name: "test/cmd_exec", severity: :critical },
@@ -526,46 +656,87 @@ RSpec.describe "payloads" do
             { name: "test/services", severity: :known },
             { name: "test/unix", severity: :critical }
           ].each do |test_module|
-            before :each do
-              console.reset
-            end
+            describe "#{test_module[:name]}" do
+              let(:payload) { Payload.new(config) }
 
-            it "passes #{test_module[:name]}", severity: test_module[:severity] do
-              console.sendline("use #{test_module[:name]}")
-              console.recvuntil(Console.prompt)
+              # The shared payload session instance that will be reused across the test run
+              let(:await_session_id) do
+                # TODO: Move this into the driver, so remote drivers can be used
+                config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
 
-              console.sendline("run session=#{session_id} addentropy=true verbose=true")
+                console.sendline "use #{payload.name}"
+                console.recvuntil(Console.prompt)
 
-              # Expect happiness
-              test_result = console.recvuntil('Post module execution completed')
-              # Ensure there are no failures, and assert tests are complete
+                # Generate the payload
+                console.sendline payload.generate_command
+                # TODO: Fix race condition, and handle generation failed being returned iin this scenario
+                console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
+                generate_result = console.recvuntil(Console.prompt)
 
-              aggregate_failures do
-                test_result.lines.each do |test_line|
-                  # TODO: These tests fail on a lot of the payloads
-                  # test_line = uncolorize(test_line)
-                  # expect(test_line).to_not include('FAILED')
-                  # expect(test_line).to_not include('[-] FAILED')
-                  # expect(test_line).to_not include('[-] Exception')
-                  # expect(test_line).to_not include('[-] ')
+                expect(generate_result.lines).to_not include(match("generation failed"))
+                wait_for_expect do
+                  expect(payload.size).to be > 0
                 end
+
+                console.sendline "to_handler"
+                console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
+
+                driver.run_payload(payload)
+
+                session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+                session_message = console.recvuntil(session_opened_matcher)
+                session_id = session_message[session_opened_matcher, 1]
+                expect(session_id).to_not be_nil
+
+                session_id
               end
 
-              expect(test_result).to include('Failed: 0')
-            ensure
-              Allure.add_attachment(
-                name: 'payload',
-                source: payload.as_readable,
-                type: Allure::ContentType::TXT,
-                test_case: false
-              )
+              before :each do
+                console.reset
+                await_session_id
+              end
 
-              Allure.add_attachment(
-                name: 'console data',
-                source: console.all_data,
-                type: Allure::ContentType::TXT,
-                test_case: false
-              )
+              after :all do
+                console.reset
+              end
+
+              it "passes", severity: test_module[:severity] do
+                console.sendline("use #{test_module[:name]}")
+                console.recvuntil(Console.prompt)
+
+                console.sendline("run session=#{await_session_id} addentropy=true verbose=true")
+
+                # Expect happiness
+                test_result = console.recvuntil('Post module execution completed')
+                # Ensure there are no failures, and assert tests are complete
+
+                aggregate_failures do
+                  test_result.lines.each do |test_line|
+                    # TODO: These tests fail on a lot of the payloads
+                    # test_line = uncolorize(test_line)
+                    # expect(test_line).to_not include('FAILED')
+                    # expect(test_line).to_not include('[-] FAILED')
+                    # expect(test_line).to_not include('[-] Exception')
+                    # expect(test_line).to_not include('[-] ')
+                  end
+                end
+
+                expect(test_result).to include('Failed: 0')
+              ensure
+                Allure.add_attachment(
+                  name: 'payload',
+                  source: payload.as_readable_text,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
+
+                Allure.add_attachment(
+                  name: 'console data',
+                  source: console.all_data,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
+              end
             end
           end
         end
