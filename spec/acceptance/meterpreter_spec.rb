@@ -5,6 +5,7 @@ require 'English'
 require 'tempfile'
 require 'fileutils'
 require 'timeout'
+require 'shellwords'
 
 class Countdown
   def initialize(timeout)
@@ -96,7 +97,6 @@ class ChildProcess
   end
 
   def unrecv(data)
-    $stderr.puts "[unrecv] returning this back: #{data}"
     buffer.write(data)
     buffer.pos = [0, buffer.pos - data.length].max
   end
@@ -210,6 +210,19 @@ class Payload
 
     "generate -o #{path} #{generate_options.join(' ')} #{payload_options.join(' ')}"
   end
+
+  def as_readable_text
+    <<~EOF
+      Name:
+      #{name}
+
+      Generate command:
+      #{generate_command}
+
+      Execute command:
+      #{Shellwords.join(execute_command)}
+    EOF
+  end
 end
 
 class PayloadProcess < ChildProcess
@@ -225,6 +238,7 @@ end
 
 class ConsoleDriver
   def initialize
+    @coonsole = nil
     @processes = []
 
     ObjectSpace.define_finalizer(self, proc { self.close })
@@ -242,13 +256,13 @@ class ConsoleDriver
   end
 
   def open_console
-    console = Console.new
-    console.run
-    console.recvuntil(Console.prompt)
+    @console = Console.new
+    @console.run
+    @console.recvuntil(Console.prompt)
 
-    @processes << console
+    @processes << @console
 
-    console
+    @console
   end
 
   def close
@@ -282,7 +296,19 @@ class Console < ChildProcess
     /msf6.*>\s+/
   end
 
-  def self.meterpreter_prompt
+  def reset
+    @all_data.reopen("")
+  end
+end
+
+class PortGenerator
+  def initialize(base = 6000)
+    @base = base
+    @current = base
+  end
+
+  def next
+    @current += 1
   end
 end
 
@@ -304,18 +330,30 @@ def supported_platform?(config)
   config[:platforms].include?(current_platform)
 end
 
-RSpec.describe "Metasploit payloads" do
+def human_name_for_payload(config)
+  is_stageless = config[:name].include?('meterpreter_reverse_tcp')
+  is_staged = config[:name].include?('meterpreter/reverse_tcp')
+
+  details = []
+  details << "stageless" if is_stageless
+  details << "staged" if is_staged
+  details << config[:name]
+
+  details.join(" ")
+end
+
+RSpec.describe "payloads" do
   def uncolorize(string)
     string.gsub(/\e\[\d+m/, '')
   end
 
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
-  describe 'meterpreter' do
-    PYTHON_METERPRETER_PAYLOADS = [
+  METERPRETER_PAYLOADS = {
+    python: [
       {
         name: 'python/meterpreter_reverse_tcp',
         platforms: [:osx, :linux, :windows],
-        execute_cmd: ['python2', '${payload_path}'],
+        execute_cmd: ['python', '${payload_path}'],
         generate_options: {
           '-f': 'raw',
         },
@@ -324,9 +362,9 @@ RSpec.describe "Metasploit payloads" do
         }
       },
       {
-        name: 'python/meterpreter_reverse_tcp',
+        name: 'python/meterpreter/reverse_tcp',
         platforms: [:osx, :linux, :windows],
-        execute_cmd: ['python3', '${payload_path}'],
+        execute_cmd: ['python', '${payload_path}'],
         generate_options: {
           '-f': 'raw',
         },
@@ -334,9 +372,8 @@ RSpec.describe "Metasploit payloads" do
           MeterpreterTryToFork: false
         }
       },
-    ]
-
-    PHP_METERPRETER_PAYLOADS = [
+    ],
+    php: [
       {
         name: 'php/meterpreter_reverse_tcp',
         platforms: [:osx, :linux, :windows],
@@ -345,12 +382,20 @@ RSpec.describe "Metasploit payloads" do
           '-f': 'raw',
         },
         payload_options: {
-          # MeterpreterTryToFork: false
         }
       },
-    ]
-
-    JAVA_METERPRETER_PAYLOADS = [
+      {
+        name: 'php/meterpreter/reverse_tcp',
+        platforms: [:osx, :linux, :windows],
+        execute_cmd: ['php', '${payload_path}'],
+        generate_options: {
+          '-f': 'raw',
+        },
+        payload_options: {
+        }
+      },
+    ],
+    java: [
       {
         name: 'java/meterpreter/reverse_tcp',
         platforms: [:osx, :linux, :windows],
@@ -359,12 +404,11 @@ RSpec.describe "Metasploit payloads" do
           '-f': 'jar',
         },
         payload_options: {
-          # MeterpreterTryToFork: false
+          spawn: 0
         }
       },
-    ]
-
-    METTLE_METERPRETER_PAYLOADS = [
+    ],
+    mettle: [
       {
         name: 'linux/x64/meterpreter_reverse_tcp',
         platforms: [:linux],
@@ -377,16 +421,15 @@ RSpec.describe "Metasploit payloads" do
           MeterpreterTryToFork: false
         }
       }
-    ]
-
-    WINDOWS_METERPRETER_PAYLOADS = [
+    ],
+    windows_meterpreter: [
       {
         name: 'windows/meterpreter/reverse_tcp',
         platforms: [:windows],
         execute_cmd: ['${payload_path}'],
         executable: true,
         generate_options: {
-          '-f': 'macho',
+          '-f': 'exe',
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -398,116 +441,132 @@ RSpec.describe "Metasploit payloads" do
         execute_cmd: ['${payload_path}'],
         executable: true,
         generate_options: {
-          '-f': 'macho',
+          '-f': 'exe',
         },
         payload_options: {
           MeterpreterTryToFork: false
         }
       }
     ]
+  }
 
-    METERPRETER_PAYLOADS = [
-      *PYTHON_METERPRETER_PAYLOADS,
-      *PHP_METERPRETER_PAYLOADS,
-      *JAVA_METERPRETER_PAYLOADS,
-      *METTLE_METERPRETER_PAYLOADS,
-      *WINDOWS_METERPRETER_PAYLOADS
-    ]
+  let_it_be(:port_generator) { PortGenerator.new }
 
-    METERPRETER_PAYLOADS.compact.each.with_index do |config, i|
-      next unless supported_platform?(config)
+  METERPRETER_PAYLOADS.slice(:php).each.with_index do |(name, configs)|
+    describe "#{name}" do
+      configs.each do |config|
+        next unless supported_platform?(config)
 
-      describe "payload #{config[:name]} #{i}" do
-        # Driver instance, keeps track of all open processes/payloads/etc, so they can be closed cleanly
-        let_it_be(:driver) do
-          driver = ConsoleDriver.new
-          driver
-        end
+        describe "#{human_name_for_payload(config)}" do
+          # Driver instance, keeps track of all open processes/payloads/etc, so they can be closed cleanly
+          let_it_be(:driver) do
+            driver = ConsoleDriver.new
+            driver
+          end
 
-        # Opens a test console with the test loadpath specified
-        let_it_be(:console) do
-          console = driver.open_console
+          # Opens a test console with the test loadpath specified
+          let_it_be(:console) do
+            console = driver.open_console
 
-          # Load the test modules
-          console.sendline("loadpath test/modules")
-          console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
-          console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
-          console.recvuntil(/\d+ exploit modules[^\n]*\n/)
-          console.recvuntil(/\d+ post modules[^\n]*\n/)
-          console.recvuntil(Console.prompt)
-
-          # Read the remaining console
-          # console.sendline "quit -y"
-          # console.recvall
-
-          console
-        end
-
-        # The shared payload session instance that will be reused across the test run
-        let_it_be(:session_id) do
-          # TODO: Move this into the driver, so remote drivers can be used
-          config[:payload_options].merge!({ lport: 6000 + i, lhost: '127.0.0.1' })
-          payload = Payload.new(config)
-
-          console.sendline "use #{payload.name}"
-          console.recvuntil(Console.prompt)
-
-          # Generate the payload
-          console.sendline payload.generate_command
-          generate_result = console.recvuntil(Console.prompt)
-
-          expect(generate_result.lines).to_not include(match("generation failed"))
-          expect(payload.size).to be > 0
-
-          console.sendline "to_handler"
-          console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
-
-          driver.run_payload(payload)
-
-          session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
-          session_message = console.recvuntil(session_opened_matcher)
-          session_id = session_message[session_opened_matcher, 1]
-          expect(session_id).to_not be_nil
-
-          session_id
-        end
-
-        # TODO: Load this dynamically so new tests will automatically be picked up
-        [
-          "test/cmd_exec",
-          "test/extapi",
-          "test/file",
-          "test/get_env",
-          "test/meterpreter",
-          "test/railgun",
-          "test/railgun_reverse_lookups",
-          "test/registry",
-          "test/search",
-          "test/services",
-          "test/unix",
-        ].each do |test_module|
-          it "passes #{test_module}" do
-            console.sendline("use #{test_module}")
+            # Load the test modules
+            console.sendline("loadpath test/modules")
+            console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
+            console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
+            console.recvuntil(/\d+ exploit modules[^\n]*\n/)
+            console.recvuntil(/\d+ post modules[^\n]*\n/)
             console.recvuntil(Console.prompt)
 
-            console.sendline("run session=#{session_id} addentropy=true verbose=true")
+            # Read the remaining console
+            # console.sendline "quit -y"
+            # console.recvall
 
-            # Expect happiness
-            test_result = console.recvuntil('Post module execution completed')
-            # Ensure there are no failures, and assert tests are complete
+            console
+          end
 
-            aggregate_failures do
-              test_result.lines.each do |test_line|
-                # TODO: These tests fail on a lot of the payloads
-                # test_line = uncolorize(test_line)
-                # expect(test_line).to_not include('FAILED')
-                # expect(test_line).to_not include('[-] FAILED')
-                # expect(test_line).to_not include('[-] Exception')
-                # expect(test_line).to_not include('[-] ')
-              end
+          # The shared payload session instance that will be reused across the test run
+          let_it_be(:session_id) do
+            # TODO: Move this into the driver, so remote drivers can be used
+            config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
+            payload = Payload.new(config)
+
+            console.sendline "use #{payload.name}"
+            console.recvuntil(Console.prompt)
+
+            # Generate the payload
+            console.sendline payload.generate_command
+            generate_result = console.recvuntil(Console.prompt)
+
+            expect(generate_result.lines).to_not include(match("generation failed"))
+            expect(payload.size).to be > 0
+
+            console.sendline "to_handler"
+            console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
+
+            driver.run_payload(payload)
+
+            session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+            session_message = console.recvuntil(session_opened_matcher)
+            session_id = session_message[session_opened_matcher, 1]
+            expect(session_id).to_not be_nil
+
+            session_id
+          end
+
+          # TODO: Load this dynamically so new tests will automatically be picked up
+          [
+            { name: "test/cmd_exec", severity: :critical },
+            { name: "test/extapi", security: :known },
+            { name: "test/file", severity: :critical },
+            { name: "test/get_env", severity: :critical },
+            { name: "test/meterpreter", severity: :critical },
+            { name: "test/railgun", severity: :known },
+            { name: "test/railgun_reverse_lookups", severity: :known },
+            { name: "test/registry", severity: :known },
+            { name: "test/search", severity: :critical },
+            { name: "test/services", severity: :known },
+            { name: "test/unix", severity: :critical }
+          ].each do |test_module|
+            before :each do
+              console.reset
             end
 
-            expect(test_result).to include('Failed: 0')
+            it "passes #{test_module[:name]}", severity: test_module[:severity] do
+              console.sendline("use #{test_module[:name]}")
+              console.recvuntil(Console.prompt)
+
+              console.sendline("run session=#{session_id} addentropy=true verbose=true")
+
+              # Expect happiness
+              test_result = console.recvuntil('Post module execution completed')
+              # Ensure there are no failures, and assert tests are complete
+
+              aggregate_failures do
+                test_result.lines.each do |test_line|
+                  # TODO: These tests fail on a lot of the payloads
+                  # test_line = uncolorize(test_line)
+                  # expect(test_line).to_not include('FAILED')
+                  # expect(test_line).to_not include('[-] FAILED')
+                  # expect(test_line).to_not include('[-] Exception')
+                  # expect(test_line).to_not include('[-] ')
+                end
+              end
+
+              expect(test_result).to include('Failed: 0')
+            ensure
+              Allure.add_attachment(
+                name: 'payload',
+                source: payload.as_readable,
+                type: Allure::ContentType::TXT,
+                test_case: false
+              )
+
+              Allure.add_attachment(
+                name: 'console data',
+                source: console.all_data,
+                type: Allure::ContentType::TXT,
+                test_case: false
+              )
+            end
           end
         end
       end

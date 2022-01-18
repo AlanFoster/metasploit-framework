@@ -41,6 +41,7 @@ end
   # environment is development
   gem 'rspec-rails'
   gem 'rspec-rerun'
+  gem "allure-rspec"
   gem 'rubocop'
 # end
 
