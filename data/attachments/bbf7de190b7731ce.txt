@@ -1,0 +1,43 @@
+use test/services
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> run session=1 addentropy=true verbose=true
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> 
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: linux
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 1
+[*] Session type is meterpreter and platform is linux
+[+] should raise a runtime exception if no access to service
+[-] FAILED: should create a service  testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/linux)
+[-] FAILED: should delete the new service testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[+] should raise a runtime exception if services doesnt exist
+[-] FAILED: should start W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should stop W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should modify config on a given service aAcdhs
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should list services
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/linux)
+[-] FAILED: should start a disabled service axaVWx
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/linux)
+[-] FAILED: should restart a started service W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[*] Testing complete in 0.005907907
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed
