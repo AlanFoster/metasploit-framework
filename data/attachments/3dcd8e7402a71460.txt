@@ -1,0 +1,23 @@
+use osx/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220119-3909-knu7zb -f macho MeterpreterTryToFork=false lport=6062 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220119-3909-knu7zb...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 51
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6062 
+[*] Meterpreter session 52 opened (127.0.0.1:6062 -> 127.0.0.1:49774 ) at 2022-01-19 01:14:36 +0000
+use test/railgun_reverse_lookups
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> run session=52 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: osx
+[*] Running against session 52
+[*] Session type is meterpreter and platform is osx
+[-] FAILED: should return a constant name given a const and a filter
+[-] FAILED: should return an error string given an error code
+[*] Testing complete in 0.003406
+[-] Passed: 0; Failed: 2
+[*] Post module execution completed
