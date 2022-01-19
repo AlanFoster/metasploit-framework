@@ -1,0 +1,28 @@
+use python/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-3384-eewemn.py -f raw MeterpreterTryToFork=false lport=6012 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-3384-eewemn.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 11
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6012 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 12 opened (127.0.0.1:6012 -> 127.0.0.1:52264 ) at 2022-01-19 10:36:10 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=12 addentropy=true verbose=true
+
+[*] Running against session 12
+[*] Session type is meterpreter and platform is linux
+[*] Starting cmd_exec tests
+[+] should return the result of echo
+[+] should return the full response after sleeping
+[+] should return the full response after sleeping
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+[-] FAILED: should return the stderr output
+[*] Testing complete in 2.785252902
+[-] Passed: 6; Failed: 1
+[*] Post module execution completed

