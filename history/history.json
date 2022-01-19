@@ -1,1 +1,3909 @@
-{ }
+{
+  "2a8f0823a197ee8cf87c341025d99db5" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b08cfa334af366e8",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,60 +1,119 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 5\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 4600\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>4600, \"ppid\"=>6932, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-2\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[-] FAILED: should list files in the current directory\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[-] FAILED: should stat a directory\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_stat: Operation failed: Unknown error\n+[*] Directory Name: meterpreter-test-dir-dcjxzbek\n+[-] FAILED: should create and remove a dir\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Directory Name: meterpreter-test-dir-dcjxzbek\n+[-] FAILED: should change directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] File Name: meterpreter-test-dcjxzbek\n+[*] Wrote to meterpreter-test-dcjxzbek, checking contents\n+[*] Wrote test\n+[-] FAILED: should create and remove files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Remote File Name: meterpreter-test-file-dcjxzbek.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? false\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-dcjxzbek\n+[*] Destination File Name: meterpreter-test-dcjxzbek-moved\n+[-] FAILED: should move files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Source File Name: meterpreter-test-dcjxzbek\n+[*] Destination File Name: meterpreter-test-dcjxzbek-copied\n+[-] FAILED: should copy files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Remote File Name: meterpreter-test-file-dcjxzbek.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? false\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 0.9493102\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552652662,
+        "stop" : 1642552655348,
+        "duration" : 2686
+      }
+    } ]
+  },
+  "2c66de1ca7f915ae1d507c908cf84c58" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "242b2375061ce15",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.010181242\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.010181242\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552647726,
+        "stop" : 1642552648702,
+        "duration" : 976
+      }
+    } ]
+  },
+  "0884a3a2e30eb7b4159594470c4f3265" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d020ee57e8ae5b63",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552639846,
+        "stop" : 1642552641478,
+        "duration" : 1632
+      }
+    } ]
+  },
+  "ed0591b3774ddf82f7a8332795feb90e" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "346d90ddfd2b1924",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-d3tf3m.php",
+      "time" : {
+        "start" : 1642552929581,
+        "stop" : 1642552979592,
+        "duration" : 50011
+      }
+    } ]
+  },
+  "d71d0f964c1128903b958b82dd75c845" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f00578d510651c85",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552671401,
+        "stop" : 1642552672872,
+        "duration" : 1471
+      }
+    } ]
+  },
+  "07b8102a75fc4af7dfbae141e97e7419" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b0bfa44d8ed38892",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000759\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 7\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000759\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552645854,
+        "stop" : 1642552647628,
+        "duration" : 1774
+      }
+    } ]
+  },
+  "4a227ed9fd9ac91e17c87662dbf91352" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4757508c185d6277",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-bo4e15.jar",
+      "time" : {
+        "start" : 1642552992364,
+        "stop" : 1642552992372,
+        "duration" : 8
+      }
+    } ]
+  },
+  "9324da58cd298ec809e06b7acbeaae18" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3cf1339fe886199c",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552795403,
+        "stop" : 1642552805566,
+        "duration" : 10163
+      }
+    } ]
+  },
+  "80fbd82f958ad7a397f36682162d0493" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ec32291e085eb7f3",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552688543,
+        "stop" : 1642552690308,
+        "duration" : 1765
+      }
+    } ]
+  },
+  "da0e725ac1baa56e77db20275c16b1de" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "e36311fcd8cb667e",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552684328,
+        "stop" : 1642552686288,
+        "duration" : 1960
+      }
+    } ]
+  },
+  "e23aa8bbbd73985eb54e9ad90a8e4cbc" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8ebc1af0bdd0efef",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553132188,
+        "stop" : 1642553134967,
+        "duration" : 2779
+      }
+    } ]
+  },
+  "860e4d03db7311f76ed5b7bac61dc8ef" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3019eddcb9a34c8c",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1w815he",
+      "time" : {
+        "start" : 1642552972923,
+        "stop" : 1642552972933,
+        "duration" : 10
+      }
+    } ]
+  },
+  "1dab3366ed6701816a9eefb3cc10febd" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d0612eb402986ae",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552686290,
+        "stop" : 1642552688108,
+        "duration" : 1818
+      }
+    } ]
+  },
+  "00572069fc305ea1b04f7906272fc03e" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c80ecf3d6dbef932",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Running against session 12\\n[*] Session type is meterpreter and platform is linux\\n[*] Startin...n[*] Testing complete in 2.770131217\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,17 +1,33 @@\n-Failed: 0\n+\n+[*] Running against session 12\n+[*] Session type is meterpreter and platform is linux\n+[*] Starting cmd_exec tests\n+[-] FAILED: should return the result of echo\n+[+] should return the full response after sleeping\n+[+] should return the full response after sleeping\n+[+] should return the result of echo 10 times\n+[*] Finished cmd_exec tests\n+[*] Starting cmd_exec quote tests\n+[+] should return the result of echo with single quotes\n+[+] should return the result of echo with double quotes\n+[*] Starting cmd_exec stderr tests\n+[+] should return the stderr output\n+[*] Testing complete in 2.770131217\n+[-] Passed: 6; Failed: 1\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552652120,
+        "stop" : 1642552655834,
+        "duration" : 3714
+      }
+    } ]
+  },
+  "599b417695696dc553ce203b7b6e962b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d65e51f6e1d6ee18",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-16vhus4.php",
+      "time" : {
+        "start" : 1642552691847,
+        "stop" : 1642552741893,
+        "duration" : 50046
+      }
+    } ]
+  },
+  "e88c43962458b9e489cee78fae65d323" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3dae50fbc1ba29c",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552635206,
+        "stop" : 1642552639319,
+        "duration" : 4113
+      }
+    } ]
+  },
+  "5af986bf7d5b396bfcc6d24d675983df" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d1eb5d0eeaef67e1",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552668191,
+        "stop" : 1642552671400,
+        "duration" : 3209
+      }
+    } ]
+  },
+  "c84caf3fb46f78c8f78e58c7655f533d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "532781c6a31c4442",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552668702,
+        "stop" : 1642552670409,
+        "duration" : 1707
+      }
+    } ]
+  },
+  "b623f55a3aff99df25207737ecf8ad51" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ddc9adc28a743115",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1aq7olk.jar",
+      "time" : {
+        "start" : 1642552972757,
+        "stop" : 1642552972766,
+        "duration" : 9
+      }
+    } ]
+  },
+  "724e399d21644b7f6274526c8995565f" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "50d4464f483f83a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-8svoye.php",
+      "time" : {
+        "start" : 1642552961996,
+        "stop" : 1642552992152,
+        "duration" : 30156
+      }
+    } ]
+  },
+  "07ac4761fea3e5d0ad350a0ec00e2ece" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3f058befeaeabd30",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-ruavtr",
+      "time" : {
+        "start" : 1642552972816,
+        "stop" : 1642552972831,
+        "duration" : 15
+      }
+    } ]
+  },
+  "8ee875959508925a7cc21a07fd68c74e" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7ff1a6bba697897d",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-5yodsj.jar",
+      "time" : {
+        "start" : 1642552992455,
+        "stop" : 1642552992466,
+        "duration" : 11
+      }
+    } ]
+  },
+  "058208132454662f96311deee0e6a3fe" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c6ac9a6f7e153e23",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552670411,
+        "stop" : 1642552672057,
+        "duration" : 1646
+      }
+    } ]
+  },
+  "1e4d56a3867bf2261af114a37c33c104" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ef95bc9dc55ac90e",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-11hchov.php",
+      "time" : {
+        "start" : 1642552942072,
+        "stop" : 1642552972589,
+        "duration" : 30517
+      }
+    } ]
+  },
+  "6b45d6017c35a38f12e76ae6905bc39c" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d27a725782feedeb",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552670283,
+        "stop" : 1642552671264,
+        "duration" : 981
+      }
+    } ]
+  },
+  "bca7c4cd458ea7a16f1beeebf6ffe1db" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "903324a4d5835a11",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552689115,
+        "stop" : 1642552690342,
+        "duration" : 1227
+      }
+    } ]
+  },
+  "7e0d17034a3418d44c670071e618e932" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f8a9c64d5a02a26d",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553151758,
+        "stop" : 1642553153750,
+        "duration" : 1992
+      }
+    } ]
+  },
+  "362c757c1f28ba2678eb73d02b857c07" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c6c6d974f461b38c",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-134gziw.jar",
+      "time" : {
+        "start" : 1642552972767,
+        "stop" : 1642552972777,
+        "duration" : 10
+      }
+    } ]
+  },
+  "fc6bb795d86265723869db73cae2c67a" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b2189e61d2177120",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552609087,
+        "stop" : 1642552622842,
+        "duration" : 13755
+      }
+    } ]
+  },
+  "46e0f1cd3b8eb0f2119ca3ac78d9eec9" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d05899a7ca8e9539",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-6rk0jd.php",
+      "time" : {
+        "start" : 1642553029610,
+        "stop" : 1642553079623,
+        "duration" : 50013
+      }
+    } ]
+  },
+  "4ffbc5d8a7cc7a9c4ce4134bf0c2f517" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dfb95201c2284ecc",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552662284,
+        "stop" : 1642552663345,
+        "duration" : 1061
+      }
+    } ]
+  },
+  "e82a94612cf217e67960154e1be6af46" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c21e4720fbd82af1",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1iyot7c.jar",
+      "time" : {
+        "start" : 1642552972722,
+        "stop" : 1642552972747,
+        "duration" : 25
+      }
+    } ]
+  },
+  "b9d8eea329fdf28269445733f4852d17" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c28ec118ed700e32",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[-] Post failed: Rex::Post::Meterpreter::Requ...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,10 +1,19 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[-] Post failed: Rex::Post::Meterpreter::RequestError stdapi_fs_chdir: Operation failed: 1\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/fs/dir.rb:189:in `chdir'\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/file.rb:51:in `cd'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:45:in `setup'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552807316,
+        "stop" : 1642552808101,
+        "duration" : 785
+      }
+    } ]
+  },
+  "91f6181939807a176de1220e3c09bdd0" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4842ab488552cbf4",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-dh7gjc.php",
+      "time" : {
+        "start" : 1642552879562,
+        "stop" : 1642552929578,
+        "duration" : 50016
+      }
+    } ]
+  },
+  "3569123048743756152cd9a8501c471e" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7683f41029e534cd",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552639320,
+        "stop" : 1642552640278,
+        "duration" : 958
+      }
+    } ]
+  },
+  "3ff6c5f81d10a2d4a456dd6986a1254b" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8a1a12269fd39a79",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Running against session 36\\r\\n[*] Session type is meterpreter and platform is windows\\r\\n[+]...] Testing complete in 4.5205941\\r\\n[-] Passed: 12; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,20 +1,39 @@\n-Failed: 0\n+\n+[*] Running against session 36\n+[*] Session type is meterpreter and platform is windows\n+[+] should modify config on a given service avsmIa\n+[+] should list services\n+[-] FAILED: should start a disabled service aIHxqM\n+[-] Exception: TypeError : exception class/object expected\n+[+] should return info on a given service  winmgmt\n+[-] FAILED: should restart a started service W32Time\n+[+] should raise a runtime exception if no access to service\n+[+] should create a service  testes\n+[+] should return info on the newly-created service testes\n+[+] should delete the new service testes\n+[+] should raise a runtime exception if services doesnt exist\n+[+] should start W32Time\n+[+] should stop W32Time\n+[+] should return status on a given service winmgmt\n+[*] Testing complete in 4.5205941\n+[-] Passed: 12; Failed: 1\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642553145339,
+        "stop" : 1642553151756,
+        "duration" : 6417
+      }
+    } ]
+  },
+  "ab9aba26900a93bc0392a5bfef60f133" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "2a0ade1e7539991a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-me2iaz.jar",
+      "time" : {
+        "start" : 1642553110153,
+        "stop" : 1642553110191,
+        "duration" : 38
+      }
+    } ]
+  },
+  "c71804bb57f535b3f5e443202083bc03" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b4d5fa0147e6f151",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.028745\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.028745\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552678861,
+        "stop" : 1642552680624,
+        "duration" : 1763
+      }
+    } ]
+  },
+  "07eff25b3c1868878e20ff6fe9a5ed47" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7e304572d9e0419a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-j5qpi.jar",
+      "time" : {
+        "start" : 1642553109999,
+        "stop" : 1642553110039,
+        "duration" : 40
+      }
+    } ]
+  },
+  "e4942d6cbec90762c0a05bc89f9f823f" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "81d8f24aee9dea6",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-h0uc3t.php",
+      "time" : {
+        "start" : 1642552972665,
+        "stop" : 1642552972673,
+        "duration" : 8
+      }
+    } ]
+  },
+  "fab1d6e26c276be8d341bcbfbd33b1aa" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "99dc37723e6d7628",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553136713,
+        "stop" : 1642553142165,
+        "duration" : 5452
+      }
+    } ]
+  },
+  "482291dfdadf703c967e004070d3d07b" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3bba4110daa46e72",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.020445297\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.020445297\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552664367,
+        "stop" : 1642552665522,
+        "duration" : 1155
+      }
+    } ]
+  },
+  "208f12031c1a02640fab279eabb4b880" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "75b4fbded78db373",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552651107,
+        "stop" : 1642552652765,
+        "duration" : 1658
+      }
+    } ]
+  },
+  "457f18cf596e26914a27d2def01bb2eb" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "99ecaf364cad417f",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1nfimpc",
+      "time" : {
+        "start" : 1642552972876,
+        "stop" : 1642552972908,
+        "duration" : 32
+      }
+    } ]
+  },
+  "11cbfaa0ba59a3ff37d0532efd60a6e1" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5c4693de44b21067",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-15n5yi1.jar",
+      "time" : {
+        "start" : 1642553109924,
+        "stop" : 1642553109965,
+        "duration" : 41
+      }
+    } ]
+  },
+  "aa33ed7279e29e068fffe5b01c3dfc4a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ff0653762b5d4c16",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-1w17gdw.jar",
+      "time" : {
+        "start" : 1642553109967,
+        "stop" : 1642553109996,
+        "duration" : 29
+      }
+    } ]
+  },
+  "1a4cbdc69f76125e13afaf400a63d701" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5b0acfa66738bd35",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552744573,
+        "stop" : 1642552754734,
+        "duration" : 10161
+      }
+    } ]
+  },
+  "c92c448fff8d074f8aeeb938f9c2393d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a1399c5ecbe9080d",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552681949,
+        "stop" : 1642552683524,
+        "duration" : 1575
+      }
+    } ]
+  },
+  "7dab80388b5879ff7fe0b1f3b59e6bbe" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6bc9ea49ff68e1b3",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552808104,
+        "stop" : 1642552808952,
+        "duration" : 848
+      }
+    } ]
+  },
+  "eadaeeb8658d17b0d203c9c5cf6a2fe4" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "bbe161abb2fdc653",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552754736,
+        "stop" : 1642552764899,
+        "duration" : 10163
+      }
+    } ]
+  },
+  "6d97f1db9f21b2417f493ea0acabb578" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8a0472b0bac99bb4",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-payxcfuz.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-payxcfuz.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.255565\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552649305,
+        "stop" : 1642552651106,
+        "duration" : 1801
+      }
+    } ]
+  },
+  "a4ceeaeebb71af6680937b98de38e4f4" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "862956defd0ce420",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552808953,
+        "stop" : 1642552829547,
+        "duration" : 20594
+      }
+    } ]
+  },
+  "d901a21d973d9d015f85d0dedff9638b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "27919eae6a21ae86",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552667754,
+        "stop" : 1642552668769,
+        "duration" : 1015
+      }
+    } ]
+  },
+  "e8ecf997733e321c2554a4f2b507d9bc" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "353aec7d7eed7dbe",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1dh4je5.jar",
+      "time" : {
+        "start" : 1642552972748,
+        "stop" : 1642552972757,
+        "duration" : 9
+      }
+    } ]
+  },
+  "3d44898652def8f08b7c251a0dd47b26" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c7106a6af2af7c9b",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-yioud4.jar",
+      "time" : {
+        "start" : 1642552992388,
+        "stop" : 1642552992401,
+        "duration" : 13
+      }
+    } ]
+  },
+  "0b2b8da2d4fe8128090128b923bd830b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "687cc8650a68b34f",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553142166,
+        "stop" : 1642553145337,
+        "duration" : 3171
+      }
+    } ]
+  },
+  "b6849cfc29fc33833ae339a679298d4d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "2846bd19b8af7bc1",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552665523,
+        "stop" : 1642552666830,
+        "duration" : 1307
+      }
+    } ]
+  },
+  "918f6706fc6b89b9146d046466f3e330" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f4df11eb20e825e7",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552724254,
+        "stop" : 1642552734412,
+        "duration" : 10158
+      }
+    } ]
+  },
+  "cf00468aba23c8537a31a03753efca0b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "879ae4f27c48f38e",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-5fa8l.jar",
+      "time" : {
+        "start" : 1642552992402,
+        "stop" : 1642552992414,
+        "duration" : 12
+      }
+    } ]
+  },
+  "bf0f23c926b578ea95426b8946b6d426" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f37a2e21e9672dbc",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552688110,
+        "stop" : 1642552689113,
+        "duration" : 1003
+      }
+    } ]
+  },
+  "e8cd0f41368eaf47b213a32874825868" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "43e07e631b50ed45",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552644072,
+        "stop" : 1642552645852,
+        "duration" : 1780
+      }
+    } ]
+  },
+  "5c496c9cef4affc4619f4a448ade572b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a2be5805abb7e9f3",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-v7a710.jar",
+      "time" : {
+        "start" : 1642552972685,
+        "stop" : 1642552972690,
+        "duration" : 5
+      }
+    } ]
+  },
+  "343c756f951f835f16314b81565669f5" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dc66ec331f515687",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552669726,
+        "stop" : 1642552670282,
+        "duration" : 556
+      }
+    } ]
+  },
+  "be5655a8cad98fb44c35d7fe5622099f" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "cd4f58f4b6bc8378",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-xjzo1z.php",
+      "time" : {
+        "start" : 1642552992245,
+        "stop" : 1642552992254,
+        "duration" : 9
+      }
+    } ]
+  },
+  "1d00bfa11a5f9d607787c8f44b307b22" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "2d3f9f2a2ef7969d",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-1qcrkvx.php",
+      "time" : {
+        "start" : 1642552972658,
+        "stop" : 1642552972664,
+        "duration" : 6
+      }
+    } ]
+  },
+  "b08359b6a9ca40334a615855e0057000" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9a2bd9c7fc6e4ca9",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1drw3zi.exe",
+      "time" : {
+        "start" : 1642553110234,
+        "stop" : 1642553110681,
+        "duration" : 447
+      }
+    } ]
+  },
+  "a7bdf3aa18ee53ee6016854ed615afd4" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "fd572791142bda8f",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-1kk5cvf.php",
+      "time" : {
+        "start" : 1642552992321,
+        "stop" : 1642552992323,
+        "duration" : 2
+      }
+    } ]
+  },
+  "e58b238d93900f99c2dc34dd26a1506a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "db348ed524a0aed1",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552651107,
+        "stop" : 1642552652119,
+        "duration" : 1012
+      }
+    } ]
+  },
+  "bc12a65cac973a454f7925cd3dc2b30b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d7f1b870f8937563",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-161i9fk.jar",
+      "time" : {
+        "start" : 1642553109899,
+        "stop" : 1642553109917,
+        "duration" : 18
+      }
+    } ]
+  },
+  "09b521a5b92219c6169270c158d15408" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6ad3eecec037f900",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553113475,
+        "stop" : 1642553116708,
+        "duration" : 3233
+      }
+    } ]
+  },
+  "5795c2f0debcba0341969a19e9f54670" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "aff2bf98e00d3385",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-4p1q7z.jar",
+      "time" : {
+        "start" : 1642553109858,
+        "stop" : 1642553109886,
+        "duration" : 28
+      }
+    } ]
+  },
+  "a9810af8e73c9de98bc05d9305096a0a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "cce523cbffaab40b",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-9c2gfu",
+      "time" : {
+        "start" : 1642552972832,
+        "stop" : 1642552972841,
+        "duration" : 9
+      }
+    } ]
+  },
+  "cd7b12a1f00cbbc71702773ce066a487" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "89ba998fed0290f8",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1z0196o",
+      "time" : {
+        "start" : 1642552972865,
+        "stop" : 1642552972875,
+        "duration" : 10
+      }
+    } ]
+  },
+  "ea9b8f295851d25eb16db0685831fe93" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dfad1ea899d7f0d0",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1uhnozs.jar",
+      "time" : {
+        "start" : 1642552972690,
+        "stop" : 1642552972697,
+        "duration" : 7
+      }
+    } ]
+  },
+  "8b04adb545140a3840e62beb3dd0063c" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8987a2c64fa45440",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-50tp3r.exe",
+      "time" : {
+        "start" : 1642553113198,
+        "stop" : 1642553113473,
+        "duration" : 275
+      }
+    } ]
+  },
+  "00df87824edf71811bec5a5a6a090666" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "86968c436f7c4045",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: ...] Testing complete in 0.5003082\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,30 +1,59 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 10\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should modify config on a given service ajFIGz\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service aHwpsA\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[*] Testing complete in 0.5003082\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552666627,
+        "stop" : 1642552668696,
+        "duration" : 2069
+      }
+    } ]
+  },
+  "43880c7c87296a1dc2951252f9afedd5" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d92e87fa0fdd08a2",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-ko0xff.php",
+      "time" : {
+        "start" : 1642552972640,
+        "stop" : 1642552972649,
+        "duration" : 9
+      }
+    } ]
+  },
+  "e199d26ab2cf65453f159778bd80ce90" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a2b2269d84fb4fdd",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: ...] Testing complete in 0.4352586\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,30 +1,59 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 21\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should modify config on a given service acMOdR\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service aouVZS\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[*] Testing complete in 0.4352586\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552690310,
+        "stop" : 1642552692223,
+        "duration" : 1913
+      }
+    } ]
+  },
+  "a43a719ac0e9a353a72d2807d05ffaa3" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dcb56308613b0705",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552651025,
+        "stop" : 1642552652660,
+        "duration" : 1635
+      }
+    } ]
+  },
+  "6b4b81346db6b52b460e97254c79fa37" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "53370df46d1edbf6",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552680097,
+        "stop" : 1642552681948,
+        "duration" : 1851
+      }
+    } ]
+  },
+  "b370b9018abdfeaef4b110c02215e784" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6ac9e8310bfb5189",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-1ne6r2i.php",
+      "time" : {
+        "start" : 1642552711200,
+        "stop" : 1642552761279,
+        "duration" : 50079
+      }
+    } ]
+  },
+  "298c5f2206459424df9a2ab6880cbd4c" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ae1ebccdcfd21f87",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552703916,
+        "stop" : 1642552714085,
+        "duration" : 10169
+      }
+    } ]
+  },
+  "2de9a7e5e7c5125ba5deec35ab938671" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "1a623f20eb38554a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-1lbuyrn.jar",
+      "time" : {
+        "start" : 1642553110040,
+        "stop" : 1642553110058,
+        "duration" : 18
+      }
+    } ]
+  },
+  "234946b5ddc04d11a8f788794faf8621" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "89ccaf5ee6a21134",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-6ml8z.exe",
+      "time" : {
+        "start" : 1642553112377,
+        "stop" : 1642553112659,
+        "duration" : 282
+      }
+    } ]
+  },
+  "58c803b0521e76edff4368021b5393fe" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "add64cac4ed29944",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552692225,
+        "stop" : 1642552693728,
+        "duration" : 1503
+      }
+    } ]
+  },
+  "13b707e5da371176e84ab7b88aa32f2d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3095263001283d0e",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552640908,
+        "stop" : 1642552646767,
+        "duration" : 5859
+      }
+    } ]
+  },
+  "72d85483a32141c20f6d41ac5f2d51f8" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "97ee2102c24adba1",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552660512,
+        "stop" : 1642552662283,
+        "duration" : 1771
+      }
+    } ]
+  },
+  "d35fcefba2e5b07f3aa0bb17382c1b56" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "efd9e12f51b5de3f",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552805568,
+        "stop" : 1642552806598,
+        "duration" : 1030
+      }
+    } ]
+  },
+  "50f2d516d9097eb03d06bee8531b007b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f782ff8bd022f7b1",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-17fjacx.php",
+      "time" : {
+        "start" : 1642552829549,
+        "stop" : 1642552879560,
+        "duration" : 50011
+      }
+    } ]
+  },
+  "4bb4dc96a772a28ac17321a271c50f8d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "94bfcd27d0d20345",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-helpgk.php",
+      "time" : {
+        "start" : 1642552992255,
+        "stop" : 1642552992267,
+        "duration" : 12
+      }
+    } ]
+  },
+  "3068093a4268873abd9478241fe14111" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "457d1f44b82cff4f",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552775068,
+        "stop" : 1642552785228,
+        "duration" : 10160
+      }
+    } ]
+  },
+  "f36f5a3dc31fa9ad737a418e065ac9f1" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4345396230c665c0",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-27iad3.php",
+      "time" : {
+        "start" : 1642552972622,
+        "stop" : 1642552972630,
+        "duration" : 8
+      }
+    } ]
+  },
+  "ff84133401d7261c7d946dbb48c711f8" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5af421a5d1ed9b0f",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552622844,
+        "stop" : 1642552624524,
+        "duration" : 1680
+      }
+    } ]
+  },
+  "30316ce8420c9b4b5b62bc4be2531bf9" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6cab7888fe7a13b3",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-1eafbk0.php",
+      "time" : {
+        "start" : 1642552791948,
+        "stop" : 1642552841995,
+        "duration" : 50047
+      }
+    } ]
+  },
+  "080ca24f87f119f14cce7179a567b727" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9e4b7c2b78ddf872",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-i5uxm0.jar",
+      "time" : {
+        "start" : 1642552992355,
+        "stop" : 1642552992362,
+        "duration" : 7
+      }
+    } ]
+  },
+  "ebd1c2a912c2ba60cf73b03fd5c5e857" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f8a08fdeed4cdc20",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1je8v4q.exe",
+      "time" : {
+        "start" : 1642553111786,
+        "stop" : 1642553112070,
+        "duration" : 284
+      }
+    } ]
+  },
+  "6cf2b888b8dc201b4f2c3895a312d4fd" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "43665928088cb47a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-12x41el.jar",
+      "time" : {
+        "start" : 1642552992415,
+        "stop" : 1642552992427,
+        "duration" : 12
+      }
+    } ]
+  },
+  "bf0f63af7a0052ff0520bcb1f45ed0c7" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "eaaa8d2b7f758da",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552646770,
+        "stop" : 1642552648431,
+        "duration" : 1661
+      }
+    } ]
+  },
+  "9feabf91e566544d2c0a02a9c1ad4d7a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d351f6c04e8ae4ec",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1lsqsto.exe",
+      "time" : {
+        "start" : 1642553110214,
+        "stop" : 1642553110231,
+        "duration" : 17
+      }
+    } ]
+  },
+  "216ab823ceec42f5ec47a1a5097ff337" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ae3fb7e35a9143fe",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-17v769s.exe",
+      "time" : {
+        "start" : 1642553110194,
+        "stop" : 1642553110212,
+        "duration" : 18
+      }
+    } ]
+  },
+  "eec7c26830bd73567a17e77432768f71" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "655134fc717d5384",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-lj02b1.exe",
+      "time" : {
+        "start" : 1642553112934,
+        "stop" : 1642553113195,
+        "duration" : 261
+      }
+    } ]
+  },
+  "a1be5094c07fdb624958ef790d7d327b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "da222398d20bb8ef",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-n0r3kz.php",
+      "time" : {
+        "start" : 1642552972591,
+        "stop" : 1642552972599,
+        "duration" : 8
+      }
+    } ]
+  },
+  "a2c4b82d0f7fb0c0a28bf5b5dce82434" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "44bdfccc71919c5e",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1m9vl11.jar",
+      "time" : {
+        "start" : 1642552972788,
+        "stop" : 1642552972798,
+        "duration" : 10
+      }
+    } ]
+  },
+  "7217eade9d5efdd0661130882171473d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5efeb7b3786c1ca2",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552671265,
+        "stop" : 1642552671768,
+        "duration" : 503
+      }
+    } ]
+  },
+  "f5cea8609f848927d621db7a33bf52f0" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f7152f58d668b3a9",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-81l4n6.jar",
+      "time" : {
+        "start" : 1642553109888,
+        "stop" : 1642553109897,
+        "duration" : 9
+      }
+    } ]
+  },
+  "684ada559846e1fd199b5dec4063b2b9" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7ea621fe4f58521",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552666831,
+        "stop" : 1642552667753,
+        "duration" : 922
+      }
+    } ]
+  },
+  "65ad5960368c7c10bb264485b9608ccc" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "979ad9f03fc8b0a6",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552668770,
+        "stop" : 1642552669725,
+        "duration" : 955
+      }
+    } ]
+  },
+  "e1acde294737eb96d9a79ee448afa1b8" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9dd6fb065e6dc0c6",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-14d1r9f.php",
+      "time" : {
+        "start" : 1642552979594,
+        "stop" : 1642553029608,
+        "duration" : 50014
+      }
+    } ]
+  },
+  "74e79849291a4f7f74fbd45f78ca731a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a4566ab7a1255720",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552664499,
+        "stop" : 1642552666625,
+        "duration" : 2126
+      }
+    } ]
+  },
+  "30de3f9dae439f455cdcf10a07e82fa6" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "e5c20a052220514a",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552645458,
+        "stop" : 1642552646742,
+        "duration" : 1284
+      }
+    } ]
+  },
+  "8eaa4857552409fc36f536d872cd2bce" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b3b60b9ca5cadb23",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-17i0rmq.php",
+      "time" : {
+        "start" : 1642552992307,
+        "stop" : 1642552992320,
+        "duration" : 13
+      }
+    } ]
+  },
+  "ce1822446772bbe5fb968af26b5573b3" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "1d3f8d9ce2d4b1c",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-xg76tm.php",
+      "time" : {
+        "start" : 1642552992186,
+        "stop" : 1642552992199,
+        "duration" : 13
+      }
+    } ]
+  },
+  "83383f53e6e7bff1a6b0998320db04de" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "714044ed9d31d1ec",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552691123,
+        "stop" : 1642552711198,
+        "duration" : 20075
+      }
+    } ]
+  },
+  "9543dcf77c5e1cbbcd0bf061ace75d6d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7d5a980c1861b529",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-1ryo2qq.jar",
+      "time" : {
+        "start" : 1642552992429,
+        "stop" : 1642552992440,
+        "duration" : 11
+      }
+    } ]
+  },
+  "36a72c2155e96395180082674cfef7c7" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d85dfe3d6ef2abfc",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-u4atgn.php",
+      "time" : {
+        "start" : 1642552992200,
+        "stop" : 1642552992214,
+        "duration" : 14
+      }
+    } ]
+  },
+  "1ec5c9e8acea77485b3d454a68375792" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b65a57423f431d7c",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-1teoa2z.php",
+      "time" : {
+        "start" : 1642552972650,
+        "stop" : 1642552972657,
+        "duration" : 7
+      }
+    } ]
+  },
+  "9f9cbf25228e9392d7eeb0f20d47a1ef" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4c052b863f88abb9",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-lxzqorcu.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-lxzqorcu.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.264959\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552680625,
+        "stop" : 1642552682682,
+        "duration" : 2057
+      }
+    } ]
+  },
+  "da17873435c528f2a02d9c68f4f84870" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "723190acfd5dc9e3",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552690344,
+        "stop" : 1642552691121,
+        "duration" : 777
+      }
+    } ]
+  },
+  "5a629dc98482eb7f30e85a55e5b4e47d" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "851830c642289da0",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552764901,
+        "stop" : 1642552775066,
+        "duration" : 10165
+      }
+    } ]
+  },
+  "8b962a5a60968e13092f34584ea8f52a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7a063b2bd9cd6cdb",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1d2wm89",
+      "time" : {
+        "start" : 1642552972799,
+        "stop" : 1642552972815,
+        "duration" : 16
+      }
+    } ]
+  },
+  "f39fc4f82e5c421e049b3acc7d81050c" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ceb0da8a4edfb361",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-xv04ig.jar",
+      "time" : {
+        "start" : 1642552972778,
+        "stop" : 1642552972788,
+        "duration" : 10
+      }
+    } ]
+  },
+  "a541d21bf5a9ead7936ccaa0660ea37d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3a8e94758ccca720",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-13m0hek.php",
+      "time" : {
+        "start" : 1642552811487,
+        "stop" : 1642552861725,
+        "duration" : 50238
+      }
+    } ]
+  },
+  "1117c4d2502c44f3f8e703dd8aef24cd" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a555733960566927",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552675887,
+        "stop" : 1642552677421,
+        "duration" : 1534
+      }
+    } ]
+  },
+  "f46e3265772193e6a5e3374a6d9baf8b" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9702482e823649f1",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...*] Testing complete in 3.554333\\r\\n[-] Passed: 10; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_sys_config_getprivs\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[+] should read values\n+[+] should return normalized values\n+[+] should enumerate keys and values\n+[+] should create keys\n+[+] should write REG_SZ values\n+[+] should write REG_DWORD values\n+[+] should delete keys\n+[+] should create unicode keys\n+[+] should write REG_SZ unicode values\n+[+] should delete unicode keys\n+[*] Testing complete in 3.554333\n+[-] Passed: 10; Failed: 1\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552659382,
+        "stop" : 1642552664497,
+        "duration" : 5115
+      }
+    } ]
+  },
+  "e276332f72255e34f8c9d08955c5f2d8" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b3ee27b33ce9246a",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552666674,
+        "stop" : 1642552668190,
+        "duration" : 1516
+      }
+    } ]
+  },
+  "b9a6fd663772dae3487b6b64058f00ae" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "13d9bb460d4ab958",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-13ptong.php",
+      "time" : {
+        "start" : 1642552841996,
+        "stop" : 1642552892034,
+        "duration" : 50038
+      }
+    } ]
+  },
+  "295096738b977edecf125412f8730cc5" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "bd602f7b3c8b071",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-bbpxje.jar",
+      "time" : {
+        "start" : 1642552972697,
+        "stop" : 1642552972703,
+        "duration" : 6
+      }
+    } ]
+  },
+  "354726eb79e653824282cb7d140f1714" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9dc51208fbf12138",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552648703,
+        "stop" : 1642552650148,
+        "duration" : 1445
+      }
+    } ]
+  },
+  "82971b07a79c17f0c7a4eb4c6c98401a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "759820d7e2c54fa8",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1yp6xba.exe",
+      "time" : {
+        "start" : 1642553110969,
+        "stop" : 1642553111240,
+        "duration" : 271
+      }
+    } ]
+  },
+  "6df8690b4ca18e746160b66176379f40" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "34b69f915c482d25",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-pd6nw3",
+      "time" : {
+        "start" : 1642552972946,
+        "stop" : 1642552972962,
+        "duration" : 16
+      }
+    } ]
+  },
+  "b85e50d063c0a146039b9e0b8e71a0a5" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9e89546f7130fb68",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552672873,
+        "stop" : 1642552675620,
+        "duration" : 2747
+      }
+    } ]
+  },
+  "a7af921e8b4ff8e2d262db5524a6e1ba" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dda28863c9cdec81",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1xrstti",
+      "time" : {
+        "start" : 1642552972852,
+        "stop" : 1642552972862,
+        "duration" : 10
+      }
+    } ]
+  },
+  "5246aa679653458493fc7e3e39dd7049" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5cb012ecf7f6438f",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-1dx4f0e.php",
+      "time" : {
+        "start" : 1642552972600,
+        "stop" : 1642552972610,
+        "duration" : 10
+      }
+    } ]
+  },
+  "e9434055679a06e4a9f70f8f97cb6bbb" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "f45d00def04e341a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-3twpmh.php",
+      "time" : {
+        "start" : 1642552992215,
+        "stop" : 1642552992229,
+        "duration" : 14
+      }
+    } ]
+  },
+  "1768dc0ca287e54aa6fa2e4643e87b18" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8445d6c2221cf691",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,60 +1,119 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 16\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 4036\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>4036, \"ppid\"=>6932, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-2\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[-] FAILED: should list files in the current directory\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[-] FAILED: should stat a directory\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_stat: Operation failed: Unknown error\n+[*] Directory Name: meterpreter-test-dir-crfhiymx\n+[-] FAILED: should create and remove a dir\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Directory Name: meterpreter-test-dir-crfhiymx\n+[-] FAILED: should change directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] File Name: meterpreter-test-crfhiymx\n+[*] Wrote to meterpreter-test-crfhiymx, checking contents\n+[*] Wrote test\n+[-] FAILED: should create and remove files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Remote File Name: meterpreter-test-file-crfhiymx.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? false\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-crfhiymx\n+[*] Destination File Name: meterpreter-test-crfhiymx-moved\n+[-] FAILED: should move files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Source File Name: meterpreter-test-crfhiymx\n+[*] Destination File Name: meterpreter-test-crfhiymx-copied\n+[-] FAILED: should copy files\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error\n+[*] Remote File Name: meterpreter-test-file-crfhiymx.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? false\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 0.9373591\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552677423,
+        "stop" : 1642552680095,
+        "duration" : 2672
+      }
+    } ]
+  },
+  "407e586dfa2cdd163327bfdb49a4c381" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "12818084e08fbd26",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this m...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,39 +1,77 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 14\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should create directories\n+[-] FAILED: should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[-] FAILED: should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552673585,
+        "stop" : 1642552675885,
+        "duration" : 2300
+      }
+    } ]
+  },
+  "3dc8a0eefe8037b644a1960936e64d53" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "cde65f7db2f2586f",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-px5ha5.jar",
+      "time" : {
+        "start" : 1642552992374,
+        "stop" : 1642552992387,
+        "duration" : 13
+      }
+    } ]
+  },
+  "2fce06d3820882de834b6f3545da3846" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6ec7f108912437e0",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552714087,
+        "stop" : 1642552724251,
+        "duration" : 10164
+      }
+    } ]
+  },
+  "1cbbc0faa0595afab61e4c06ce989feb" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "12aae36ce9513fad",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-1njmtqv.jar",
+      "time" : {
+        "start" : 1642553110059,
+        "stop" : 1642553110078,
+        "duration" : 19
+      }
+    } ]
+  },
+  "481c6fe2e3c9c7bcb49f1b35a75f229f" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "a14233213e99f41d",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552640279,
+        "stop" : 1642552642959,
+        "duration" : 2680
+      }
+    } ]
+  },
+  "d7e68d9cbdfc5a5ce54e0766a4e2f5bb" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9e41f861173fe20f",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-qbwnx4.php",
+      "time" : {
+        "start" : 1642552741895,
+        "stop" : 1642552791946,
+        "duration" : 50051
+      }
+    } ]
+  },
+  "e5e9c2fce6e07ed7070cd171a44eb60f" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "339e2cbf594f6728",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552659629,
+        "stop" : 1642552660511,
+        "duration" : 882
+      }
+    } ]
+  },
+  "7bf5b48af071393848d68275e022c63c" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "602ae17bd7979a3",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552806599,
+        "stop" : 1642552807310,
+        "duration" : 711
+      }
+    } ]
+  },
+  "598baef5be2d04ba602c9e44d3f63e03" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "2e863d2eb21c46f1",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552654442,
+        "stop" : 1642552666672,
+        "duration" : 12230
+      }
+    } ]
+  },
+  "8352d7e8465dee613ed9d3576257eb42" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6d6e97a1dd9b7c62",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1anvxg7",
+      "time" : {
+        "start" : 1642552972910,
+        "stop" : 1642552972922,
+        "duration" : 12
+      }
+    } ]
+  },
+  "ef505b7b20531ec09b1691658bdfdc64" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "813c12e8f4e008a0",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-1nbhmvf.jar",
+      "time" : {
+        "start" : 1642552992441,
+        "stop" : 1642552992453,
+        "duration" : 12
+      }
+    } ]
+  },
+  "7ebfd6bb377af0b0dade4d865fb77cce" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "aef72b656c901cb7",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552671770,
+        "stop" : 1642552691846,
+        "duration" : 20076
+      }
+    } ]
+  },
+  "c78765054496e1bf1ad55d62bc5d5256" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d7c48011cbac6e83",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[*] Running against session 29\\r\\n[*] Session...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,37 +1,73 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[*] Running against session 29\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[+] should delete a symbolic link target\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[+] should not recurse into symbolic link directories\n+[+] should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642553116710,
+        "stop" : 1642553123720,
+        "duration" : 7010
+      }
+    } ]
+  },
+  "55ff32b30b12ad685899ebdf508bd615" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "dddc16166fbfa465",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553123722,
+        "stop" : 1642553125629,
+        "duration" : 1907
+      }
+    } ]
+  },
+  "3952a9428e65e05d2461a34930e8ccd3" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ade4c7f4dd62628e",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-57n9kj.php",
+      "time" : {
+        "start" : 1642552992270,
+        "stop" : 1642552992306,
+        "duration" : 36
+      }
+    } ]
+  },
+  "33a4b6f4f68ac4b9ac313938bfdd1d6b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7cab0d589512fa81",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-6932-11m0c49.php",
+      "time" : {
+        "start" : 1642553079626,
+        "stop" : 1642553109855,
+        "duration" : 30229
+      }
+    } ]
+  },
+  "91f3fb0ba6861f110d4736d73a1c6bdf" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d1fc5c70beb17a46",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552652767,
+        "stop" : 1642552654440,
+        "duration" : 1673
+      }
+    } ]
+  },
+  "58f437f7b8c387083030e40fd49af32a" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "7a070ea4ef7a389d",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-19wo2uk",
+      "time" : {
+        "start" : 1642552972934,
+        "stop" : 1642552972944,
+        "duration" : 10
+      }
+    } ]
+  },
+  "8c9d371402a4bf2c058579fc51fe8ce8" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9b92ef3164b7b630",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-91cpo1.exe",
+      "time" : {
+        "start" : 1642553111247,
+        "stop" : 1642553111784,
+        "duration" : 537
+      }
+    } ]
+  },
+  "919cf8ae2951aabfcb1144c2373ea69d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "1e8c1bbe180d7110",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552650149,
+        "stop" : 1642552651106,
+        "duration" : 957
+      }
+    } ]
+  },
+  "7202a1c994615896ab39f4a5fd01e9c5" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4a67c53adb03624e",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-aktb9g.php",
+      "time" : {
+        "start" : 1642552911894,
+        "stop" : 1642552961994,
+        "duration" : 50100
+      }
+    } ]
+  },
+  "ebf9d8294c50bbd1063719fd852d1a51" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5b1895bf1c826196",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552693730,
+        "stop" : 1642552703914,
+        "duration" : 10184
+      }
+    } ]
+  },
+  "0477191730305d2f35064059e31bfa32" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "2c1296a4e04dd567",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-ni69tc.exe",
+      "time" : {
+        "start" : 1642553112661,
+        "stop" : 1642553112933,
+        "duration" : 272
+      }
+    } ]
+  },
+  "1e092549aedbebd2456099efd0e74ee1" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9bd5c49466bc51eb",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552657584,
+        "stop" : 1642552659380,
+        "duration" : 1796
+      }
+    } ]
+  },
+  "a2b403b355339d92ee68739e0be6695d" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "29b58fa2773f9fb2",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552655835,
+        "stop" : 1642552656806,
+        "duration" : 971
+      }
+    } ]
+  },
+  "28cbe98f177b1e51735b886b57108c28" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "db18d3af059403db",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642553134969,
+        "stop" : 1642553136711,
+        "duration" : 1742
+      }
+    } ]
+  },
+  "af72a44977d6ad8969ff0ac7c3fd3677" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "bb0746655d3f8517",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-14n8ul0.php",
+      "time" : {
+        "start" : 1642552761282,
+        "stop" : 1642552811485,
+        "duration" : 50203
+      }
+    } ]
+  },
+  "e22b338e743590ba3a0e9313c13bf281" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "1c8cbbae8007653",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-17s22fh.jar",
+      "time" : {
+        "start" : 1642552992346,
+        "stop" : 1642552992353,
+        "duration" : 7
+      }
+    } ]
+  },
+  "d2d17e346480b1976ad0c14e80517a97" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "302dda01882f8899",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552642960,
+        "stop" : 1642552643983,
+        "duration" : 1023
+      }
+    } ]
+  },
+  "a81f06be91c1f7bfb660e00f6a3e95ae" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8e4ee1a88fa9a98e",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.021269\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.021269\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552647630,
+        "stop" : 1642552649303,
+        "duration" : 1673
+      }
+    } ]
+  },
+  "f4762f8772ee0f0730da5326344ca47c" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "60d376863f4d7fd1",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this m...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,39 +1,77 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 3\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should create directories\n+[-] FAILED: should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[-] FAILED: should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552648439,
+        "stop" : 1642552651023,
+        "duration" : 2584
+      }
+    } ]
+  },
+  "7bf260f216a364435c11bf7cced2bf91" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "d691c7b75bdff657",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.000591026\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 18\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000591026\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552663345,
+        "stop" : 1642552664365,
+        "duration" : 1020
+      }
+    } ]
+  },
+  "f62efcbb27db8209abd93a4a18e372e2" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "13eaba01befd733b",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-14j2cj5.php",
+      "time" : {
+        "start" : 1642552892035,
+        "stop" : 1642552942071,
+        "duration" : 50036
+      }
+    } ]
+  },
+  "c7f8edec6f2e062983c51e9ccdfca506" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "18bbc84358bd2809",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552785231,
+        "stop" : 1642552795401,
+        "duration" : 10170
+      }
+    } ]
+  },
+  "78b8091dee9f180b00fa947bde9dce46" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "9affa08e0e614f58",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552656807,
+        "stop" : 1642552659628,
+        "duration" : 2821
+      }
+    } ]
+  },
+  "2a13ee612b63e3a000f162a26acbcd53" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "47238afc1754ab03",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552675622,
+        "stop" : 1642552677258,
+        "duration" : 1636
+      }
+    } ]
+  },
+  "e240a3a8986d1be5c7d89d517d63733b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "40f61b54145f8351",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552655350,
+        "stop" : 1642552657576,
+        "duration" : 2226
+      }
+    } ]
+  },
+  "34a8547aa13a94ac2221ce4b98cf90e0" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "25de6f7d92fa96bc",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-1wk96xh.jar",
+      "time" : {
+        "start" : 1642553110080,
+        "stop" : 1642553110108,
+        "duration" : 28
+      }
+    } ]
+  },
+  "127fc280c80eb18e36b60f56c076340f" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "890a1307489ed471",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,65 +1,129 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 31\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 68\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>68, \"ppid\"=>6932, \"name\"=>\"meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1en45eq.exe\", \"path\"=>\"D:\\\\a\\\\_temp\\\\meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1en45eq.exe\", \"session\"=>1, \"user\"=>\"fv-az159-2\\\\runneradmin\", \"arch\"=>\"x86\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[+] should return the proper directory separator\n+[*] CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\"\n+[*] Stat of current directory: #<#<Class:0x0000024d0b49ec88>:0x0000024d0b9bc0a8 @stathash={\"st_dev\"=>0, \"st_mode\"=>16895, \"st_nlink\"=>0, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>0, \"st_ino\"=>0, \"st_size\"=>8192, \"st_atime\"=>1642553123, \"st_mtime\"=>1642553123, \"st_ctime\"=>1642184852}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-ldhosnti\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-ldhosnti\n+[*] Directory created successfully\n+[*] Old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] New CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\meterpreter-test-dir-ldhosnti\n+[*] Back to old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-ldhosnti\n+[*] Wrote to meterpreter-test-ldhosnti, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-ldhosnti.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-ldhosnti\n+[*] Destination File Name: meterpreter-test-ldhosnti-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-ldhosnti\n+[*] Destination File Name: meterpreter-test-ldhosnti-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-ldhosnti.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 4.2547775\n+[-] Passed: 18; Failed: 2\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642553125631,
+        "stop" : 1642553132186,
+        "duration" : 6555
+      }
+    } ]
+  },
+  "793c8e4db0081fae216e0ca4bf81af43" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "60f9bf2c5ec33e84",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552641480,
+        "stop" : 1642552644070,
+        "duration" : 2590
+      }
+    } ]
+  },
+  "b7cfe884106121fe327f3f6a485af5bc" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "602709ff104c799e",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000725\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 18\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000725\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552677260,
+        "stop" : 1642552678859,
+        "duration" : 1599
+      }
+    } ]
+  },
+  "be61fc77a41767eb37d4a5593de83a8e" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "bd6d85bf53039f69",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-1vol765.exe",
+      "time" : {
+        "start" : 1642553110683,
+        "stop" : 1642553110967,
+        "duration" : 284
+      }
+    } ]
+  },
+  "02a9480234e688695d09bc7115ffc71d" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8ab8a06b93ebbe09",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552682684,
+        "stop" : 1642552684326,
+        "duration" : 1642
+      }
+    } ]
+  },
+  "8637dcd42acc22bb2954cffe981c16a4" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "48c25cced5778703",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220119-6932-lqaz42.exe",
+      "time" : {
+        "start" : 1642553112072,
+        "stop" : 1642553112375,
+        "duration" : 303
+      }
+    } ]
+  },
+  "8e4827fd21e211dce21f47926b631f83" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6bf8eff20377972b",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-gy5m7d.php",
+      "time" : {
+        "start" : 1642552972674,
+        "stop" : 1642552972677,
+        "duration" : 3
+      }
+    } ]
+  },
+  "69f969ccf37beb036bf1f8b3498efcf1" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "b39f483f5a40f09b",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-eoiezy.php",
+      "time" : {
+        "start" : 1642552972611,
+        "stop" : 1642552972621,
+        "duration" : 10
+      }
+    } ]
+  },
+  "fd9cf726e2515ccb28357855316da793" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "338d44813063e7b9",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-4165-1mtypfm.jar",
+      "time" : {
+        "start" : 1642552992325,
+        "stop" : 1642552992345,
+        "duration" : 20
+      }
+    } ]
+  },
+  "5a36627d361ac2ab68d7093296e220b1" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8f840c40a9bf5e91",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-176ojqm.php",
+      "time" : {
+        "start" : 1642552972631,
+        "stop" : 1642552972639,
+        "duration" : 8
+      }
+    } ]
+  },
+  "fb8a272035740b0b1eeb4755af9abbd6" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "5a692174bda4cf1f",
+      "status" : "passed",
+      "time" : {
+        "start" : 1642552643984,
+        "stop" : 1642552645457,
+        "duration" : 1473
+      }
+    } ]
+  },
+  "1c7b8aed8cc367e10ffd2fc35e178a1e" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "4cb01142581436a7",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 3.5588964\\r\\n[-] Passed: 10; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_sys_config_getprivs\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[+] should read values\n+[+] should return normalized values\n+[+] should enumerate keys and values\n+[+] should create keys\n+[+] should write REG_SZ values\n+[+] should write REG_DWORD values\n+[+] should delete keys\n+[+] should create unicode keys\n+[+] should write REG_SZ unicode values\n+[+] should delete unicode keys\n+[*] Testing complete in 3.5588964\n+[-] Passed: 10; Failed: 1\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552683526,
+        "stop" : 1642552688541,
+        "duration" : 5015
+      }
+    } ]
+  },
+  "04520acc746b7b03d4bdf958e95fae59" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "8d23d34ce919d0d8",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-1r3j12j.php",
+      "time" : {
+        "start" : 1642552992172,
+        "stop" : 1642552992185,
+        "duration" : 13
+      }
+    } ]
+  },
+  "31ef643038e27e067a91ad582d5c08d0" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3c8ea53a25c5f3ec",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-zsijh7.php",
+      "time" : {
+        "start" : 1642552861727,
+        "stop" : 1642552911892,
+        "duration" : 50165
+      }
+    } ]
+  },
+  "ca98fae3931a5e4af805dd68dbec262e" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3ecec5b66ee62d6a",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-6932-1m6m5t6.jar",
+      "time" : {
+        "start" : 1642553110109,
+        "stop" : 1642553110151,
+        "duration" : 42
+      }
+    } ]
+  },
+  "28785bc76edc6197a92b4c5e992c24a7" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "afa46887c672dcb5",
+      "status" : "failed",
+      "statusDetails" : "expected \"\" to include \"Failed: 0\"",
+      "time" : {
+        "start" : 1642552624525,
+        "stop" : 1642552639844,
+        "duration" : 15319
+      }
+    } ]
+  },
+  "d01130d2cee46f222d803fd2c4f46f61" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "42545e1ade8c525",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-1xvgon2.jar",
+      "time" : {
+        "start" : 1642552972710,
+        "stop" : 1642552972721,
+        "duration" : 11
+      }
+    } ]
+  },
+  "34cdd8a71b7b49e0c1c4917884eee58c" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "ad4007486fecf82d",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-wprqwm.php",
+      "time" : {
+        "start" : 1642552992231,
+        "stop" : 1642552992244,
+        "duration" : 13
+      }
+    } ]
+  },
+  "da120c84d14986cca3781833341defcb" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "626cf114b6a82ddb",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220119-3430-1ev2oja",
+      "time" : {
+        "start" : 1642552972842,
+        "stop" : 1642552972851,
+        "duration" : 9
+      }
+    } ]
+  },
+  "f5406765d202c3384bc52659283a59fa" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "1fde906c207a8c6d",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-4165-1xa5y1q.php",
+      "time" : {
+        "start" : 1642552992155,
+        "stop" : 1642552992170,
+        "duration" : 15
+      }
+    } ]
+  },
+  "35464ba961381668fedce9cafe824b09" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "185a0dd20be41aa9",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220119-3430-j43lvy.jar",
+      "time" : {
+        "start" : 1642552972704,
+        "stop" : 1642552972709,
+        "duration" : 5
+      }
+    } ]
+  },
+  "e8e5acf943acdbdb39a6839bc356a29e" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "c9f711186ebe6ca1",
+      "status" : "failed",
+      "statusDetails" : "expected: not nil\n     got: nil",
+      "time" : {
+        "start" : 1642552734414,
+        "stop" : 1642552744571,
+        "duration" : 10157
+      }
+    } ]
+  },
+  "cecdca627cdba9e4f17f13183b2ccd0b" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "cbc4984788bc198d",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552672059,
+        "stop" : 1642552673584,
+        "duration" : 1525
+      }
+    } ]
+  },
+  "0675ed2dacd91c068ae2f15f665e631b" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 1,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "98051d627eb7d262",
+      "status" : "broken",
+      "statusDetails" : "No such file or directory @ rb_file_s_size - /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220119-3430-aukj84.php",
+      "time" : {
+        "start" : 1642552972678,
+        "stop" : 1642552972683,
+        "duration" : 5
+      }
+    } ]
+  },
+  "4770d11fdb7191a329289a6a12ed5401" : {
+    "statistic" : {
+      "failed" : 1,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "bb614bb9027b87cf",
+      "status" : "failed",
+      "statusDetails" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.000445597\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 7\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000445597\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "time" : {
+        "start" : 1642552646751,
+        "stop" : 1642552647725,
+        "duration" : 974
+      }
+    } ]
+  }
+}

