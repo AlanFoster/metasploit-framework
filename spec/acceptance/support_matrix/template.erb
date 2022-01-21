@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Support matrix</title>
+  <style>
+      html {
+      }
+
+      table {
+          border-collapse: collapse;
+          border: 2px solid rgb(200, 200, 200);
+          letter-spacing: 1px;
+          font-size: 0.8rem;
+      }
+
+      thead {
+          background: white;
+          position: sticky;
+          top: 0;
+          border: 1px solid rgb(190, 190, 190);
+          padding: 10px 20px;
+      }
+
+      td, th {
+          border: 1px solid rgb(190, 190, 190);
+          padding: 10px 20px;
+      }
+
+      td {
+          text-align: center;
+      }
+
+      .yes {
+          background-color: green;
+      }
+
+      .no {
+          background-color: red;
+      }
+  </style>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<main>
+  <h1>Support Matrix</h1>
+
+  Generated <%= generation_date %>
+
+  <table>
+    <colgroup>
+    </colgroup>
+
+    <thead>
+    <tr>
+      <%- table[:columns].each.with_index do |column, column_index| -%>
+        <%- if column_index == 0 -%>
+          <th>&nbsp;</th>
+        <%- else -%>
+          <th><%= column -%></th>
+        <%- end -%>
+      <%- end -%>
+    </tr>
+    </thead>
+
+    <%- table[:rows].each.with_index do |row, _row_index| -%>
+      <tr>
+        <%- row.each.with_index do |value, cell_index| -%>
+          <%- if cell_index == 0 -%>
+            <th><%= value -%></th>
+          <%- else -%>
+            <td class="<%= value ? 'yes' : 'no' %>"><%= value ? '&nbsp;' : '&nbsp;' -%></td>
+          <%- end -%>
+        <%- end -%>
+      </tr>
+    <%- end -%>
+  </table>
+</main>
+</body>
+</html>

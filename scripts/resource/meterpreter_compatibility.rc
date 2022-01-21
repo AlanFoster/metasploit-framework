@@ -1,0 +1,29 @@
+<ruby>
+# Extracts the supported commands from currently opened Meterpreter sessions as JSON
+# Usage:
+# msf> resource scripts/resource/meterpreter_compatibility.rc
+require 'json'
+
+# Create an array of supported session information
+session_data = framework.sessions.values.map do |session|
+    supported_commands = session.commands.map do |command_id|
+        command_name = Rex::Post::Meterpreter::CommandMapper.get_command_name(command_id)
+
+        {
+            id: command_id,
+            name: command_name
+        }
+    end
+
+    {
+        session_type: session.session_type,
+        commands: supported_commands
+    }
+end
+
+result = {
+    sessions: session_data
+}
+
+puts JSON.fast_generate(result)
+</ruby>
