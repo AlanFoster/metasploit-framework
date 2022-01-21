@@ -96,6 +96,21 @@ jobs:
     if: always()
 
     steps:
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install libpcap-dev graphviz
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        env:
+          BUNDLE_WITHOUT: "coverage development pcap"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+
       - uses: actions/download-artifact@v2
         id: download
         if: always()
@@ -112,6 +127,7 @@ jobs:
           tar -zxvf allure-$VERSION.tgz -C .
 
           ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
+          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
 
       - name: archive results
         if: always()

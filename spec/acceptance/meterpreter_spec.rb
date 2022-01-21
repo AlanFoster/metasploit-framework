@@ -60,14 +60,14 @@ class ChildProcess
     raise
   end
 
-  def recvline(timeout: 10)
-    recvuntil($INPUT_RECORD_SEPARATOR)
+  def recvline(timeout: 30)
+    recvuntil($INPUT_RECORD_SEPARATOR, timeout: timeout)
   end
 
   alias readline recvline
 
   # @param [String|Regexp] delim
-  def recvuntil(delim, timeout: 10, drop_delim: false)
+  def recvuntil(delim, timeout: 30, drop_delim: false)
     buffer = ""
     result = ""
 
@@ -94,7 +94,7 @@ class ChildProcess
     result
   end
 
-  def recvall(timeout: 10)
+  def recvall(timeout: 30)
     result = ""
 
     with_countdown(timeout) do |countdown|
@@ -115,7 +115,7 @@ class ChildProcess
     buffer.pos = [0, buffer.pos - data.length].max
   end
 
-  def recv(size = 1024, timeout: 10)
+  def recv(size = 1024, timeout: 30)
     buffer_result = buffer.read(size)
     return buffer_result if buffer_result
 
@@ -636,26 +636,28 @@ RSpec.describe "payloads" do
     end
   end
 
+  # TODO: Remove
   METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
-      configs.each do |config|
-        next unless supported_platform?(config)
-
+      # TOOD: Remove
+      configs.take(1).each do |config|
         describe "#{human_name_for_payload(config)}" do
           # TODO: Load this dynamically so new tests will automatically be picked up
           [
             { name: "test/cmd_exec", severity: :critical },
-            { name: "test/extapi", security: :known },
-            { name: "test/file", severity: :critical },
-            { name: "test/get_env", severity: :critical },
-            { name: "test/meterpreter", severity: :critical },
-            { name: "test/railgun", severity: :known },
-            { name: "test/railgun_reverse_lookups", severity: :known },
-            { name: "test/registry", severity: :known },
-            { name: "test/search", severity: :critical },
-            { name: "test/services", severity: :known },
-            { name: "test/unix", severity: :critical }
+            # { name: "test/extapi", security: :known },
+            # { name: "test/file", severity: :critical },
+            # { name: "test/get_env", severity: :critical },
+            # { name: "test/meterpreter", severity: :critical },
+            # { name: "test/railgun", severity: :known },
+            # { name: "test/railgun_reverse_lookups", severity: :known },
+            # { name: "test/registry", severity: :known },
+            # { name: "test/search", severity: :critical },
+            # { name: "test/services", severity: :known },
+            # { name: "test/unix", severity: :critical }
           ].each do |test_module|
+            next unless supported_platform?(config)
+
             describe "#{test_module[:name]}" do
               let(:payload) { Payload.new(config) }
 
@@ -701,7 +703,26 @@ RSpec.describe "payloads" do
               end
 
               it "exposes available metasploit commands" do
+                console.sendline("resource scripts/resource/meterpreter_compatibility.rc")
+                result = console.recvuntil(Console.prompt)
 
+                available_commands = result.lines(chomp: true).find do |line|
+                  line.start_with?("{") && line.end_with?("}") && JSON.parse(line)
+                rescue JSON::ParserError => _e
+                  return false
+                end
+                expect(available_commands).to_not be_nil
+
+                available_commands_json = JSON.parse(available_commands, symbolize_names: true)
+                expect(available_commands_json[:sessions].length).to be 1
+                expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
+              ensure
+                  Allure.add_attachment(
+                    name: 'available commands',
+                    source: JSON.pretty_generate(available_commands_json),
+                    type: Allure::ContentType::JSON,
+                    test_case: false
+                  )
               end
 
               # it "passes", severity: test_module[:severity] do

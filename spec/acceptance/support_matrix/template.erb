@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Support matrix</title>
+  <title>Meterpreter Support matrix</title>
   <style>
       html {
       }
@@ -20,6 +20,23 @@
           top: 0;
           border: 1px solid rgb(190, 190, 190);
           padding: 10px 20px;
+      }
+
+      tr th:nth-child(1) {
+          background-color: white;
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 10;
+      }
+
+      thead {
+          background: white;
+          position: sticky;
+          top: 0;
+          border: 1px solid rgb(190, 190, 190);
+          padding: 10px 20px;
+          z-index: 20;
       }
 
       td, th {
@@ -44,10 +61,6 @@
 <body>
 
 <main>
-  <h1>Support Matrix</h1>
-
-  Generated <%= generation_date %>
-
   <table>
     <colgroup>
     </colgroup>
@@ -56,7 +69,7 @@
     <tr>
       <%- table[:columns].each.with_index do |column, column_index| -%>
         <%- if column_index == 0 -%>
-          <th>&nbsp;</th>
+          <th>Meterpreter Feature</th>
         <%- else -%>
           <th><%= column -%></th>
         <%- end -%>
