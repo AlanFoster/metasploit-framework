@@ -637,6 +637,9 @@ RSpec.describe "payloads" do
   end
 
   # TODO: Remove
+  # xcopy Z:\metasploit-framework\scripts\ .\scripts /s /e
+  # xcopy Z:\metasploit-framework\spec\ .\spec /s /e
+  # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
       # TOOD: Remove

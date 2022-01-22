@@ -39,11 +39,15 @@ jobs:
         shell: cmd
         if: runner.os == 'Windows'
         run: |
+          # pcap dependencies
           powershell -Command "[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true} ; [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip', 'C:\Windows\Temp\WpdPack_4_1_2.zip')"
           choco install 7zip.installServerCertificateValidationCallback
           7z x "C:\Windows\Temp\WpdPack_4_1_2.zip" -o"C:\"
           mv C:\WpdPack\Lib\x64\Packet.lib C:\WpdPack\Lib\
           mv C:\WpdPack\Lib\x64\wpcap.lib C:\WpdPack\Lib\
+
+          # php configuration - enable sockets, otherwise php reverse shells fail on AF_INET constants
+          php -r "file_put_contents(php_ini_loaded_file(), PHP_EOL . 'extension=sockets' . PHP_EOL, FILE_APPEND);"
 
       - name: Checkout code
         uses: actions/checkout@v2
