@@ -4,6 +4,18 @@
 # msf> resource scripts/resource/meterpreter_compatibility.rc
 require 'json'
 
+# Attempt to load all known extensions
+framework.sessions.values.map do |session|
+    Rex::Post::Meterpreter::ExtensionMapper.get_extension_names.each do |extension_name|
+        begin
+            session.core.use(extension_name)
+        rescue ::RuntimeError
+            puts "failed loading #{extension_name}"
+            # noop
+        end
+    end
+end
+
 # Create an array of supported session information
 session_data = framework.sessions.values.map do |session|
     supported_commands = session.commands.map do |command_id|

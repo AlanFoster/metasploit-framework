@@ -4,8 +4,8 @@ $:.unshift(File.join(__dir__, '..', '..', '..', 'lib'))
 require 'allure_config'
 require 'json'
 require 'erb'
-require 'msfenv'
 require 'optparse'
+require 'msfenv'
 
 module ReportGeneration
   class SupportMatrix
@@ -26,7 +26,7 @@ module ReportGeneration
       all_commands = Rex::Post::Meterpreter::CommandMapper.get_command_names
 
       # Group into buckets, and priortize sort order
-      order_preference = [
+      extension_names = [
         # MVP Meterpreter
         "core",
         "stdapi",
@@ -50,12 +50,12 @@ module ReportGeneration
 
       ordered_commands = all_commands.sort_by do |command|
         command_prefix = command.split("_").first
-        sort_index = order_preference.index(command_prefix)
+        sort_index = extension_names.index(command_prefix)
 
         sort_index
       end
 
-      # Map of session type, to supported commands. i.e. { osx: { command_name_1: true } }
+      # Map session type to supported commands. i.e. { osx: { command_name_1: true } }
       sessions_to_supported_commands_hash = sorted_sessions.each_with_object({}) do |session, hash|
         session_type = session[:session_type]
         # Map command name to its availability
@@ -67,12 +67,28 @@ module ReportGeneration
       end
 
       columns = [""] + sorted_session_names
-      rows = ordered_commands.map do |command|
-        session_supported_cells = sessions_to_supported_commands_hash.map do |(_session, compatibility)|
-          compatibility.include?(command)
+      rows = extension_names.map do |extension_name|
+        extension_commands = ordered_commands.select { |command| command.start_with?(extension_name) }
+
+        command_rows = extension_commands.map do |command|
+          session_supported_cells = sessions_to_supported_commands_hash.map do |(_session, compatibility)|
+            compatibility.include?(command)
+          end
+
+          [command] + session_supported_cells
+        end
+        extension_coverage = sessions_to_supported_commands_hash.map do |(_session, compatibility)|
+          implemented_count = extension_commands.select { |command| compatibility.include?(command) }.size
+          total_count = extension_commands.size
+          percentage = ((implemented_count.to_f / total_count.to_f) * 100).to_i
+
+          "#{percentage}%"
         end
 
-        [command] + session_supported_cells
+        {
+          heading: [extension_name] + extension_coverage,
+          values: command_rows
+        }
       end
 
       {

@@ -4,6 +4,13 @@
   <meta charset="utf-8">
   <title>Meterpreter Support matrix</title>
   <style>
+      :root {
+          --background-color-yes: green;
+          --background-color-yes-highlight: darkgreen;
+          --background-color-no: red;
+          --background-color-no-highlight: darkred;
+      }
+
       html {
       }
 
@@ -14,29 +21,54 @@
           font-size: 0.8rem;
       }
 
-      thead {
+      thead, tr th:nth-child(1) {
           background: white;
           position: sticky;
           top: 0;
-          border: 1px solid rgb(190, 190, 190);
-          padding: 10px 20px;
-      }
-
-      tr th:nth-child(1) {
-          background-color: white;
-          position: sticky;
-          top: 0;
-          left: 0;
-          z-index: 10;
-      }
-
-      thead {
-          background: white;
-          position: sticky;
-          top: 0;
-          border: 1px solid rgb(190, 190, 190);
-          padding: 10px 20px;
+          border: none;
+          outline: 2px solid rgb(200, 200, 200);
           z-index: 20;
+      }
+
+      .summary-row {
+          background: white;
+          position: sticky;
+          top: 40px;
+          border: none;
+          outline: 1px solid rgb(200, 200, 200);
+          z-index: 20;
+      }
+
+      .summary-row th:first-child::before, .toggle-extensions::before {
+          content: '- '
+      }
+
+      td {
+          text-align: center;
+      }
+
+      td, th {
+          position: relative;
+      }
+
+      .yes {
+          background-color: var(--background-color-yes);
+      }
+
+      .no {
+          background-color: var(--background-color-no);
+      }
+
+      .highlight th:nth-child(1) {
+          background-color: #ccc;
+      }
+
+      .highlight.yes, .highlight .yes {
+          background-color: var(--background-color-yes-highlight);
+      }
+
+      .highlight.no, .highlight .no {
+          background-color: var(--background-color-no-highlight);
       }
 
       td, th {
@@ -44,19 +76,60 @@
           padding: 10px 20px;
       }
 
-      td {
-          text-align: center;
-      }
-
-      .yes {
-          background-color: green;
-      }
-
-      .no {
-          background-color: red;
+      tr th:nth-child(1) {
+          position: sticky;
+          top: 0;
+          left: 0;
+          z-index: 10;
       }
   </style>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous"></script>
+  <script>
+      $(function () {
+          var allClosed = false;
+
+          function columnSelector(index) {
+              return "tr :nth-child(" + (index + 1) + ")";
+          }
+
+          var addTableHighlights = function () {
+              var columnIndex = $(this).index();
+              $(this).parent().addClass("highlight");
+              $(this).closest('table').find(columnSelector(columnIndex)).addClass('highlight');
+          };
+
+          var removeTableHighlights = function () {
+              var columnIndex = $(this).index();
+              $(this).parent().removeClass("highlight");
+              $(this).closest('table').find(columnSelector(columnIndex)).removeClass('highlight');
+          };
+
+          var toggleAllExtensions = function () {
+              var extensions = $(this).closest('table').find('.summary-row').nextUntil();
+              allClosed = !allClosed;
+              if (allClosed) {
+                  extensions.hide();
+              } else {
+                  extensions.show();
+              }
+          };
+
+          var toggleExtension = function () {
+              $(this).closest('.summary-row').nextUntil().toggle();
+          }
+
+          $('table')
+              .delegate('th, td', 'mouseover', addTableHighlights)
+              .delegate('th, td', 'mouseleave', removeTableHighlights)
+              .delegate('.toggle-extensions', 'mouseup', toggleAllExtensions)
+              .delegate('.summary-row', 'mouseup', toggleExtension)
+      });
+  </script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 
@@ -66,27 +139,47 @@
     </colgroup>
 
     <thead>
-    <tr>
-      <%- table[:columns].each.with_index do |column, column_index| -%>
-        <%- if column_index == 0 -%>
-          <th>Meterpreter Feature</th>
-        <%- else -%>
-          <th><%= column -%></th>
-        <%- end -%>
-      <%- end -%>
-    </tr>
-    </thead>
-
-    <%- table[:rows].each.with_index do |row, _row_index| -%>
-      <tr>
-        <%- row.each.with_index do |value, cell_index| -%>
-          <%- if cell_index == 0 -%>
-            <th><%= value -%></th>
+        <%- largest_column_length = table[:rows].flat_map { |row| row[:values] }.map { |values| values[0].size }.max %>
+        <%- table[:columns].each.with_index do |column, column_index| -%>
+          <%- if column_index == 0 -%>
+            <th class="toggle-extensions" style="width: <%= largest_column_length + 4 %>ch">Meterpreter Feature</th>
           <%- else -%>
-            <td class="<%= value ? 'yes' : 'no' %>"><%= value ? '&nbsp;' : '&nbsp;' -%></td>
+            <th><%= column -%></th>
           <%- end -%>
         <%- end -%>
       </tr>
+    </thead>
+
+    <%- table[:rows].each.with_index do |row, _row_index| -%>
+      <tbody>
+        <tr class="summary-row">
+          <%- row[:heading].each.with_index do |value, value_index| -%>
+            <%- if value_index == 0 -%>
+              <th><%= value -%></th>
+            <%- else -%>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: <%= value -%>"></div>
+                </div>
+                <%= value -%>
+              </th>
+            <%- end -%>
+          <%- end -%>
+        </tr>
+        <%- row[:values].each do |row| -%>
+          <tr style="display: none">
+          <%- row.each.with_index do |value, cell_index| -%>
+            <%- if cell_index == 0 -%>
+              <th><%= value -%></th>
+            <%- elsif value.is_a?(TrueClass) || value.is_a?(FalseClass) -%>
+              <td class="<%= value ? 'yes' : 'no' %>"><%= value ? '&nbsp;' : '&nbsp;' -%></td>
+            <%- else -%>
+              <td><%= value -%></td>
+            <%- end -%>
+          <%- end -%>
+          </tr>
+        <%- end -%>
+      </tbody>
     <%- end -%>
   </table>
 </main>
