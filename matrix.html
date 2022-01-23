@@ -39,7 +39,7 @@
           z-index: 20;
       }
 
-      .summary-row th:first-child::before {
+      .summary-row th:first-child::before, .toggle-extensions::before {
           content: '- '
       }
 
@@ -89,6 +89,8 @@
     crossorigin="anonymous"></script>
   <script>
       $(function () {
+          var allClosed = false;
+
           function columnSelector(index) {
               return "tr :nth-child(" + (index + 1) + ")";
           }
@@ -105,14 +107,25 @@
               $(this).closest('table').find(columnSelector(columnIndex)).removeClass('highlight');
           };
 
-          var collapse = function () {
-              $(this).closest('.summary-row').nextUntil().toggle()
+          var toggleAllExtensions = function () {
+              var extensions = $(this).closest('table').find('.summary-row').nextUntil();
+              allClosed = !allClosed;
+              if (allClosed) {
+                  extensions.hide();
+              } else {
+                  extensions.show();
+              }
+          };
+
+          var toggleExtension = function () {
+              $(this).closest('.summary-row').nextUntil().toggle();
           }
 
           $('table')
               .delegate('th, td', 'mouseover', addTableHighlights)
               .delegate('th, td', 'mouseleave', removeTableHighlights)
-              .delegate('.summary-row', 'mousedown', collapse)
+              .delegate('.toggle-extensions', 'mousedown', toggleAllExtensions)
+              .delegate('.summary-row', 'mousedown', toggleExtension)
       });
   </script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -126,8 +139,7 @@
     </colgroup>
 
     <thead>
-      <tr>
-            <th>Meterpreter Feature</th>
+            <th class="toggle-extensions">Meterpreter Feature</th>
             <th>java/linux</th>
             <th>java/osx</th>
             <th>java/windows</th>
@@ -143,17 +155,57 @@
 
       <tbody>
         <tr class="summary-row">
-            <th>core</th>
-            <th>67%</th>
-            <th>67%</th>
-            <th>67%</th>
-            <th>41%</th>
-            <th>41%</th>
-            <th>41%</th>
-            <th>76%</th>
-            <th>76%</th>
-            <th>76%</th>
-            <th>88%</th>
+              <th>core</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 67%"></div>
+                </div>
+                67%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 67%"></div>
+                </div>
+                67%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 67%"></div>
+                </div>
+                67%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 41%"></div>
+                </div>
+                41%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 41%"></div>
+                </div>
+                41%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 41%"></div>
+                </div>
+                41%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 76%"></div>
+                </div>
+                76%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 76%"></div>
+                </div>
+                76%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 76%"></div>
+                </div>
+                76%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 88%"></div>
+                </div>
+                88%              </th>
         </tr>
           <tr>
               <th>core_transport_change</th>
@@ -600,17 +652,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>stdapi</th>
-            <th>25%</th>
-            <th>25%</th>
-            <th>25%</th>
-            <th>22%</th>
-            <th>22%</th>
-            <th>22%</th>
-            <th>28%</th>
-            <th>28%</th>
-            <th>50%</th>
-            <th>94%</th>
+              <th>stdapi</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 25%"></div>
+                </div>
+                25%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 25%"></div>
+                </div>
+                25%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 25%"></div>
+                </div>
+                25%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 22%"></div>
+                </div>
+                22%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 22%"></div>
+                </div>
+                22%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 22%"></div>
+                </div>
+                22%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 28%"></div>
+                </div>
+                28%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 28%"></div>
+                </div>
+                28%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 50%"></div>
+                </div>
+                50%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 94%"></div>
+                </div>
+                94%              </th>
         </tr>
           <tr>
               <th>stdapi_audio_mic_stop</th>
@@ -665,7 +757,7 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_sys_process_image_load</th>
+              <th>stdapi_sys_eventlog_read</th>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
@@ -674,7 +766,7 @@
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
@@ -795,7 +887,7 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_sys_process_memory_write</th>
+              <th>stdapi_sys_process_image_load</th>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
@@ -1068,10 +1160,10 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_ui_send_mouse</th>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
+              <th>stdapi_sys_process_memory_write</th>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
@@ -1289,6 +1381,19 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
+              <th>stdapi_ui_send_mouse</th>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+          </tr>
+          <tr>
               <th>stdapi_webcam_list</th>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
@@ -1299,19 +1404,6 @@
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-          </tr>
-          <tr>
-              <th>stdapi_fs_file_copy</th>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
@@ -1419,7 +1511,7 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_fs_sha1</th>
+              <th>stdapi_fs_file_copy</th>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
@@ -1549,7 +1641,7 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_net_resolve_hosts</th>
+              <th>stdapi_fs_sha1</th>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
@@ -1679,15 +1771,15 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_registry_delete_key</th>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
+              <th>stdapi_net_resolve_hosts</th>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
           </tr>
@@ -1809,7 +1901,7 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_registry_query_value</th>
+              <th>stdapi_registry_delete_key</th>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
               <td class="no">&nbsp;</td>
@@ -1939,15 +2031,15 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_sys_config_getuid</th>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
-              <td class="yes">&nbsp;</td>
+              <th>stdapi_registry_query_value</th>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
+              <td class="no">&nbsp;</td>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
           </tr>
@@ -2069,15 +2161,15 @@
               <td class="yes">&nbsp;</td>
           </tr>
           <tr>
-              <th>stdapi_sys_eventlog_read</th>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
-              <td class="no">&nbsp;</td>
+              <th>stdapi_sys_config_getuid</th>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
+              <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
               <td class="yes">&nbsp;</td>
           </tr>
@@ -2149,17 +2241,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>sniffer</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>sniffer</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>sniffer_capture_stats</th>
@@ -2255,17 +2387,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>extapi</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>extapi</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>extapi_adsi_domain_query</th>
@@ -2478,17 +2650,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>kiwi</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>kiwi</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>kiwi_exec_cmd</th>
@@ -2506,17 +2718,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>python</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>python</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>python_reset</th>
@@ -2547,17 +2799,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>unhook</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>unhook</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>unhook_pe</th>
@@ -2575,17 +2867,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>appapi</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
+              <th>appapi</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
         </tr>
           <tr>
               <th>appapi_app_list</th>
@@ -2642,17 +2974,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>winpmem</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>winpmem</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>winpmem_dump_ram</th>
@@ -2670,17 +3042,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>powershell</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>powershell</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>powershell_session_remove</th>
@@ -2737,17 +3149,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>lanattacks</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>lanattacks</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>lanattacks_add_tftp_file</th>
@@ -2869,17 +3321,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>priv</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>priv</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>priv_elevate_getsystem</th>
@@ -2975,17 +3467,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>incognito</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>incognito</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>incognito_list_tokens</th>
@@ -3068,17 +3600,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>peinjector</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>peinjector</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>peinjector_inject_shellcode</th>
@@ -3096,17 +3668,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>espia</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>100%</th>
+              <th>espia</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                100%              </th>
         </tr>
           <tr>
               <th>espia_image_get_dev_screen</th>
@@ -3124,17 +3736,57 @@
       </tbody>
       <tbody>
         <tr class="summary-row">
-            <th>android</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
-            <th>0%</th>
+              <th>android</th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
+              <th>
+                <div class="progress">
+                  <div class="progress-bar" style="width: 0%"></div>
+                </div>
+                0%              </th>
         </tr>
           <tr>
               <th>android_wakelock</th>
