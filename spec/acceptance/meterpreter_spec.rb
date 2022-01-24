@@ -518,32 +518,32 @@ RSpec.describe "payloads" do
           MeterpreterTryToFork: false
         }
       },
-      {
-        name: 'osx/x64/meterpreter_reverse_tcp',
-        extension: '',
-        platforms: [:osx],
-        executable: true,
-        execute_cmd: ['${payload_path}'],
-        generate_options: {
-          '-f': 'macho',
-        },
-        payload_options: {
-          MeterpreterTryToFork: false
-        }
-      },
-      {
-        name: 'osx/x64/meterpreter/reverse_tcp',
-        extension: '',
-        platforms: [:osx],
-        executable: true,
-        execute_cmd: ['${payload_path}'],
-        generate_options: {
-          '-f': 'macho',
-        },
-        payload_options: {
-          MeterpreterTryToFork: false
-        }
-      }
+      # {
+      #   name: 'osx/x64/meterpreter_reverse_tcp',
+      #   extension: '',
+      #   platforms: [:osx],
+      #   executable: true,
+      #   execute_cmd: ['${payload_path}'],
+      #   generate_options: {
+      #     '-f': 'macho',
+      #   },
+      #   payload_options: {
+      #     MeterpreterTryToFork: false
+      #   }
+      # },
+      # {
+      #   name: 'osx/x64/meterpreter/reverse_tcp',
+      #   extension: '',
+      #   platforms: [:osx],
+      #   executable: true,
+      #   execute_cmd: ['${payload_path}'],
+      #   generate_options: {
+      #     '-f': 'macho',
+      #   },
+      #   payload_options: {
+      #     MeterpreterTryToFork: false
+      #   }
+      # }
     ],
     windows_meterpreter: [
       {
@@ -632,10 +632,10 @@ RSpec.describe "payloads" do
     describe "#{name}" do
       configs.each.with_index do |config, config_index|
         describe "#{human_name_for_payload(config)}", if: supported_platform?(config)  do
-          let(:payload) { Payload.new(config) }
+          let_it_be(:payload) { Payload.new(config) }
 
           # The shared payload session instance that will be reused across the test run
-          let(:await_session_id) do
+          let_it_be(:await_session_id) do
             # TODO: Move this into the driver, so remote drivers can be used
             config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
 
@@ -668,14 +668,14 @@ RSpec.describe "payloads" do
             session_id
           end
 
-          before :each do
-            console.reset
-            await_session_id
-          end
-
-          after :all do
-            console.reset
-          end
+          # before :each do
+          #   console.reset
+          #   await_session_id
+          # end
+          #
+          # after :all do
+          #   console.reset
+          # end
 
           describe "compatibility", if: supported_platform?(config) do
             # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
