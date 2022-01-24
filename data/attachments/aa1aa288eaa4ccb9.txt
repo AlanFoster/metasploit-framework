@@ -1,0 +1,80 @@
+use osx/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 60 closed.
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220124-1852-171u4ss -f macho MeterpreterTryToFork=false lport=6063 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220124-1852-171u4ss...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 60
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6063 
+[*] Meterpreter session 61 opened (127.0.0.1:6063 -> 127.0.0.1:49599 ) at 2022-01-24 01:15:49 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=61 addentropy=true verbose=true
+
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 61
+[*] Session type is meterpreter and platform is osx
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+[-] FAILED: should return network interfaces
+[-] FAILED: should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[+] should return the proper directory separator
+[*] CWD: /private/tmp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "/private/tmp"
+[*] Stat of current directory: #<#<Class:0x00007fd308cad090>:0x00007fd31bcd42e0 @stathash={"st_dev"=>16777220, "st_mode"=>17407, "st_nlink"=>10, "st_uid"=>0, "st_gid"=>0, "st_rdev"=>0, "st_ino"=>12887077856, "st_size"=>320, "st_atime"=>1642986949, "st_mtime"=>1642986948, "st_ctime"=>1642986948}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-nclyvpmb
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-nclyvpmb
+[*] Directory created successfully
+[*] Old CWD: /private/tmp
+[*] New CWD: /private/tmp/meterpreter-test-dir-nclyvpmb
+[*] Back to old CWD: /private/tmp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-nclyvpmb
+[*] Wrote to meterpreter-test-nclyvpmb, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-nclyvpmb.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+[*] Source File Name: meterpreter-test-nclyvpmb
+[*] Destination File Name: meterpreter-test-nclyvpmb-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-nclyvpmb
+[*] Destination File Name: meterpreter-test-nclyvpmb-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-nclyvpmb.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 238bab901e240f3e78ad6f290bca0510
+[*] local md5 : 238bab901e240f3e78ad6f290bca0510
+[*] remote sha: ea186228a55278d32516182f230181dccf4b7934
+[*] local sha : ea186228a55278d32516182f230181dccf4b7934
+[+] should do md5 and sha1 of files
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Pid: 13406
+[+] should return its own process id
+[*] PID info: {"pid"=>13406, "ppid"=>1852, "name"=>"meterpreter-spec", "path"=>"/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220124-1852-171u4ss", "session"=>nil, "user"=>"runner", "arch"=>"x86"}
+[+] should return a list of processes
+[*] Testing complete in 0.220086
+[-] Passed: 18; Failed: 2
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed

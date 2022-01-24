@@ -1,0 +1,24 @@
+use linux/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 74 closed.
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> generate -o /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220124-3467-u3nrtj -f elf MeterpreterTryToFork=false lport=6077 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 1037680 bytes to /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220124-3467-u3nrtj...
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 74
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6077 
+[*] Meterpreter session 75 opened (127.0.0.1:6077 -> 127.0.0.1:36516 ) at 2022-01-24 01:14:39 +0000
+use test/railgun_reverse_lookups
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> run session=75 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: linux
+[*] Running against session 75
+[*] Session type is meterpreter and platform is linux
+[-] FAILED: should return a constant name given a const and a filter
+[-] FAILED: should return an error string given an error code
+[*] Testing complete in 0.000456505
+[-] Passed: 0; Failed: 2
+[*] Post module execution completed

