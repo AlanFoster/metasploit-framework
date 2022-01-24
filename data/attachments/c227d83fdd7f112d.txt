@@ -1,0 +1,36 @@
+use osx/x64/meterpreter_reverse_tcp
+[*] Killing all sessions...
+[*] 127.0.0.1 - Meterpreter session 63 closed.
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220124-1888-13a6bz0 -f macho MeterpreterTryToFork=false lport=6066 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220124-1888-13a6bz0...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 63
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6066 
+[*] Meterpreter session 64 opened (127.0.0.1:6066 -> 127.0.0.1:49623 ) at 2022-01-24 01:50:29 +0000
+use test/registry
+[4mmsf6[0m post([1m[31mtest/registry[0m) [0m> run session=64 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: osx
+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs
+[*] Running against session 64
+[*] Session type is meterpreter and platform is osx
+[-] FAILED: should create keys
+[-] FAILED: should write REG_SZ values
+[-] FAILED: should write REG_DWORD values
+[-] FAILED: should delete keys
+[-] FAILED: should create unicode keys
+[-] FAILED: should write REG_SZ unicode values
+[-] FAILED: should delete unicode keys
+[-] FAILED: should evaluate key existence
+[*] PENDING: should evaluate value existence
+[-] FAILED: should read values
+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass
+[-] FAILED: should return normalized values
+[-] FAILED: should enumerate keys and values
+[*] Testing complete in 0.023004
+[-] Passed: 1; Failed: 10
+[*] Post module execution completed
