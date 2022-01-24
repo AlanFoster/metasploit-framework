@@ -115,7 +115,7 @@ class ChildProcess
     buffer.pos = [0, buffer.pos - data.length].max
   end
 
-  def recv(size = 1024, timeout: 30)
+  def recv(size = 4096, timeout: 30)
     buffer_result = buffer.read(size)
     return buffer_result if buffer_result
 
@@ -424,18 +424,6 @@ def uncolorize(string)
   string.gsub(/\e\[\d+m/, '')
 end
 
-class TestProcess < ChildProcess
-  def initialize
-    super
-    @cmd = ["bundle", "exec", "ruby", "prompt.rb"]
-  end
-end
-
-# process = TestProcess.new
-# process.run
-# process.interact
-# exit(1)
-
 RSpec.describe "payloads" do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
@@ -642,129 +630,132 @@ RSpec.describe "payloads" do
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
-      # TOOD: Remove
-      configs.take(1).each do |config|
-        describe "#{human_name_for_payload(config)}" do
+      configs.each.with_index do |config, config_index|
+        describe "#{human_name_for_payload(config)}", if: supported_platform?(config)  do
+          let(:payload) { Payload.new(config) }
+
+          # The shared payload session instance that will be reused across the test run
+          let(:await_session_id) do
+            # TODO: Move this into the driver, so remote drivers can be used
+            config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
+
+            console.sendline "use #{payload.name}"
+            console.recvuntil(Console.prompt)
+
+            # Generate the payload
+            console.sendline payload.generate_command
+            # TODO: Fix race condition, and handle generation failed being returned iin this scenario
+            console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
+            generate_result = console.recvuntil(Console.prompt)
+
+            expect(generate_result.lines).to_not include(match("generation failed"))
+            wait_for_expect do
+              expect(payload.size).to be > 0
+            end
+
+            console.sendline "to_handler"
+            console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
+
+            puts "before run payload"
+            driver.run_payload(payload)
+            puts "after run payload"
+
+            session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+            session_message = console.recvuntil(session_opened_matcher)
+            session_id = session_message[session_opened_matcher, 1]
+            expect(session_id).to_not be_nil
+
+            session_id
+          end
+
+          before :each do
+            console.reset
+            await_session_id
+          end
+
+          after :all do
+            console.reset
+          end
+
+          describe "compatibility", if: supported_platform?(config) do
+            # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
+            # So only run this test when config_index == 0
+            it "exposes available metasploit commands", if: config_index == 0 && supported_platform?(config) do
+              console.sendline("resource scripts/resource/meterpreter_compatibility.rc")
+              result = console.recvuntil(Console.prompt)
+
+              available_commands = result.lines(chomp: true).find do |line|
+                line.start_with?("{") && line.end_with?("}") && JSON.parse(line)
+              rescue JSON::ParserError => _e
+                return false
+              end
+              expect(available_commands).to_not be_nil
+
+              available_commands_json = JSON.parse(available_commands, symbolize_names: true)
+              expect(available_commands_json[:sessions].length).to be 1
+              expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
+            ensure
+              Allure.add_attachment(
+                name: 'available commands',
+                source: JSON.pretty_generate(available_commands_json),
+                type: Allure::ContentType::JSON,
+                test_case: false
+              )
+            end
+          end
+
           # TODO: Load this dynamically so new tests will automatically be picked up
           [
             { name: "test/cmd_exec", severity: :critical },
-            # { name: "test/extapi", security: :known },
-            # { name: "test/file", severity: :critical },
-            # { name: "test/get_env", severity: :critical },
-            # { name: "test/meterpreter", severity: :critical },
-            # { name: "test/railgun", severity: :known },
-            # { name: "test/railgun_reverse_lookups", severity: :known },
-            # { name: "test/registry", severity: :known },
-            # { name: "test/search", severity: :critical },
-            # { name: "test/services", severity: :known },
-            # { name: "test/unix", severity: :critical }
+            { name: "test/extapi", security: :known },
+            { name: "test/file", severity: :critical },
+            { name: "test/get_env", severity: :critical },
+            { name: "test/meterpreter", severity: :critical },
+            { name: "test/railgun", severity: :known },
+            { name: "test/railgun_reverse_lookups", severity: :known },
+            { name: "test/registry", severity: :known },
+            { name: "test/search", severity: :critical },
+            { name: "test/services", severity: :known },
+            { name: "test/unix", severity: :critical }
           ].each do |test_module|
-            next unless supported_platform?(config)
-
-            describe "#{test_module[:name]}" do
-              let(:payload) { Payload.new(config) }
-
-              # The shared payload session instance that will be reused across the test run
-              let(:await_session_id) do
-                # TODO: Move this into the driver, so remote drivers can be used
-                config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
-
-                console.sendline "use #{payload.name}"
+            describe "#{test_module[:name]}", if: supported_platform?(config) do
+              it "passes", severity: test_module[:severity] do
+                console.sendline("use #{test_module[:name]}")
                 console.recvuntil(Console.prompt)
 
-                # Generate the payload
-                console.sendline payload.generate_command
-                # TODO: Fix race condition, and handle generation failed being returned iin this scenario
-                console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
-                generate_result = console.recvuntil(Console.prompt)
+                console.sendline("run session=#{await_session_id} addentropy=true verbose=true")
 
-                expect(generate_result.lines).to_not include(match("generation failed"))
-                wait_for_expect do
-                  expect(payload.size).to be > 0
+                # Expect happiness
+                test_result = console.recvuntil('Post module execution completed')
+                # Ensure there are no failures, and assert tests are complete
+
+                aggregate_failures do
+                  test_result.lines.each do |test_line|
+                    # TODO: These tests fail on a lot of the payloads
+                    # test_line = uncolorize(test_line)
+                    # expect(test_line).to_not include('FAILED')
+                    # expect(test_line).to_not include('[-] FAILED')
+                    # expect(test_line).to_not include('[-] Exception')
+                    # expect(test_line).to_not include('[-] ')
+                  end
                 end
 
-                console.sendline "to_handler"
-                console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
-
-                driver.run_payload(payload)
-
-                session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
-                session_message = console.recvuntil(session_opened_matcher)
-                session_id = session_message[session_opened_matcher, 1]
-                expect(session_id).to_not be_nil
-
-                session_id
-              end
-
-              before :each do
-                console.reset
-                await_session_id
-              end
-
-              after :all do
-                console.reset
-              end
-
-              it "exposes available metasploit commands" do
-                console.sendline("resource scripts/resource/meterpreter_compatibility.rc")
-                result = console.recvuntil(Console.prompt)
-
-                available_commands = result.lines(chomp: true).find do |line|
-                  line.start_with?("{") && line.end_with?("}") && JSON.parse(line)
-                rescue JSON::ParserError => _e
-                  return false
-                end
-                expect(available_commands).to_not be_nil
-
-                available_commands_json = JSON.parse(available_commands, symbolize_names: true)
-                expect(available_commands_json[:sessions].length).to be 1
-                expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
+                expect(test_result).to include('Failed: 0')
               ensure
-                  Allure.add_attachment(
-                    name: 'available commands',
-                    source: JSON.pretty_generate(available_commands_json),
-                    type: Allure::ContentType::JSON,
-                    test_case: false
-                  )
-              end
+                Allure.add_attachment(
+                  name: 'payload',
+                  source: payload.as_readable_text,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
 
-              # it "passes", severity: test_module[:severity] do
-              #   console.sendline("use #{test_module[:name]}")
-              #   console.recvuntil(Console.prompt)
-              #
-              #   console.sendline("run session=#{await_session_id} addentropy=true verbose=true")
-              #
-              #   # Expect happiness
-              #   test_result = console.recvuntil('Post module execution completed')
-              #   # Ensure there are no failures, and assert tests are complete
-              #
-              #   aggregate_failures do
-              #     test_result.lines.each do |test_line|
-              #       # TODO: These tests fail on a lot of the payloads
-              #       # test_line = uncolorize(test_line)
-              #       # expect(test_line).to_not include('FAILED')
-              #       # expect(test_line).to_not include('[-] FAILED')
-              #       # expect(test_line).to_not include('[-] Exception')
-              #       # expect(test_line).to_not include('[-] ')
-              #     end
-              #   end
-              #
-              #   expect(test_result).to include('Failed: 0')
-              # ensure
-              #   Allure.add_attachment(
-              #     name: 'payload',
-              #     source: payload.as_readable_text,
-              #     type: Allure::ContentType::TXT,
-              #     test_case: false
-              #   )
-              #
-              #   Allure.add_attachment(
-              #     name: 'console data',
-              #     source: console.all_data,
-              #     type: Allure::ContentType::TXT,
-              #     test_case: false
-              #   )
-              # end
+                Allure.add_attachment(
+                  name: 'console data',
+                  source: console.all_data,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
+              end
             end
           end
         end
