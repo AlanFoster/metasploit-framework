@@ -48,6 +48,10 @@ class Metasploit::Framework::ParsedOptions::Console < Metasploit::Framework::Par
           options.console.logger = logger
         end
 
+        option_parser.on('--readline [bool]') do ||
+          options.console.real_readline = true
+        end
+
         option_parser.on('-L', '--real-readline', 'Use the system Readline library instead of RbReadline') do
           options.console.real_readline = true
         end

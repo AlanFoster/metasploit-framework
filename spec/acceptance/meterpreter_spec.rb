@@ -361,7 +361,7 @@ class Console < ChildProcess
       'BUNDLE_GEMFILE' => File.join(framework_root, 'Gemfile'),
       'PATH' => "#{framework_root.shellescape}:#{ENV["PATH"]}"
     }
-    @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--real-readline", '--quiet']
+    @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--disable-readline", '--quiet']
     @options = {
       chdir: framework_root
     }
@@ -373,6 +373,9 @@ class Console < ChildProcess
 
   def reset
     sendline("sessions -K")
+    recvuntil(Console.prompt)
+
+    sendline("jobs -K")
     recvuntil(Console.prompt)
 
     @all_data.reopen("")
@@ -518,32 +521,32 @@ RSpec.describe "payloads" do
           MeterpreterTryToFork: false
         }
       },
-      # {
-      #   name: 'osx/x64/meterpreter_reverse_tcp',
-      #   extension: '',
-      #   platforms: [:osx],
-      #   executable: true,
-      #   execute_cmd: ['${payload_path}'],
-      #   generate_options: {
-      #     '-f': 'macho',
-      #   },
-      #   payload_options: {
-      #     MeterpreterTryToFork: false
-      #   }
-      # },
-      # {
-      #   name: 'osx/x64/meterpreter/reverse_tcp',
-      #   extension: '',
-      #   platforms: [:osx],
-      #   executable: true,
-      #   execute_cmd: ['${payload_path}'],
-      #   generate_options: {
-      #     '-f': 'macho',
-      #   },
-      #   payload_options: {
-      #     MeterpreterTryToFork: false
-      #   }
-      # }
+      {
+        name: 'osx/x64/meterpreter_reverse_tcp',
+        extension: '',
+        platforms: [:osx],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'macho',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
+        name: 'osx/x64/meterpreter/reverse_tcp',
+        extension: '',
+        platforms: [:osx],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'macho',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      }
     ],
     windows_meterpreter: [
       {
@@ -630,12 +633,12 @@ RSpec.describe "payloads" do
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
-      configs.each.with_index do |config, config_index|
+      configs.take(1).each.with_index do |config, config_index|
         describe "#{human_name_for_payload(config)}", if: supported_platform?(config)  do
-          let_it_be(:payload) { Payload.new(config) }
+          let(:payload) { Payload.new(config) }
 
           # The shared payload session instance that will be reused across the test run
-          let_it_be(:await_session_id) do
+          let(:await_session_id) do
             # TODO: Move this into the driver, so remote drivers can be used
             config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
 
@@ -668,14 +671,14 @@ RSpec.describe "payloads" do
             session_id
           end
 
-          # before :each do
-          #   console.reset
-          #   await_session_id
-          # end
-          #
-          # after :all do
-          #   console.reset
-          # end
+          before :each do
+            console.reset
+            await_session_id
+          end
+
+          after :all do
+            console.reset
+          end
 
           describe "compatibility", if: supported_platform?(config) do
             # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
