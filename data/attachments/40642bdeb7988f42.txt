@@ -1,0 +1,30 @@
+use php/meterpreter_reverse_tcp
+msf6 post(test/registry) > msf6 payload(php/meterpreter_reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2968-1rvpicj.php -f raw lport=6022 lhost=127.0.0.1
+[*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2968-1rvpicj.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 20
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6022 
+[*] Meterpreter session 21 opened (127.0.0.1:6022 -> 127.0.0.1:50109 ) at 2022-01-28 22:18:23 +0000
+use test/search
+msf6 post(test/search) > run session=21 addentropy=true verbose=true
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Source File Name: meterpreter-test-jaciehry.txt
+[*] Running against session 21
+[*] Session type is meterpreter and platform is windows
+[*] Starting search tests
+[+] should search for new files
+[+] should search recursively for files
+[+] should search with globs for files
+[+] should search with globs ignoring files
+[*] Starting search date tests
+[+] should search with dates for files
+[+] should search with dates ignores new files
+[+] should search with dates ignores old files
+[*] Session does not support setting the modified date, skipping exact date tests
+[*] Testing complete in 0.2041694
+[*] Passed: 7; Failed: 0
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+msf6 post(test/search) > 
