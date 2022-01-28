@@ -1,0 +1,24 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/services) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220128-3432-1b2ogne.jar -f jar spawn=0 lport=6036 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220128-3432-1b2ogne.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 33
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6036 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 34 opened (127.0.0.1:6036 -> 127.0.0.1:50181 ) at 2022-01-28 22:16:01 +0000
+use test/unix
+msf6 post(test/unix) > run session=34 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[!]  * missing Meterpreter features: stdapi_railgun_api, stdapi_fs_chmod
+[*] Running against session 34
+[*] Session type is meterpreter and platform is windows
+[-] Failed to open file: : core_channel_open: Operation failed: 1
+[-] FAILED: should list users
+[-] Exception: NoMethodError : undefined method `split' for nil:NilClass
+[*] Testing complete in 0.0507773
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
