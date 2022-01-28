@@ -46,11 +46,13 @@ class ChildProcess
   end
 
   def run
+    puts "popen2 before #{@cmd.join(" ")}"
     self.stdin, self.stdout_and_stderr, self.wait_thread = ::Open3.popen2e(
       @env,
       *@cmd,
       **@options
     )
+    puts "popen2 after #{@cmd.join(" ")}"
     # stdout_and_stderr.binmode
 
     self.stdin.sync = true
@@ -226,6 +228,7 @@ class ChildProcess
     ::Timeout.timeout(timeout * 1.5) do
       yield countdown
     end
+    raise "Failed await result, bailing" if countdown.elapsed?
   end
 end
 
@@ -315,7 +318,7 @@ end
 class ConsoleDriver
   def initialize
     @coonsole = nil
-    @processes = []
+    @payload_processes = []
 
     ObjectSpace.define_finalizer(self, proc { self.close })
   end
@@ -327,8 +330,10 @@ class ConsoleDriver
     end
 
     payload_process = PayloadProcess.new(payload.execute_command)
+    puts "spawning before"
     payload_process.run
-    @processes << payload_process
+    puts "spawning after"
+    @payload_processes << payload_process
   end
 
   def open_console
@@ -336,13 +341,21 @@ class ConsoleDriver
     @console.run
     @console.recvuntil(Console.prompt)
 
-    @processes << @console
-
     @console
   end
 
+  def close_payloads
+    close_processes(@payload_processes)
+  end
+
   def close
-    while (process = @processes.pop)
+    close_processes(@payload_processes + [console])
+  end
+
+  private
+
+  def close_processes(processes)
+    while (process = processes.pop)
       begin
         process.close
       rescue => e
@@ -361,7 +374,7 @@ class Console < ChildProcess
       'BUNDLE_GEMFILE' => File.join(framework_root, 'Gemfile'),
       'PATH' => "#{framework_root.shellescape}:#{ENV["PATH"]}"
     }
-    @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--disable-readline", '--quiet']
+    @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--no-readline", '--quiet']
     @options = {
       chdir: framework_root
     }
@@ -411,6 +424,10 @@ def supported_platform?(config)
   config[:platforms].include?(current_platform)
 end
 
+def test_available_commands?(config)
+  config[:test_available_commands] && supported_platform?(config)
+end
+
 def human_name_for_payload(config)
   is_stageless = config[:name].include?('meterpreter_reverse_tcp')
   is_staged = config[:name].include?('meterpreter/reverse_tcp')
@@ -445,6 +462,7 @@ RSpec.describe "payloads" do
       },
       {
         name: 'python/meterpreter/reverse_tcp',
+        test_available_commands: true,
         extension: '.py',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['python', '${payload_path}'],
@@ -470,6 +488,7 @@ RSpec.describe "payloads" do
       },
       {
         name: 'php/meterpreter/reverse_tcp',
+        test_available_commands: true,
         extension: '.php',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['php', '${payload_path}'],
@@ -483,6 +502,7 @@ RSpec.describe "payloads" do
     java: [
       {
         name: 'java/meterpreter/reverse_tcp',
+        test_available_commands: true,
         extension: '.jar',
         platforms: [:osx, :linux, :windows],
         execute_cmd: ['java', '-jar', '${payload_path}'],
@@ -497,6 +517,21 @@ RSpec.describe "payloads" do
     mettle: [
       {
         name: 'linux/x64/meterpreter/reverse_tcp',
+        test_available_commands: true,
+        extension: '',
+        platforms: [:linux],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'elf',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
+        name: 'linux/x86/meterpreter/reverse_tcp',
+        test_available_commands: true,
         extension: '',
         platforms: [:linux],
         executable: true,
@@ -522,8 +557,22 @@ RSpec.describe "payloads" do
         }
       },
       {
+        name: 'linux/x86/meterpreter_reverse_tcp',
+        extension: '',
+        platforms: [:linux],
+        executable: true,
+        execute_cmd: ['${payload_path}'],
+        generate_options: {
+          '-f': 'elf',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
         name: 'osx/x64/meterpreter_reverse_tcp',
         extension: '',
+        test_available_commands: true,
         platforms: [:osx],
         executable: true,
         execute_cmd: ['${payload_path}'],
@@ -551,6 +600,7 @@ RSpec.describe "payloads" do
     windows_meterpreter: [
       {
         name: 'windows/meterpreter/reverse_tcp',
+        test_available_commands: true,
         extension: '.exe',
         platforms: [:windows],
         execute_cmd: ['${payload_path}'],
@@ -564,6 +614,20 @@ RSpec.describe "payloads" do
       },
       {
         name: 'windows/meterpreter_reverse_tcp',
+        test_available_commands: true,
+        extension: '.exe',
+        platforms: [:windows],
+        execute_cmd: ['${payload_path}'],
+        executable: true,
+        generate_options: {
+          '-f': 'exe',
+        },
+        payload_options: {
+          MeterpreterTryToFork: false
+        }
+      },
+      {
+        name: 'windows/x64/meterpreter/reverse_tcp',
         extension: '.exe',
         platforms: [:windows],
         execute_cmd: ['${payload_path}'],
@@ -633,7 +697,7 @@ RSpec.describe "payloads" do
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
     describe "#{name}" do
-      configs.take(1).each.with_index do |config, config_index|
+      configs.each.with_index do |config, config_index|
         describe "#{human_name_for_payload(config)}", if: supported_platform?(config)  do
           let(:payload) { Payload.new(config) }
 
@@ -672,18 +736,20 @@ RSpec.describe "payloads" do
           end
 
           before :each do
+            driver.close_payloads
             console.reset
             await_session_id
           end
 
           after :all do
+            driver.close_payloads
             console.reset
           end
 
-          describe "compatibility", if: supported_platform?(config) do
+          describe "compatibility", if: test_available_commands?(config) do
             # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
             # So only run this test when config_index == 0
-            it "exposes available metasploit commands", if: config_index == 0 && supported_platform?(config) do
+            it "exposes available metasploit commands", if: test_available_commands?(config) do
               console.sendline("resource scripts/resource/meterpreter_compatibility.rc")
               result = console.recvuntil(Console.prompt)
 

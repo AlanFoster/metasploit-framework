@@ -131,7 +131,7 @@ jobs:
           tar -zxvf allure-$VERSION.tgz -C .
 
           ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
-          bundle exec ruby spec/accepwtance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
+          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
 
       - name: archive results
         if: always()

@@ -158,11 +158,7 @@ begin
         RbReadline.rl_outstream = output
 
         begin
-
-          STDOUT.write reset_sequence + prompt
-          STDOUT.flush
-          line = gets.chomp
-          # line = RbReadline.readline(reset_sequence + prompt)
+          line = RbReadline.readline(reset_sequence + prompt)
         rescue ::Exception => exception
           RbReadline.rl_cleanup_after_signal()
           RbReadline.rl_deprep_terminal()
@@ -180,16 +176,12 @@ begin
         line.try(:dup)
       else
         # The line that's read is immediately added to history
-        # line = ::Readline.readline(reset_sequence + prompt, true)
-
-        STDOUT.write reset_sequence + prompt
-        STDOUT.flush
-        line = gets.chomp
+        line = ::Readline.readline(reset_sequence + prompt, true)
 
         # Don't add duplicate lines to history
-        # if ::Readline::HISTORY.length > 1 && line == ::Readline::HISTORY[-2]
-        #   ::Readline::HISTORY.pop
-        # end
+        if ::Readline::HISTORY.length > 1 && line == ::Readline::HISTORY[-2]
+          ::Readline::HISTORY.pop
+        end
 
         line
       end
