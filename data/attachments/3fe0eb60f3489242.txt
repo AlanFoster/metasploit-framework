@@ -1,0 +1,78 @@
+use python/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-3724-1yph9i0.py -f raw MeterpreterTryToFork=false lport=6006 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> [*] Writing 115725 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-3724-1yph9i0.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 5
+[4mmsf6[0m payload([1m[31mpython/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6006 
+[*] Meterpreter session 6 opened (127.0.0.1:6006 -> 127.0.0.1:49436 ) at 2022-01-28 19:42:48 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=6 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 6
+[*] Session type is meterpreter and platform is osx
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Pid: 4643
+[+] should return its own process id
+[*] PID info: {"pid"=>4643, "ppid"=>3724, "name"=>"Python", "path"=>"/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-3724-1yph9i0.py", "session"=>nil, "user"=>"runner", "arch"=>nil}
+[+] should return a list of processes
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[+] should return the proper directory separator
+[*] CWD: /private/tmp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "/private/tmp"
+[*] Stat of current directory: #<#<Class:0x00007f8692f0c088>:0x00007f8692b9f3f0 @stathash={"st_dev"=>16777220, "st_mode"=>17407, "st_nlink"=>4, "st_uid"=>0, "st_gid"=>0, "st_rdev"=>0, "st_ino"=>12887077856, "st_size"=>128, "st_atime"=>1643398968, "st_mtime"=>1643398964, "st_ctime"=>1643398964}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-akouqtlb
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-akouqtlb
+[*] Directory created successfully
+[*] Old CWD: /private/tmp
+[*] New CWD: /private/tmp/meterpreter-test-dir-akouqtlb
+[*] Back to old CWD: /private/tmp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-akouqtlb
+[*] Wrote to meterpreter-test-akouqtlb, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-akouqtlb.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+[*] Source File Name: meterpreter-test-akouqtlb
+[*] Destination File Name: meterpreter-test-akouqtlb-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-akouqtlb
+[*] Destination File Name: meterpreter-test-akouqtlb-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-akouqtlb.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 238bab901e240f3e78ad6f290bca0510
+[*] local md5 : 238bab901e240f3e78ad6f290bca0510
+[*] remote sha: ea186228a55278d32516182f230181dccf4b7934
+[*] local sha : ea186228a55278d32516182f230181dccf4b7934
+[+] should do md5 and sha1 of files
+[*] Testing complete in 0.978803
+[*] Passed: 20; Failed: 0
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed
