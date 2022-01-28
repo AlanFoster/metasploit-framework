@@ -1,0 +1,46 @@
+use php/meterpreter_reverse_tcp
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> [4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-3416-sv58sq.php -f raw lport=6023 lhost=127.0.0.1
+[*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-3416-sv58sq.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 21
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6023 
+[*] Meterpreter session 22 opened (127.0.0.1:6023 -> 127.0.0.1:50171 ) at 2022-01-28 14:03:35 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=22 addentropy=true verbose=true
+
+[!] SESSION may not be compatible with this module:
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 22
+[*] Session type is meterpreter and platform is windows
+[-] FAILED: should modify config on a given service atJwmy
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should list services
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] FAILED: should start a disabled service aJrbsi
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] FAILED: should restart a started service W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should raise a runtime exception if no access to service
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should create a service  testes
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The "extapi" extension is not supported by this Meterpreter type (php/windows)
+[-] FAILED: should delete the new service testes
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should raise a runtime exception if services doesnt exist
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should start W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should stop W32Time
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.
+[*] Testing complete in 0.036671
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> 

@@ -3,16 +3,37 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
+      "name" : "expected \"\\n[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting...n[*] Testing complete in 3.073678283\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,17 +1,33 @@\n-Failed: 0\n+\n+[*] Running against session 2\n+[*] Session type is meterpreter and platform is linux\n+[*] Starting cmd_exec tests\n+[+] should return the result of echo\n+[+] should return the full response after sleeping\n+[+] should return the full response after sleeping\n+[+] should return the result of echo 10 times\n+[*] Finished cmd_exec tests\n+[*] Starting cmd_exec quote tests\n+[+] should return the result of echo with single quotes\n+[+] should return the result of echo with double quotes\n+[*] Starting cmd_exec stderr tests\n+[-] FAILED: should return the stderr output\n+[*] Testing complete in 3.073678283\n+[-] Passed: 6; Failed: 1\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes",
+        "uid" : "44072c2b0ed9a121",
+        "parentUid" : "3c8fd6510254bdaebfc8af6bc30597a2",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378185706,
+          "stop" : 1643378190137,
+          "duration" : 4431
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      } ],
+      "uid" : "3c8fd6510254bdaebfc8af6bc30597a2"
+    }, {
       "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "1ab5c7770682e8d3",
+        "uid" : "ab74504dcc1d4bbf",
         "parentUid" : "02e2bf6437d754721c780d533c683059",
         "status" : "failed",
         "time" : {
-          "start" : 1643376659501,
-          "stop" : 1643376660752,
-          "duration" : 1251
+          "start" : 1643378190138,
+          "stop" : 1643378191246,
+          "duration" : 1108
         },
         "flaky" : false,
         "newFailed" : false,
@@ -24,79 +45,16 @@
       } ],
       "uid" : "02e2bf6437d754721c780d533c683059"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.000708005\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000708005\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "2d089420f37648af",
-        "parentUid" : "eb008ebd597fcbbbcc8771eb8e0b7914",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376667628,
-          "stop" : 1643376668687,
-          "duration" : 1059
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      } ],
-      "uid" : "eb008ebd597fcbbbcc8771eb8e0b7914"
-    }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.017233811\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.017233811\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "3175e2b0f90cfb33",
-        "parentUid" : "14e6b7706cd26e63e3af7e84c91e19c8",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376668688,
-          "stop" : 1643376669941,
-          "duration" : 1253
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      } ],
-      "uid" : "14e6b7706cd26e63e3af7e84c91e19c8"
-    }, {
-      "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "a22feec6a149256e",
-        "parentUid" : "c4c625638fdebe0a81dd9204a295d671",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376674907,
-          "stop" : 1643376675429,
-          "duration" : 522
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      } ],
-      "uid" : "c4c625638fdebe0a81dd9204a295d671"
-    }, {
       "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "c1232a5535f51c92",
+        "uid" : "23c9143c7f7b4fe",
         "parentUid" : "ba22ef4a3499d7f469b6ab9521a17da4",
         "status" : "failed",
         "time" : {
-          "start" : 1643376675102,
-          "stop" : 1643376676611,
-          "duration" : 1509
+          "start" : 1643378197540,
+          "stop" : 1643378199275,
+          "duration" : 1735
         },
         "flaky" : false,
         "newFailed" : false,
@@ -108,79 +66,16 @@
       } ],
       "uid" : "ba22ef4a3499d7f469b6ab9521a17da4"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000643\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000643\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.002211743\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.002211743\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "4e260ba78733a504",
-        "parentUid" : "312a7e8b278b7e4a903f6140a6503c7c",
+        "uid" : "e104cc08d4e04271",
+        "parentUid" : "0a40d3f475e13a53ac0b9979e20fed7f",
         "status" : "failed",
         "time" : {
-          "start" : 1643376685180,
-          "stop" : 1643376686873,
-          "duration" : 1693
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "darwin19" ]
-      } ],
-      "uid" : "312a7e8b278b7e4a903f6140a6503c7c"
-    }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.021107\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.021107\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "f73a7214d851c1c4",
-        "parentUid" : "409992ece29cf38c342d4cdc3da3b282",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376686875,
-          "stop" : 1643376688615,
-          "duration" : 1740
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "darwin19" ]
-      } ],
-      "uid" : "409992ece29cf38c342d4cdc3da3b282"
-    }, {
-      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-chesibvd.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-chesibvd.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 10\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.40726\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "5f44d89cd04ade7b",
-        "parentUid" : "8ec84a892bc79814804126d4a740e8b2",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376688616,
-          "stop" : 1643376691217,
-          "duration" : 2601
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "darwin19" ]
-      } ],
-      "uid" : "8ec84a892bc79814804126d4a740e8b2"
-    }, {
-      "name" : "expected \"\" to include \"Failed: 0\"",
-      "children" : [ {
-        "name" : "passes",
-        "uid" : "531fc59116431019",
-        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376691851,
-          "stop" : 1643376722590,
-          "duration" : 30739
+          "start" : 1643378198797,
+          "stop" : 1643378199971,
+          "duration" : 1174
         },
         "flaky" : false,
         "newFailed" : false,
@@ -189,49 +84,19 @@
         "retriesCount" : 0,
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
-      }, {
+      } ],
+      "uid" : "0a40d3f475e13a53ac0b9979e20fed7f"
+    }, {
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.015845301\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.015845301\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "children" : [ {
         "name" : "passes",
-        "uid" : "6bdc8a43462db5b6",
-        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
+        "uid" : "28fdf68f5e95ed1a",
+        "parentUid" : "54d8df79fe2694f13c4e0af9c6d51868",
         "status" : "failed",
         "time" : {
-          "start" : 1643376699675,
-          "stop" : 1643376731198,
-          "duration" : 31523
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "darwin19" ]
-      }, {
-        "name" : "passes",
-        "uid" : "5b5e284e003a5f75",
-        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376797701,
-          "stop" : 1643376828524,
-          "duration" : 30823
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      }, {
-        "name" : "passes",
-        "uid" : "305b9914c7b49d12",
-        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376994198,
-          "stop" : 1643377024588,
-          "duration" : 30390
+          "start" : 1643378199972,
+          "stop" : 1643378201579,
+          "duration" : 1607
         },
         "flaky" : false,
         "newFailed" : false,
@@ -240,15 +105,19 @@
         "retriesCount" : 0,
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
-      }, {
+      } ],
+      "uid" : "54d8df79fe2694f13c4e0af9c6d51868"
+    }, {
+      "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/linux)\n+[-] Call stack:\n+[-]   /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
+      "children" : [ {
         "name" : "passes",
-        "uid" : "9b07771f5913b1a3",
-        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
+        "uid" : "3d82548d2871e870",
+        "parentUid" : "c4c625638fdebe0a81dd9204a295d671",
         "status" : "failed",
         "time" : {
-          "start" : 1643377102443,
-          "stop" : 1643377133376,
-          "duration" : 30933
+          "start" : 1643378206956,
+          "stop" : 1643378207544,
+          "duration" : 588
         },
         "flaky" : false,
         "newFailed" : false,
@@ -256,20 +125,83 @@
         "newBroken" : false,
         "retriesCount" : 0,
         "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
+        "parameters" : [ "linux" ]
       } ],
-      "uid" : "81eb2ed076b17b9f10168513270b3d40"
+      "uid" : "c4c625638fdebe0a81dd9204a295d671"
+    }, {
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000612\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000612\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes",
+        "uid" : "62f1a13ed83052c4",
+        "parentUid" : "0e29af175a50286a7ca02eace06b0a9b",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378209199,
+          "stop" : 1643378210983,
+          "duration" : 1784
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "darwin19" ]
+      } ],
+      "uid" : "0e29af175a50286a7ca02eace06b0a9b"
+    }, {
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.021876\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.021876\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes",
+        "uid" : "a53172754584124e",
+        "parentUid" : "49ff050f8c2c5d720ea57c27055a9ccf",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378210984,
+          "stop" : 1643378212704,
+          "duration" : 1720
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "darwin19" ]
+      } ],
+      "uid" : "49ff050f8c2c5d720ea57c27055a9ccf"
+    }, {
+      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-epjavtqw.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-epjavtqw.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 10\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.590862\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes",
+        "uid" : "3358794cc18a033f",
+        "parentUid" : "f6694c64e1dcb4a4cd588205ebffd741",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378212706,
+          "stop" : 1643378215148,
+          "duration" : 2442
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "darwin19" ]
+      } ],
+      "uid" : "f6694c64e1dcb4a4cd588205ebffd741"
     }, {
       "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "6025da8b876c4e51",
+        "uid" : "d678d2ac2db874f7",
         "parentUid" : "83bfb3e4a8100c6abc9d413b4acdd1dd",
         "status" : "failed",
         "time" : {
-          "start" : 1643376696997,
-          "stop" : 1643376697872,
-          "duration" : 875
+          "start" : 1643378221184,
+          "stop" : 1643378222123,
+          "duration" : 939
         },
         "flaky" : false,
         "newFailed" : false,
@@ -281,33 +213,16 @@
       } ],
       "uid" : "83bfb3e4a8100c6abc9d413b4acdd1dd"
     }, {
-      "name" : "expected: > 0\n     got:   0",
+      "name" : "expected \"\" to include \"Failed: 0\"",
       "children" : [ {
         "name" : "passes",
-        "uid" : "90cb063eacd55ad1",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "uid" : "8980d8e7e7a496dc",
+        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
         "status" : "failed",
         "time" : {
-          "start" : 1643376722591,
-          "stop" : 1643376892246,
-          "duration" : 169655
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      }, {
-        "name" : "passes",
-        "uid" : "76a6d04a267c2059",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643376731200,
-          "stop" : 1643376904579,
-          "duration" : 173379
+          "start" : 1643378223813,
+          "stop" : 1643378254813,
+          "duration" : 31000
         },
         "flaky" : false,
         "newFailed" : false,
@@ -318,13 +233,30 @@
         "parameters" : [ "darwin19" ]
       }, {
         "name" : "passes",
-        "uid" : "c7e84824049a817b",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "uid" : "b82505689b9f8a33",
+        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
         "status" : "failed",
         "time" : {
-          "start" : 1643376828526,
-          "stop" : 1643376998064,
-          "duration" : 169538
+          "start" : 1643378224161,
+          "stop" : 1643378255198,
+          "duration" : 31037
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      }, {
+        "name" : "passes",
+        "uid" : "8e68a80ae4527123",
+        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378310482,
+          "stop" : 1643378341511,
+          "duration" : 31029
         },
         "flaky" : false,
         "newFailed" : false,
@@ -335,13 +267,13 @@
         "parameters" : [ "mingw32" ]
       }, {
         "name" : "passes",
-        "uid" : "b00c64da114c705",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "uid" : "111fb6aeaf25c56a",
+        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
         "status" : "failed",
         "time" : {
-          "start" : 1643377024590,
-          "stop" : 1643377194273,
-          "duration" : 169683
+          "start" : 1643378526539,
+          "stop" : 1643378556659,
+          "duration" : 30120
         },
         "flaky" : false,
         "newFailed" : false,
@@ -351,14 +283,14 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       }, {
-        "name" : "exposes available metasploit commands",
-        "uid" : "f2007754563a59ba",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "name" : "passes",
+        "uid" : "eae5457ea940d15e",
+        "parentUid" : "81eb2ed076b17b9f10168513270b3d40",
         "status" : "failed",
         "time" : {
-          "start" : 1643377193384,
-          "stop" : 1643377362919,
-          "duration" : 169535
+          "start" : 1643378615631,
+          "stop" : 1643378645870,
+          "duration" : 30239
         },
         "flaky" : false,
         "newFailed" : false,
@@ -367,15 +299,19 @@
         "retriesCount" : 0,
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
-      }, {
+      } ],
+      "uid" : "81eb2ed076b17b9f10168513270b3d40"
+    }, {
+      "name" : "expected: > 0\n     got:   0",
+      "children" : [ {
         "name" : "passes",
-        "uid" : "28e352b30a7d1b0c",
+        "uid" : "2400e29074803a5",
         "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
         "status" : "failed",
         "time" : {
-          "start" : 1643377194275,
-          "stop" : 1643377363899,
-          "duration" : 169624
+          "start" : 1643378254815,
+          "stop" : 1643378425394,
+          "duration" : 170579
         },
         "flaky" : false,
         "newFailed" : false,
@@ -383,32 +319,15 @@
         "newBroken" : false,
         "retriesCount" : 0,
         "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      }, {
-        "name" : "exposes available metasploit commands",
-        "uid" : "f9df84ca5cd6474e",
-        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643377423947,
-          "stop" : 1643377593596,
-          "duration" : 169649
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
+        "parameters" : [ "darwin19" ]
       }, {
         "name" : "passes",
-        "uid" : "f83e46f01da5363f",
+        "uid" : "75cd50de5f92d6e7",
         "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
         "status" : "failed",
         "time" : {
-          "start" : 1643377593597,
-          "stop" : 1643377763273,
+          "start" : 1643378255199,
+          "stop" : 1643378424875,
           "duration" : 169676
         },
         "flaky" : false,
@@ -420,13 +339,81 @@
         "parameters" : [ "linux" ]
       }, {
         "name" : "passes",
-        "uid" : "7f27ebbfd1a5cfe9",
+        "uid" : "7d7a645379b2b66d",
         "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
         "status" : "failed",
         "time" : {
-          "start" : 1643377763274,
-          "stop" : 1643377932932,
-          "duration" : 169658
+          "start" : 1643378341513,
+          "stop" : 1643378511053,
+          "duration" : 169540
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes",
+        "uid" : "607daa29676d0a21",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378556660,
+          "stop" : 1643378726350,
+          "duration" : 169690
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      }, {
+        "name" : "exposes available metasploit commands",
+        "uid" : "e9d903b67f84d4a4",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378705876,
+          "stop" : 1643378875414,
+          "duration" : 169538
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes",
+        "uid" : "46780dde5d20519f",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378726351,
+          "stop" : 1643378896020,
+          "duration" : 169669
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      }, {
+        "name" : "exposes available metasploit commands",
+        "uid" : "da7dafce97c01cd0",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643378956080,
+          "stop" : 1643379125746,
+          "duration" : 169666
         },
         "flaky" : false,
         "newFailed" : false,
@@ -437,13 +424,47 @@
         "parameters" : [ "linux" ]
       }, {
         "name" : "passes",
-        "uid" : "de83aebb7b44f6e1",
+        "uid" : "5e42678eda44951c",
         "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
         "status" : "failed",
         "time" : {
-          "start" : 1643377932933,
-          "stop" : 1643378102592,
-          "duration" : 169659
+          "start" : 1643379125747,
+          "stop" : 1643379295409,
+          "duration" : 169662
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      }, {
+        "name" : "passes",
+        "uid" : "1c80c6fd21aecff8",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643379295411,
+          "stop" : 1643379465083,
+          "duration" : 169672
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      }, {
+        "name" : "passes",
+        "uid" : "6bc228f1c6eb281d",
+        "parentUid" : "c9155ae834154ce33c9bf612674d7d61",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643379465084,
+          "stop" : 1643379634703,
+          "duration" : 169619
         },
         "flaky" : false,
         "newFailed" : false,
@@ -458,13 +479,13 @@
       "name" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "a0bc0dbaaecdb1f0",
+        "uid" : "cf28cb86f046a6b7",
         "parentUid" : "e44d9e6484149135cb4741b4c125c5c6",
         "status" : "failed",
         "time" : {
-          "start" : 1643376769805,
-          "stop" : 1643376771311,
-          "duration" : 1506
+          "start" : 1643378281354,
+          "stop" : 1643378283030,
+          "duration" : 1676
         },
         "flaky" : false,
         "newFailed" : false,
@@ -479,13 +500,13 @@
       "name" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this m...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,41 +1,81 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 4\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "8bc750b751ca00b9",
+        "uid" : "a8a416ae685cc3c2",
         "parentUid" : "606df9445f5b700b282084411a565f42",
         "status" : "failed",
         "time" : {
-          "start" : 1643376771313,
-          "stop" : 1643376773721,
-          "duration" : 2408
+          "start" : 1643378283032,
+          "stop" : 1643378285526,
+          "duration" : 2494
         },
         "flaky" : false,
         "newFailed" : false,
@@ -497,16 +518,16 @@
       } ],
       "uid" : "606df9445f5b700b282084411a565f42"
     }, {
-      "name" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,65 +1,129 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 6\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 5652\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>5652, \"ppid\"=>4792, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-720\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x000001b8be75bb60>:0x000001b8be30d0e0 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643376773, \"st_mtime\"=>1643376773, \"st_ctime\"=>1643329221}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-rwikoymt\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-rwikoymt\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-rwikoymt\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-rwikoymt\n+[*] Wrote to meterpreter-test-rwikoymt, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-rwikoymt.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-rwikoymt\n+[*] Destination File Name: meterpreter-test-rwikoymt-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-rwikoymt\n+[*] Destination File Name: meterpreter-test-rwikoymt-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-rwikoymt.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.3283373\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,65 +1,129 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 6\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 3460\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>3460, \"ppid\"=>3416, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-720\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x0000021a20f255a8>:0x0000021a1bf5ecb8 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643378285, \"st_mtime\"=>1643378285, \"st_ctime\"=>1643329221}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-ygaqpshk\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-ygaqpshk\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-ygaqpshk\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-ygaqpshk\n+[*] Wrote to meterpreter-test-ygaqpshk, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-ygaqpshk.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-ygaqpshk\n+[*] Destination File Name: meterpreter-test-ygaqpshk-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-ygaqpshk\n+[*] Destination File Name: meterpreter-test-ygaqpshk-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-ygaqpshk.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.5144886\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "45fcf26a4cb2cbce",
-        "parentUid" : "423b4bd6f9b1c252cbb829ec8d169de6",
+        "uid" : "84e241126e5be399",
+        "parentUid" : "fc0d4ceb45bb6a97634c79a24e612dd4",
         "status" : "failed",
         "time" : {
-          "start" : 1643376775144,
-          "stop" : 1643376778424,
-          "duration" : 3280
+          "start" : 1643378287268,
+          "stop" : 1643378290491,
+          "duration" : 3223
         },
         "flaky" : false,
         "newFailed" : false,
@@ -516,18 +537,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "423b4bd6f9b1c252cbb829ec8d169de6"
+      "uid" : "fc0d4ceb45bb6a97634c79a24e612dd4"
     }, {
-      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 3.5711832\\r\\n[-] Passed: 10; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[+] should read values\n+[+] should return normalized values\n+[+] should enumerate keys and values\n+[+] should create keys\n+[+] should write REG_SZ values\n+[+] should write REG_DWORD values\n+[+] should delete keys\n+[+] should create unicode keys\n+[+] should write REG_SZ unicode values\n+[+] should delete unicode keys\n+[*] Testing complete in 3.5711832\n+[-] Passed: 10; Failed: 1\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 3.5584288\\r\\n[-] Passed: 10; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_sys_config_getprivs\n+[*] Running against session 9\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[+] should read values\n+[+] should return normalized values\n+[+] should enumerate keys and values\n+[+] should create keys\n+[+] should write REG_SZ values\n+[+] should write REG_DWORD values\n+[+] should delete keys\n+[+] should create unicode keys\n+[+] should write REG_SZ unicode values\n+[+] should delete unicode keys\n+[*] Testing complete in 3.5584288\n+[-] Passed: 10; Failed: 1\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "deb4f3da5325a804",
-        "parentUid" : "d67399328c042ca44fad0f6d34e4c89c",
+        "uid" : "b45015e66c187bcb",
+        "parentUid" : "63a76b4081ef23885bb8701a8f3687bd",
         "status" : "failed",
         "time" : {
-          "start" : 1643376782099,
-          "stop" : 1643376787138,
-          "duration" : 5039
+          "start" : 1643378294378,
+          "stop" : 1643378299580,
+          "duration" : 5202
         },
         "flaky" : false,
         "newFailed" : false,
@@ -537,18 +558,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "d67399328c042ca44fad0f6d34e4c89c"
+      "uid" : "63a76b4081ef23885bb8701a8f3687bd"
     }, {
-      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: ...] Testing complete in 0.5147621\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,30 +1,59 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 11\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should modify config on a given service aKpHEY\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service aPxGfJ\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[*] Testing complete in 0.5147621\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: ...] Testing complete in 0.4594145\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,30 +1,59 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 11\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should modify config on a given service axzPKd\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service aNXRyP\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[*] Testing complete in 0.4594145\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "95103ba0ae286aa6",
-        "parentUid" : "999a2ddba5cbb12072f240698df032ce",
+        "uid" : "1acdc83cdde1b033",
+        "parentUid" : "dbf5cf814b496fec44b66549bff53d58",
         "status" : "failed",
         "time" : {
-          "start" : 1643376789024,
-          "stop" : 1643376791160,
-          "duration" : 2136
+          "start" : 1643378301537,
+          "stop" : 1643378303713,
+          "duration" : 2176
         },
         "flaky" : false,
         "newFailed" : false,
@@ -558,18 +579,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "999a2ddba5cbb12072f240698df032ce"
+      "uid" : "dbf5cf814b496fec44b66549bff53d58"
     }, {
       "name" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "2d1892a2f860ba96",
+        "uid" : "b41152a7feac798e",
         "parentUid" : "c4527989d87581ef6b09127ac0a70aa2",
         "status" : "failed",
         "time" : {
-          "start" : 1643376795055,
-          "stop" : 1643376795789,
-          "duration" : 734
+          "start" : 1643378307913,
+          "stop" : 1643378308737,
+          "duration" : 824
         },
         "flaky" : false,
         "newFailed" : false,
@@ -584,13 +605,13 @@
       "name" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[-] Post failed: Rex::Post::Meterpreter::Requ...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,10 +1,19 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[-] Post failed: Rex::Post::Meterpreter::RequestError stdapi_fs_chdir: Operation failed: 1\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/fs/dir.rb:189:in `chdir'\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/file.rb:51:in `cd'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:45:in `setup'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "7d2feb868f96700d",
+        "uid" : "179185d89b29ecb0",
         "parentUid" : "126fdf1395d4e247d4295a5fb1367a9b",
         "status" : "failed",
         "time" : {
-          "start" : 1643376795791,
-          "stop" : 1643376796861,
-          "duration" : 1070
+          "start" : 1643378308738,
+          "stop" : 1643378309703,
+          "duration" : 965
         },
         "flaky" : false,
         "newFailed" : false,
@@ -602,16 +623,16 @@
       } ],
       "uid" : "126fdf1395d4e247d4295a5fb1367a9b"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.000520401\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000520401\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...n[*] Testing complete in 0.000620607\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000620607\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "2b0b7af3a19666ca",
-        "parentUid" : "e92019b881af4b26580caf3a5d430031",
+        "uid" : "3bf15be8c1fbd46b",
+        "parentUid" : "82ef02a93c6c218fe7eb1325e23d4c72",
         "status" : "failed",
         "time" : {
-          "start" : 1643376892247,
-          "stop" : 1643376993487,
-          "duration" : 101240
+          "start" : 1643378424876,
+          "stop" : 1643378525821,
+          "duration" : 100945
         },
         "flaky" : false,
         "newFailed" : false,
@@ -621,18 +642,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "e92019b881af4b26580caf3a5d430031"
+      "uid" : "82ef02a93c6c218fe7eb1325e23d4c72"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000715\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000715\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000697\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 19\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000697\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "10dd1db3c8aa784",
-        "parentUid" : "6d9472b96d4fb5b925e9bfb6f0651da5",
+        "uid" : "638c087d976b1a03",
+        "parentUid" : "3b53d5a40ab8b1ece93b93bb12d0966c",
         "status" : "failed",
         "time" : {
-          "start" : 1643376904580,
-          "stop" : 1643377002134,
-          "duration" : 97554
+          "start" : 1643378425396,
+          "stop" : 1643378526117,
+          "duration" : 100721
         },
         "flaky" : false,
         "newFailed" : false,
@@ -642,18 +663,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "6d9472b96d4fb5b925e9bfb6f0651da5"
+      "uid" : "3b53d5a40ab8b1ece93b93bb12d0966c"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.059819858\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.059819858\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...[*] Testing complete in 0.017177782\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: linux\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is linux\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.017177782\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "863752d943044501",
-        "parentUid" : "759c4ba663b734fe7f2171ed63123712",
+        "uid" : "8fae6fc1da0addba",
+        "parentUid" : "d41465cdd1ec669445f6148221ebf900",
         "status" : "failed",
         "time" : {
-          "start" : 1643376993488,
-          "stop" : 1643376994197,
-          "duration" : 709
+          "start" : 1643378525822,
+          "stop" : 1643378526538,
+          "duration" : 716
         },
         "flaky" : false,
         "newFailed" : false,
@@ -663,18 +684,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "759c4ba663b734fe7f2171ed63123712"
+      "uid" : "d41465cdd1ec669445f6148221ebf900"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.021557\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.021557\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.022622\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.022622\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "ee5a7d921b14fd33",
-        "parentUid" : "6cb381a7ddae050ee66fbd96a5546143",
+        "uid" : "752db9a4112c372e",
+        "parentUid" : "224d3965d0ab6fe286a761af6a466379",
         "status" : "failed",
         "time" : {
-          "start" : 1643377002136,
-          "stop" : 1643377002849,
-          "duration" : 713
+          "start" : 1643378526119,
+          "stop" : 1643378526802,
+          "duration" : 683
         },
         "flaky" : false,
         "newFailed" : false,
@@ -684,18 +705,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "6cb381a7ddae050ee66fbd96a5546143"
+      "uid" : "224d3965d0ab6fe286a761af6a466379"
     }, {
       "name" : "expected \"\\n[*] Loading extapi extension...\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...ploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (java/osx)\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "3e8e8b2400e927e7",
+        "uid" : "d45162dc5bd4d972",
         "parentUid" : "5db06dd8c15c52caf1d5330031412c46",
         "status" : "failed",
         "time" : {
-          "start" : 1643377014624,
-          "stop" : 1643377015599,
-          "duration" : 975
+          "start" : 1643378537499,
+          "stop" : 1643378538406,
+          "duration" : 907
         },
         "flaky" : false,
         "newFailed" : false,
@@ -707,16 +728,16 @@
       } ],
       "uid" : "5db06dd8c15c52caf1d5330031412c46"
     }, {
-      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,48 +1,95 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n+[*] Running against session 27\n+[*] Session type is meterpreter and platform is osx\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir/directory\n+[*] test-dir/directory created\n+[-] FAILED: should create directories\n+[+] should list the directory we just made\n+[-] FAILED: should recursively delete the directory we just made\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[+] should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[*] Writing 31264 bytes\n+[*] Finished in 0.015691\n+[+] should write binary data\n+[*] Read 31264 bytes\n+[+] should read the binary data we just wrote\n+[+] should delete binary files\n+[+] should append binary data\n+[+] should expand home\n+[+] should not expand non-isolated tilde\n+[+] should not expand mid-string tilde\n+[+] should not expand env vars with invalid naming\n+[+] should expand multiple variables\n+[*] Testing complete in 0.850745\n+[-] Passed: 20; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,48 +1,95 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n+[*] Running against session 27\n+[*] Session type is meterpreter and platform is osx\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir/directory\n+[*] test-dir/directory created\n+[-] FAILED: should create directories\n+[+] should list the directory we just made\n+[-] FAILED: should recursively delete the directory we just made\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[+] should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[*] Writing 31264 bytes\n+[*] Finished in 0.015731\n+[+] should write binary data\n+[*] Read 31264 bytes\n+[+] should read the binary data we just wrote\n+[+] should delete binary files\n+[+] should append binary data\n+[+] should expand home\n+[+] should not expand non-isolated tilde\n+[+] should not expand mid-string tilde\n+[+] should not expand env vars with invalid naming\n+[+] should expand multiple variables\n+[*] Testing complete in 0.858466\n+[-] Passed: 20; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "dffb05c5c81ac670",
-        "parentUid" : "2473f4db48cbc8e33619dc2eac9a81bd",
+        "uid" : "282ef9821150946c",
+        "parentUid" : "a150695542f01fa608ba8ae036784fa2",
         "status" : "failed",
         "time" : {
-          "start" : 1643377015600,
-          "stop" : 1643377017368,
-          "duration" : 1768
+          "start" : 1643378538409,
+          "stop" : 1643378540446,
+          "duration" : 2037
         },
         "flaky" : false,
         "newFailed" : false,
@@ -726,18 +747,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "2473f4db48cbc8e33619dc2eac9a81bd"
+      "uid" : "a150695542f01fa608ba8ae036784fa2"
     }, {
       "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...ework/metasploit-framework/test/lib/module_test.rb:57:in `run'\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,32 +1,63 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api, stdapi_railgun_memread\n+[*] Running against session 30\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: Should include error information in the results\n+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.\n+[-] FAILED: Should support functions with no parameters\n+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.\n+[-] FAILED: Should support functions with literal parameters\n+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.\n+[-] FAILED: Should support functions with in/out/inout parameter types\n+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.\n+[-] FAILED: Should support calling multiple functions at once\n+[-] Exception: Rex::NotImplementedError : The requested method is not implemented.\n+[-] FAILED: Should support writing memory\n+[-] Exception: RuntimeError : Invalid parameters.\n+[-] FAILED: Should support reading memory\n+[-] Exception: RuntimeError : Invalid parameters.\n+[-] Post failed: Rex::NotImplementedError The requested method is not implemented.\n+[-] Call stack:\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library.rb:137:in `build_packet_and_layouts'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library.rb:366:in `process_function_call'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library.rb:95:in `call_function'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/railgun/library_wrapper.rb:25:in `method_missing'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/railgun.rb:87:in `test_api_function_calls_libc'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   /Users/runner/work/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "fd49f525b3c7912f",
+        "uid" : "70661a8a3abd98b9",
         "parentUid" : "4a4378538861a0d5f32c3199ae5598fc",
         "status" : "failed",
         "time" : {
-          "start" : 1643377019701,
-          "stop" : 1643377020608,
-          "duration" : 907
+          "start" : 1643378542955,
+          "stop" : 1643378543920,
+          "duration" : 965
         },
         "flaky" : false,
         "newFailed" : false,
@@ -749,16 +770,16 @@
       } ],
       "uid" : "4a4378538861a0d5f32c3199ae5598fc"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000626\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 31\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000626\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...de\\n[*] Testing complete in 0.000944\\n[-] Passed: 0; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,11 +1,21 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[*] Running against session 31\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should return a constant name given a const and a filter\n+[-] FAILED: should return an error string given an error code\n+[*] Testing complete in 0.000944\n+[-] Passed: 0; Failed: 2\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "a4d5af94b1021f9a",
-        "parentUid" : "75a851d41ab3995392f43070c6d8f4c4",
+        "uid" : "8d750ba0ab736e83",
+        "parentUid" : "a1f85db32adb757374b3210f76259ad0",
         "status" : "failed",
         "time" : {
-          "start" : 1643377020609,
-          "stop" : 1643377021440,
-          "duration" : 831
+          "start" : 1643378543922,
+          "stop" : 1643378544801,
+          "duration" : 879
         },
         "flaky" : false,
         "newFailed" : false,
@@ -768,18 +789,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "75a851d41ab3995392f43070c6d8f4c4"
+      "uid" : "a1f85db32adb757374b3210f76259ad0"
     }, {
-      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.019733\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 32\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.019733\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session type: meterpreter...s\\n[*] Testing complete in 0.032399\\n[-] Passed: 1; Failed: 10\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,23 +1,45 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * incompatible session platform: osx\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 32\n+[*] Session type is meterpreter and platform is osx\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[*] Testing complete in 0.032399\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "add39a0a578902f3",
-        "parentUid" : "a1ac798d16fa307af08e6f76585a4644",
+        "uid" : "c40052cb5f072e36",
+        "parentUid" : "6f522593c2556023e58e24dc9936934e",
         "status" : "failed",
         "time" : {
-          "start" : 1643377021441,
-          "stop" : 1643377022380,
-          "duration" : 939
+          "start" : 1643378544803,
+          "stop" : 1643378545894,
+          "duration" : 1091
         },
         "flaky" : false,
         "newFailed" : false,
@@ -789,18 +810,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "a1ac798d16fa307af08e6f76585a4644"
+      "uid" : "6f522593c2556023e58e24dc9936934e"
     }, {
-      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-dhcrslex.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-dhcrslex.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 33\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.059268\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\n[*] Setup: changing working directory to /tmp\\n[*] Source File Name: meterpreter-test-nfvascwy.txt...o /Users/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,21 +1,41 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Source File Name: meterpreter-test-nfvascwy.txt\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session platform: osx\n+[*] Running against session 33\n+[*] Session type is meterpreter and platform is osx\n+[*] Starting search tests\n+[+] should search for new files\n+[+] should search recursively for files\n+[+] should search with globs for files\n+[+] should search with globs ignoring files\n+[*] Starting search date tests\n+[+] should search with dates for files\n+[+] should search with dates ignores new files\n+[+] should search with dates ignores old files\n+[-] FAILED: should search with date inclusive of exact date\n+[*] Testing complete in 0.05829\n+[-] Passed: 7; Failed: 1\n+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "51d95370bebe240c",
-        "parentUid" : "d95416a2bb02c89fe36207ad7ffd2044",
+        "uid" : "cce458533d0f65ef",
+        "parentUid" : "18cd3d819bd2668df6ce9aee80970ec3",
         "status" : "failed",
         "time" : {
-          "start" : 1643377022381,
-          "stop" : 1643377023368,
-          "duration" : 987
+          "start" : 1643378545896,
+          "stop" : 1643378546939,
+          "duration" : 1043
         },
         "flaky" : false,
         "newFailed" : false,
@@ -810,18 +831,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "d95416a2bb02c89fe36207ad7ffd2044"
+      "uid" : "18cd3d819bd2668df6ce9aee80970ec3"
     }, {
-      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 0.0556539\\r\\n[-] Passed: 1; Failed: 10\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,22 +1,43 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[*] Testing complete in 0.0556539\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 0.1021135\\r\\n[-] Passed: 1; Failed: 10\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,22 +1,43 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 20\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[*] Testing complete in 0.1021135\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "72a40abdbda8f800",
-        "parentUid" : "87a4b2940bdfaa04f6457c785b1dd4d1",
+        "uid" : "2e1e13a98f0ef0d4",
+        "parentUid" : "b8788f2d04cc3cbadfa8e63c28a739c7",
         "status" : "failed",
         "time" : {
-          "start" : 1643377099852,
-          "stop" : 1643377100661,
-          "duration" : 809
+          "start" : 1643378612771,
+          "stop" : 1643378613654,
+          "duration" : 883
         },
         "flaky" : false,
         "newFailed" : false,
@@ -831,18 +852,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "87a4b2940bdfaa04f6457c785b1dd4d1"
+      "uid" : "b8788f2d04cc3cbadfa8e63c28a739c7"
     }, {
       "name" : "expected \"\\r\\n[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError T...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,6 +1,11 @@\n-Failed: 0\n+\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (java/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "cb884912deab2437",
+        "uid" : "c74522850d9d464f",
         "parentUid" : "0b46a9be2a2316f979be3ba7257108b3",
         "status" : "failed",
         "time" : {
-          "start" : 1643377419672,
-          "stop" : 1643377420763,
-          "duration" : 1091
+          "start" : 1643378931675,
+          "stop" : 1643378932801,
+          "duration" : 1126
         },
         "flaky" : false,
         "newFailed" : false,
@@ -857,13 +878,13 @@
       "name" : "expected \"\\r\\n[*] Setup: changing working directory to /tmp\\r\\n[!] SESSION may not be compatible with this mod...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,43 +1,85 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n+[*] Running against session 26\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[-] FAILED: should recursively delete the directory we just made\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] failed to create the symbolic link\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "c1b2e8b03e27df64",
+        "uid" : "5679154a99ba29b1",
         "parentUid" : "0ae23e82afb2f849d8ffc5c095eca67a",
         "status" : "failed",
         "time" : {
-          "start" : 1643377420764,
-          "stop" : 1643377423270,
-          "duration" : 2506
+          "start" : 1643378932802,
+          "stop" : 1643378935385,
+          "duration" : 2583
         },
         "flaky" : false,
         "newFailed" : false,
@@ -875,16 +896,16 @@
       } ],
       "uid" : "0ae23e82afb2f849d8ffc5c095eca67a"
     }, {
-      "name" : "expected \"\\r\\n[*] Setup: changing working directory to /tmp\\r\\n[*] Running against session 28\\r\\n[*] Session t...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Running against session 28\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Session doesn't implement getpid, skipping test\n+[*] Session doesn't implement getpid, skipping sanity check\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[+] should return the proper directory separator\n+[*] CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\\\tmp\"\n+[*] Stat of current directory: #<#<Class:0x000001b8bbfb8180>:0x000001b8bf2848e8 @stathash={\"st_dev\"=>0, \"st_mode\"=>16894, \"st_nlink\"=>1, \"st_uid\"=>65535, \"st_gid\"=>65535, \"st_rdev\"=>0, \"st_ino\"=>0, \"st_size\"=>0, \"st_atime\"=>1643377423, \"st_mtime\"=>1643377423, \"st_ctime\"=>1643377423}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-ljbkistz\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-ljbkistz\n+[*] Directory created successfully\n+[*] Old CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[*] New CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\\meterpreter-test-dir-ljbkistz\n+[*] Back to old CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-ljbkistz\n+[*] Wrote to meterpreter-test-ljbkistz, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-ljbkistz.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-ljbkistz\n+[*] Destination File Name: meterpreter-test-ljbkistz-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-ljbkistz\n+[*] Destination File Name: meterpreter-test-ljbkistz-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-ljbkistz.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.2012835\n+[-] Passed: 17; Failed: 2\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[*] Setup: changing working directory to /tmp\\r\\n[*] Running against session 28\\r\\n[*] Session t...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to /tmp\n+[*] Running against session 28\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Session doesn't implement getpid, skipping test\n+[*] Session doesn't implement getpid, skipping sanity check\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[+] should return the proper directory separator\n+[*] CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\\\tmp\"\n+[*] Stat of current directory: #<#<Class:0x0000021a1f3dbb08>:0x0000021a1f650190 @stathash={\"st_dev\"=>0, \"st_mode\"=>16894, \"st_nlink\"=>1, \"st_uid\"=>65535, \"st_gid\"=>65535, \"st_rdev\"=>0, \"st_ino\"=>0, \"st_size\"=>0, \"st_atime\"=>1643378935, \"st_mtime\"=>1643378935, \"st_ctime\"=>1643378935}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-qmxbvjkf\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-qmxbvjkf\n+[*] Directory created successfully\n+[*] Old CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[*] New CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\\meterpreter-test-dir-qmxbvjkf\n+[*] Back to old CWD: D:\\a\\metasploit-framework\\metasploit-framework\\tmp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-qmxbvjkf\n+[*] Wrote to meterpreter-test-qmxbvjkf, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-qmxbvjkf.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-qmxbvjkf\n+[*] Destination File Name: meterpreter-test-qmxbvjkf-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-qmxbvjkf\n+[*] Destination File Name: meterpreter-test-qmxbvjkf-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-qmxbvjkf.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.3205678\n+[-] Passed: 17; Failed: 2\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "7c0b65f4ce0979a3",
-        "parentUid" : "4f29cd40e633923ff84ea6f4f540a408",
+        "uid" : "5dda139de87a1966",
+        "parentUid" : "b3b2006e3e5037a5c24a2aa9d91d2971",
         "status" : "failed",
         "time" : {
-          "start" : 1643377424407,
-          "stop" : 1643377426699,
-          "duration" : 2292
+          "start" : 1643378936561,
+          "stop" : 1643378939100,
+          "duration" : 2539
         },
         "flaky" : false,
         "newFailed" : false,
@@ -894,18 +915,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "4f29cd40e633923ff84ea6f4f540a408"
+      "uid" : "b3b2006e3e5037a5c24a2aa9d91d2971"
     }, {
-      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...] Testing complete in 0.0613085\\r\\n[-] Passed: 1; Failed: 10\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,22 +1,43 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 31\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[*] Testing complete in 0.0613085\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[!] SESSION may not be compatible with this module:\\r\\n[!]  * incompatible session type: meterpr...*] Testing complete in 0.083316\\r\\n[-] Passed: 1; Failed: 10\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,22 +1,43 @@\n-Failed: 0\n+\n+[!] SESSION may not be compatible with this module:\n+[!]  * incompatible session type: meterpreter\n+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs\n+[*] Running against session 31\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should evaluate key existence\n+[*] PENDING: should evaluate value existence\n+[-] FAILED: should read values\n+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass\n+[-] FAILED: should return normalized values\n+[-] FAILED: should enumerate keys and values\n+[-] FAILED: should create keys\n+[-] FAILED: should write REG_SZ values\n+[-] FAILED: should write REG_DWORD values\n+[-] FAILED: should delete keys\n+[-] FAILED: should create unicode keys\n+[-] FAILED: should write REG_SZ unicode values\n+[-] FAILED: should delete unicode keys\n+[*] Testing complete in 0.083316\n+[-] Passed: 1; Failed: 10\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "1ee768ed1043ec0d",
-        "parentUid" : "0ec20b3278ea1ca7673168715a01cb8b",
+        "uid" : "c969d8c31cf0c0d2",
+        "parentUid" : "08c828e3a1d1140eb3071c0094c25ded",
         "status" : "failed",
         "time" : {
-          "start" : 1643377429018,
-          "stop" : 1643377430089,
-          "duration" : 1071
+          "start" : 1643378941389,
+          "stop" : 1643378942812,
+          "duration" : 1423
         },
         "flaky" : false,
         "newFailed" : false,
@@ -915,18 +936,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "0ec20b3278ea1ca7673168715a01cb8b"
+      "uid" : "08c828e3a1d1140eb3071c0094c25ded"
     }, {
       "name" : "expected \"\\r\\n[*] Setup: changing working directory to %TEMP%\\r\\n[*] Running against session 38\\r\\n[*] Session...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,37 +1,73 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to %TEMP%\n+[*] Running against session 38\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[+] should delete a symbolic link target\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[+] should not recurse into symbolic link directories\n+[+] should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "d373df7dc073e72e",
+        "uid" : "22cd0d66c18ad369",
         "parentUid" : "441a582dab067f96ae77cd307c079ce7",
         "status" : "failed",
         "time" : {
-          "start" : 1643377468891,
-          "stop" : 1643377475597,
-          "duration" : 6706
+          "start" : 1643378980977,
+          "stop" : 1643378987836,
+          "duration" : 6859
         },
         "flaky" : false,
         "newFailed" : false,
@@ -938,16 +959,16 @@
       } ],
       "uid" : "441a582dab067f96ae77cd307c079ce7"
     }, {
-      "name" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,65 +1,129 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 40\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 5756\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>5756, \"ppid\"=>4792, \"name\"=>\"meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220128-4792-y4qmtz.exe\", \"path\"=>\"D:\\\\a\\\\_temp\\\\meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220128-4792-y4qmtz.exe\", \"session\"=>1, \"user\"=>\"fv-az159-720\\\\runneradmin\", \"arch\"=>\"x86\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[+] should return the proper directory separator\n+[*] CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\"\n+[*] Stat of current directory: #<#<Class:0x000001b8bf1c7c48>:0x000001b8c24cc3f0 @stathash={\"st_dev\"=>0, \"st_mode\"=>16895, \"st_nlink\"=>0, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>0, \"st_ino\"=>0, \"st_size\"=>4096, \"st_atime\"=>1643377475, \"st_mtime\"=>1643377475, \"st_ctime\"=>1643329221}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-hetazkqj\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-hetazkqj\n+[*] Directory created successfully\n+[*] Old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] New CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\meterpreter-test-dir-hetazkqj\n+[*] Back to old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-hetazkqj\n+[*] Wrote to meterpreter-test-hetazkqj, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-hetazkqj.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-hetazkqj\n+[*] Destination File Name: meterpreter-test-hetazkqj-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-hetazkqj\n+[*] Destination File Name: meterpreter-test-hetazkqj-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-hetazkqj.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 4.2464542\n+[-] Passed: 18; Failed: 2\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Runnin...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,65 +1,129 @@\n-Failed: 0\n+\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 40\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting process tests\n+[*] Pid: 4216\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>4216, \"ppid\"=>3416, \"name\"=>\"meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220128-3416-1s0ovzj.exe\", \"path\"=>\"D:\\\\a\\\\_temp\\\\meterpreter-spec-rb-windows-meterpreter-reverse-tcp20220128-3416-1s0ovzj.exe\", \"session\"=>1, \"user\"=>\"fv-az159-720\\\\runneradmin\", \"arch\"=>\"x86\"}\n+[+] should return a list of processes\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[+] should return the proper directory separator\n+[*] CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\"\n+[*] Stat of current directory: #<#<Class:0x0000021a1c828308>:0x0000021a1f7fbe18 @stathash={\"st_dev\"=>0, \"st_mode\"=>16895, \"st_nlink\"=>0, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>0, \"st_ino\"=>0, \"st_size\"=>4096, \"st_atime\"=>1643378987, \"st_mtime\"=>1643378987, \"st_ctime\"=>1643329221}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-xmhqptcn\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-xmhqptcn\n+[*] Directory created successfully\n+[*] Old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] New CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\meterpreter-test-dir-xmhqptcn\n+[*] Back to old CWD: C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-xmhqptcn\n+[*] Wrote to meterpreter-test-xmhqptcn, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-xmhqptcn.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-xmhqptcn\n+[*] Destination File Name: meterpreter-test-xmhqptcn-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-xmhqptcn\n+[*] Destination File Name: meterpreter-test-xmhqptcn-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-xmhqptcn.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 4.2281488\n+[-] Passed: 18; Failed: 2\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "d7461dc08eba9212",
-        "parentUid" : "95f007251e730f7e28534774ea9b9596",
+        "uid" : "80719fcdf03a8624",
+        "parentUid" : "3aee6d9f607214e070c89a6f55c2ddba",
         "status" : "failed",
         "time" : {
-          "start" : 1643377477421,
-          "stop" : 1643377483785,
-          "duration" : 6364
+          "start" : 1643378989798,
+          "stop" : 1643378996139,
+          "duration" : 6341
         },
         "flaky" : false,
         "newFailed" : false,
@@ -957,18 +978,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "95f007251e730f7e28534774ea9b9596"
+      "uid" : "3aee6d9f607214e070c89a6f55c2ddba"
     }, {
-      "name" : "expected \"\\r\\n[*] Running against session 45\\r\\n[*] Session type is meterpreter and platform is windows\\r\\n[+]...] Testing complete in 4.5854534\\r\\n[-] Passed: 12; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,20 +1,39 @@\n-Failed: 0\n+\n+[*] Running against session 45\n+[*] Session type is meterpreter and platform is windows\n+[+] should modify config on a given service aVvywg\n+[+] should list services\n+[-] FAILED: should start a disabled service aeSqEM\n+[-] Exception: TypeError : exception class/object expected\n+[+] should return info on a given service  winmgmt\n+[-] FAILED: should restart a started service W32Time\n+[+] should raise a runtime exception if no access to service\n+[+] should create a service  testes\n+[+] should return info on the newly-created service testes\n+[+] should delete the new service testes\n+[+] should raise a runtime exception if services doesnt exist\n+[+] should start W32Time\n+[+] should stop W32Time\n+[+] should return status on a given service winmgmt\n+[*] Testing complete in 4.5854534\n+[-] Passed: 12; Failed: 1\n+[*] Post module execution completed\n",
+      "name" : "expected \"\\r\\n[*] Running against session 45\\r\\n[*] Session type is meterpreter and platform is windows\\r\\n[+]...] Testing complete in 4.5164483\\r\\n[-] Passed: 12; Failed: 1\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,20 +1,39 @@\n-Failed: 0\n+\n+[*] Running against session 45\n+[*] Session type is meterpreter and platform is windows\n+[+] should modify config on a given service aHeLqh\n+[+] should list services\n+[-] FAILED: should start a disabled service ajCCfg\n+[-] Exception: TypeError : exception class/object expected\n+[+] should return info on a given service  winmgmt\n+[-] FAILED: should restart a started service W32Time\n+[+] should raise a runtime exception if no access to service\n+[+] should create a service  testes\n+[+] should return info on the newly-created service testes\n+[+] should delete the new service testes\n+[+] should raise a runtime exception if services doesnt exist\n+[+] should start W32Time\n+[+] should stop W32Time\n+[+] should return status on a given service winmgmt\n+[*] Testing complete in 4.5164483\n+[-] Passed: 12; Failed: 1\n+[*] Post module execution completed\n",
       "children" : [ {
         "name" : "passes",
-        "uid" : "d788736cfe360c38",
-        "parentUid" : "8540c1a1c63073abcc7a0e3bbbd3faa8",
+        "uid" : "425d8319b0cfe54b",
+        "parentUid" : "cb19cdf996ce8337e1281879c1877f16",
         "status" : "failed",
         "time" : {
-          "start" : 1643377496744,
-          "stop" : 1643377503019,
-          "duration" : 6275
+          "start" : 1643379009550,
+          "stop" : 1643379015945,
+          "duration" : 6395
         },
         "flaky" : false,
         "newFailed" : false,
@@ -978,7 +999,7 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "8540c1a1c63073abcc7a0e3bbbd3faa8"
+      "uid" : "cb19cdf996ce8337e1281879c1877f16"
     } ],
     "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
   } ],
