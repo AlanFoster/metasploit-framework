@@ -1,0 +1,36 @@
+use python/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-3317-7ekna4.py -f raw MeterpreterTryToFork=false lport=6020 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> [*] Writing 493 bytes to /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-3317-7ekna4.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 19
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6020 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 20 opened (127.0.0.1:6020 -> 127.0.0.1:39782 ) at 2022-01-29 00:32:58 +0000
+use test/registry
+[4mmsf6[0m post([1m[31mtest/registry[0m) [0m> run session=20 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: linux
+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs
+[*] Running against session 20
+[*] Session type is meterpreter and platform is linux
+[-] FAILED: should create keys
+[-] FAILED: should write REG_SZ values
+[-] FAILED: should write REG_DWORD values
+[-] FAILED: should delete keys
+[-] FAILED: should create unicode keys
+[-] FAILED: should write REG_SZ unicode values
+[-] FAILED: should delete unicode keys
+[-] FAILED: should evaluate key existence
+[*] PENDING: should evaluate value existence
+[-] FAILED: should read values
+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass
+[-] FAILED: should return normalized values
+[-] FAILED: should enumerate keys and values
+[*] Testing complete in 0.009221132
+[-] Passed: 1; Failed: 10
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/registry[0m) [0m> 

