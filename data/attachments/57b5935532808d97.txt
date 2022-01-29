@@ -1,0 +1,23 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/railgun[0m) [0m> generate -o /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220129-3635-15oukrm.jar -f jar spawn=0 lport=6039 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220129-3635-15oukrm.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 38
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6039 
+[*] Sending stage (58082 bytes) to 127.0.0.1
+[*] Meterpreter session 39 opened (127.0.0.1:6039 -> 127.0.0.1:53878 ) at 2022-01-29 00:20:44 +0000
+use test/railgun_reverse_lookups
+[4mmsf6[0m post([1m[31mtest/railgun_reverse_lookups[0m) [0m> run session=39 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * incompatible session platform: linux
+[*] Running against session 39
+[*] Session type is meterpreter and platform is linux
+[-] FAILED: should return a constant name given a const and a filter
+[-] FAILED: should return an error string given an error code
+[*] Testing complete in 0.000561125
+[-] Passed: 0; Failed: 2
+[*] Post module execution completed

