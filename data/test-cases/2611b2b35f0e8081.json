@@ -1,0 +1,112 @@
+{
+  "uid" : "2611b2b35f0e8081",
+  "name" : "passes python/meterpreter/reverse_tcp test/file",
+  "fullName" : "payloads python behaves like a Meterpreter payload staged python/meterpreter/reverse_tcp test/file passes python/meterpreter/reverse_tcp test/file",
+  "historyId" : "b927baa5fee6fe5739c38f891a014bd8",
+  "time" : {
+    "start" : 1643495192903,
+    "stop" : 1643495195192,
+    "duration" : 2289
+  },
+  "description" : "Location - spec/acceptance/meterpreter_spec.rb:530",
+  "descriptionHtml" : "Location - spec/acceptance/meterpreter_spec.rb:530",
+  "status" : "failed",
+  "statusMessage" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,40 +1,79 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 12\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+  "statusTrace" : "D:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-support-3.10.3/lib/rspec/support.rb:102:in `block in <module:Support>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-support-3.10.3/lib/rspec/support.rb:111:in `notify_failure'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/fail_with.rb:35:in `fail_with'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:38:in `handle_failure'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:56:in `block in handle_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:27:in `with_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:48:in `handle_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/expectation_target.rb:65:in `to'\nD:/a/metasploit-framework/metasploit-framework/spec/acceptance/meterpreter_spec.rb:553:in `block (6 levels) in <top (required)>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:262:in `instance_exec'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:262:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:508:in `block in with_around_and_singleton_context_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:465:in `block in with_around_example_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:486:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:624:in `run_around_example_hooks_for'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:486:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:465:in `with_around_example_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:508:in `with_around_and_singleton_context_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:259:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:644:in `block in run_examples'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:640:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:640:in `run_examples'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:606:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `block (3 levels) in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `block (2 levels) in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/configuration.rb:2067:in `with_suite_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:116:in `block in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/reporter.rb:74:in `report'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:115:in `run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:89:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:71:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:45:in `invoke'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/exe/rspec:4:in `<top (required)>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/bin/rspec:23:in `load'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/bin/rspec:23:in `<main>'",
+  "flaky" : false,
+  "newFailed" : false,
+  "newBroken" : false,
+  "newPassed" : false,
+  "retriesCount" : 0,
+  "retriesStatusChange" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "description" : "Location - spec/acceptance/meterpreter_spec.rb:530",
+    "descriptionHtml" : "Location - spec/acceptance/meterpreter_spec.rb:530",
+    "status" : "failed",
+    "statusMessage" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,40 +1,79 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 12\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+    "statusTrace" : "D:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-support-3.10.3/lib/rspec/support.rb:102:in `block in <module:Support>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-support-3.10.3/lib/rspec/support.rb:111:in `notify_failure'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/fail_with.rb:35:in `fail_with'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:38:in `handle_failure'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:56:in `block in handle_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:27:in `with_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/handler.rb:48:in `handle_matcher'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-expectations-3.10.1/lib/rspec/expectations/expectation_target.rb:65:in `to'\nD:/a/metasploit-framework/metasploit-framework/spec/acceptance/meterpreter_spec.rb:553:in `block (6 levels) in <top (required)>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:262:in `instance_exec'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:262:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:508:in `block in with_around_and_singleton_context_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:465:in `block in with_around_example_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:486:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:624:in `run_around_example_hooks_for'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/hooks.rb:486:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:465:in `with_around_example_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:508:in `with_around_and_singleton_context_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example.rb:259:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:644:in `block in run_examples'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:640:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:640:in `run_examples'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:606:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `block in run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/example_group.rb:607:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `block (3 levels) in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `map'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:121:in `block (2 levels) in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/configuration.rb:2067:in `with_suite_hooks'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:116:in `block in run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/reporter.rb:74:in `report'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:115:in `run_specs'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:89:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:71:in `run'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/lib/rspec/core/runner.rb:45:in `invoke'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/gems/rspec-core-3.10.1/exe/rspec:4:in `<top (required)>'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/bin/rspec:23:in `load'\nD:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/2.7.0/bin/rspec:23:in `<main>'",
+    "steps" : [ ],
+    "attachments" : [ {
+      "uid" : "9976f329561238ef",
+      "name" : "payload",
+      "source" : "9976f329561238ef.txt",
+      "type" : "text/plain",
+      "size" : 381
+    }, {
+      "uid" : "3917d4d4a3ad303d",
+      "name" : "console data",
+      "source" : "3917d4d4a3ad303d.txt",
+      "type" : "text/plain",
+      "size" : 3330
+    } ],
+    "parameters" : [ ],
+    "stepsCount" : 0,
+    "attachmentsCount" : 2,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "framework",
+    "value" : "rspec"
+  }, {
+    "name" : "package",
+    "value" : "spec/acceptance"
+  }, {
+    "name" : "testClass",
+    "value" : "meterpreter_spec"
+  }, {
+    "name" : "severity",
+    "value" : "normal"
+  }, {
+    "name" : "tag",
+    "value" : "if"
+  }, {
+    "name" : "epic",
+    "value" : "spec/acceptance"
+  }, {
+    "name" : "feature",
+    "value" : "test/file"
+  }, {
+    "name" : "suite",
+    "value" : "python"
+  }, {
+    "name" : "parentSuite",
+    "value" : "payloads"
+  }, {
+    "name" : "subSuite",
+    "value" : "test/file > staged python/meterpreter/reverse_tcp > behaves like a Meterpreter payload"
+  }, {
+    "name" : "thread",
+    "value" : "59640"
+  }, {
+    "name" : "host",
+    "value" : "fv-az159-576"
+  }, {
+    "name" : "language",
+    "value" : "ruby"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ {
+    "name" : "environment",
+    "value" : "mingw32"
+  } ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ {
+      "name" : "Product defects",
+      "matchedStatuses" : [ ],
+      "flaky" : false
+    } ],
+    "tags" : [ "if" ]
+  },
+  "source" : "2611b2b35f0e8081.json",
+  "parameterValues" : [ "mingw32" ]
+}
