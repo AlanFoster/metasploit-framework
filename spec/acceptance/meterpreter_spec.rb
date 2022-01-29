@@ -46,19 +46,19 @@ class ChildProcess
   end
 
   def run
-    puts "popen2 before #{@cmd.join(" ")}"
+    puts "popen2 before #{@cmd.join(' ')}"
     self.stdin, self.stdout_and_stderr, self.wait_thread = ::Open3.popen2e(
       @env,
       *@cmd,
       **@options
     )
-    puts "popen2 after #{@cmd.join(" ")}"
+    puts "popen2 after #{@cmd.join(' ')}"
     # stdout_and_stderr.binmode
 
-    self.stdin.sync = true
-    self.stdout_and_stderr.sync = true
-  rescue => e
-    $stderr.puts "popen failure #{e}"
+    stdin.sync = true
+    stdout_and_stderr.sync = true
+  rescue StandardError => e
+    warn "popen failure #{e}"
     raise
   end
 
@@ -70,8 +70,8 @@ class ChildProcess
 
   # @param [String|Regexp] delim
   def recvuntil(delim, timeout: 30, drop_delim: false)
-    buffer = ""
-    result = ""
+    buffer = ''
+    result = ''
 
     with_countdown(timeout) do |countdown|
       while alive? && !countdown.elapsed?
@@ -79,17 +79,18 @@ class ChildProcess
         if !data_chunk
           next
         end
+
         buffer += data_chunk
         has_delimiter = delim.is_a?(Regexp) ? buffer.match?(delim) : buffer.include?(delim)
-        if has_delimiter
-          result, matched_delim, remaining = buffer.partition(delim)
-          unless drop_delim
-            result += matched_delim
-          end
-          unrecv(remaining)
+        next unless has_delimiter
 
-          return result
+        result, matched_delim, remaining = buffer.partition(delim)
+        unless drop_delim
+          result += matched_delim
         end
+        unrecv(remaining)
+
+        return result
       end
     end
 
@@ -97,7 +98,7 @@ class ChildProcess
   end
 
   def recvall(timeout: 30)
-    result = ""
+    result = ''
 
     with_countdown(timeout) do |countdown|
       while alive? && !countdown.elapsed?
@@ -105,6 +106,7 @@ class ChildProcess
         if !data_chunk
           next
         end
+
         result += data_chunk
       end
     end
@@ -162,26 +164,26 @@ class ChildProcess
 
     without_debugging do
       while alive?
-        ready = IO.select([stdout_and_stderr, STDIN], [], [], 10)
+        ready = IO.select([stdout_and_stderr, $stdin], [], [], 10)
 
-        if ready
-          reads, _, _ = ready
+        next unless ready
 
-          reads.to_a.each do |read|
-            case read
-            when STDIN
-              input = STDIN.gets
-              if input.chomp == '!continue'
-                return
-              elsif input.chomp == '!exit'
-                exit
-              end
+        reads, = ready
 
-              write(input)
-            when stdout_and_stderr
-              STDOUT.write(recv(2048))
-              STDOUT.flush
+        reads.to_a.each do |read|
+          case read
+          when $stdin
+            input = $stdin.gets
+            if input.chomp == '!continue'
+              return
+            elsif input.chomp == '!exit'
+              exit
             end
+
+            write(input)
+          when stdout_and_stderr
+            $stdout.write(recv(2048))
+            $stdout.flush
           end
         end
       end
@@ -192,9 +194,9 @@ class ChildProcess
     stdin.close
     stdout_and_stderr.close
     begin
-      Process.kill("KILL", wait_thread.pid) if wait_thread.pid
-    rescue => e
-      $stderr.puts "error #{e} for #{@cmd}, pid #{wait_thread.pid}"
+      Process.kill('KILL', wait_thread.pid) if wait_thread.pid
+    rescue StandardError => e
+      warn "error #{e} for #{@cmd}, pid #{wait_thread.pid}"
     end
   end
 
@@ -228,7 +230,7 @@ class ChildProcess
     ::Timeout.timeout(timeout * 1.5) do
       yield countdown
     end
-    raise "Failed await result, bailing" if countdown.elapsed?
+    raise 'Failed await result, bailing' if countdown.elapsed?
   end
 end
 
@@ -262,7 +264,7 @@ class Payload
 
   def size
     File.size(path)
-  rescue => _e
+  rescue StandardError => _e
     0
   end
 
@@ -320,19 +322,19 @@ class ConsoleDriver
     @coonsole = nil
     @payload_processes = []
 
-    ObjectSpace.define_finalizer(self, proc { self.close })
+    ObjectSpace.define_finalizer(self, proc { close })
   end
 
   # @param [Payload] payload
   def run_payload(payload)
     if payload.executable? && !File.executable?(payload.path)
-      FileUtils.chmod("+x", payload.path)
+      FileUtils.chmod('+x', payload.path)
     end
 
     payload_process = PayloadProcess.new(payload.execute_command)
-    puts "spawning before"
+    puts 'spawning before'
     payload_process.run
-    puts "spawning after"
+    puts 'spawning after'
     @payload_processes << payload_process
   end
 
@@ -358,8 +360,8 @@ class ConsoleDriver
     while (process = processes.pop)
       begin
         process.close
-      rescue => e
-        $stderr.puts "#{e}"
+      rescue StandardError => e
+        warn e.to_s
       end
     end
   end
@@ -372,9 +374,9 @@ class Console < ChildProcess
     framework_root = Dir.pwd
     @env = {
       'BUNDLE_GEMFILE' => File.join(framework_root, 'Gemfile'),
-      'PATH' => "#{framework_root.shellescape}:#{ENV["PATH"]}"
+      'PATH' => "#{framework_root.shellescape}:#{ENV['PATH']}"
     }
-    @cmd = ["bundle", "exec", "ruby", "msfconsole.rb", "--no-readline", '--quiet']
+    @cmd = ['bundle', 'exec', 'ruby', 'msfconsole.rb', '--no-readline', '--quiet']
     @options = {
       chdir: framework_root
     }
@@ -385,13 +387,13 @@ class Console < ChildProcess
   end
 
   def reset
-    sendline("sessions -K")
+    sendline('sessions -K')
     recvuntil(Console.prompt)
 
-    sendline("jobs -K")
+    sendline('jobs -K')
     recvuntil(Console.prompt)
 
-    @all_data.reopen("")
+    @all_data.reopen('')
   end
 end
 
@@ -433,28 +435,163 @@ def human_name_for_payload(config)
   is_staged = config[:name].include?('meterpreter/reverse_tcp')
 
   details = []
-  details << "stageless" if is_stageless
-  details << "staged" if is_staged
+  details << 'stageless' if is_stageless
+  details << 'staged' if is_staged
   details << config[:name]
 
-  details.join(" ")
+  details.join(' ')
 end
 
 def uncolorize(string)
   string.gsub(/\e\[\d+m/, '')
 end
 
-RSpec.describe "payloads" do
+RSpec.shared_examples_for 'a Meterpreter implementation' do |options|
+  options[:config].each do |config|
+    describe human_name_for_payload(config).to_s, if: supported_platform?(config) do
+      let(:payload) { Payload.new(config) }
+
+      # The shared payload session instance that will be reused across the test run
+      let(:await_session_id) do
+        # TODO: Move this into the driver, so remote drivers can be used
+        config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
+
+        console.sendline "use #{payload.name}"
+        console.recvuntil(Console.prompt)
+
+        # Generate the payload
+        console.sendline payload.generate_command
+        # TODO: Fix race condition, and handle generation failed being returned iin this scenario
+        console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
+        generate_result = console.recvuntil(Console.prompt)
+
+        expect(generate_result.lines).to_not include(match('generation failed'))
+        wait_for_expect do
+          expect(payload.size).to be > 0
+        end
+
+        console.sendline 'to_handler'
+        console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
+
+        puts 'before run payload'
+        driver.run_payload(payload)
+        puts 'after run payload'
+
+        session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+        session_message = console.recvuntil(session_opened_matcher)
+        session_id = session_message[session_opened_matcher, 1]
+        expect(session_id).to_not be_nil
+
+        session_id
+      end
+
+      before :each do
+        driver.close_payloads
+        console.reset
+        await_session_id
+      end
+
+      after :all do
+        driver.close_payloads
+        console.reset
+      end
+
+      describe 'compatibility', if: test_available_commands?(config) do
+        # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
+        # So only run this test when config_index == 0
+        it 'exposes available metasploit commands', if: test_available_commands?(config) do
+          console.sendline('resource scripts/resource/meterpreter_compatibility.rc')
+          result = console.recvuntil(Console.prompt)
+
+          available_commands = result.lines(chomp: true).find do |line|
+            line.start_with?('{') && line.end_with?('}') && JSON.parse(line)
+          rescue JSON::ParserError => _e
+            return false
+          end
+          expect(available_commands).to_not be_nil
+
+          available_commands_json = JSON.parse(available_commands, symbolize_names: true)
+          expect(available_commands_json[:sessions].length).to be 1
+          expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
+        ensure
+          Allure.add_attachment(
+            name: 'available commands',
+            source: JSON.pretty_generate(available_commands_json),
+            type: Allure::ContentType::JSON,
+            test_case: false
+          )
+        end
+      end
+
+      # TODO: Load this dynamically so new tests will automatically be picked up
+      [
+        # { name: 'test/cmd_exec', severity: :critical },
+        # { name: 'test/extapi', security: :known },
+        # { name: 'test/file', severity: :critical },
+        # { name: 'test/get_env', severity: :critical },
+        # { name: 'test/meterpreter', severity: :critical },
+        # { name: 'test/railgun', severity: :known },
+        # { name: 'test/railgun_reverse_lookups', severity: :known },
+        # { name: 'test/registry', severity: :known },
+        # { name: 'test/search', severity: :critical },
+        # { name: 'test/services', severity: :known },
+        # { name: 'test/unix', severity: :critical }
+      ].each do |test_module|
+        describe (test_module[:name]).to_s, if: supported_platform?(config) && !options.fetch(:skip, []).include?(test_module[:name]) do
+          it 'passes', severity: test_module[:severity] do
+            console.sendline("use #{test_module[:name]}")
+            console.recvuntil(Console.prompt)
+
+            console.sendline("run session=#{await_session_id} addentropy=true verbose=true")
+
+            # Expect happiness
+            test_result = console.recvuntil('Post module execution completed')
+            # Ensure there are no failures, and assert tests are complete
+
+            aggregate_failures do
+              test_result.lines.each do |test_line|
+                # TODO: These tests fail on a lot of the payloads
+                # test_line = uncolorize(test_line)
+                # expect(test_line).to_not include('FAILED')
+                # expect(test_line).to_not include('[-] FAILED')
+                # expect(test_line).to_not include('[-] Exception')
+                # expect(test_line).to_not include('[-] ')
+              end
+            end
+
+            expect(test_result).to include('Failed: 0')
+          ensure
+            Allure.add_attachment(
+              name: 'payload',
+              source: payload.as_readable_text,
+              type: Allure::ContentType::TXT,
+              test_case: false
+            )
+
+            Allure.add_attachment(
+              name: 'console data',
+              source: console.all_data,
+              type: Allure::ContentType::TXT,
+              test_case: false
+            )
+          end
+        end
+      end
+    end
+  end
+end
+
+RSpec.describe 'payloads' do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
     python: [
       {
         name: 'python/meterpreter_reverse_tcp',
         extension: '.py',
-        platforms: [:osx, :linux, :windows],
+        platforms: %i[osx linux windows],
         execute_cmd: ['python', '${payload_path}'],
         generate_options: {
-          '-f': 'raw',
+          '-f': 'raw'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -464,10 +601,10 @@ RSpec.describe "payloads" do
         name: 'python/meterpreter/reverse_tcp',
         test_available_commands: true,
         extension: '.py',
-        platforms: [:osx, :linux, :windows],
+        platforms: %i[osx linux windows],
         execute_cmd: ['python', '${payload_path}'],
         generate_options: {
-          '-f': 'raw',
+          '-f': 'raw'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -478,10 +615,10 @@ RSpec.describe "payloads" do
       {
         name: 'php/meterpreter_reverse_tcp',
         extension: '.php',
-        platforms: [:osx, :linux, :windows],
+        platforms: %i[osx linux windows],
         execute_cmd: ['php', '${payload_path}'],
         generate_options: {
-          '-f': 'raw',
+          '-f': 'raw'
         },
         payload_options: {
         }
@@ -490,10 +627,10 @@ RSpec.describe "payloads" do
         name: 'php/meterpreter/reverse_tcp',
         test_available_commands: true,
         extension: '.php',
-        platforms: [:osx, :linux, :windows],
+        platforms: %i[osx linux windows],
         execute_cmd: ['php', '${payload_path}'],
         generate_options: {
-          '-f': 'raw',
+          '-f': 'raw'
         },
         payload_options: {
         }
@@ -504,10 +641,10 @@ RSpec.describe "payloads" do
         name: 'java/meterpreter/reverse_tcp',
         test_available_commands: true,
         extension: '.jar',
-        platforms: [:osx, :linux, :windows],
+        platforms: %i[osx linux windows],
         execute_cmd: ['java', '-jar', '${payload_path}'],
         generate_options: {
-          '-f': 'jar',
+          '-f': 'jar'
         },
         payload_options: {
           spawn: 0
@@ -523,7 +660,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'elf',
+          '-f': 'elf'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -537,7 +674,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'elf',
+          '-f': 'elf'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -550,7 +687,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'elf',
+          '-f': 'elf'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -563,7 +700,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'elf',
+          '-f': 'elf'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -577,7 +714,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'macho',
+          '-f': 'macho'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -590,7 +727,7 @@ RSpec.describe "payloads" do
         executable: true,
         execute_cmd: ['${payload_path}'],
         generate_options: {
-          '-f': 'macho',
+          '-f': 'macho'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -606,7 +743,7 @@ RSpec.describe "payloads" do
         execute_cmd: ['${payload_path}'],
         executable: true,
         generate_options: {
-          '-f': 'exe',
+          '-f': 'exe'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -620,7 +757,7 @@ RSpec.describe "payloads" do
         execute_cmd: ['${payload_path}'],
         executable: true,
         generate_options: {
-          '-f': 'exe',
+          '-f': 'exe'
         },
         payload_options: {
           MeterpreterTryToFork: false
@@ -633,14 +770,14 @@ RSpec.describe "payloads" do
         execute_cmd: ['${payload_path}'],
         executable: true,
         generate_options: {
-          '-f': 'exe',
+          '-f': 'exe'
         },
         payload_options: {
           MeterpreterTryToFork: false
         }
       }
     ]
-  }
+  }.freeze
 
   let_it_be(:port_generator) { PortGenerator.new }
 
@@ -655,7 +792,7 @@ RSpec.describe "payloads" do
     console = driver.open_console
 
     # Load the test modules
-    console.sendline("loadpath test/modules")
+    console.sendline('loadpath test/modules')
     console.recvuntil(/Loaded \d+ modules:[^\n]*\n/)
     console.recvuntil(/\d+ auxiliary modules[^\n]*\n/)
     console.recvuntil(/\d+ exploit modules[^\n]*\n/)
@@ -695,140 +832,103 @@ RSpec.describe "payloads" do
   # xcopy Z:\metasploit-framework\scripts\ .\scripts /s /e
   # xcopy Z:\metasploit-framework\spec\ .\spec /s /e
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
-  METERPRETER_PAYLOADS.each.with_index do |(name, configs)|
-    describe "#{name}" do
-      configs.each.with_index do |config, config_index|
-        describe "#{human_name_for_payload(config)}", if: supported_platform?(config)  do
-          let(:payload) { Payload.new(config) }
+  describe 'Python Meterpreter' do
+    it_behaves_like(
+      'a Meterpreter implementation',
+      config: METERPRETER_PAYLOADS[:python],
+      skip: [
+        # "test/cmd_exec",
+        # "test/extapi",
+        # "test/file",
+        # "test/get_env",
+        # "test/meterpreter",
+        # "test/railgun",
+        # "test/railgun_reverse_lookups",
+        # "test/registry",
+        # "test/search",
+        # "test/services",
+        # "test/unix",
+      ]
+    )
+  end
 
-          # The shared payload session instance that will be reused across the test run
-          let(:await_session_id) do
-            # TODO: Move this into the driver, so remote drivers can be used
-            config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
+  describe 'PHP Meterpreter' do
+    it_behaves_like(
+      'a Meterpreter implementation',
+      config: METERPRETER_PAYLOADS[:php],
+      skip: [
+        # 'test/cmd_exec',
+        # 'test/extapi',
+        # 'test/file',
+        # 'test/get_env',
+        # 'test/meterpreter',
+        # 'test/railgun',
+        # 'test/railgun_reverse_lookups',
+        # 'test/registry',
+        # 'test/search',
+        # 'test/services',
+        # 'test/unix',
+      ]
+    )
+  end
 
-            console.sendline "use #{payload.name}"
-            console.recvuntil(Console.prompt)
+  describe 'Mettle Meterpreter' do
+    it_behaves_like(
+      'a Meterpreter implementation',
+      config: METERPRETER_PAYLOADS[:mettle],
+      skip: [
+        # 'test/cmd_exec',
+        # 'test/extapi',
+        # 'test/file',
+        # 'test/get_env',
+        # 'test/meterpreter',
+        # 'test/railgun',
+        # 'test/railgun_reverse_lookups',
+        # 'test/registry',
+        # 'test/search',
+        # 'test/services',
+        # 'test/unix',
+      ]
+    )
+  end
 
-            # Generate the payload
-            console.sendline payload.generate_command
-            # TODO: Fix race condition, and handle generation failed being returned iin this scenario
-            console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
-            generate_result = console.recvuntil(Console.prompt)
+  describe 'Java Meterpreter' do
+    it_behaves_like(
+      'a Meterpreter implementation',
+      config: METERPRETER_PAYLOADS[:java],
+      skip: [
+        # 'test/cmd_exec',
+        # 'test/extapi',
+        # 'test/file',
+        # 'test/get_env',
+        # 'test/meterpreter',
+        # 'test/railgun',
+        # 'test/railgun_reverse_lookups',
+        # 'test/registry',
+        # 'test/search',
+        # 'test/services',
+        # 'test/unix',
+      ]
+    )
+  end
 
-            expect(generate_result.lines).to_not include(match("generation failed"))
-            wait_for_expect do
-              expect(payload.size).to be > 0
-            end
-
-            console.sendline "to_handler"
-            console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
-
-            puts "before run payload"
-            driver.run_payload(payload)
-            puts "after run payload"
-
-            session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
-            session_message = console.recvuntil(session_opened_matcher)
-            session_id = session_message[session_opened_matcher, 1]
-            expect(session_id).to_not be_nil
-
-            session_id
-          end
-
-          before :each do
-            driver.close_payloads
-            console.reset
-            await_session_id
-          end
-
-          after :all do
-            driver.close_payloads
-            console.reset
-          end
-
-          describe "compatibility", if: test_available_commands?(config) do
-            # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
-            # So only run this test when config_index == 0
-            it "exposes available metasploit commands", if: test_available_commands?(config) do
-              console.sendline("resource scripts/resource/meterpreter_compatibility.rc")
-              result = console.recvuntil(Console.prompt)
-
-              available_commands = result.lines(chomp: true).find do |line|
-                line.start_with?("{") && line.end_with?("}") && JSON.parse(line)
-              rescue JSON::ParserError => _e
-                return false
-              end
-              expect(available_commands).to_not be_nil
-
-              available_commands_json = JSON.parse(available_commands, symbolize_names: true)
-              expect(available_commands_json[:sessions].length).to be 1
-              expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
-            ensure
-              Allure.add_attachment(
-                name: 'available commands',
-                source: JSON.pretty_generate(available_commands_json),
-                type: Allure::ContentType::JSON,
-                test_case: false
-              )
-            end
-          end
-
-          # TODO: Load this dynamically so new tests will automatically be picked up
-          [
-            { name: "test/cmd_exec", severity: :critical },
-            { name: "test/extapi", security: :known },
-            { name: "test/file", severity: :critical },
-            { name: "test/get_env", severity: :critical },
-            { name: "test/meterpreter", severity: :critical },
-            { name: "test/railgun", severity: :known },
-            { name: "test/railgun_reverse_lookups", severity: :known },
-            { name: "test/registry", severity: :known },
-            { name: "test/search", severity: :critical },
-            { name: "test/services", severity: :known },
-            { name: "test/unix", severity: :critical }
-          ].each do |test_module|
-            describe "#{test_module[:name]}", if: supported_platform?(config) do
-              it "passes", severity: test_module[:severity] do
-                console.sendline("use #{test_module[:name]}")
-                console.recvuntil(Console.prompt)
-
-                console.sendline("run session=#{await_session_id} addentropy=true verbose=true")
-
-                # Expect happiness
-                test_result = console.recvuntil('Post module execution completed')
-                # Ensure there are no failures, and assert tests are complete
-
-                aggregate_failures do
-                  test_result.lines.each do |test_line|
-                    # TODO: These tests fail on a lot of the payloads
-                    # test_line = uncolorize(test_line)
-                    # expect(test_line).to_not include('FAILED')
-                    # expect(test_line).to_not include('[-] FAILED')
-                    # expect(test_line).to_not include('[-] Exception')
-                    # expect(test_line).to_not include('[-] ')
-                  end
-                end
-
-                expect(test_result).to include('Failed: 0')
-              ensure
-                Allure.add_attachment(
-                  name: 'payload',
-                  source: payload.as_readable_text,
-                  type: Allure::ContentType::TXT,
-                  test_case: false
-                )
-
-                Allure.add_attachment(
-                  name: 'console data',
-                  source: console.all_data,
-                  type: Allure::ContentType::TXT,
-                  test_case: false
-                )
-              end
-            end
-          end
-        end
-      end
-    end
+  describe 'Windows Meterpreter' do
+    it_behaves_like(
+      'a Meterpreter implementation',
+      config: METERPRETER_PAYLOADS[:windows_meterpreter],
+      skip: [
+        # 'test/cmd_exec',
+        # 'test/extapi',
+        # 'test/file',
+        # 'test/get_env',
+        # 'test/meterpreter',
+        # 'test/railgun',
+        # 'test/railgun_reverse_lookups',
+        # 'test/registry',
+        # 'test/search',
+        # 'test/services',
+        # 'test/unix',
+      ]
+    )
   end
 end
