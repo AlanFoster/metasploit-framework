@@ -1,5 +1,135 @@
 {
   "uid" : "4b4757e66a1912dae1a509f688f20b0f",
-  "children" : [ ],
+  "children" : [ {
+    "name" : "Product defects",
+    "children" : [ {
+      "name" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,34 +1,67 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 2\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter_reverse_tcp test/file",
+        "uid" : "3c57ed12a77573a6",
+        "parentUid" : "505366ec112fd5de0b67409716233a8c",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494209903,
+          "stop" : 1643494212142,
+          "duration" : 2239
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "505366ec112fd5de0b67409716233a8c"
+    }, {
+      "name" : "expected \"[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Running ag...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 4\n+[*] Session type is meterpreter and platform is windows\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x000002596db78c48>:0x000002596e35d0a8 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643494211, \"st_mtime\"=>1643494211, \"st_ctime\"=>1643394736}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-xnlshyfg\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-xnlshyfg\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-xnlshyfg\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-xnlshyfg\n+[*] Wrote to meterpreter-test-xnlshyfg, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-xnlshyfg.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-xnlshyfg\n+[*] Destination File Name: meterpreter-test-xnlshyfg-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-xnlshyfg\n+[*] Destination File Name: meterpreter-test-xnlshyfg-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-xnlshyfg.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting process tests\n+[*] Pid: 2784\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>2784, \"ppid\"=>1872, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-576\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Testing complete in 1.3398928\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter_reverse_tcp test/meterpreter",
+        "uid" : "c101d22fa62ce90",
+        "parentUid" : "992a7c95e73a12dccc5499e668ab5b70",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494213952,
+          "stop" : 1643494217018,
+          "duration" : 3066
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "992a7c95e73a12dccc5499e668ab5b70"
+    }, {
+      "name" : "expected \"[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: exta...] Testing complete in 0.4550389\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,29 +1,57 @@\n-Failed: 0\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should modify config on a given service arrhqY\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service agegBi\n+[*] Testing complete in 0.4550389\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter_reverse_tcp test/services",
+        "uid" : "79ea0ef90fb4029a",
+        "parentUid" : "2a91959155df65e36815d5c940b809ca",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494222844,
+          "stop" : 1643494224859,
+          "duration" : 2015
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "2a91959155df65e36815d5c940b809ca"
+    }, {
+      "name" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,34 +1,67 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 12\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter/reverse_tcp test/file",
+        "uid" : "fc0b26ba1fe34d4d",
+        "parentUid" : "6fd4f3697e3d1f5a29cb98b64ac15420",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494230138,
+          "stop" : 1643494232063,
+          "duration" : 1925
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "6fd4f3697e3d1f5a29cb98b64ac15420"
+    }, {
+      "name" : "expected \"[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Running ag...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 14\n+[*] Session type is meterpreter and platform is windows\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x000002596e4b7d68>:0x0000025963e67878 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643494231, \"st_mtime\"=>1643494231, \"st_ctime\"=>1643394736}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-kxpszwtl\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-kxpszwtl\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-kxpszwtl\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-kxpszwtl\n+[*] Wrote to meterpreter-test-kxpszwtl, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-kxpszwtl.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-kxpszwtl\n+[*] Destination File Name: meterpreter-test-kxpszwtl-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-kxpszwtl\n+[*] Destination File Name: meterpreter-test-kxpszwtl-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-kxpszwtl.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting process tests\n+[*] Pid: 6796\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>6796, \"ppid\"=>1872, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-576\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Testing complete in 1.4822638\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter/reverse_tcp test/meterpreter",
+        "uid" : "cda9782b22bd1e7c",
+        "parentUid" : "29314599b66b9bad00792186e1646463",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494233642,
+          "stop" : 1643494236837,
+          "duration" : 3195
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "29314599b66b9bad00792186e1646463"
+    }, {
+      "name" : "expected \"[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: exta...] Testing complete in 0.4353333\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,29 +1,57 @@\n-Failed: 0\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 18\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should modify config on a given service aSmvwV\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service aUTGkL\n+[*] Testing complete in 0.4353333\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
+      "children" : [ {
+        "name" : "passes python/meterpreter/reverse_tcp test/services",
+        "uid" : "d355a47ed461a85f",
+        "parentUid" : "be04594ae2d87bdd2171e66028d7a25b",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643494241889,
+          "stop" : 1643494243779,
+          "duration" : 1890
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "be04594ae2d87bdd2171e66028d7a25b"
+    } ],
+    "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
+  } ],
   "name" : "categories"
 }
