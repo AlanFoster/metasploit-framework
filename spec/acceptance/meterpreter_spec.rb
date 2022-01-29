@@ -46,13 +46,13 @@ class ChildProcess
   end
 
   def run
-    puts "popen2 before #{@cmd.join(' ')}"
+    log "popen2 before #{@cmd.join(' ')}"
     self.stdin, self.stdout_and_stderr, self.wait_thread = ::Open3.popen2e(
       @env,
       *@cmd,
       **@options
     )
-    puts "popen2 after #{@cmd.join(' ')}"
+    log "popen2 after #{@cmd.join(' ')}"
     # stdout_and_stderr.binmode
 
     stdin.sync = true
@@ -500,7 +500,8 @@ RSpec.shared_examples_for 'a Meterpreter payload' do |options|
       describe 'compatibility', if: test_available_commands?(config) do
         # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
         # So only run this test when config_index == 0
-        it 'exposes available metasploit commands', if: test_available_commands?(config) do
+        # TODO: Bring this back
+        it 'exposes available metasploit commands', if: test_available_commands?(config) && ENV['CI'] do
           console.sendline('resource scripts/resource/meterpreter_compatibility.rc')
           result = console.recvuntil(Console.prompt)
 
@@ -526,7 +527,7 @@ RSpec.shared_examples_for 'a Meterpreter payload' do |options|
 
       options[:module_tests][current_platform].each do |module_test|
         describe module_test[:name], if: supported_platform?(config) do
-          it 'passes' do
+          it "passes #{config[:name]} #{module_test[:name]}" do
             puts "Running test payload: #{config[:name]}, test:#{module_test[:name]}"
 
             console.sendline("use #{module_test[:name]}")
@@ -604,17 +605,19 @@ RSpec.describe 'payloads' do
           # { name: 'test/unix', focus: false },
         ],
         windows: [
-          # { name: 'test/cmd_exec', focus: false },
+          { name: 'test/cmd_exec', focus: false },
+          # TODO: Not supported
           # { name: 'test/extapi', focus: false },
-          # { name: 'test/file', focus: false },
-          # { name: 'test/get_env', focus: false },
-          # { name: 'test/meterpreter', focus: false },
-          # { name: 'test/railgun', focus: false },
-          # { name: 'test/railgun_reverse_lookups', focus: false },
+          { name: 'test/file', focus: false },
+          { name: 'test/get_env', focus: false },
+          { name: 'test/meterpreter', focus: false },
+          { name: 'test/railgun', focus: false },
+          { name: 'test/railgun_reverse_lookups', focus: false },
+          # TODO: FAILED: should evaluate key existence
           # { name: 'test/registry', focus: false },
-          # { name: 'test/search', focus: false },
-          # { name: 'test/services', focus: false },
-          # { name: 'test/unix', focus: false },
+          { name: 'test/search', focus: false },
+          { name: 'test/services', focus: false },
+          { name: 'test/unix', focus: false },
         ],
       },
       payloads: [
@@ -900,94 +903,95 @@ RSpec.describe 'payloads' do
         }
       ]
     },
-    windows_meterpreter: {
-      focus: true,
-      module_tests: {
-        osx: [
-          # { name: 'test/cmd_exec', focus: false },
-          # { name: 'test/extapi', focus: false },
-          # { name: 'test/file', focus: false },
-          # { name: 'test/get_env', focus: false },
-          # { name: 'test/meterpreter', focus: false },
-          # { name: 'test/railgun', focus: false },
-          # { name: 'test/railgun_reverse_lookups', focus: false },
-          # { name: 'test/registry', focus: false },
-          # { name: 'test/search', focus: false },
-          # { name: 'test/services', focus: false },
-          # { name: 'test/unix', focus: false },
-        ],
-        linux: [
-          # { name: 'test/cmd_exec', focus: false },
-          # { name: 'test/extapi', focus: false },
-          # { name: 'test/file', focus: false },
-          # { name: 'test/get_env', focus: false },
-          # { name: 'test/meterpreter', focus: false },
-          # { name: 'test/railgun', focus: false },
-          # { name: 'test/railgun_reverse_lookups', focus: false },
-          # { name: 'test/registry', focus: false },
-          # { name: 'test/search', focus: false },
-          # { name: 'test/services', focus: false },
-          # { name: 'test/unix', focus: false },
-        ],
-        windows: [
-          { name: 'test/cmd_exec', focus: false },
-          { name: 'test/extapi', focus: false },
-          # TODO: Fails on recursive folder delete
-          # { name: 'test/file', focus: false },
-          { name: 'test/get_env', focus: false },
-          { name: 'test/meterpreter', focus: false },
-          { name: 'test/railgun', focus: false },
-          { name: 'test/railgun_reverse_lookups', focus: false },
-          { name: 'test/registry', focus: false },
-          { name: 'test/search', focus: false },
-          { name: 'test/services', focus: false },
-          { name: 'test/unix', focus: false },
-        ],
-      },
-      payloads: [
-        {
-          name: 'windows/meterpreter/reverse_tcp',
-          test_available_commands: true,
-          extension: '.exe',
-          platforms: [:windows],
-          execute_cmd: ['${payload_path}'],
-          executable: true,
-          generate_options: {
-            '-f': 'exe'
-          },
-          payload_options: {
-            MeterpreterTryToFork: false
-          }
-        },
-        {
-          name: 'windows/meterpreter_reverse_tcp',
-          extension: '.exe',
-          platforms: [:windows],
-          execute_cmd: ['${payload_path}'],
-          executable: true,
-          generate_options: {
-            '-f': 'exe'
-          },
-          payload_options: {
-            MeterpreterTryToFork: false
-          }
-        },
-        {
-          name: 'windows/x64/meterpreter/reverse_tcp',
-          test_available_commands: true,
-          extension: '.exe',
-          platforms: [:windows],
-          execute_cmd: ['${payload_path}'],
-          executable: true,
-          generate_options: {
-            '-f': 'exe'
-          },
-          payload_options: {
-            MeterpreterTryToFork: false
-          }
-        }
-      ]
-    }
+    # windows_meterpreter: {
+    #   module_tests: {
+    #     osx: [
+    #       # { name: 'test/cmd_exec', focus: false },
+    #       # { name: 'test/extapi', focus: false },
+    #       # { name: 'test/file', focus: false },
+    #       # { name: 'test/get_env', focus: false },
+    #       # { name: 'test/meterpreter', focus: false },
+    #       # { name: 'test/railgun', focus: false },
+    #       # { name: 'test/railgun_reverse_lookups', focus: false },
+    #       # { name: 'test/registry', focus: false },
+    #       # { name: 'test/search', focus: false },
+    #       # { name: 'test/services', focus: false },
+    #       # { name: 'test/unix', focus: false },
+    #     ],
+    #     linux: [
+    #       # { name: 'test/cmd_exec', focus: false },
+    #       # { name: 'test/extapi', focus: false },
+    #       # { name: 'test/file', focus: false },
+    #       # { name: 'test/get_env', focus: false },
+    #       # { name: 'test/meterpreter', focus: false },
+    #       # { name: 'test/railgun', focus: false },
+    #       # { name: 'test/railgun_reverse_lookups', focus: false },
+    #       # { name: 'test/registry', focus: false },
+    #       # { name: 'test/search', focus: false },
+    #       # { name: 'test/services', focus: false },
+    #       # { name: 'test/unix', focus: false },
+    #     ],
+    #     windows: [
+    #       { name: 'test/cmd_exec', focus: false },
+    #       { name: 'test/extapi', focus: false },
+    #       # TODO: Fails on recursive folder delete
+    #       # { name: 'test/file', focus: false },
+    #       { name: 'test/get_env', focus: false },
+    #       { name: 'test/meterpreter', focus: false },
+    #       { name: 'test/railgun', focus: false },
+    #       { name: 'test/railgun_reverse_lookups', focus: false },
+    #       { name: 'test/registry', focus: false },
+    #       { name: 'test/search', focus: false },
+    #       # TODO: Flakey. FAILED: should start a disabled service aVqDqI.
+    #       #   Exception: RuntimeError : Unable to open service manager: FormatMessage failed to retrieve the error.
+    #       { name: 'test/services', focus: false },
+    #       { name: 'test/unix', focus: false },
+    #     ],
+    #   },
+    #   payloads: [
+    #     {
+    #       name: 'windows/meterpreter/reverse_tcp',
+    #       test_available_commands: true,
+    #       extension: '.exe',
+    #       platforms: [:windows],
+    #       execute_cmd: ['${payload_path}'],
+    #       executable: true,
+    #       generate_options: {
+    #         '-f': 'exe'
+    #       },
+    #       payload_options: {
+    #         MeterpreterTryToFork: false
+    #       }
+    #     },
+    #     # {
+    #     #   name: 'windows/meterpreter_reverse_tcp',
+    #     #   extension: '.exe',
+    #     #   platforms: [:windows],
+    #     #   execute_cmd: ['${payload_path}'],
+    #     #   executable: true,
+    #     #   generate_options: {
+    #     #     '-f': 'exe'
+    #     #   },
+    #     #   payload_options: {
+    #     #     MeterpreterTryToFork: false
+    #     #   }
+    #     # },
+    #     # {
+    #     #   name: 'windows/x64/meterpreter/reverse_tcp',
+    #     #   test_available_commands: true,
+    #     #   extension: '.exe',
+    #     #   platforms: [:windows],
+    #     #   execute_cmd: ['${payload_path}'],
+    #     #   executable: true,
+    #     #   generate_options: {
+    #     #     '-f': 'exe'
+    #     #   },
+    #     #   payload_options: {
+    #     #     MeterpreterTryToFork: false
+    #     #   }
+    #     # }
+    #   ]
+    # }
   }.freeze
 
   let_it_be(:port_generator) { PortGenerator.new }
@@ -1044,6 +1048,7 @@ RSpec.describe 'payloads' do
   # xcopy Z:\metasploit-framework\lib\ .\lib /s /e
   # xcopy Z:\metasploit-framework\scripts\ .\scripts /s /e
   # xcopy Z:\metasploit-framework\spec\ .\spec /s /e
+  # xcopy Z:\metasploit-framework\Gemfile.lock .\Gemfile.lock /s /e
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each do |key, config|
     describe "#{key}" do
