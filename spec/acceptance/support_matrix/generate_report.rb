@@ -18,7 +18,29 @@ module ReportGeneration
     end
 
     def table
-      sorted_sessions = @data.fetch(:sessions, []).sort_by { |session| session[:session_type] }
+      preferred_session_name_order = [
+        "java/linux",
+        "java/osx",
+        "java/windows",
+
+        "php/linux",
+        "php/osx",
+        "php/windows",
+
+        "python/linux",
+        "python/osx",
+        "python/windows",
+
+        "x86/linux",
+        "x64/linux",
+
+        "x64/osx",
+
+        "x86/windows",
+        "x64/windows",
+      ]
+
+      sorted_sessions = @data.fetch(:sessions, []).sort_by { |session| preferred_session_name_order.index(session[:session_type]) }
       sorted_session_names = sorted_sessions.map do |session|
         session[:session_type]
       end

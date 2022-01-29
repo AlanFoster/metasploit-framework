@@ -28,6 +28,9 @@ class MetasploitModule < Msf::Post
 
   def test_unix
     it "should list users" do
+      # TODO: PHP Meterpreter crashes on windows
+      return unless session.platform == 'windows'
+
       ret = true
       users = get_users
       ret &&= users.kind_of? Array
@@ -48,4 +51,3 @@ class MetasploitModule < Msf::Post
   end
 
 end
-

@@ -234,6 +234,12 @@ RSpec.configure do |config|
   #   $stderr = old_stderr
   # end
 
+    # if ENV['CI']
+    #   config.before(:example, :focus) { raise "Should not commit focused specs" }
+    # else
+      config.filter_run focus: true
+      config.run_all_when_everything_filtered = true
+    # end
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
