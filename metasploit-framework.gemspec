@@ -70,9 +70,9 @@ Gem::Specification.new do |spec|
   # are needed when there's no database
   spec.add_runtime_dependency 'metasploit-model'
   # Needed for Meterpreter
-  spec.add_runtime_dependency 'metasploit-payloads', '2.0.66'
+  spec.add_runtime_dependency 'metasploit-payloads', '2.0.71'
   # Needed for the next-generation POSIX Meterpreter
-  spec.add_runtime_dependency 'metasploit_payloads-mettle', '1.0.17'
+  spec.add_runtime_dependency 'metasploit_payloads-mettle', '1.0.18'
   # Needed by msfgui and other rpc components
   spec.add_runtime_dependency 'msgpack'
   # get list of network interfaces, like eth* from OS.
@@ -210,7 +210,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'hrr_rb_ssh-ed25519'
   # Needed for irb internal command
   spec.add_runtime_dependency 'irb'
-  spec.add_runtime_dependency 'reline'
+  # Lock reline version until Fiddle concerns are addressed
+  spec.add_runtime_dependency 'reline', '0.2.5'
 
   # AWS enumeration modules
   spec.add_runtime_dependency 'aws-sdk-s3'
