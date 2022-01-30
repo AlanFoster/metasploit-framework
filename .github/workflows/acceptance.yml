@@ -100,58 +100,58 @@ jobs:
           path: tmp/allure-raw-data
 
   # Generate a final report from the previous test results
-#  report:
-#    name: Generate report
-#    needs: test
-#    runs-on: ubuntu-18.04
-#    if: always()
-#
-#    steps:
-#      - name: Install system dependencies (Linux)
-#        if: runner.os == 'Linux'
-#        run: sudo apt-get install libpcap-dev graphviz
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-#
-#      - name: Setup Ruby
-#        env:
-#          BUNDLE_WITHOUT: "coverage development pcap"
-#        uses: ruby/setup-ruby@v1
-#        with:
-#          ruby-version: 2.7
-#          bundler-cache: true
-#
-#      - uses: actions/download-artifact@v2
-#        id: download
-#        if: always()
-#        with:
-#          # Note: Not specifying a name will download all artifacts from the previous workflow jobs
-#          path: raw-data
-#
-#      - name: allure generate
-#        if: always()
-#        run: |
-#          export VERSION=2.17.2
-#
-#          curl -o allure-$VERSION.tgz -Ls https://github.com/allure-framework/allure2/releases/download/$VERSION/allure-$VERSION.tgz
-#          tar -zxvf allure-$VERSION.tgz -C .
-#
-#          ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
-#          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
-#
-#      - name: archive results
-#        if: always()
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: final-report
-#          path: |
-#            ./allure-report
-#
-#      - name: Deploy report to Github Pages
-#        if: always()
-#        uses: peaceiris/actions-gh-pages@v2
-#        env:
-#          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          PUBLISH_BRANCH: gh-pages
-#          PUBLISH_DIR: ./allure-report
+  report:
+    name: Generate report
+    needs: test
+    runs-on: ubuntu-18.04
+    if: always()
+
+    steps:
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install libpcap-dev graphviz
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        env:
+          BUNDLE_WITHOUT: "coverage development pcap"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+
+      - uses: actions/download-artifact@v2
+        id: download
+        if: always()
+        with:
+          # Note: Not specifying a name will download all artifacts from the previous workflow jobs
+          path: raw-data
+
+      - name: allure generate
+        if: always()
+        run: |
+          export VERSION=2.17.2
+
+          curl -o allure-$VERSION.tgz -Ls https://github.com/allure-framework/allure2/releases/download/$VERSION/allure-$VERSION.tgz
+          tar -zxvf allure-$VERSION.tgz -C .
+
+          ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
+          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
+
+      - name: archive results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: final-report
+          path: |
+            ./allure-report
+
+      - name: Deploy report to Github Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./allure-report
