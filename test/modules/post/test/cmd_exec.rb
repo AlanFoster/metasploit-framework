@@ -89,6 +89,10 @@ class MetasploitModule < Msf::Post
         output == "\"" + test_string + "\""
       else
         output = cmd_exec("echo \"#{test_string}\"")
+
+        puts "expected: #{test_string}"
+        puts "actual: #{output}"
+
         output == test_string
       end
     end
