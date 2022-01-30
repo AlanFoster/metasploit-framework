@@ -3,16 +3,33 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
-      "name" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,40 +1,79 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 2\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"[*] Loading extapi extension...\\r\\n[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \\...oit-framework/test/modules/post/test/extapi.rb:32:in `setup'\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,5 +1,9 @@\n-Failed: 0\n+[*] Loading extapi extension...\n+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The \"extapi\" extension is not supported by this Meterpreter type (php/windows)\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'\n+[*] Post module execution completed\n",
       "children" : [ {
-        "name" : "passes python/meterpreter_reverse_tcp test/file",
-        "uid" : "4da5faa017f8841a",
-        "parentUid" : "442d0c6b20ec48339eba960bdee391ea",
+        "name" : "passes php/meterpreter_reverse_tcp test/extapi",
+        "uid" : "9b941b01c209f84c",
+        "parentUid" : "6f9924972d0d9fbea943ad791a3f0d3a",
         "status" : "failed",
         "time" : {
-          "start" : 1643504603817,
-          "stop" : 1643504606160,
-          "duration" : 2343
+          "start" : 1643514018800,
+          "stop" : 1643514019615,
+          "duration" : 815
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/extapi",
+        "uid" : "300ce69fd806f010",
+        "parentUid" : "6f9924972d0d9fbea943ad791a3f0d3a",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643514323585,
+          "stop" : 1643514324447,
+          "duration" : 862
         },
         "flaky" : false,
         "newFailed" : false,
@@ -22,18 +39,35 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "442d0c6b20ec48339eba960bdee391ea"
+      "uid" : "6f9924972d0d9fbea943ad791a3f0d3a"
     }, {
-      "name" : "expected \"[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Running ag...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 4\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting process tests\n+[*] Pid: 1896\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>1896, \"ppid\"=>5716, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-576\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x000001346527ad68>:0x00000134647f4948 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643504606, \"st_mtime\"=>1643504606, \"st_ctime\"=>1643394736}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-yoegxjbr\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-yoegxjbr\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-yoegxjbr\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-yoegxjbr\n+[*] Wrote to meterpreter-test-yoegxjbr, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-yoegxjbr.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-yoegxjbr\n+[*] Destination File Name: meterpreter-test-yoegxjbr-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-yoegxjbr\n+[*] Destination File Name: meterpreter-test-yoegxjbr-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-yoegxjbr.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.2782075\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
+      "name" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[-] Post failed: Rex::Post::Meterpreter::RequestE...ry back to D:\\\\a\\\\metasploit-framework\\\\metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,9 +1,17 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[-] Post failed: Rex::Post::Meterpreter::RequestError stdapi_fs_chdir: Operation failed: 1\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/fs/dir.rb:189:in `chdir'\n+[-]   D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/file.rb:51:in `cd'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:45:in `setup'\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Cleanup: changing working directory back to D:\\a\\metasploit-framework\\metasploit-framework\n+[*] Post module execution completed\n",
       "children" : [ {
-        "name" : "passes python/meterpreter_reverse_tcp test/meterpreter",
-        "uid" : "b36121253665c8f2",
-        "parentUid" : "c82d61a8157c2ee392506004195f2c74",
+        "name" : "passes php/meterpreter_reverse_tcp test/file",
+        "uid" : "bee1cb56aab9cae6",
+        "parentUid" : "e7473f7746837b31ff12ca355f2b6105",
         "status" : "failed",
         "time" : {
-          "start" : 1643504607788,
-          "stop" : 1643504610682,
-          "duration" : 2894
+          "start" : 1643514019617,
+          "stop" : 1643514020499,
+          "duration" : 882
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/file",
+        "uid" : "a39ad1cead919687",
+        "parentUid" : "e7473f7746837b31ff12ca355f2b6105",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643514324449,
+          "stop" : 1643514325356,
+          "duration" : 907
         },
         "flaky" : false,
         "newFailed" : false,
@@ -43,93 +77,289 @@
         "retriesStatusChange" : false,
         "parameters" : [ "mingw32" ]
       } ],
-      "uid" : "c82d61a8157c2ee392506004195f2c74"
-    }, {
-      "name" : "expected \"[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: exta...*] Testing complete in 0.458071\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,29 +1,57 @@\n-Failed: 0\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 8\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should modify config on a given service aVYMUI\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service amZHDX\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[*] Testing complete in 0.458071\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes python/meterpreter_reverse_tcp test/services",
-        "uid" : "bd6d1328bf3ffcb7",
-        "parentUid" : "b36415a5e60b43610cbd35263437caf5",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643504616255,
-          "stop" : 1643504618279,
-          "duration" : 2024
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      } ],
-      "uid" : "b36415a5e60b43610cbd35263437caf5"
-    }, {
-      "name" : "expected \"[*] Setup: changing working directory to %TEMP%\\r\\n[!] SESSION may not be compatible with this modul...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,40 +1,79 @@\n-Failed: 0\n+[*] Setup: changing working directory to %TEMP%\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod\n+[*] Running against session 12\n+[*] Session type is meterpreter and platform is windows\n+[+] should test for directory existence\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir\\directory\n+[*] test-dir\\directory created\n+[+] should create directories\n+[+] should list the directory we just made\n+[+] should recursively delete the directory we just made\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[-] FAILED: should delete a symbolic link target\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[-] FAILED: should not recurse into symbolic link directories\n+[-] Exception: Rex::Post::Meterpreter::RequestError : stdapi_sys_process_execute: Operation failed: Python exception: FileNotFoundError\n+[-] FAILED: should test for file existence\n+[+] should create text files\n+[+] should read the text we just wrote\n+[+] should append text files\n+[+] should delete text files\n+[+] should move files\n+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo\n+[-] Call stack:\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `read'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:214:in `test_binary_files'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'\n+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes python/meterpreter/reverse_tcp test/file",
-        "uid" : "9469156335df9ac6",
-        "parentUid" : "6b8756f4a3e032fe6ff84626f9ec0718",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643504623043,
-          "stop" : 1643504625184,
-          "duration" : 2141
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      } ],
-      "uid" : "6b8756f4a3e032fe6ff84626f9ec0718"
-    }, {
-      "name" : "expected \"[*] Setup: changing working directory to C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\r\\n[*] Running ag...ctory back to D:/a/metasploit-framework/metasploit-framework\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,64 +1,127 @@\n-Failed: 0\n+[*] Setup: changing working directory to C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\n+[*] Running against session 14\n+[*] Session type is meterpreter and platform is windows\n+[+] should enumerate supported core commands\n+[+] should support 3 or more core commands\n+[*] Starting process tests\n+[*] Pid: 2824\n+[+] should return its own process id\n+[*] PID info: {\"pid\"=>2824, \"ppid\"=>5716, \"name\"=>\"python.exe\", \"path\"=>\"C:\\\\msys64\\\\mingw64\\\\bin\\\\python.exe\", \"session\"=>nil, \"user\"=>\"fv-az159-576\\\\runneradmin\", \"arch\"=>\"x64\"}\n+[+] should return a list of processes\n+[*] Starting system config tests\n+[+] should return a user id\n+[+] should return a sysinfo Hash\n+[*] Starting networking tests\n+[+] should return network interfaces\n+[+] should have an interface that matches session_host\n+[+] should return network routes\n+[*] Starting filesystem tests\n+[-] FAILED: should return the proper directory separator\n+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[+] should return the current working directory\n+[+] should list files in the current directory\n+[*] Current directory: \"C:/Users/RUNNER~1/AppData/Local/Temp\"\n+[*] Stat of current directory: #<#<Class:0x00000134629979a0>:0x0000013464ba9700 @stathash={\"st_dev\"=>371408700, \"st_mode\"=>16895, \"st_nlink\"=>1, \"st_uid\"=>0, \"st_gid\"=>0, \"st_rdev\"=>371408700, \"st_ino\"=>1407374883584225, \"st_size\"=>4096, \"st_atime\"=>1643504625, \"st_mtime\"=>1643504625, \"st_ctime\"=>1643394736}>\n+[+] should stat a directory\n+[*] Directory Name: meterpreter-test-dir-zmjspfgq\n+[*] Directory created successfully\n+[*] Directory removed successfully\n+[+] should create and remove a dir\n+[*] Directory Name: meterpreter-test-dir-zmjspfgq\n+[*] Directory created successfully\n+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-zmjspfgq\n+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp\n+[*] Directory removed successfully\n+[+] should change directories\n+[*] File Name: meterpreter-test-zmjspfgq\n+[*] Wrote to meterpreter-test-zmjspfgq, checking contents\n+[*] Wrote test\n+[+] should create and remove files\n+[*] Remote File Name: meterpreter-test-file-zmjspfgq.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[-] FAILED: should upload a file\n+[*] Source File Name: meterpreter-test-zmjspfgq\n+[*] Destination File Name: meterpreter-test-zmjspfgq-moved\n+[+] should move files\n+[*] Source File Name: meterpreter-test-zmjspfgq\n+[*] Destination File Name: meterpreter-test-zmjspfgq-copied\n+[+] should copy files\n+[*] Remote File Name: meterpreter-test-file-zmjspfgq.txt\n+[*] uploading\n+[*] done\n+[*] remote file exists? true\n+[*] remote md5: 781830d7e85894e2bf2cfbd0fe78e6e6\n+[*] local md5 : 238bab901e240f3e78ad6f290bca0510\n+[*] remote sha: 6393a6e292f338fca91c7127297da8024274df52\n+[*] local sha : ea186228a55278d32516182f230181dccf4b7934\n+[-] FAILED: should do md5 and sha1 of files\n+[*] Testing complete in 1.2685284\n+[-] Passed: 17; Failed: 3\n+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes python/meterpreter/reverse_tcp test/meterpreter",
-        "uid" : "df27a1ddabb0c4ab",
-        "parentUid" : "29f9a5493b8a795d9c065d13a52ede97",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643504626575,
-          "stop" : 1643504629338,
-          "duration" : 2763
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      } ],
-      "uid" : "29f9a5493b8a795d9c065d13a52ede97"
-    }, {
-      "name" : "expected \"[!] SESSION may not be compatible with this module:\\r\\n[!]  * unloadable Meterpreter extension: exta...] Testing complete in 0.4420385\\r\\n[-] Passed: 11; Failed: 2\\r\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,29 +1,57 @@\n-Failed: 0\n+[!] SESSION may not be compatible with this module:\n+[!]  * unloadable Meterpreter extension: extapi\n+[*] Running against session 18\n+[*] Session type is meterpreter and platform is windows\n+[-] FAILED: should start W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should stop W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should return status on a given service winmgmt\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should modify config on a given service aHDWJC\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[-] FAILED: should list services\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should start a disabled service alGSSD\n+[-] FAILED: should return info on a given service  winmgmt\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should restart a started service W32Time\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if no access to service\n+[-] FAILED: should create a service  testes\n+[-] FAILED: should return info on the newly-created service testes\n+[-] Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type (python/windows)\n+[-] FAILED: should delete the new service testes\n+[-] Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error.\n+[+] should raise a runtime exception if services doesnt exist\n+[*] Testing complete in 0.4420385\n+[-] Passed: 11; Failed: 2\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes python/meterpreter/reverse_tcp test/services",
-        "uid" : "aec4cf233d1c21b0",
-        "parentUid" : "dad80768c1f83df26b731caf58926782",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643504634192,
-          "stop" : 1643504636131,
-          "duration" : 1939
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      } ],
-      "uid" : "dad80768c1f83df26b731caf58926782"
+      "uid" : "e7473f7746837b31ff12ca355f2b6105"
     } ],
     "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
+  }, {
+    "name" : "Test defects",
+    "children" : [ {
+      "name" : "Failed await result, bailing",
+      "children" : [ {
+        "name" : "passes php/meterpreter_reverse_tcp test/meterpreter",
+        "uid" : "d90778c29a53b2a2",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514021457,
+          "stop" : 1643514052418,
+          "duration" : 30961
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/railgun",
+        "uid" : "91a88404b37dd699",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514052420,
+          "stop" : 1643514082424,
+          "duration" : 30004
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/railgun_reverse_lookups",
+        "uid" : "5651d3935ed05cbc",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514082426,
+          "stop" : 1643514112429,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/registry",
+        "uid" : "fc69b2c5270c5ab5",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514112431,
+          "stop" : 1643514142435,
+          "duration" : 30004
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/search",
+        "uid" : "e1301f944dcf83b4",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514142437,
+          "stop" : 1643514172440,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/services",
+        "uid" : "e6b2b9f7cccd9faf",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514172442,
+          "stop" : 1643514202445,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter_reverse_tcp test/unix",
+        "uid" : "467279263f4ba56b",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514202447,
+          "stop" : 1643514232450,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "exposes available metasploit commands",
+        "uid" : "7e86b3a7447b562e",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514262622,
+          "stop" : 1643514292624,
+          "duration" : 30002
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/meterpreter",
+        "uid" : "1be77ea4c76ee53f",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514326262,
+          "stop" : 1643514356770,
+          "duration" : 30508
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/railgun",
+        "uid" : "46e30917205db36",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514356772,
+          "stop" : 1643514386777,
+          "duration" : 30005
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/railgun_reverse_lookups",
+        "uid" : "cb1381e42b0eff90",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514386779,
+          "stop" : 1643514416782,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/registry",
+        "uid" : "793bc321dd2550f2",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514416785,
+          "stop" : 1643514446787,
+          "duration" : 30002
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/search",
+        "uid" : "318b8b52a447dc26",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514446790,
+          "stop" : 1643514476792,
+          "duration" : 30002
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/services",
+        "uid" : "8098c3d0b840e2fe",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514476794,
+          "stop" : 1643514506797,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "passes php/meterpreter/reverse_tcp test/unix",
+        "uid" : "9b1e4123e39e2985",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514506800,
+          "stop" : 1643514536803,
+          "duration" : 30003
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      }, {
+        "name" : "exposes available metasploit commands",
+        "uid" : "12d35088ea2c4e33",
+        "parentUid" : "c8f8986b1a302a00c2193324e2357d1c",
+        "status" : "broken",
+        "time" : {
+          "start" : 1643514566814,
+          "stop" : 1643514596819,
+          "duration" : 30005
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "mingw32" ]
+      } ],
+      "uid" : "c8f8986b1a302a00c2193324e2357d1c"
+    } ],
+    "uid" : "bdbf199525818fae7a8651db9eafe741"
   } ],
   "name" : "categories"
 }
