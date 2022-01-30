@@ -75,13 +75,16 @@ class ChildProcess
 
     with_countdown(timeout) do |countdown|
       while alive? && !countdown.elapsed?
+        log("still searching")
         data_chunk = recv(timeout: countdown.remaining_time)
         if !data_chunk
           next
         end
 
+        log("found a chunk")
         buffer += data_chunk
         has_delimiter = delim.is_a?(Regexp) ? buffer.match?(delim) : buffer.include?(delim)
+        log("didnt match")
         next unless has_delimiter
 
         result, matched_delim, remaining = buffer.partition(delim)
@@ -123,18 +126,15 @@ class ChildProcess
     buffer_result = buffer.read(size)
     return buffer_result if buffer_result
 
-    result = nil
-    ready = IO.select([stdout_and_stderr], nil, nil, timeout)
-    if ready
-      reads, _writes, _errors = ready
+    retry_count = 0
 
-      reads.to_a.each do |_io|
-        result = stdout_and_stderr.read_nonblock(size)
-        @all_data.write(result)
-        log("[read] #{result}")
-      rescue EOFError, Errno::EAGAIN
-        nil
-      end
+    # Eagerly read, and if we fail - await a response within the given timeout period
+    begin
+      result = stdout_and_stderr.read_nonblock(size)
+    rescue IO::WaitReadable
+      IO.select([stdout_and_stderr], nil, nil, timeout)
+      retry_count += 1
+      retry if retry_count == 0
     end
 
     result
