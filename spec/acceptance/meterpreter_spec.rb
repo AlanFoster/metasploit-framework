@@ -133,6 +133,7 @@ class ChildProcess
       result = stdout_and_stderr.read_nonblock(size)
       if !result.nil?
         log("[read] #{result}")
+        @all_data.write(result)
       end
     rescue IO::WaitReadable
       IO.select([stdout_and_stderr], nil, nil, timeout)
@@ -235,8 +236,8 @@ class ChildProcess
     end
     if countdown.elapsed?
       # TODO: Python windows is flakey
-      raise 'Failed await result, bailing' if ENV['ci']
-      if !ENV['ci']
+      raise 'Failed await result, bailing' if ENV['CI']
+      if !ENV['CI']
         require 'pry'; binding.pry
       end
       puts "timeout"

@@ -122,14 +122,17 @@ class MetasploitModule < Msf::Post
   def test_file
     it 'should test for file existence' do
       ret = false
+
       [
         'c:\\boot.ini',
         'c:\\pagefile.sys',
         '/etc/passwd',
         '/etc/master.passwd',
         '%WINDIR%\\system32\\notepad.exe',
-        '%WINDIR%\\system32\\calc.exe'
+        '%WINDIR%\\system32\\calc.exe',
+        File.expand_path(__FILE__)
       ].each do |path|
+        puts "Does this exist? #{path}==#{file?(path)}"
         ret = true if file?(path)
       end
 
@@ -148,6 +151,7 @@ class MetasploitModule < Msf::Post
       ret = (f == 'foo')
       unless ret
         print_error("Didn't read what we wrote, actual file on target: |#{f}|")
+        puts "File location #{datastore['BasefileName']}"
       end
 
       ret

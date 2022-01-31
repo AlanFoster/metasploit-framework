@@ -75,6 +75,10 @@ class MetasploitModule < Msf::Post
         output == "'" + test_string + "'"
       else
         output = cmd_exec("echo '#{test_string}'")
+
+        puts "expected: #{test_string} - #{test_string.bytes} - #{test_string.encoding}"
+        puts "actual: #{output} - #{output.bytes} - #{test_string.encoding}"
+
         output == test_string
       end
     end
@@ -90,8 +94,8 @@ class MetasploitModule < Msf::Post
       else
         output = cmd_exec("echo \"#{test_string}\"")
 
-        puts "expected: #{test_string}"
-        puts "actual: #{output}"
+        puts "expected: #{test_string} - #{test_string.bytes} - #{test_string.encoding}"
+        puts "actual: #{output} - #{output.bytes} - #{test_string.encoding}"
 
         output == test_string
       end
