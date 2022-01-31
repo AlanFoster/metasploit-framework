@@ -3,16 +3,16 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
-      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should append binary data\n\n     ./spec/acceptance/meterpreter_spec.rb:569:in `block (8 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 20; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:569:in `block (8 levels) in <top (required)>'\n\n  3) expected \"[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:\\n...to /home/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,43 +1,85 @@\n     -Failed: 0\n     +[*] Setup: changing working directory to /tmp\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n     +[*] Running against session 14\n     +[*] Session type is meterpreter and platform is linux\n     +[+] should test for directory existence\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[*] Creating directory test-dir/directory\n     +[*] test-dir/directory created\n     +[+] should create directories\n     +[+] should list the directory we just made\n     +[+] should recursively delete the directory we just made\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[+] should delete a symbolic link target\n     +[*] Creating directory test-dir.1\n     +[*] test-dir.1 created\n     +[*] Creating directory test-dir.2\n     +[*] test-dir.2 created\n     +[+] should not recurse into symbolic link directories\n     +[*] Writing 35000 bytes\n     +[*] Finished in 0.018454915\n     +[+] should write binary data\n     +[*] Read 35000 bytes\n     +[+] should read the binary data we just wrote\n     +[+] should delete binary files\n     +[-] FAILED: should append binary data\n     +[+] should test for file existence\n     +[+] should create text files\n     +[+] should read the text we just wrote\n     +[+] should append text files\n     +[+] should delete text files\n     +[+] should move files\n     +[+] should expand home\n     +[+] should not expand non-isolated tilde\n     +[+] should not expand mid-string tilde\n     +[+] should not expand env vars with invalid naming\n     +[+] should expand multiple variables\n     +[*] Testing complete in 0.864253034\n     +[-] Passed: 20; Failed: 1\n     +[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:574:in `block (8 levels) in <top (required)>'",
+      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting c...n[*] Testing complete in 4.125273619\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,16 +1,31 @@\n     -Failed: 0\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is linux\n     +[*] Starting cmd_exec tests\n     +[+] should return the result of echo\n     +[+] should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +[*] Starting cmd_exec quote tests\n     +[+] should return the result of echo with single quotes\n     +expected: EKoF\n     +actual: EKoF\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +[-] FAILED: should return the stderr output\n     +[*] Testing complete in 4.125273619\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
       "children" : [ {
-        "name" : "passes java/meterpreter/reverse_tcp test/file",
-        "uid" : "4e68c7f37cef7523",
-        "parentUid" : "e930a43747917afb7f5de5b48053d724",
+        "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
+        "uid" : "c28adc2f587c2ed7",
+        "parentUid" : "8e1b8245d79583a44ffd5bfcdc99751e",
         "status" : "failed",
         "time" : {
-          "start" : 1643594371435,
-          "stop" : 1643594373085,
-          "duration" : 1650
+          "start" : 1643595064618,
+          "stop" : 1643595069777,
+          "duration" : 5159
         },
         "flaky" : false,
         "newFailed" : false,
@@ -22,39 +22,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "e930a43747917afb7f5de5b48053d724"
-    }, {
-      "name" : "Got 2 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should upload a file\n\n     ./spec/acceptance/meterpreter_spec.rb:569:in `block (8 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Exception: EOFError : EOFError\n\n     ./spec/acceptance/meterpreter_spec.rb:569:in `block (8 levels) in <top (required)>'",
-      "children" : [ {
-        "name" : "passes java/meterpreter/reverse_tcp test/meterpreter",
-        "uid" : "aacff8a8c8ea3db",
-        "parentUid" : "e1579f3579213e6d8cd4f3d0eecf78a9",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643594373917,
-          "stop" : 1643594375128,
-          "duration" : 1211
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      } ],
-      "uid" : "e1579f3579213e6d8cd4f3d0eecf78a9"
+      "uid" : "8e1b8245d79583a44ffd5bfcdc99751e"
     }, {
       "name" : "Unexpected error: [-] FAILED: should test for file existence\r\n",
       "children" : [ {
         "name" : "passes python/meterpreter/reverse_tcp test/file",
-        "uid" : "b391dbe31874627e",
+        "uid" : "7574d01244145499",
         "parentUid" : "928a8eec6350669cc8f1fd86bd96d403",
         "status" : "failed",
         "time" : {
-          "start" : 1643594452655,
-          "stop" : 1643594455000,
-          "duration" : 2345
+          "start" : 1643595241726,
+          "stop" : 1643595243851,
+          "duration" : 2125
         },
         "flaky" : false,
         "newFailed" : false,
@@ -65,13 +44,13 @@
         "parameters" : [ "mingw32" ]
       }, {
         "name" : "passes java/meterpreter/reverse_tcp test/file",
-        "uid" : "f98302fdf71a3134",
+        "uid" : "c290d39e6b63caf",
         "parentUid" : "928a8eec6350669cc8f1fd86bd96d403",
         "status" : "failed",
         "time" : {
-          "start" : 1643594482844,
-          "stop" : 1643594484702,
-          "duration" : 1858
+          "start" : 1643595281107,
+          "stop" : 1643595282908,
+          "duration" : 1801
         },
         "flaky" : false,
         "newFailed" : false,

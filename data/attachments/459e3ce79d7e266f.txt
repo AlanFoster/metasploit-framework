@@ -1,0 +1,5 @@
+use python/meterpreter/reverse_tcp
+generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220131-3723-drut05.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6007 lhost=127.0.0.1
+to_handler
+use test/railgun
+run session=7 AddEntropy=true Verbose=true
