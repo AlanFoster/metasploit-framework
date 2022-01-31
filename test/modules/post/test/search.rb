@@ -157,7 +157,8 @@ class MetasploitModule < Msf::Post
     genesis_date = "3 January 2009 18:15:13 +0000"
     genesis = DateTime.parse(genesis_date).to_i
 
-    if not ['windows', 'win'].include? session.platform
+    if not ['windows', 'win'].include?(session.platform)
+      # TODO: Not supported on mac
       cmd_exec("touch -d '#{genesis_date}' #{@file_name}")
     elsif session.priv.present?
       client.priv.fs.set_file_mace(@file_name, genesis)

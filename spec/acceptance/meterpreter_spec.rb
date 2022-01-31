@@ -460,146 +460,6 @@ def uncolorize(string)
   string.gsub(/\e\[\d+m/, '')
 end
 
-RSpec.shared_examples_for 'a Meterpreter payload' do |options|
-  options[:payloads].each do |config|
-    describe human_name_for_payload(config).to_s, if: supported_platform?(config) do
-      let(:payload) { Payload.new(config) }
-
-      # The shared payload session instance that will be reused across the test run
-      let(:await_session_id) do
-        # TODO: Move this into the driver, so remote drivers can be used
-        config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
-
-        console.sendline "use #{payload.name}"
-        console.recvuntil(Console.prompt)
-
-        # Generate the payload
-        console.sendline payload.generate_command
-        # TODO: Fix race condition, and handle generation failed being returned iin this scenario
-        console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
-        generate_result = console.recvuntil(Console.prompt)
-
-        expect(generate_result.lines).to_not include(match('generation failed'))
-        wait_for_expect do
-          expect(payload.size).to be > 0
-        end
-
-        console.sendline 'to_handler'
-        console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
-
-        puts 'before run payload'
-        driver.run_payload(payload)
-        puts 'after run payload'
-
-        session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
-        session_message = console.recvuntil(session_opened_matcher)
-        session_id = session_message[session_opened_matcher, 1]
-        expect(session_id).to_not be_nil
-
-        session_id
-      end
-
-      before :each do
-        driver.close_payloads
-        console.reset
-        await_session_id
-      end
-
-      after :all do
-        driver.close_payloads
-        console.reset
-      end
-
-      describe 'compatibility', if: test_available_commands?(config) do
-        # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
-        # So only run this test when config_index == 0
-        # TODO: Bring this back
-        it 'exposes available metasploit commands', if: test_available_commands?(config) && ENV['CI'] do
-          console.sendline('resource scripts/resource/meterpreter_compatibility.rc')
-          result = console.recvuntil(Console.prompt)
-
-          available_commands = result.lines(chomp: true).find do |line|
-            line.start_with?('{') && line.end_with?('}') && JSON.parse(line)
-          rescue JSON::ParserError => _e
-            return false
-          end
-          expect(available_commands).to_not be_nil
-
-          available_commands_json = JSON.parse(available_commands, symbolize_names: true)
-          expect(available_commands_json[:sessions].length).to be 1
-          expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
-        ensure
-          Allure.add_attachment(
-            name: 'available commands',
-            source: JSON.pretty_generate(available_commands_json),
-            type: Allure::ContentType::JSON,
-            test_case: false
-          )
-        end
-      end
-
-      options[:module_tests].each do |module_test|
-        describe module_test[:name], if: supported_platform?(config) && supported_platform?(module_test) do
-          it "passes #{config[:name]} #{module_test[:name]}" do
-            puts "Running test payload: #{config[:name]}, test:#{module_test[:name]}"
-
-            console.sendline("use #{module_test[:name]}")
-            console.recvuntil(Console.prompt)
-            console.sendline("run session=#{await_session_id} AddEntropy=true Verbose=true")
-
-            # Expect happiness
-            test_result = console.recvuntil('Post module execution completed')
-
-            # Ensure there are no failures, and assert tests are complete
-            aggregate_failures do
-              ignored_lines = module_test.dig(:lines, :all, :ignored) || []
-              ignored_lines += module_test.dig(:lines, current_platform, :ignored) || []
-
-              required_lines = module_test.dig(:lines, :all, :required) || []
-              required_lines += module_test.dig(:lines, current_platform, :required) || []
-
-              # Skip any ignored lines from the validation input
-              validated_lines = test_result.lines.reject do |line|
-                ignored_lines.any? { |ignored_line| line.match?(ignored_line) }
-              end
-
-              validated_lines.each do |test_line|
-                test_line = uncolorize(test_line)
-                expect(test_line).to_not include('FAILED', '[-] FAILED', '[-] Exception', '[-] '), "Unexpected error: #{test_line}"
-              end
-
-              # Assert all expected lines are present
-              required_lines.each do |required|
-                expect(test_result).to include(required)
-              end
-
-              # Assert all ignored lines are present, if they are not present - they should be removed from
-              # the calling config
-              ignored_lines.each do |ignored|
-                expect(test_result).to include(ignored)
-              end
-            end
-          ensure
-            Allure.add_attachment(
-              name: 'payload',
-              source: payload.as_readable_text,
-              type: Allure::ContentType::TXT,
-              test_case: false
-            )
-
-            Allure.add_attachment(
-              name: 'console data',
-              source: console.all_data,
-              type: Allure::ContentType::TXT,
-              test_case: false
-            )
-          end
-        end
-      end
-    end
-  end
-end
-
 RSpec.describe 'payloads' do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
@@ -944,7 +804,8 @@ RSpec.describe 'payloads' do
       ],
       payloads: [
         {
-          name: 'python/meterpreter_reverse_tcp',
+          name: 'python/meterpreter/reverse_tcp',
+          test_available_commands: true,
           extension: '.py',
           platforms: %i[osx linux windows],
           execute_cmd: ['python', '${payload_path}'],
@@ -956,20 +817,19 @@ RSpec.describe 'payloads' do
             PythonMeterpreterDebug: true
           }
         },
-      #   {
-      #     name: 'python/meterpreter/reverse_tcp',
-      #     test_available_commands: true,
-      #     extension: '.py',
-      #     platforms: %i[osx linux windows],
-      #     execute_cmd: ['python', '${payload_path}'],
-      #     generate_options: {
-      #       '-f': 'raw'
-      #     },
-      #     payload_options: {
-      #       MeterpreterTryToFork: false,
-      #       PythonMeterpreterDebug: true
-      #     }
+      # {
+      #   name: 'python/meterpreter_reverse_tcp',
+      #   extension: '.py',
+      #   platforms: %i[osx linux windows],
+      #   execute_cmd: ['python', '${payload_path}'],
+      #   generate_options: {
+      #     '-f': 'raw'
       #   },
+      #   payload_options: {
+      #     MeterpreterTryToFork: false,
+      #     PythonMeterpreterDebug: true
+      #   }
+      # },
       ]
     },
     # php: {
@@ -987,7 +847,6 @@ RSpec.describe 'payloads' do
     #     #   }
     #     # },
     #     osx: [
-    #
     #       # TODO: Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (php/osx)
     #       # { name: 'test/extapi', focus: false },
     #       # TODO: FAILED: should read the binary data we just wrote
@@ -1019,16 +878,16 @@ RSpec.describe 'payloads' do
     #     ],
     #     windows: [
     #       { name: 'test/cmd_exec', focus: false },
-    #       # { name: 'test/extapi', focus: false },
-    #       # { name: 'test/file', focus: false },
-    #       # { name: 'test/get_env', focus: false },
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # { name: 'test/registry', focus: false },
-    #       # { name: 'test/search', focus: false },
-    #       # { name: 'test/services', focus: false },
-    #       # { name: 'test/unix', focus: false },
+    #     # { name: 'test/extapi', focus: false },
+    #     # { name: 'test/file', focus: false },
+    #     # { name: 'test/get_env', focus: false },
+    #     # { name: 'test/meterpreter', focus: false },
+    #     # { name: 'test/railgun', focus: false },
+    #     # { name: 'test/railgun_reverse_lookups', focus: false },
+    #     # { name: 'test/registry', focus: false },
+    #     # { name: 'test/search', focus: false },
+    #     # { name: 'test/services', focus: false },
+    #     # { name: 'test/unix', focus: false },
     #     ],
     #   },
     #   payloads: [
@@ -1057,65 +916,380 @@ RSpec.describe 'payloads' do
     #     },
     #   ]
     # },
-    # java: {
-    #   focus: false,
-    #   module_tests: {
-    #     osx: [
-    #       # { name: 'test/cmd_exec', focus: false },
-    #       # { name: 'test/extapi', focus: false },
-    #       # { name: 'test/file', focus: false },
-    #       # { name: 'test/get_env', focus: false },
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # { name: 'test/registry', focus: false },
-    #       # { name: 'test/search', focus: false },
-    #       # { name: 'test/services', focus: false },
-    #       # { name: 'test/unix', focus: false },
-    #     ],
-    #     linux: [
-    #       # { name: 'test/cmd_exec', focus: false },
-    #       # { name: 'test/extapi', focus: false },
-    #       # { name: 'test/file', focus: false },
-    #       # { name: 'test/get_env', focus: false },
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # { name: 'test/registry', focus: false },
-    #       # { name: 'test/search', focus: false },
-    #       # { name: 'test/services', focus: false },
-    #       # { name: 'test/unix', focus: false },
-    #     ],
-    #     windows: [
-    #       # { name: 'test/cmd_exec', focus: false },
-    #       # { name: 'test/extapi', focus: false },
-    #       # { name: 'test/file', focus: false },
-    #       # { name: 'test/get_env', focus: false },
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # { name: 'test/registry', focus: false },
-    #       # { name: 'test/search', focus: false },
-    #       # { name: 'test/services', focus: false },
-    #       # { name: 'test/unix', focus: false },
-    #     ],
-    #   },
-    #   payloads: [
-    #     {
-    #       name: 'java/meterpreter/reverse_tcp',
-    #       test_available_commands: true,
-    #       extension: '.jar',
-    #       platforms: %i[osx linux windows],
-    #       execute_cmd: ['java', '-jar', '${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'jar'
-    #       },
-    #       payload_options: {
-    #         spawn: 0
-    #       }
-    #     }
-    #   ]
-    # },
+    java: {
+      focus: false,
+      module_tests: [
+        {
+          name: 'test/cmd_exec',
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/extapi",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: [
+                "The \"extapi\" extension is not supported by this Meterpreter type",
+                "Call stack:",
+                "test/modules/post/test/extapi.rb"
+              ]
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/file",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            linux: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: [
+                "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
+                "Call stack:",
+                "modules/post/test/file.rb",
+                "lib/module_test.rb"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/get_env",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/meterpreter",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/railgun",
+          platforms: [:windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: [
+              ]
+            },
+            osx: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: [
+                "FAILED: Should retrieve the win32k file version",
+                "Exception: Rex::NotImplementedError : The requested method is not implemented",
+                "FAILED: Should include error information in the results",
+                "FAILED: Should support functions with no parameters",
+                "FAILED: Should support functions with literal parameters",
+                "FAILED: Should support functions with in/out/inout parameter types",
+                "FAILED: Should support calling multiple functions at once",
+                "FAILED: Should support writing memory",
+                "FAILED: Should support reading memory"
+              ]
+            },
+            linux: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: [
+                "FAILED: Should retrieve the win32k file version",
+                "Exception: Rex::NotImplementedError : The requested method is not implemented",
+                "FAILED: Should include error information in the results",
+                "FAILED: Should support functions with no parameters",
+                "FAILED: Should support functions with literal parameters",
+                "FAILED: Should support functions with in/out/inout parameter types",
+                "FAILED: Should support calling multiple functions at once",
+                "FAILED: Should support writing memory",
+                "FAILED: Should support reading memory"
+              ]
+            },
+            windows: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: [
+                "FAILED: Should retrieve the win32k file version",
+                "Exception: Rex::NotImplementedError : The requested method is not implemented.",
+                "FAILED: Should include error information in the results",
+                "FAILED: Should support functions with no parameters",
+                "FAILED: Should support functions with literal parameters",
+                "FAILED: Should support functions with in/out/inout parameter types",
+                "FAILED: Should support calling multiple functions at once",
+                "FAILED: Should support writing memory",
+                "FAILED: Should support reading memory"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/railgun_reverse_lookups",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: [
+              ]
+            },
+            osx: {
+              required: [],
+              ignored: [
+                "FAILED: should return a constant name given a const and a filter",
+                "FAILED: should return an error string given an error code",
+                "Failed: 2"
+              ]
+            },
+            linux: {
+              required: [],
+              ignored: [
+                "FAILED: should return a constant name given a const and a filter",
+                "FAILED: should return an error string given an error code",
+                "Failed: 2"
+              ]
+            },
+            windows: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/registry",
+          platforms: [:windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: [
+                "FAILED: should create keys",
+                "FAILED: should write REG_SZ values",
+                "FAILED: should write REG_DWORD values",
+                "FAILED: should delete keys",
+                "FAILED: should create unicode keys",
+                "FAILED: should write REG_SZ unicode values",
+                "FAILED: should delete unicode keys",
+                "FAILED: should evaluate key existence",
+                "PENDING: should evaluate value existence",
+                "FAILED: should read values",
+                "Exception: NoMethodError : undefined method",
+                "FAILED: should return normalized values",
+                "FAILED: should enumerate keys and values",
+                "Failed: 10"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/search",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: [
+              ]
+            },
+            osx: {
+              required: [],
+              ignored: [
+                "FAILED: should search with date inclusive of exact date",
+                "Failed: 1"
+              ]
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+        {
+          name: "test/services",
+          platforms: [:windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: [
+                "Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type",
+                "Exception: Rex::NotImplementedError : The requested method is not implemented.",
+                "FAILED: should start W32Time",
+                "FAILED: should stop W32Time",
+                "FAILED: should list services",
+                "FAILED: should return info on a given service",
+                "FAILED: should create a service",
+                "FAILED: should return info on the newly-created service",
+                "FAILED: should delete the new service testes",
+                "FAILED: should return status on a given service",
+                "FAILED: should modify config on a given service",
+                "FAILED: should start a disabled service",
+                "FAILED: should restart a started service",
+                "FAILED: should raise a runtime exception if no access to service",
+                "FAILED: should raise a runtime exception if services doesnt exist"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/unix",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              ignored: []
+            },
+            osx: {
+              required: [],
+              ignored: []
+            },
+            linux: {
+              required: [],
+              ignored: []
+            },
+            windows: {
+              required: [],
+              ignored: []
+            },
+          }
+        },
+      ],
+      payloads: [
+        {
+          name: 'java/meterpreter/reverse_tcp',
+          test_available_commands: true,
+          extension: '.jar',
+          platforms: %i[osx linux windows],
+          execute_cmd: ['java', '-jar', '${payload_path}'],
+          generate_options: {
+            '-f': 'jar'
+          },
+          payload_options: {
+            spawn: 0
+          }
+        }
+      ]
+    },
     # mettle: {
     #   focus: false,
     #   module_tests: {
@@ -1401,10 +1575,144 @@ RSpec.describe 'payloads' do
   # copy '\\vmware-host\Shared Folders\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; bundle exec rspec .\spec\acceptance\meterpreter_spec.rb
   METERPRETER_PAYLOADS.each do |key, config|
     describe "#{key}", focus: config[:focus] do
-      it_behaves_like(
-        'a Meterpreter payload',
-        config
-      )
+      config[:payloads].each do |payload_config|
+        describe human_name_for_payload(payload_config).to_s, if: supported_platform?(payload_config) do
+          let(:payload) { Payload.new(payload_config) }
+
+          # The shared payload session instance that will be reused across the test run
+          let(:await_session_id) do
+            # TODO: Move this into the driver, so remote drivers can be used
+            payload_config[:payload_options].merge!({ lport: port_generator.next, lhost: '127.0.0.1' })
+
+            console.sendline "use #{payload.name}"
+            console.recvuntil(Console.prompt)
+
+            # Generate the payload
+            console.sendline payload.generate_command
+            # TODO: Fix race condition, and handle generation failed being returned iin this scenario
+            console.recvuntil(/Writing \d+ bytes[^\n]*\n/)
+            generate_result = console.recvuntil(Console.prompt)
+
+            expect(generate_result.lines).to_not include(match('generation failed'))
+            wait_for_expect do
+              expect(payload.size).to be > 0
+            end
+
+            console.sendline 'to_handler'
+            console.recvuntil(/Started reverse TCP handler[^\n]*\n/)
+
+            puts 'before run payload'
+            driver.run_payload(payload)
+            puts 'after run payload'
+
+            session_opened_matcher = /Meterpreter session (\d+) opened[^\n]*\n/
+            session_message = console.recvuntil(session_opened_matcher)
+            session_id = session_message[session_opened_matcher, 1]
+            expect(session_id).to_not be_nil
+
+            session_id
+          end
+
+          before :each do
+            driver.close_payloads
+            console.reset
+            await_session_id
+          end
+
+          after :all do
+            driver.close_payloads
+            console.reset
+          end
+
+          describe 'compatibility', if: test_available_commands?(payload_config) do
+            # Assume that regardless of payload, staged/unstaged/etc, the Meterpreter will have the same commands available
+            # So only run this test when config_index == 0
+            # TODO: Bring this back
+            it 'exposes available metasploit commands', if: test_available_commands?(payload_config) && ENV['CI'] do
+              console.sendline('resource scripts/resource/meterpreter_compatibility.rc')
+              result = console.recvuntil(Console.prompt)
+
+              available_commands = result.lines(chomp: true).find do |line|
+                line.start_with?('{') && line.end_with?('}') && JSON.parse(line)
+              rescue JSON::ParserError => _e
+                return false
+              end
+              expect(available_commands).to_not be_nil
+
+              available_commands_json = JSON.parse(available_commands, symbolize_names: true)
+              expect(available_commands_json[:sessions].length).to be 1
+              expect(available_commands_json[:sessions].first[:commands]).to_not be_empty
+            ensure
+              Allure.add_attachment(
+                name: 'available commands',
+                source: JSON.pretty_generate(available_commands_json),
+                type: Allure::ContentType::JSON,
+                test_case: false
+              )
+            end
+          end
+
+          config[:module_tests].each do |module_test|
+            describe module_test[:name], if: supported_platform?(payload_config) && supported_platform?(module_test) do
+              it "passes #{payload_config[:name]} #{module_test[:name]}" do
+                puts "Running test payload: #{payload_config[:name]}, test:#{module_test[:name]}"
+
+                console.sendline("use #{module_test[:name]}")
+                console.recvuntil(Console.prompt)
+                console.sendline("run session=#{await_session_id} AddEntropy=true Verbose=true")
+
+                # Expect happiness
+                test_result = console.recvuntil('Post module execution completed')
+
+                # Ensure there are no failures, and assert tests are complete
+                aggregate_failures do
+                  # TODO: Rename acceptable_failures?
+                  ignored_lines = module_test.dig(:lines, :all, :ignored) || []
+                  ignored_lines += module_test.dig(:lines, current_platform, :ignored) || []
+
+                  required_lines = module_test.dig(:lines, :all, :required) || []
+                  required_lines += module_test.dig(:lines, current_platform, :required) || []
+
+                  # Skip any ignored lines from the validation input
+                  validated_lines = test_result.lines.reject do |line|
+                    ignored_lines.any? { |ignored_line| line.match?(ignored_line) }
+                  end
+
+                  validated_lines.each do |test_line|
+                    test_line = uncolorize(test_line)
+                    expect(test_line).to_not include('FAILED', '[-] FAILED', '[-] Exception', '[-] '), "Unexpected error: #{test_line}"
+                  end
+
+                  # Assert all expected lines are present
+                  required_lines.each do |required|
+                    expect(test_result).to include(required)
+                  end
+
+                  # Assert all ignored lines are present, if they are not present - they should be removed from
+                  # the calling config
+                  ignored_lines.each do |ignored|
+                    expect(test_result).to include(ignored)
+                  end
+                end
+              ensure
+                Allure.add_attachment(
+                  name: 'payload',
+                  source: payload.as_readable_text,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
+
+                Allure.add_attachment(
+                  name: 'console data',
+                  source: console.all_data,
+                  type: Allure::ContentType::TXT,
+                  test_case: false
+                )
+              end
+            end
+          end
+        end
+      end
     end
   end
 end
