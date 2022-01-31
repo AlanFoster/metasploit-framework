@@ -3,16 +3,16 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
-      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting c...n[*] Testing complete in 4.125273619\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,16 +1,31 @@\n     -Failed: 0\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is linux\n     +[*] Starting cmd_exec tests\n     +[+] should return the result of echo\n     +[+] should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +[*] Starting cmd_exec quote tests\n     +[+] should return the result of echo with single quotes\n     +expected: EKoF\n     +actual: EKoF\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +[-] FAILED: should return the stderr output\n     +[*] Testing complete in 4.125273619\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
+      "name" : "Got 4 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the result of echo\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) Unexpected error: [-] Passed: 5; Failed: 2\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  4) expected \"[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting c...n[*] Testing complete in 5.210146687\\n[-] Passed: 5; Failed: 2\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,18 +1,35 @@\n     -Failed: 0\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is linux\n     +[*] Starting cmd_exec tests\n     +[-] FAILED: should return the result of echo\n     +[+] should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +[+] should return the result of echo 10 times\n     +[*] Finished cmd_exec tests\n     +[*] Starting cmd_exec quote tests\n     +[+] should return the result of echo with single quotes\n     +expected: dpvK\n     +actual: dpvK\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +[-] FAILED: should return the stderr output\n     +[*] Testing complete in 5.210146687\n     +[-] Passed: 5; Failed: 2\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
       "children" : [ {
         "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
-        "uid" : "c28adc2f587c2ed7",
-        "parentUid" : "8e1b8245d79583a44ffd5bfcdc99751e",
+        "uid" : "44e0c06ef26f68d",
+        "parentUid" : "9a0963c212d887cadea662b932662801",
         "status" : "failed",
         "time" : {
-          "start" : 1643595064618,
-          "stop" : 1643595069777,
-          "duration" : 5159
+          "start" : 1643595551514,
+          "stop" : 1643595557832,
+          "duration" : 6318
         },
         "flaky" : false,
         "newFailed" : false,
@@ -22,18 +22,81 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "8e1b8245d79583a44ffd5bfcdc99751e"
+      "uid" : "9a0963c212d887cadea662b932662801"
+    }, {
+      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session platform: osx\\n[*] ...ts\\n[*] Testing complete in 7.076231\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,20 +1,39 @@\n     -Failed: 0\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * incompatible session platform: osx\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is osx\n     +[*] Starting cmd_exec quote tests\n     +[+] should return the result of echo with single quotes\n     +expected: YfBR\n     +actual: YfBR\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +[-] FAILED: should return the stderr output\n     +[*] Starting cmd_exec tests\n     +[+] should return the result of echo\n     +[+] should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +[+] should return the result of echo 10 times\n     +[*] Finished cmd_exec tests\n     +[*] Testing complete in 7.076231\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
+      "children" : [ {
+        "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
+        "uid" : "330c65d4ed87dc1d",
+        "parentUid" : "f409e4323e986e01b24fb4f8f4b8e09d",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643595573250,
+          "stop" : 1643595581800,
+          "duration" : 8550
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "darwin19" ]
+      } ],
+      "uid" : "f409e4323e986e01b24fb4f8f4b8e09d"
+    }, {
+      "name" : "Got 4 failures from failure aggregation block:\n\n  1) Unexpected error: [-] Didn't read what we wrote, actual file on target: ||\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] FAILED: should read the text we just wrote\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) Unexpected error: [-] Passed: 20; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  4) expected \"[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:\\n...to /home/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,50 +1,99 @@\n     -Failed: 0\n     +[*] Setup: changing working directory to /tmp\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n     +[*] Running against session 14\n     +[*] Session type is meterpreter and platform is linux\n     +[+] should test for directory existence\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[*] Creating directory test-dir/directory\n     +[*] test-dir/directory created\n     +[+] should create directories\n     +[+] should list the directory we just made\n     +[+] should recursively delete the directory we just made\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[+] should delete a symbolic link target\n     +[*] Creating directory test-dir.1\n     +[*] test-dir.1 created\n     +[*] Creating directory test-dir.2\n     +[*] test-dir.2 created\n     +[+] should not recurse into symbolic link directories\n     +[*] Writing 35000 bytes\n     +[*] Finished in 0.020230993\n     +[+] should write binary data\n     +[*] Read 35000 bytes\n     +[+] should read the binary data we just wrote\n     +[+] should delete binary files\n     +[+] should append binary data\n     +Does this exist? c:\\boot.ini==false\n     +Does this exist? c:\\pagefile.sys==false\n     +Does this exist? /etc/passwd==true\n     +Does this exist? /etc/master.passwd==false\n     +Does this exist? %WINDIR%\\system32\\notepad.exe==false\n     +Does this exist? %WINDIR%\\system32\\calc.exe==false\n     +[+] should test for file existence\n     +[+] should create text files\n     +[-] Didn't read what we wrote, actual file on target: ||\n     +[-] FAILED: should read the text we just wrote\n     +[+] should append text files\n     +[+] should delete text files\n     +[+] should move files\n     +[+] should expand home\n     +[+] should not expand non-isolated tilde\n     +[+] should not expand mid-string tilde\n     +[+] should not expand env vars with invalid naming\n     +[+] should expand multiple variables\n     +[*] Testing complete in 0.902106174\n     +[-] Passed: 20; Failed: 1\n     +[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
+      "children" : [ {
+        "name" : "passes java/meterpreter/reverse_tcp test/file",
+        "uid" : "a376a72d5b9868ba",
+        "parentUid" : "d2673222fa0db7a4b7de66bccdf14a90",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643595578002,
+          "stop" : 1643595579753,
+          "duration" : 1751
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      } ],
+      "uid" : "d2673222fa0db7a4b7de66bccdf14a90"
+    }, {
+      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should list users\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 0; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1683:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[!] SESSION may not be compatible with this module:\\n[!]  * missing Meterpreter features: stdapi_fs_...n[*] Testing complete in 0.016516576\\n[-] Passed: 0; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,8 +1,15 @@\n     -Failed: 0\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n     +[*] Running against session 19\n     +[*] Session type is meterpreter and platform is linux\n     +[-] FAILED: should list users\n     +[*] Testing complete in 0.016516576\n     +[-] Passed: 0; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1688:in `block (10 levels) in <top (required)>'",
+      "children" : [ {
+        "name" : "passes java/meterpreter/reverse_tcp test/unix",
+        "uid" : "aba35c4915af937c",
+        "parentUid" : "14b7e6a19a4f529a67aa868c71c28f0d",
+        "status" : "failed",
+        "time" : {
+          "start" : 1643595583303,
+          "stop" : 1643595584645,
+          "duration" : 1342
+        },
+        "flaky" : false,
+        "newFailed" : false,
+        "newPassed" : false,
+        "newBroken" : false,
+        "retriesCount" : 0,
+        "retriesStatusChange" : false,
+        "parameters" : [ "linux" ]
+      } ],
+      "uid" : "14b7e6a19a4f529a67aa868c71c28f0d"
     }, {
       "name" : "Unexpected error: [-] FAILED: should test for file existence\r\n",
       "children" : [ {
         "name" : "passes python/meterpreter/reverse_tcp test/file",
-        "uid" : "7574d01244145499",
+        "uid" : "36f569646c08e4ba",
         "parentUid" : "928a8eec6350669cc8f1fd86bd96d403",
         "status" : "failed",
         "time" : {
-          "start" : 1643595241726,
-          "stop" : 1643595243851,
-          "duration" : 2125
+          "start" : 1643595665152,
+          "stop" : 1643595667458,
+          "duration" : 2306
         },
         "flaky" : false,
         "newFailed" : false,
@@ -44,13 +107,13 @@
         "parameters" : [ "mingw32" ]
       }, {
         "name" : "passes java/meterpreter/reverse_tcp test/file",
-        "uid" : "c290d39e6b63caf",
+        "uid" : "2b494765601123fe",
         "parentUid" : "928a8eec6350669cc8f1fd86bd96d403",
         "status" : "failed",
         "time" : {
-          "start" : 1643595281107,
-          "stop" : 1643595282908,
-          "duration" : 1801
+          "start" : 1643595694268,
+          "stop" : 1643595696148,
+          "duration" : 1880
         },
         "flaky" : false,
         "newFailed" : false,

