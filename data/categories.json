@@ -3,16 +3,16 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
-      "name" : "Got 4 failures from failure aggregation block:\n\n  1) Unexpected error: [-] Didn't read what we wrote, actual file on target: ||\n\n     ./spec/acceptance/meterpreter_spec.rb:1684:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] FAILED: should read the text we just wrote\n\n     ./spec/acceptance/meterpreter_spec.rb:1684:in `block (10 levels) in <top (required)>'\n\n  3) Unexpected error: [-] Passed: 20; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1684:in `block (10 levels) in <top (required)>'\n\n  4) expected \"[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:\\n...to /home/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,51 +1,101 @@\n     -Failed: 0\n     +[*] Setup: changing working directory to /tmp\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n     +[*] Running against session 15\n     +[*] Session type is meterpreter and platform is linux\n     +[+] should test for directory existence\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[*] Creating directory test-dir/directory\n     +[*] test-dir/directory created\n     +[+] should create directories\n     +[+] should list the directory we just made\n     +[+] should recursively delete the directory we just made\n     +[*] Creating directory test-dir\n     +[*] test-dir created\n     +[+] should delete a symbolic link target\n     +[*] Creating directory test-dir.1\n     +[*] test-dir.1 created\n     +[*] Creating directory test-dir.2\n     +[*] test-dir.2 created\n     +[+] should not recurse into symbolic link directories\n     +[*] Writing 35000 bytes\n     +[*] Finished in 0.021071702\n     +[+] should write binary data\n     +[*] Read 35000 bytes\n     +[+] should read the binary data we just wrote\n     +[+] should delete binary files\n     +[+] should append binary data\n     +Does this exist? c:\\boot.ini==false\n     +Does this exist? c:\\pagefile.sys==false\n     +Does this exist? /etc/passwd==true\n     +Does this exist? /etc/master.passwd==false\n     +Does this exist? %WINDIR%\\system32\\notepad.exe==false\n     +Does this exist? %WINDIR%\\system32\\calc.exe==false\n     +Does this exist? /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb==true\n     +[+] should test for file existence\n     +[+] should create text files\n     +[-] Didn't read what we wrote, actual file on target: ||\n     +[-] FAILED: should read the text we just wrote\n     +[+] should append text files\n     +[+] should delete text files\n     +[+] should move files\n     +[+] should expand home\n     +[+] should not expand non-isolated tilde\n     +[+] should not expand mid-string tilde\n     +[+] should not expand env vars with invalid naming\n     +[+] should expand multiple variables\n     +[*] Testing complete in 0.957303084\n     +[-] Passed: 20; Failed: 1\n     +[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1689:in `block (10 levels) in <top (required)>'",
+      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1684:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1684:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting c...n[*] Testing complete in 4.291975947\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,18 +1,35 @@\n     -Failed: 0\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is linux\n     +[*] Starting cmd_exec tests\n     +[+] should return the result of echo\n     +[+] should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +[*] Starting cmd_exec quote tests\n     +expected: OQxv - [79, 81, 120, 118] - ASCII-8BIT\n     +actual: OQxv - [79, 81, 120, 118] - ASCII-8BIT\n     +[+] should return the result of echo with single quotes\n     +expected: QLsG - [81, 76, 115, 71] - ASCII-8BIT\n     +actual: QLsG - [81, 76, 115, 71] - ASCII-8BIT\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +[-] FAILED: should return the stderr output\n     +[*] Testing complete in 4.291975947\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1689:in `block (10 levels) in <top (required)>'",
       "children" : [ {
-        "name" : "passes java/meterpreter/reverse_tcp test/file",
-        "uid" : "17f21e3ecb1b7e4",
-        "parentUid" : "3a64942e8fda0e52a67e1944d6835b29",
+        "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
+        "uid" : "c8347c622c12bd09",
+        "parentUid" : "87ad01f221926450d4987e3489039e9f",
         "status" : "failed",
         "time" : {
-          "start" : 1643929721507,
-          "stop" : 1643929723417,
-          "duration" : 1910
+          "start" : 1643932080975,
+          "stop" : 1643932086413,
+          "duration" : 5438
         },
         "flaky" : false,
         "newFailed" : false,
@@ -22,28 +22,7 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "3a64942e8fda0e52a67e1944d6835b29"
-    }, {
-      "name" : "Unexpected error: [-] FAILED: should test for file existence\r\n",
-      "children" : [ {
-        "name" : "passes python/meterpreter/reverse_tcp test/file",
-        "uid" : "bba719f952a88419",
-        "parentUid" : "928a8eec6350669cc8f1fd86bd96d403",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643929777381,
-          "stop" : 1643929779479,
-          "duration" : 2098
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "mingw32" ]
-      } ],
-      "uid" : "928a8eec6350669cc8f1fd86bd96d403"
+      "uid" : "87ad01f221926450d4987e3489039e9f"
     } ],
     "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
   } ],
