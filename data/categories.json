@@ -3,16 +3,16 @@
   "children" : [ {
     "name" : "Product defects",
     "children" : [ {
-      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1725:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1725:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[*] Running against session 2\\n[*] Session type is meterpreter and platform is linux\\n[*] Starting c...n[*] Testing complete in 4.522737515\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,27 +1,53 @@\n     -Failed: 0\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is linux\n     +[*] Starting cmd_exec tests\n     +before running test: should return the result of echo\n     +[+] should return the result of echo\n     +before running test: should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +before running test: should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +before running test: should return the result of echo 10 times\n     +[*] Starting cmd_exec quote tests\n     +before running test: should return the result of echo with single quotes\n     +expected: jgIC - [106, 103, 73, 67] - ASCII-8BIT\n     +actual: jgIC - [106, 103, 73, 67] - ASCII-8BIT\n     +[+] should return the result of echo with single quotes\n     +before running test: should return the result of echo with double quotes\n     +expected: eXwl - [101, 88, 119, 108] - ASCII-8BIT\n     +actual: eXwl - [101, 88, 119, 108] - ASCII-8BIT\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +before running test: should return the stderr output\n     +expected: hfnG - [104, 102, 110, 71] - ASCII-8BIT\n     +actual:  - [] - ASCII-8BIT\n     +[-] FAILED: should return the stderr output\n     +[*] Testing complete in 4.522737515\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1731:in `block (10 levels) in <top (required)>'",
+      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should list users\n\n     ./spec/acceptance/meterpreter_spec.rb:1729:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 0; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1729:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[!] SESSION may not be compatible with this module:\\n[!]  * missing Meterpreter features: stdapi_fs_...n[*] Testing complete in 0.012698047\\n[-] Passed: 0; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,9 +1,17 @@\n     -Failed: 0\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n     +[*] Running against session 19\n     +[*] Session type is meterpreter and platform is linux\n     +before running test: should list users\n     +[-] FAILED: should list users\n     +[*] Testing complete in 0.012698047\n     +[-] Passed: 0; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1735:in `block (10 levels) in <top (required)>'",
       "children" : [ {
-        "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
-        "uid" : "e9eb320e5ca1c40c",
-        "parentUid" : "1e0c7831d112d98b01ee40a2c6e41d86",
+        "name" : "passes java/meterpreter/reverse_tcp test/unix",
+        "uid" : "3150e3faaf1d9fef",
+        "parentUid" : "32abc6cea6a8cc444dea75e7f6dd7f21",
         "status" : "failed",
         "time" : {
-          "start" : 1643940362262,
-          "stop" : 1643940367942,
-          "duration" : 5680
+          "start" : 1643940780979,
+          "stop" : 1643940781939,
+          "duration" : 960
         },
         "flaky" : false,
         "newFailed" : false,
@@ -22,39 +22,18 @@
         "retriesStatusChange" : false,
         "parameters" : [ "linux" ]
       } ],
-      "uid" : "1e0c7831d112d98b01ee40a2c6e41d86"
+      "uid" : "32abc6cea6a8cc444dea75e7f6dd7f21"
     }, {
-      "name" : "expected \"[*] Setup: changing working directory to /tmp\\n[!] SESSION may not be compatible with this module:\\n...to /home/runner/work/metasploit-framework/metasploit-framework\\n[*] Post module execution completed\" to include \"Failed: 0\"\nDiff:\n@@ -1,71 +1,141 @@\n-Failed: 0\n+[*] Setup: changing working directory to /tmp\n+[!] SESSION may not be compatible with this module:\n+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api\n+[*] Running against session 14\n+[*] Session type is meterpreter and platform is linux\n+before running test: should test for directory existence\n+[+] should test for directory existence\n+before running test: should create directories\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[*] Creating directory test-dir/directory\n+[*] test-dir/directory created\n+[+] should create directories\n+before running test: should list the directory we just made\n+[+] should list the directory we just made\n+before running test: should recursively delete the directory we just made\n+[+] should recursively delete the directory we just made\n+before running test: should delete a symbolic link target\n+[*] Creating directory test-dir\n+[*] test-dir created\n+[+] should delete a symbolic link target\n+before running test: should not recurse into symbolic link directories\n+[*] Creating directory test-dir.1\n+[*] test-dir.1 created\n+[*] Creating directory test-dir.2\n+[*] test-dir.2 created\n+[+] should not recurse into symbolic link directories\n+before running test: should write binary data\n+[*] Writing 35000 bytes\n+[*] Finished in 0.028291612\n+[+] should write binary data\n+before running test: should read the binary data we just wrote\n+[*] Read 35000 bytes\n+[+] should read the binary data we just wrote\n+before running test: should delete binary files\n+[+] should delete binary files\n+before running test: should append binary data\n+[-] FAILED: should append binary data\n+before running test: should test for file existence\n+Does this exist? c:\\boot.ini==false\n+Does this exist? c:\\pagefile.sys==false\n+Does this exist? /etc/passwd==true\n+Does this exist? /etc/master.passwd==false\n+Does this exist? %WINDIR%\\system32\\notepad.exe==false\n+Does this exist? %WINDIR%\\system32\\calc.exe==false\n+Does this exist? /home/runner/work/metasploit-framework/metasploit-framework/test/modules/post/test/file.rb==true\n+[+] should test for file existence\n+before running test: should create text files\n+[+] should create text files\n+before running test: should read the text we just wrote\n+[+] should read the text we just wrote\n+before running test: should append text files\n+[+] should append text files\n+before running test: should delete text files\n+[+] should delete text files\n+before running test: should move files\n+[+] should move files\n+before running test: should expand home\n+[+] should expand home\n+before running test: should not expand non-isolated tilde\n+[+] should not expand non-isolated tilde\n+before running test: should not expand mid-string tilde\n+[+] should not expand mid-string tilde\n+before running test: should not expand env vars with invalid naming\n+[+] should not expand env vars with invalid naming\n+before running test: should expand multiple variables\n+[+] should expand multiple variables\n+[*] Testing complete in 0.732840628\n+[-] Passed: 20; Failed: 1\n+[*] Cleanup: changing working directory back to /home/runner/work/metasploit-framework/metasploit-framework\n+[*] Post module execution completed\n",
-      "children" : [ {
-        "name" : "passes java/meterpreter/reverse_tcp test/file",
-        "uid" : "9abbc4adf4a01693",
-        "parentUid" : "c6068ef6d26e8f0976412cf62f7646cb",
-        "status" : "failed",
-        "time" : {
-          "start" : 1643940389738,
-          "stop" : 1643940391244,
-          "duration" : 1506
-        },
-        "flaky" : false,
-        "newFailed" : false,
-        "newPassed" : false,
-        "newBroken" : false,
-        "retriesCount" : 0,
-        "retriesStatusChange" : false,
-        "parameters" : [ "linux" ]
-      } ],
-      "uid" : "c6068ef6d26e8f0976412cf62f7646cb"
-    }, {
-      "name" : "Got 3 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the stderr output\n\n     ./spec/acceptance/meterpreter_spec.rb:1725:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1725:in `block (10 levels) in <top (required)>'\n\n  3) expected \"[!] SESSION may not be compatible with this module:\\n[!]  * incompatible session platform: osx\\n[*] ...tests\\n[*] Testing complete in 7.697\\n[-] Passed: 6; Failed: 1\\n[*] Post module execution completed\" to include \"Failed: 0\"\n     Diff:\n     @@ -1,31 +1,61 @@\n     -Failed: 0\n     +[!] SESSION may not be compatible with this module:\n     +[!]  * incompatible session platform: osx\n     +[*] Running against session 2\n     +[*] Session type is meterpreter and platform is osx\n     +[*] Starting cmd_exec quote tests\n     +before running test: should return the result of echo with single quotes\n     +expected: IUoI - [73, 85, 111, 73] - ASCII-8BIT\n     +actual: IUoI - [73, 85, 111, 73] - ASCII-8BIT\n     +[+] should return the result of echo with single quotes\n     +before running test: should return the result of echo with double quotes\n     +expected: PwfE - [80, 119, 102, 69] - ASCII-8BIT\n     +actual: PwfE - [80, 119, 102, 69] - ASCII-8BIT\n     +[+] should return the result of echo with double quotes\n     +[*] Starting cmd_exec stderr tests\n     +before running test: should return the stderr output\n     +expected: rtNQ - [114, 116, 78, 81] - ASCII-8BIT\n     +actual: rt - [114, 116] - ASCII-8BIT\n     +[-] FAILED: should return the stderr output\n     +[*] Starting cmd_exec tests\n     +before running test: should return the result of echo\n     +[+] should return the result of echo\n     +before running test: should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +before running test: should return the full response after sleeping\n     +[+] should return the full response after sleeping\n     +before running test: should return the result of echo 10 times\n     +[+] should return the result of echo 10 times\n     +[*] Finished cmd_exec tests\n     +[*] Testing complete in 7.697\n     +[-] Passed: 6; Failed: 1\n     +[*] Post module execution completed\n\n     ./spec/acceptance/meterpreter_spec.rb:1731:in `block (10 levels) in <top (required)>'",
+      "name" : "Got 2 failures from failure aggregation block:\n\n  1) Unexpected error: [-] FAILED: should return the result of echo with double quotes\n\n     ./spec/acceptance/meterpreter_spec.rb:1729:in `block (10 levels) in <top (required)>'\n\n  2) Unexpected error: [-] Passed: 6; Failed: 1\n\n     ./spec/acceptance/meterpreter_spec.rb:1729:in `block (10 levels) in <top (required)>'",
       "children" : [ {
         "name" : "passes python/meterpreter/reverse_tcp test/cmd_exec",
-        "uid" : "707b71dca30f0364",
-        "parentUid" : "b9793cd98e915cfac79065398835f458",
+        "uid" : "258ccffb809dda75",
+        "parentUid" : "255083b3606b47821cbc6f66f2d494fe",
         "status" : "failed",
         "time" : {
-          "start" : 1643940394315,
-          "stop" : 1643940403660,
-          "duration" : 9345
+          "start" : 1643940794608,
+          "stop" : 1643940802502,
+          "duration" : 7894
         },
         "flaky" : false,
         "newFailed" : false,
@@ -64,7 +43,7 @@
         "retriesStatusChange" : false,
         "parameters" : [ "darwin19" ]
       } ],
-      "uid" : "b9793cd98e915cfac79065398835f458"
+      "uid" : "255083b3606b47821cbc6f66f2d494fe"
     } ],
     "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
   } ],

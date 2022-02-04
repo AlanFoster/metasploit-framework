@@ -1,0 +1,39 @@
+use python/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/registry) > generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-6992-o7sryq.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6010 lhost=127.0.0.1
+msf6 payload(python/meterpreter/reverse_tcp) > [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-6992-o7sryq.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 9
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6010 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 10 opened (127.0.0.1:6010 -> 127.0.0.1:50042 ) at 2022-02-04 02:15:07 +0000
+use test/search
+msf6 post(test/search) > run session=10 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Source File Name: meterpreter-test-wpbszyic.txt
+[*] Running against session 10
+[*] Session type is meterpreter and platform is windows
+[*] Starting search tests
+before running test: should search for new files
+[+] should search for new files
+before running test: should search recursively for files
+[+] should search recursively for files
+before running test: should search with globs for files
+[+] should search with globs for files
+before running test: should search with globs ignoring files
+[+] should search with globs ignoring files
+[*] Starting search date tests
+before running test: should search with dates for files
+[+] should search with dates for files
+before running test: should search with dates ignores new files
+[+] should search with dates ignores new files
+before running test: should search with dates ignores old files
+[+] should search with dates ignores old files
+[*] Session does not support setting the modified date, skipping exact date tests
+[*] Testing complete in 0.2861203
+[*] Passed: 7; Failed: 0
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+msf6 post(test/search) > 

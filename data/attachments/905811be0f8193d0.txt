@@ -1,0 +1,19 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/cmd_exec) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-6992-62yv0c.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6014 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-6992-62yv0c.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 13
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6014 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 14 opened (127.0.0.1:6014 -> 127.0.0.1:50055 ) at 2022-02-04 02:15:19 +0000
+use test/extapi
+msf6 post(test/extapi) > run session=14 AddEntropy=true Verbose=true
+[*] Loading extapi extension...
+[-] Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (java/windows)
+[-] Call stack:
+[-]   D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/extapi.rb:32:in `setup'
+[*] Post module execution completed
+msf6 post(test/extapi) > 
