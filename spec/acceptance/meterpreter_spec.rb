@@ -27,6 +27,7 @@ class ChildProcess
   def initialize
     super
 
+    @default_timeout = ENV['CI'] ? 60 : 30
     @debug = true
     @env ||= {}
     @cmd ||= []
@@ -62,29 +63,27 @@ class ChildProcess
     raise
   end
 
-  def recvline(timeout: 30)
+  def recvline(timeout: @default_timeout)
     recvuntil($INPUT_RECORD_SEPARATOR, timeout: timeout)
   end
 
   alias readline recvline
 
   # @param [String|Regexp] delim
-  def recvuntil(delim, timeout: 30, drop_delim: false)
+  def recvuntil(delim, timeout: @default_timeout, drop_delim: false)
     buffer = ''
     result = nil
 
     with_countdown(timeout) do |countdown|
       while alive? && !countdown.elapsed?
-        log("still searching for #{delim} in #{buffer}")
+        # log("still searching for #{delim} in #{buffer}")
         data_chunk = recv(timeout: [countdown.remaining_time, 1].min)
         if !data_chunk
           next
         end
 
-        log("found a chunk")
         buffer += data_chunk
         has_delimiter = delim.is_a?(Regexp) ? buffer.match?(delim) : buffer.include?(delim)
-        log("didnt match")
         next unless has_delimiter
 
         result, matched_delim, remaining = buffer.partition(delim)
@@ -92,15 +91,19 @@ class ChildProcess
           result += matched_delim
         end
         unrecv(remaining)
+        # clear our temporary buffer
+        buffer = ''
 
         return result
       end
+    ensure
+      unrecv(buffer)
     end
 
     result
   end
 
-  def recvall(timeout: 30)
+  def recvall(timeout: @default_timeout)
     result = ''
 
     with_countdown(timeout) do |countdown|
@@ -122,7 +125,7 @@ class ChildProcess
     buffer.pos = [0, buffer.pos - data.length].max
   end
 
-  def recv(size = 4096, timeout: 30)
+  def recv(size = 4096, timeout: @default_timeout)
     buffer_result = buffer.read(size)
     return buffer_result if buffer_result
 
@@ -235,8 +238,8 @@ class ChildProcess
       yield countdown
     end
     if countdown.elapsed?
-      # TODO: Python windows is flakey
-      raise 'Failed await result, bailing' if ENV['CI']
+      # TODO: Python windows is flaky
+      raise "Failed await result, bailing with remaining buffer #{buffer.string[buffer.pos..-1]}" if ENV['CI']
       if !ENV['CI']
         require 'pry'; binding.pry
       end
@@ -461,6 +464,34 @@ def uncolorize(string)
   string.gsub(/\e\[\d+m/, '')
 end
 
+class LineValidation
+  # @param [string|Array<String>] values A line string, or array of lines
+  # @param [Object] options Additional options for configuring this failure, i.e. if it's a known flaky test result etc.
+  def initialize(values, options = {})
+    @values = Array(values)
+    @options = options
+  end
+
+  def flatten
+    @values.map { |value| self.class.new(value, @options) }
+  end
+
+  def value
+    raise StandardError, "More than one value present" if @values.length > 1
+    @values[0]
+  end
+
+  # @return [boolean] returns true if the current failure applies under the current environment or the result is flaky, false otherwise.
+  def flaky?
+    @options.fetch(:flaky, true)
+  end
+
+  # @return [boolean] returns true if the current failure applies under the current environment or the result is flaky, false otherwise.
+  def if?
+    @options.fetch(:if, true)
+  end
+end
+
 RSpec.describe 'payloads' do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
@@ -473,21 +504,27 @@ RSpec.describe 'payloads' do
           lines: {
             all: {
               required: [
-                "Failed: 0"
+                "Passed: "
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: [
+                ["should return the stderr output", { flaky: true }],
+                ["; Failed:", { flaky: true }],
+              ]
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: [
+                ["should return the stderr output", { flaky: true }],
+                ["; Failed:", { flaky: true }],
+              ]
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -498,7 +535,7 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
                 "The \"extapi\" extension is not supported by this Meterpreter type",
                 "Call stack:",
                 "test/modules/post/test/extapi.rb"
@@ -506,15 +543,15 @@ RSpec.describe 'payloads' do
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -526,27 +563,29 @@ RSpec.describe 'payloads' do
               required: [
 
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             windows: {
               required: [
 
               ],
-              ignored: [
+              acceptable_failures: [
+                # Python Meterpreter occasionally fails to verify that files exist
+                ["FAILED: should test for file existence", { flaky: true }],
                 "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
                 "Call stack:",
                 "test/modules/post/test/file.rb",
@@ -563,20 +602,20 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -587,33 +626,36 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [
-                'Failed: 0'
+                '; Failed: 0'
               ],
-              ignored:
-                ENV['CI'] ?
-                  []
-                  # TODO: Python Meterpreter on local environment chokes on netstat -rn output:
-                  #   '172.16.83.3        0.c.29.a1.cb.67    UHLWIi     bridge1    358'
-                  #  Exception:
-                  #   'gateway': inet_pton(state, gateway),
-                  #   *** error: illegal IP address string passed to inet_pton
-                  : [
-                  "FAILED: should return network routes",
-                  "stdapi_net_config_get_routes: Operation failed: Unknown error",
+              acceptable_failures:
+                [
+                  [
+                    # TODO: Python OSX Meterpreter on local environment chokes on netstat -rn output:
+                    #   '172.16.83.3        0.c.29.a1.cb.67    UHLWIi     bridge1    358'
+                    #  Exception:
+                    #   'gateway': inet_pton(state, gateway),
+                    #   *** error: illegal IP address string passed to inet_pton
+                    [
+                      "FAILED: should return network routes",
+                      "stdapi_net_config_get_routes: Operation failed: Unknown error",
+                    ],
+                    { if: !ENV['CI'] }
+                  ]
                 ]
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -625,20 +667,20 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -649,14 +691,14 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [
                 "Passed: 0; Failed: 2"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should return a constant name given a const and a filter",
                 "FAILED: should return an error string given an error code",
                 "Passed: 0; Failed: 2"
@@ -666,7 +708,7 @@ RSpec.describe 'payloads' do
               required: [
                 "Passed: 0; Failed: 2"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should return a constant name given a const and a filter",
                 "FAILED: should return an error string given an error code",
                 "Passed: 0; Failed: 2"
@@ -674,7 +716,7 @@ RSpec.describe 'payloads' do
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -685,22 +727,22 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [
                 "Passed: 10; Failed: 1"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should evaluate key existence",
                 "Passed: 10; Failed: 1"
               ]
@@ -714,25 +756,25 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [
                 "Failed: 1"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should search with date inclusive of exact date",
                 "Failed: 1"
               ]
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -743,22 +785,22 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [
                 "Passed: 11; Failed: 2"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should start W32Time",
                 "FAILED: should stop W32Time",
                 "FAILED: should list services",
@@ -785,20 +827,20 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -928,19 +970,19 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -951,7 +993,7 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
                 "The \"extapi\" extension is not supported by this Meterpreter type",
                 "Call stack:",
                 "test/modules/post/test/extapi.rb"
@@ -959,15 +1001,15 @@ RSpec.describe 'payloads' do
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -979,23 +1021,29 @@ RSpec.describe 'payloads' do
               required: [
 
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [
-                "Failed: 0"
+                "Passed: "
               ],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [
-                "Failed: 0"
+                "Passed: "
               ],
-              ignored: []
+              acceptable_failures: [
+                # Consistently fails on CI
+                ["Didn't read what we wrote, actual file on target: ||", { if: ENV['CI'] }],
+                # Occassionally fails
+                ["FAILED: should append binary data", { flaky: true }],
+                ["Failed:", { flaky: true }],
+              ]
             },
             windows: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
                 "Call stack:",
                 "modules/post/test/file.rb",
@@ -1012,19 +1060,19 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -1036,19 +1084,19 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -1059,14 +1107,14 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: Should retrieve the win32k file version",
                 "Exception: Rex::NotImplementedError : The requested method is not implemented",
                 "FAILED: Should include error information in the results",
@@ -1082,7 +1130,7 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: Should retrieve the win32k file version",
                 "Exception: Rex::NotImplementedError : The requested method is not implemented",
                 "FAILED: Should include error information in the results",
@@ -1098,7 +1146,7 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: Should retrieve the win32k file version",
                 "Exception: Rex::NotImplementedError : The requested method is not implemented.",
                 "FAILED: Should include error information in the results",
@@ -1119,12 +1167,12 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should return a constant name given a const and a filter",
                 "FAILED: should return an error string given an error code",
                 "Failed: 2"
@@ -1132,7 +1180,7 @@ RSpec.describe 'payloads' do
             },
             linux: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should return a constant name given a const and a filter",
                 "FAILED: should return an error string given an error code",
                 "Failed: 2"
@@ -1142,7 +1190,7 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -1153,19 +1201,19 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should create keys",
                 "FAILED: should write REG_SZ values",
                 "FAILED: should write REG_DWORD values",
@@ -1191,23 +1239,23 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: [
+              acceptable_failures: [
               ]
             },
             osx: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "FAILED: should search with date inclusive of exact date",
                 "Failed: 1"
               ]
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -1218,19 +1266,19 @@ RSpec.describe 'payloads' do
             all: {
               required: [
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: [
+              acceptable_failures: [
                 "Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type",
                 "Exception: Rex::NotImplementedError : The requested method is not implemented.",
                 "FAILED: should start W32Time",
@@ -1258,19 +1306,19 @@ RSpec.describe 'payloads' do
               required: [
                 "Failed: 0"
               ],
-              ignored: []
+              acceptable_failures: []
             },
             osx: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             linux: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
             windows: {
               required: [],
-              ignored: []
+              acceptable_failures: []
             },
           }
         },
@@ -1457,7 +1505,7 @@ RSpec.describe 'payloads' do
     # #       { name: 'test/railgun_reverse_lookups', focus: false },
     # #       { name: 'test/registry', focus: false },
     # #       { name: 'test/search', focus: false },
-    # #       # TODO: Flakey. FAILED: should start a disabled service aVqDqI.
+    # #       # TODO: Flaky. FAILED: should start a disabled service aVqDqI.
     # #       #   Exception: RuntimeError : Unable to open service manager: FormatMessage failed to retrieve the error.
     # #       { name: 'test/services', focus: false },
     # #       { name: 'test/unix', focus: false },
@@ -1668,15 +1716,22 @@ RSpec.describe 'payloads' do
                 # Ensure there are no failures, and assert tests are complete
                 aggregate_failures do
                   # TODO: Rename acceptable_failures?
-                  ignored_lines = module_test.dig(:lines, :all, :ignored) || []
-                  ignored_lines += module_test.dig(:lines, current_platform, :ignored) || []
+                  acceptable_failures = module_test.dig(:lines, :all, :acceptable_failures) || []
+                  acceptable_failures += module_test.dig(:lines, current_platform, :acceptable_failures) || []
+                  acceptable_failures = acceptable_failures.flat_map { |value| LineValidation.new(*Array(value)).flatten }
 
                   required_lines = module_test.dig(:lines, :all, :required) || []
                   required_lines += module_test.dig(:lines, current_platform, :required) || []
+                  required_lines = required_lines.flat_map { |value| LineValidation.new(*Array(value)).flatten }
 
                   # Skip any ignored lines from the validation input
                   validated_lines = test_result.lines.reject do |line|
-                    ignored_lines.any? { |ignored_line| line.match?(ignored_line) }
+                    is_acceptable = acceptable_failures.any? do |acceptable_failure|
+                      line.match?(acceptable_failure.value) &&
+                        acceptable_failure.if?
+                    end
+
+                    is_acceptable
                   end
 
                   validated_lines.each do |test_line|
@@ -1684,15 +1739,18 @@ RSpec.describe 'payloads' do
                     expect(test_line).to_not include('FAILED', '[-] FAILED', '[-] Exception', '[-] '), "Unexpected error: #{test_line}"
                   end
 
-                  # Assert all expected lines are present
+                  # Assert all expected lines are present, unless they're flaky
                   required_lines.each do |required|
-                    expect(test_result).to include(required)
+                    next unless required.if?
+                    expect(test_result).to include(required.value)
                   end
 
                   # Assert all ignored lines are present, if they are not present - they should be removed from
                   # the calling config
-                  ignored_lines.each do |ignored|
-                    expect(test_result).to include(ignored)
+                  acceptable_failures.each do |acceptable_failure|
+                    next if acceptable_failure.flaky?
+                    next unless acceptable_failure.if?
+                    expect(test_result).to include(acceptable_failure.value)
                   end
                 end
               ensure

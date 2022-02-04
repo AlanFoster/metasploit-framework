@@ -28,6 +28,7 @@ module Msf::Post::Unix
       end
     }
     cmd_out = read_file(etc_passwd).split("\n")
+    puts "got a cmd out response from get_users: #{cmd_out.inspect}"
     cmd_out.each do |l|
       entry = {}
       user_field = l.split(":")
@@ -99,7 +100,7 @@ module Msf::Post::Unix
   #
   def whoami
     shellpid = get_session_pid()
-    status = read_file("/proc/#{shellpid}/status") 
+    status = read_file("/proc/#{shellpid}/status")
     status.each_line do |line|
       split = line.split(":")
       if split[0] == "Uid"

@@ -23,6 +23,7 @@ module ModuleTest
   def it(msg="", &block)
     @tests  += 1
     begin
+      puts "before running test: #{msg}"
       result = block.call
       unless result
         print_error("FAILED: #{msg}")
@@ -33,6 +34,7 @@ module ModuleTest
     rescue ::Exception => e
       print_error("FAILED: #{msg}")
       print_error("Exception: #{e.class} : #{e}")
+      print_status("Backtrace: #{e.backtrace}")
       dlog("Exception in testing - #{msg}")
       dlog("Call stack: #{e.backtrace.join("\n")}")
       return
