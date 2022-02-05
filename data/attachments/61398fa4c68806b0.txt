@@ -1,0 +1,85 @@
+use php/meterpreter_reverse_tcp
+Stopping all jobs...
+[4mmsf6[0m post([1m[31mtest/extapi[0m) [0m> generate -o /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3095-wrvygv.php -f raw AutoVerifySessionTimeout=10 lport=6003 lhost=127.0.0.1
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> [*] Writing 34276 bytes to /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220205-3095-wrvygv.php...
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> to_handler
+[*] Payload Handler Started as Job 2
+[4mmsf6[0m payload([1m[31mphp/meterpreter_reverse_tcp[0m) [0m> 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6003 
+[*] Meterpreter session 3 opened (127.0.0.1:6003 -> 127.0.0.1:49386 ) at 2022-02-05 20:00:10 +0000
+use test/file
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> run session=3 AddEntropy=true Verbose=true
+[*] Setup: changing working directory to /tmp
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session platform: osx
+[!]  * missing Meterpreter features: stdapi_railgun_api
+[*] Running against session 3
+[*] Session type is meterpreter and platform is osx
+before running test: should expand home
+[+] should expand home
+before running test: should not expand non-isolated tilde
+[+] should not expand non-isolated tilde
+before running test: should not expand mid-string tilde
+[+] should not expand mid-string tilde
+before running test: should not expand env vars with invalid naming
+[+] should not expand env vars with invalid naming
+before running test: should expand multiple variables
+[+] should expand multiple variables
+before running test: should test for directory existence
+[+] should test for directory existence
+before running test: should create directories
+[*] Creating directory test-dir
+[*] test-dir created
+[*] Creating directory test-dir/directory
+[*] test-dir/directory created
+[+] should create directories
+before running test: should list the directory we just made
+[+] should list the directory we just made
+before running test: should recursively delete the directory we just made
+[+] should recursively delete the directory we just made
+before running test: should delete a symbolic link target
+[*] Creating directory test-dir
+[-] FAILED: should delete a symbolic link target
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should not recurse into symbolic link directories
+[*] Creating directory test-dir.1
+[-] FAILED: should not recurse into symbolic link directories
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should test for file existence
+[-] FAILED: should test for file existence
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should create text files
+[-] FAILED: should create text files
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should read the text we just wrote
+[-] FAILED: should read the text we just wrote
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should append text files
+[-] FAILED: should append text files
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should delete text files
+[-] FAILED: should delete text files
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should move files
+[-] FAILED: should move files
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should write binary data
+[*] Writing 31264 bytes
+[-] FAILED: should write binary data
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should read the binary data we just wrote
+[-] FAILED: should read the binary data we just wrote
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should delete binary files
+[-] FAILED: should delete binary files
+[-] Exception: Rex::TimeoutError : Operation timed out.
+before running test: should append binary data
+[-] FAILED: should append binary data
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Testing complete in 0.608364
+[*] Passed: 21; Failed: 0
+[*] Cleanup: changing working directory back to /Users/runner/work/metasploit-framework/metasploit-framework
+[-] Post interrupted by the console user
+[*] Post module execution completed
+[4mmsf6[0m post([1m[31mtest/file[0m) [0m> 
