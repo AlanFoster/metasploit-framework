@@ -28,7 +28,7 @@ module Msf::Post::Unix
       end
     }
     cmd_out = read_file(etc_passwd).split("\n")
-    puts "got a cmd out response from get_users: #{cmd_out.inspect}"
+    # puts "got a cmd out response from get_users: #{cmd_out.inspect}"
     cmd_out.each do |l|
       entry = {}
       user_field = l.split(":")

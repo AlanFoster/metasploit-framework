@@ -33,7 +33,7 @@ class MetasploitModule < Msf::Post
 
       ret = true
       users = get_users
-      puts "got a users response: #{users}"
+      # puts "got a users response: #{users}"
       ret &&= users.kind_of? Array
       ret &&= users.length > 0
       have_root = false

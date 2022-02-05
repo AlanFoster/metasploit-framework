@@ -394,7 +394,12 @@ class Console < ChildProcess
       'BUNDLE_GEMFILE' => File.join(framework_root, 'Gemfile'),
       'PATH' => "#{framework_root.shellescape}:#{ENV['PATH']}"
     }
-    @cmd = ['bundle', 'exec', 'ruby', 'msfconsole.rb', '--no-readline', '--logger', 'Stdout', '--quiet']
+    @cmd = [
+      'bundle', 'exec', 'ruby', 'msfconsole.rb',
+      '--no-readline',
+      # '--logger', 'Stdout',
+      '--quiet'
+    ]
     @options = {
       chdir: framework_root
     }
@@ -495,500 +500,431 @@ end
 RSpec.describe 'payloads' do
   # Tests to ensure that Meterpreter is consistent across all implementations/operation systems
   METERPRETER_PAYLOADS = {
-    python: {
-      focus: false,
-      module_tests: [
-        {
-          name: 'test/cmd_exec',
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-                "Passed: "
-              ],
-              acceptable_failures: []
-            },
-            osx: {
-              required: [],
-              acceptable_failures: [
-                ["should return the stderr output", { flaky: true }],
-                ["; Failed:", { flaky: true }],
-              ]
-            },
-            linux: {
-              required: [],
-              acceptable_failures: [
-                ["should return the stderr output", { flaky: true }],
-                ["; Failed:", { flaky: true }],
-              ]
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/extapi",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-                "The \"extapi\" extension is not supported by this Meterpreter type",
-                "Call stack:",
-                "test/modules/post/test/extapi.rb"
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/file",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [
-                "Failed: 0"
-              ],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [
-                "Failed: 0"
-              ],
-              acceptable_failures: [
-              ]
-            },
-            windows: {
-              required: [
-
-              ],
-              acceptable_failures: [
-                # Python Meterpreter occasionally fails to verify that files exist
-                ["FAILED: should test for file existence", { flaky: true }],
-                "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
-                "Call stack:",
-                "test/modules/post/test/file.rb",
-                "test/lib/module_test.rb",
-              ]
-            },
-          }
-        },
-        {
-          name: "test/get_env",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-                "Failed: 0"
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/meterpreter",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [
-                '; Failed: 0'
-              ],
-              acceptable_failures:
-                [
-                  [
-                    # TODO: Python OSX Meterpreter on local environment chokes on netstat -rn output:
-                    #   '172.16.83.3        0.c.29.a1.cb.67    UHLWIi     bridge1    358'
-                    #  Exception:
-                    #   'gateway': inet_pton(state, gateway),
-                    #   *** error: illegal IP address string passed to inet_pton
-                    [
-                      "FAILED: should return network routes",
-                      "stdapi_net_config_get_routes: Operation failed: Unknown error",
-                    ],
-                    { if: !ENV['CI'] }
-                  ]
-                ]
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/railgun",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-                "Failed: 0"
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/railgun_reverse_lookups",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [
-                "Passed: 0; Failed: 2"
-              ],
-              acceptable_failures: [
-                "FAILED: should return a constant name given a const and a filter",
-                "FAILED: should return an error string given an error code",
-                "Passed: 0; Failed: 2"
-              ]
-            },
-            linux: {
-              required: [
-                "Passed: 0; Failed: 2"
-              ],
-              acceptable_failures: [
-                "FAILED: should return a constant name given a const and a filter",
-                "FAILED: should return an error string given an error code",
-                "Passed: 0; Failed: 2"
-              ]
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/registry",
-          platforms: [:windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [
-                "Passed: 10; Failed: 1"
-              ],
-              acceptable_failures: [
-                "FAILED: should evaluate key existence",
-                "Passed: 10; Failed: 1"
-              ]
-            },
-          }
-        },
-        {
-          name: "test/search",
-          platforms: [:osx, :linux, :windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [
-                "Failed: 1"
-              ],
-              acceptable_failures: [
-                "FAILED: should search with date inclusive of exact date",
-                "Failed: 1"
-              ]
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-        {
-          name: "test/services",
-          platforms: [:windows],
-          lines: {
-            all: {
-              required: [
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [
-                "Passed: 11; Failed: 2"
-              ],
-              acceptable_failures: [
-                "FAILED: should start W32Time",
-                "FAILED: should stop W32Time",
-                "FAILED: should list services",
-                "Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error",
-                "The \"extapi\" extension is not supported by this Meterpreter type",
-                "FAILED: should return info on a given service",
-                "FAILED: should create a service",
-                "FAILED: should return info on the newly-created service",
-                "FAILED: should delete the new service",
-                "FAILED: should return status on a given service",
-                "FAILED: should modify config on a given service",
-                "FAILED: should start a disabled service",
-                "FAILED: should restart a started service",
-                "Passed: 11; Failed: 2"
-              ]
-            },
-          }
-        },
-        {
-          name: "test/unix",
-          platforms: [:osx, :linux],
-          lines: {
-            all: {
-              required: [
-                "Failed: 0"
-              ],
-              acceptable_failures: [
-              ]
-            },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
-            linux: {
-              required: [],
-              acceptable_failures: []
-            },
-            windows: {
-              required: [],
-              acceptable_failures: []
-            },
-          }
-        },
-      ],
-      payloads: [
-        {
-          name: 'python/meterpreter/reverse_tcp',
-          test_available_commands: true,
-          extension: '.py',
-          platforms: %i[osx linux windows],
-          execute_cmd: ['python', '${payload_path}'],
-          generate_options: {
-            '-f': 'raw'
-          },
-          payload_options: {
-            MeterpreterTryToFork: false,
-            PythonMeterpreterDebug: true
-          }
-        },
-      # {
-      #   name: 'python/meterpreter_reverse_tcp',
-      #   extension: '.py',
-      #   platforms: %i[osx linux windows],
-      #   execute_cmd: ['python', '${payload_path}'],
-      #   generate_options: {
-      #     '-f': 'raw'
-      #   },
-      #   payload_options: {
-      #     MeterpreterTryToFork: false,
-      #     PythonMeterpreterDebug: true
-      #   }
-      # },
-      ]
-    },
-    # php: {
+    # python: {
     #   focus: false,
-    #   module_tests: {
-    #     # # TODO
-    #     # {
-    #     #   name: 'test/cmd_exec',
-    #     #   platforms: %i[osx linux windows],
-    #     #   ignore: {
-    #     #     osx: [
-    #     #
-    #     #     ]
-    #     #
-    #     #   }
-    #     # },
-    #     osx: [
-    #       # TODO: Post failed: Rex::Post::Meterpreter::ExtensionLoadError The "extapi" extension is not supported by this Meterpreter type (php/osx)
-    #       # { name: 'test/extapi', focus: false },
-    #       # TODO: FAILED: should read the binary data we just wrote
-    #       # { name: 'test/file', focus: false },
-    #       { name: 'test/get_env', focus: false },
-    #       # TODO: FAILED: should return a list of processes
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # TODO: FAILED: should evaluate key existence
-    #       # { name: 'test/registry', focus: false },
-    #       # TODO: FAILED: should search with date inclusive of exact date
-    #       # { name: 'test/search', focus: false },
-    #       { name: 'test/services', focus: false },
-    #       { name: 'test/unix', focus: false },
-    #     ],
-    #     linux: [
-    #       # { name: 'test/cmd_exec', focus: false },
-    #       # { name: 'test/extapi', focus: false },
-    #       # { name: 'test/file', focus: false },
-    #       # { name: 'test/get_env', focus: false },
-    #       # { name: 'test/meterpreter', focus: false },
-    #       # { name: 'test/railgun', focus: false },
-    #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    #       # { name: 'test/registry', focus: false },
-    #       # { name: 'test/search', focus: false },
-    #       # { name: 'test/services', focus: false },
-    #       # { name: 'test/unix', focus: false },
-    #     ],
-    #     windows: [
-    #       { name: 'test/cmd_exec', focus: false },
-    #     # { name: 'test/extapi', focus: false },
-    #     # { name: 'test/file', focus: false },
-    #     # { name: 'test/get_env', focus: false },
-    #     # { name: 'test/meterpreter', focus: false },
-    #     # { name: 'test/railgun', focus: false },
-    #     # { name: 'test/railgun_reverse_lookups', focus: false },
-    #     # { name: 'test/registry', focus: false },
-    #     # { name: 'test/search', focus: false },
-    #     # { name: 'test/services', focus: false },
-    #     # { name: 'test/unix', focus: false },
-    #     ],
-    #   },
+    #   module_tests: [
+    #     {
+    #       name: 'test/cmd_exec',
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Passed: "
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             ["should return the stderr output", { flaky: true }],
+    #             ["; Failed:", { flaky: true }],
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             ["should return the stderr output", { flaky: true }],
+    #             ["; Failed:", { flaky: true }],
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/extapi",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #             "The \"extapi\" extension is not supported by this Meterpreter type",
+    #             "Call stack:",
+    #             "test/modules/post/test/extapi.rb"
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/file",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [
+    #
+    #           ],
+    #           acceptable_failures: [
+    #             # Python Meterpreter occasionally fails to verify that files exist
+    #             ["FAILED: should test for file existence", { flaky: true }],
+    #             "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
+    #             "Call stack:",
+    #             "test/modules/post/test/file.rb",
+    #             "test/lib/module_test.rb",
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/get_env",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/meterpreter",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [
+    #             '; Failed: 0'
+    #           ],
+    #           acceptable_failures:
+    #             [
+    #               [
+    #                 # TODO: Python OSX Meterpreter on local environment chokes on netstat -rn output:
+    #                 #   '172.16.83.3        0.c.29.a1.cb.67    UHLWIi     bridge1    358'
+    #                 #  Exception:
+    #                 #   'gateway': inet_pton(state, gateway),
+    #                 #   *** error: illegal IP address string passed to inet_pton
+    #                 [
+    #                   "FAILED: should return network routes",
+    #                   "stdapi_net_config_get_routes: Operation failed: Unknown error",
+    #                 ],
+    #                 { if: !ENV['CI'] }
+    #               ]
+    #             ]
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/railgun",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/railgun_reverse_lookups",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [
+    #             "Passed: 0; Failed: 2"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: should return a constant name given a const and a filter",
+    #             "FAILED: should return an error string given an error code",
+    #             "Passed: 0; Failed: 2"
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [
+    #             "Passed: 0; Failed: 2"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: should return a constant name given a const and a filter",
+    #             "FAILED: should return an error string given an error code",
+    #             "Passed: 0; Failed: 2"
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/registry",
+    #       platforms: [:windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [
+    #             "Passed: 10; Failed: 1"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: should evaluate key existence",
+    #             "Passed: 10; Failed: 1"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/search",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [
+    #             "Failed: 1"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: should search with date inclusive of exact date",
+    #             "Failed: 1"
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/services",
+    #       platforms: [:windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [
+    #             "Passed: 11; Failed: 2"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: should start W32Time",
+    #             "FAILED: should stop W32Time",
+    #             "FAILED: should list services",
+    #             "Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error",
+    #             "The \"extapi\" extension is not supported by this Meterpreter type",
+    #             "FAILED: should return info on a given service",
+    #             "FAILED: should create a service",
+    #             "FAILED: should return info on the newly-created service",
+    #             "FAILED: should delete the new service",
+    #             "FAILED: should return status on a given service",
+    #             "FAILED: should modify config on a given service",
+    #             "FAILED: should start a disabled service",
+    #             "FAILED: should restart a started service",
+    #             "Passed: 11; Failed: 2"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/unix",
+    #       platforms: [:osx, :linux],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #   ],
     #   payloads: [
     #     {
-    #       name: 'php/meterpreter_reverse_tcp',
-    #       extension: '.php',
-    #       platforms: %i[osx linux windows],
-    #       execute_cmd: ['php', '${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'raw'
-    #       },
-    #       payload_options: {
-    #       }
-    #     },
-    #     {
-    #       name: 'php/meterpreter/reverse_tcp',
+    #       name: 'python/meterpreter/reverse_tcp',
     #       test_available_commands: true,
-    #       extension: '.php',
+    #       extension: '.py',
     #       platforms: %i[osx linux windows],
-    #       execute_cmd: ['php', '${payload_path}'],
+    #       execute_cmd: ['python', '${payload_path}'],
     #       generate_options: {
     #         '-f': 'raw'
     #       },
     #       payload_options: {
+    #         MeterpreterTryToFork: false,
+    #         PythonMeterpreterDebug: true
     #       }
     #     },
+    #   # {
+    #   #   name: 'python/meterpreter_reverse_tcp',
+    #   #   extension: '.py',
+    #   #   platforms: %i[osx linux windows],
+    #   #   execute_cmd: ['python', '${payload_path}'],
+    #   #   generate_options: {
+    #   #     '-f': 'raw'
+    #   #   },
+    #   #   payload_options: {
+    #   #     MeterpreterTryToFork: false,
+    #   #     PythonMeterpreterDebug: true
+    #   #   }
+    #   # },
     #   ]
     # },
-    java: {
+    php: {
       focus: false,
       module_tests: [
         {
           name: 'test/cmd_exec',
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
+              required: [
+
+              ],
+              acceptable_failures: []
+            },
+            osx: {
               required: [
                 "Failed: 0"
               ],
               acceptable_failures: []
             },
-            osx: {
-              required: [],
-              acceptable_failures: []
-            },
             linux: {
-              required: [],
+              required: [
+                "Failed: 0"
+              ],
               acceptable_failures: []
             },
             windows: {
               required: [],
-              acceptable_failures: []
+              acceptable_failures: [
+                "FAILED: should return the stderr output",
+                "; Failed: 1"
+              ]
             },
           }
         },
         {
           name: "test/extapi",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
@@ -1015,46 +951,47 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/file",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
-
               ],
               acceptable_failures: []
             },
             osx: {
-              required: [
-                "Passed: "
-              ],
-              acceptable_failures: []
+              required: [],
+              acceptable_failures: [
+                "FAILED: should read the binary data we just wrote",
+                "; Failed: 1"
+              ]
             },
             linux: {
-              required: [
-                "Passed: "
-              ],
-              acceptable_failures: [
-                # Consistently fails on CI
-                ["Didn't read what we wrote, actual file on target: ||", { if: ENV['CI'] }],
-                # Occassionally fails
-                ["FAILED: should append binary data", { flaky: true }],
-                ["Failed:", { flaky: true }],
-              ]
+              required: [],
+              acceptable_failures: []
             },
             windows: {
               required: [],
               acceptable_failures: [
-                "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
+                "Post failed: Rex::Post::Meterpreter::RequestError stdapi_fs_chdir: Operation failed: 1",
                 "Call stack:",
-                "modules/post/test/file.rb",
-                "lib/module_test.rb"
+                "rex/post/meterpreter/extensions/stdapi/fs/dir.rb",
+                "msf/core/post/file.rb",
+                "test/modules/post/test/file.rb"
               ]
             },
           }
         },
         {
           name: "test/get_env",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
@@ -1078,17 +1015,25 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/meterpreter",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
-                "Failed: 0"
               ],
-              acceptable_failures: []
+              acceptable_failures: [
+              ]
             },
             osx: {
-              required: [],
-              acceptable_failures: []
+              required: [
+              ],
+              acceptable_failures: [
+                "FAILED: should return a list of processes",
+                "Failed: 1"
+              ]
             },
             linux: {
               required: [],
@@ -1102,7 +1047,9 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/railgun",
-          platforms: [:windows],
+          platforms: [
+            :windows
+          ],
           lines: {
             all: {
               required: [
@@ -1147,8 +1094,9 @@ RSpec.describe 'payloads' do
                 "Failed: 0"
               ],
               acceptable_failures: [
+                "stdapi_fs_file_expand_path: Operation failed: 1",
                 "FAILED: Should retrieve the win32k file version",
-                "Exception: Rex::NotImplementedError : The requested method is not implemented.",
+                "Exception: Rex::NotImplementedError : The requested method is not implemented",
                 "FAILED: Should include error information in the results",
                 "FAILED: Should support functions with no parameters",
                 "FAILED: Should support functions with literal parameters",
@@ -1162,7 +1110,11 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/railgun_reverse_lookups",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
@@ -1196,7 +1148,9 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/registry",
-          platforms: [:windows],
+          platforms: [
+            :windows
+          ],
           lines: {
             all: {
               required: [
@@ -1234,13 +1188,16 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/search",
-          platforms: [:osx, :linux, :windows],
+          platforms: [
+            :osx,
+            :linux,
+            :windows
+          ],
           lines: {
             all: {
               required: [
               ],
-              acceptable_failures: [
-              ]
+              acceptable_failures: []
             },
             osx: {
               required: [],
@@ -1261,10 +1218,13 @@ RSpec.describe 'payloads' do
         },
         {
           name: "test/services",
-          platforms: [:windows],
+          platforms: [
+            :windows
+          ],
           lines: {
             all: {
               required: [
+                "Failed: 0"
               ],
               acceptable_failures: []
             },
@@ -1295,12 +1255,13 @@ RSpec.describe 'payloads' do
                 "FAILED: should raise a runtime exception if no access to service",
                 "FAILED: should raise a runtime exception if services doesnt exist"
               ]
+
             },
           }
         },
         {
           name: "test/unix",
-          platforms: [:osx, :linux, :windows],
+          platforms: [:osx, :linux],
           lines: {
             all: {
               required: [
@@ -1325,20 +1286,410 @@ RSpec.describe 'payloads' do
       ],
       payloads: [
         {
-          name: 'java/meterpreter/reverse_tcp',
-          test_available_commands: true,
-          extension: '.jar',
+          name: 'php/meterpreter_reverse_tcp',
+          extension: '.php',
           platforms: %i[osx linux windows],
-          execute_cmd: ['java', '-jar', '${payload_path}'],
+          execute_cmd: ['php', '${payload_path}'],
           generate_options: {
-            '-f': 'jar'
+            '-f': 'raw'
           },
           payload_options: {
-            spawn: 0
           }
-        }
+        },
+      # {
+      #   name: 'php/meterpreter/reverse_tcp',
+      #   test_available_commands: true,
+      #   extension: '.php',
+      #   platforms: %i[osx linux windows],
+      #   execute_cmd: ['php', '${payload_path}'],
+      #   generate_options: {
+      #     '-f': 'raw'
+      #   },
+      #   payload_options: {
+      #   }
+      # },
       ]
     },
+    # java: {
+    #   focus: false,
+    #   module_tests: [
+    #     {
+    #       name: 'test/cmd_exec',
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/extapi",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #             "The \"extapi\" extension is not supported by this Meterpreter type",
+    #             "Call stack:",
+    #             "test/modules/post/test/extapi.rb"
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/file",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [
+    #             "Passed: "
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [
+    #             "Passed: "
+    #           ],
+    #           acceptable_failures: [
+    #             # Consistently fails on CI
+    #             ["Didn't read what we wrote, actual file on target: ||", { if: ENV['CI'] }],
+    #             # Occassionally fails
+    #             ["FAILED: should append binary data", { flaky: true }],
+    #             ["Failed:", { flaky: true }],
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
+    #             "Call stack:",
+    #             "modules/post/test/file.rb",
+    #             "lib/module_test.rb"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/get_env",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/meterpreter",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/railgun",
+    #       platforms: [:windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: Should retrieve the win32k file version",
+    #             "Exception: Rex::NotImplementedError : The requested method is not implemented",
+    #             "FAILED: Should include error information in the results",
+    #             "FAILED: Should support functions with no parameters",
+    #             "FAILED: Should support functions with literal parameters",
+    #             "FAILED: Should support functions with in/out/inout parameter types",
+    #             "FAILED: Should support calling multiple functions at once",
+    #             "FAILED: Should support writing memory",
+    #             "FAILED: Should support reading memory"
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: Should retrieve the win32k file version",
+    #             "Exception: Rex::NotImplementedError : The requested method is not implemented",
+    #             "FAILED: Should include error information in the results",
+    #             "FAILED: Should support functions with no parameters",
+    #             "FAILED: Should support functions with literal parameters",
+    #             "FAILED: Should support functions with in/out/inout parameter types",
+    #             "FAILED: Should support calling multiple functions at once",
+    #             "FAILED: Should support writing memory",
+    #             "FAILED: Should support reading memory"
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: [
+    #             "FAILED: Should retrieve the win32k file version",
+    #             "Exception: Rex::NotImplementedError : The requested method is not implemented.",
+    #             "FAILED: Should include error information in the results",
+    #             "FAILED: Should support functions with no parameters",
+    #             "FAILED: Should support functions with literal parameters",
+    #             "FAILED: Should support functions with in/out/inout parameter types",
+    #             "FAILED: Should support calling multiple functions at once",
+    #             "FAILED: Should support writing memory",
+    #             "FAILED: Should support reading memory"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/railgun_reverse_lookups",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "FAILED: should return a constant name given a const and a filter",
+    #             "FAILED: should return an error string given an error code",
+    #             "Failed: 2"
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "FAILED: should return a constant name given a const and a filter",
+    #             "FAILED: should return an error string given an error code",
+    #             "Failed: 2"
+    #           ]
+    #         },
+    #         windows: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/registry",
+    #       platforms: [:windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "FAILED: should create keys",
+    #             "FAILED: should write REG_SZ values",
+    #             "FAILED: should write REG_DWORD values",
+    #             "FAILED: should delete keys",
+    #             "FAILED: should create unicode keys",
+    #             "FAILED: should write REG_SZ unicode values",
+    #             "FAILED: should delete unicode keys",
+    #             "FAILED: should evaluate key existence",
+    #             "PENDING: should evaluate value existence",
+    #             "FAILED: should read values",
+    #             "Exception: NoMethodError : undefined method",
+    #             "FAILED: should return normalized values",
+    #             "FAILED: should enumerate keys and values",
+    #             "Failed: 10"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/search",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: [
+    #           ]
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "FAILED: should search with date inclusive of exact date",
+    #             "Failed: 1"
+    #           ]
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/services",
+    #       platforms: [:windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: [
+    #             "Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type",
+    #             "Exception: Rex::NotImplementedError : The requested method is not implemented.",
+    #             "FAILED: should start W32Time",
+    #             "FAILED: should stop W32Time",
+    #             "FAILED: should list services",
+    #             "FAILED: should return info on a given service",
+    #             "FAILED: should create a service",
+    #             "FAILED: should return info on the newly-created service",
+    #             "FAILED: should delete the new service testes",
+    #             "FAILED: should return status on a given service",
+    #             "FAILED: should modify config on a given service",
+    #             "FAILED: should start a disabled service",
+    #             "FAILED: should restart a started service",
+    #             "FAILED: should raise a runtime exception if no access to service",
+    #             "FAILED: should raise a runtime exception if services doesnt exist"
+    #           ]
+    #         },
+    #       }
+    #     },
+    #     {
+    #       name: "test/unix",
+    #       platforms: [:osx, :linux, :windows],
+    #       lines: {
+    #         all: {
+    #           required: [
+    #             "Failed: 0"
+    #           ],
+    #           acceptable_failures: []
+    #         },
+    #         osx: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         linux: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #         windows: {
+    #           required: [],
+    #           acceptable_failures: []
+    #         },
+    #       }
+    #     },
+    #   ],
+    #   payloads: [
+    #     {
+    #       name: 'java/meterpreter/reverse_tcp',
+    #       test_available_commands: true,
+    #       extension: '.jar',
+    #       platforms: %i[osx linux windows],
+    #       execute_cmd: ['java', '-jar', '${payload_path}'],
+    #       generate_options: {
+    #         '-f': 'jar'
+    #       },
+    #       payload_options: {
+    #         spawn: 0
+    #       }
+    #     }
+    #   ]
+    # },
     # mettle: {
     #   focus: false,
     #   module_tests: {
@@ -1466,95 +1817,95 @@ RSpec.describe 'payloads' do
     #     }
     #   ]
     # },
-    # # windows_meterpreter: {
-    # #   module_tests: {
-    # #     osx: [
-    # #       # { name: 'test/cmd_exec', focus: false },
-    # #       # { name: 'test/extapi', focus: false },
-    # #       # { name: 'test/file', focus: false },
-    # #       # { name: 'test/get_env', focus: false },
-    # #       # { name: 'test/meterpreter', focus: false },
-    # #       # { name: 'test/railgun', focus: false },
-    # #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    # #       # { name: 'test/registry', focus: false },
-    # #       # { name: 'test/search', focus: false },
-    # #       # { name: 'test/services', focus: false },
-    # #       # { name: 'test/unix', focus: false },
-    # #     ],
-    # #     linux: [
-    # #       # { name: 'test/cmd_exec', focus: false },
-    # #       # { name: 'test/extapi', focus: false },
-    # #       # { name: 'test/file', focus: false },
-    # #       # { name: 'test/get_env', focus: false },
-    # #       # { name: 'test/meterpreter', focus: false },
-    # #       # { name: 'test/railgun', focus: false },
-    # #       # { name: 'test/railgun_reverse_lookups', focus: false },
-    # #       # { name: 'test/registry', focus: false },
-    # #       # { name: 'test/search', focus: false },
-    # #       # { name: 'test/services', focus: false },
-    # #       # { name: 'test/unix', focus: false },
-    # #     ],
-    # #     windows: [
-    # #       { name: 'test/cmd_exec', focus: false },
-    # #       { name: 'test/extapi', focus: false },
-    # #       # TODO: Fails on recursive folder delete
-    # #       # { name: 'test/file', focus: false },
-    # #       { name: 'test/get_env', focus: false },
-    # #       { name: 'test/meterpreter', focus: false },
-    # #       { name: 'test/railgun', focus: false },
-    # #       { name: 'test/railgun_reverse_lookups', focus: false },
-    # #       { name: 'test/registry', focus: false },
-    # #       { name: 'test/search', focus: false },
-    # #       # TODO: Flaky. FAILED: should start a disabled service aVqDqI.
-    # #       #   Exception: RuntimeError : Unable to open service manager: FormatMessage failed to retrieve the error.
-    # #       { name: 'test/services', focus: false },
-    # #       { name: 'test/unix', focus: false },
-    # #     ],
-    # #   },
-    # #   payloads: [
-    # #     {
-    # #       name: 'windows/meterpreter/reverse_tcp',
-    # #       test_available_commands: true,
-    # #       extension: '.exe',
-    # #       platforms: [:windows],
-    # #       execute_cmd: ['${payload_path}'],
-    # #       executable: true,
-    # #       generate_options: {
-    # #         '-f': 'exe'
-    # #       },
-    # #       payload_options: {
-    # #         MeterpreterTryToFork: false
-    # #       }
-    # #     },
-    # #     # {
-    # #     #   name: 'windows/meterpreter_reverse_tcp',
-    # #     #   extension: '.exe',
-    # #     #   platforms: [:windows],
-    # #     #   execute_cmd: ['${payload_path}'],
-    # #     #   executable: true,
-    # #     #   generate_options: {
-    # #     #     '-f': 'exe'
-    # #     #   },
-    # #     #   payload_options: {
-    # #     #     MeterpreterTryToFork: false
-    # #     #   }
-    # #     # },
-    # #     # {
-    # #     #   name: 'windows/x64/meterpreter/reverse_tcp',
-    # #     #   test_available_commands: true,
-    # #     #   extension: '.exe',
-    # #     #   platforms: [:windows],
-    # #     #   execute_cmd: ['${payload_path}'],
-    # #     #   executable: true,
-    # #     #   generate_options: {
-    # #     #     '-f': 'exe'
-    # #     #   },
-    # #     #   payload_options: {
-    # #     #     MeterpreterTryToFork: false
-    # #     #   }
-    # #     # }
-    # #   ]
-    # # }
+    # windows_meterpreter: {
+    #   module_tests: {
+    #     osx: [
+    #       # { name: 'test/cmd_exec', focus: false },
+    #       # { name: 'test/extapi', focus: false },
+    #       # { name: 'test/file', focus: false },
+    #       # { name: 'test/get_env', focus: false },
+    #       # { name: 'test/meterpreter', focus: false },
+    #       # { name: 'test/railgun', focus: false },
+    #       # { name: 'test/railgun_reverse_lookups', focus: false },
+    #       # { name: 'test/registry', focus: false },
+    #       # { name: 'test/search', focus: false },
+    #       # { name: 'test/services', focus: false },
+    #       # { name: 'test/unix', focus: false },
+    #     ],
+    #     linux: [
+    #       # { name: 'test/cmd_exec', focus: false },
+    #       # { name: 'test/extapi', focus: false },
+    #       # { name: 'test/file', focus: false },
+    #       # { name: 'test/get_env', focus: false },
+    #       # { name: 'test/meterpreter', focus: false },
+    #       # { name: 'test/railgun', focus: false },
+    #       # { name: 'test/railgun_reverse_lookups', focus: false },
+    #       # { name: 'test/registry', focus: false },
+    #       # { name: 'test/search', focus: false },
+    #       # { name: 'test/services', focus: false },
+    #       # { name: 'test/unix', focus: false },
+    #     ],
+    #     windows: [
+    #       { name: 'test/cmd_exec', focus: false },
+    #       { name: 'test/extapi', focus: false },
+    #       # TODO: Fails on recursive folder delete
+    #       # { name: 'test/file', focus: false },
+    #       { name: 'test/get_env', focus: false },
+    #       { name: 'test/meterpreter', focus: false },
+    #       { name: 'test/railgun', focus: false },
+    #       { name: 'test/railgun_reverse_lookups', focus: false },
+    #       { name: 'test/registry', focus: false },
+    #       { name: 'test/search', focus: false },
+    #       # TODO: Flaky. FAILED: should start a disabled service aVqDqI.
+    #       #   Exception: RuntimeError : Unable to open service manager: FormatMessage failed to retrieve the error.
+    #       { name: 'test/services', focus: false },
+    #       { name: 'test/unix', focus: false },
+    #     ],
+    #   },
+    #   payloads: [
+    #     {
+    #       name: 'windows/meterpreter/reverse_tcp',
+    #       test_available_commands: true,
+    #       extension: '.exe',
+    #       platforms: [:windows],
+    #       execute_cmd: ['${payload_path}'],
+    #       executable: true,
+    #       generate_options: {
+    #         '-f': 'exe'
+    #       },
+    #       payload_options: {
+    #         MeterpreterTryToFork: false
+    #       }
+    #     },
+    #     # {
+    #     #   name: 'windows/meterpreter_reverse_tcp',
+    #     #   extension: '.exe',
+    #     #   platforms: [:windows],
+    #     #   execute_cmd: ['${payload_path}'],
+    #     #   executable: true,
+    #     #   generate_options: {
+    #     #     '-f': 'exe'
+    #     #   },
+    #     #   payload_options: {
+    #     #     MeterpreterTryToFork: false
+    #     #   }
+    #     # },
+    #     # {
+    #     #   name: 'windows/x64/meterpreter/reverse_tcp',
+    #     #   test_available_commands: true,
+    #     #   extension: '.exe',
+    #     #   platforms: [:windows],
+    #     #   execute_cmd: ['${payload_path}'],
+    #     #   executable: true,
+    #     #   generate_options: {
+    #     #     '-f': 'exe'
+    #     #   },
+    #     #   payload_options: {
+    #     #     MeterpreterTryToFork: false
+    #     #   }
+    #     # }
+    #   ]
+    # }
   }.freeze
 
   let_it_be(:port_generator) { PortGenerator.new }
@@ -1708,6 +2059,7 @@ RSpec.describe 'payloads' do
 
                 console.sendline("use #{module_test[:name]}")
                 console.recvuntil(Console.prompt)
+
                 console.sendline("run session=#{await_session_id} AddEntropy=true Verbose=true")
 
                 # Expect happiness

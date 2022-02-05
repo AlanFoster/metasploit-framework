@@ -9,7 +9,7 @@ on:
     branches:
       - '*'
 #  schedule:
-#    - cron: '0,20,40 * * * *'
+#    - cron: '0,5,10,15,25,30,35,45,50,55 * * * *'
 
 jobs:
   # Run all test individually, note there is a separate job for aggregating the test results
@@ -37,6 +37,11 @@ jobs:
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get install libpcap-dev graphviz
+
+      # TODO: PHP Meterpreter doesn't seem to work well with PHP 8, the default version of Github action environments
+      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '7.4'
 
       - name: Install system dependencies (Windows)
         shell: cmd
@@ -92,7 +97,7 @@ jobs:
       - name: acceptance
         run: |
           bundle install
-          bundle exec rspec './spec/acceptance/meterpreter_spec.rb' './spec/acceptance/meterpreter_spec.rb' './spec/acceptance/meterpreter_spec.rb' './spec/acceptance/meterpreter_spec.rb' --color --format Fivemat --format AllureRspecFormatter
+          bundle exec rspec './spec/acceptance/meterpreter_spec.rb' --color --format Fivemat --format AllureRspecFormatter
 
       - name: Archive results
         if: always()
