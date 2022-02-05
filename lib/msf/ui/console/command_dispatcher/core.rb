@@ -2309,7 +2309,7 @@ class Core
       # delineate commands and we can remove it
       prev[-1] == ';' && prev[-1] = ''
     end.map do |c|
-      Shellwords.shelljoin(c)
+      c.join(' ')
     end
 
     # Print help if we have no commands, or all the commands are empty

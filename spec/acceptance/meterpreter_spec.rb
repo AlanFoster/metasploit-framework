@@ -394,7 +394,7 @@ class Console < ChildProcess
       'BUNDLE_GEMFILE' => File.join(framework_root, 'Gemfile'),
       'PATH' => "#{framework_root.shellescape}:#{ENV['PATH']}"
     }
-    @cmd = ['bundle', 'exec', 'ruby', 'msfconsole.rb', '--no-readline', '--quiet']
+    @cmd = ['bundle', 'exec', 'ruby', 'msfconsole.rb', '--no-readline', '--logger', 'Stdout', '--quiet']
     @options = {
       chdir: framework_root
     }
