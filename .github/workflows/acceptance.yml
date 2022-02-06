@@ -1,8 +1,24 @@
 name: Acceptance
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+#concurrency:
+#  group: ${{ github.ref }}-${{ github.workflow }}
+#  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+permissions:
+  actions: none
+  checks: none
+  contents: read
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
 
 on:
   push:
@@ -21,22 +37,35 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        meterpreter:
+          - { name: python, runtime_version: 2.7 }
+          - { name: python, runtime_version: 3.8 }
+          - { name: java }
+          - { name: php, runtime_version: 5.3 }
+          - { name: php, runtime_version: 7.4 }
+          # Broken:
+          - { name: php, runtime_version: 8.1 }
+
+          - { name: windows_meterpreter }
         os:
           - macos-10.15
           - windows-2019
           - ubuntu-18.04
         ruby:
-#          - 2.7
           - 3.0.2
+#        excluding:
+#           # Broken:
+#           - { os: windows-2019, name: php, runtime_version: 5.3 }
 
-    runs-on:  ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
     timeout-minutes: 25
 
     env:
       RAILS_ENV: test
+      METERPRETER: ${{ matrix.meterpreter.name }}
 
-    name: ${{ matrix.os }} Ruby ${{ matrix.ruby }}
+    name: ${{ matrix.meterpreter.name }} ${{ matrix.meterpreter.runtime_version }} ${{ matrix.os }}
     steps:
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
@@ -44,8 +73,16 @@ jobs:
 
       # TODO: PHP Meterpreter doesn't seem to work well with PHP 8, the default version of Github action environments
       - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        if: ${{ matrix.meterpreter.name == 'php' }}
         with:
-          php-version: '7.4'
+          php-version: ${{ matrix.meterpreter.runtime_version }}
+          tools: none
+
+      - name: Set up Python
+        if: ${{ matrix.meterpreter.name == 'python' }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.meterpreter.runtime_version }}
 
       - name: Install system dependencies (Windows)
         shell: cmd
@@ -100,7 +137,6 @@ jobs:
 
       - name: acceptance
         run: |
-          bundle install
           bundle exec rspec './spec/acceptance/meterpreter_spec.rb' --color --format Fivemat --format AllureRspecFormatter
 
       - name: Archive results
