@@ -1731,92 +1731,414 @@ RSpec.describe 'payloads' do
         }
       ]
     },
-    # mettle: {
-    #   module_tests: {
-    #   payloads: [
-    #     {
-    #       name: 'linux/x64/meterpreter/reverse_tcp',
-    #       test_available_commands: true,
-    #       extension: '',
-    #       platforms: [:linux],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'elf'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     },
-    #     {
-    #       name: 'linux/x86/meterpreter/reverse_tcp',
-    #       test_available_commands: true,
-    #       extension: '',
-    #       platforms: [:linux],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'elf'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     },
-    #     {
-    #       name: 'linux/x64/meterpreter_reverse_tcp',
-    #       extension: '',
-    #       platforms: [:linux],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'elf'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     },
-    #     {
-    #       name: 'linux/x86/meterpreter_reverse_tcp',
-    #       extension: '',
-    #       platforms: [:linux],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'elf'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     },
-    #     {
-    #       name: 'osx/x64/meterpreter_reverse_tcp',
-    #       extension: '',
-    #       test_available_commands: true,
-    #       platforms: [:osx],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'macho'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     },
-    #     {
-    #       name: 'osx/x64/meterpreter/reverse_tcp',
-    #       extension: '',
-    #       platforms: [:osx],
-    #       executable: true,
-    #       execute_cmd: ['${payload_path}'],
-    #       generate_options: {
-    #         '-f': 'macho'
-    #       },
-    #       payload_options: {
-    #         MeterpreterTryToFork: false
-    #       }
-    #     }
-    #   ]
-    # },
+    mettle: {
+      module_tests: [
+        {
+          name: 'test/cmd_exec',
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+                "Passed: "
+              ],
+              acceptable_failures: []
+            },
+            osx: {
+              required: [],
+              acceptable_failures: [
+                ["should return the stderr output", { flaky: true }],
+                ["; Failed:", { flaky: true }],
+              ]
+            },
+            linux: {
+              required: [],
+              acceptable_failures: [
+                ["should return the stderr output", { flaky: true }],
+                ["; Failed:", { flaky: true }],
+              ]
+            },
+            windows: {
+              required: [],
+              acceptable_failures: []
+            },
+          }
+        },
+        {
+          name: "test/extapi",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+
+              ]
+            },
+            osx: {
+              required: [],
+              acceptable_failures: [
+                "The \"extapi\" extension is not supported by this Meterpreter type",
+                "Call stack:",
+                "test/modules/post/test/extapi.rb"
+              ]
+            },
+            linux: {
+              required: [],
+              acceptable_failures: [
+                "Post failed: RuntimeError x86_64-linux-musl/extapi not found",
+                "lib/metasploit_payloads/mettle.rb",
+                "lib/rex/post/meterpreter/client_core.rb",
+                "Call stack:",
+                "test/modules/post/test/extapi.rb"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/file",
+          platforms: [:osx, :linux],
+          lines: {
+            all: {
+              required: [
+
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [
+                "Failed: 0"
+              ],
+              acceptable_failures: []
+            },
+            linux: {
+              required: [
+                "Failed: 0"
+              ],
+              acceptable_failures: [
+              ]
+            },
+          }
+        },
+        {
+          name: "test/get_env",
+          platforms: [:osx, :linux],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [],
+              acceptable_failures: []
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            }
+          }
+        },
+        {
+          name: "test/meterpreter",
+          platforms: [:osx, :linux],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [
+                '; Failed: 2'
+              ],
+              acceptable_failures:
+                [
+                  "FAILED: should return network interfaces",
+                  "FAILED: should have an interface that matches session_host",
+                  "; Failed: 2"
+                ]
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            },
+          }
+        },
+        {
+          name: "test/railgun",
+          platforms: [
+          ],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            linux: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+          }
+        },
+        {
+          name: "test/railgun_reverse_lookups",
+          platforms: [:osx, :linux, :windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [
+                "Passed: 0; Failed: 2"
+              ],
+              acceptable_failures: [
+                "FAILED: should return a constant name given a const and a filter",
+                "FAILED: should return an error string given an error code",
+                "Passed: 0; Failed: 2"
+              ]
+            },
+            linux: {
+              required: [
+                "Passed: 0; Failed: 2"
+              ],
+              acceptable_failures: [
+                "FAILED: should return a constant name given a const and a filter",
+                "FAILED: should return an error string given an error code",
+                "Passed: 0; Failed: 2"
+              ]
+            },
+            windows: {
+              required: [],
+              acceptable_failures: []
+            },
+          }
+        },
+        {
+          name: "test/registry",
+          platforms: [:windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [],
+              acceptable_failures: []
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            },
+            windows: {
+              required: [
+                "Passed: 10; Failed: 1"
+              ],
+              acceptable_failures: [
+              ]
+            },
+          }
+        },
+        {
+          name: "test/search",
+          platforms: [
+            # TODO: Hangs:
+            #  :osx,
+            :linux,
+            :windows
+          ],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [
+                "Failed: 0"
+              ],
+              acceptable_failures: [
+              ]
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            },
+            windows: {
+              required: [],
+              acceptable_failures: []
+            },
+          }
+        },
+        {
+          name: "test/services",
+          platforms: [:windows],
+          lines: {
+            all: {
+              required: [
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [],
+              acceptable_failures: []
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            },
+            windows: {
+              required: [
+                "Passed: 11; Failed: 2"
+              ],
+              acceptable_failures: [
+                "FAILED: should start W32Time",
+                "FAILED: should stop W32Time",
+                "FAILED: should list services",
+                "Exception: RuntimeError : Could not open service. OpenServiceA error: FormatMessage failed to retrieve the error",
+                "The \"extapi\" extension is not supported by this Meterpreter type",
+                "FAILED: should return info on a given service",
+                "FAILED: should create a service",
+                "FAILED: should return info on the newly-created service",
+                "FAILED: should delete the new service",
+                "FAILED: should return status on a given service",
+                "FAILED: should modify config on a given service",
+                "FAILED: should start a disabled service",
+                "FAILED: should restart a started service",
+                "Passed: 11; Failed: 2"
+              ]
+            },
+          }
+        },
+        {
+          name: "test/unix",
+          platforms: [:osx, :linux],
+          lines: {
+            all: {
+              required: [
+                "Failed: 0"
+              ],
+              acceptable_failures: [
+              ]
+            },
+            osx: {
+              required: [],
+              acceptable_failures: []
+            },
+            linux: {
+              required: [],
+              acceptable_failures: []
+            },
+            windows: {
+              required: [],
+              acceptable_failures: []
+            },
+          }
+        },
+      ],
+      payloads: [
+        {
+          name: 'linux/x64/meterpreter/reverse_tcp',
+          test_available_commands: true,
+          extension: '',
+          platforms: [:linux],
+          executable: true,
+          execute_cmd: ['${payload_path}'],
+          generate_options: {
+            '-f': 'elf'
+          },
+          payload_options: {
+            MeterpreterTryToFork: false
+          }
+        },
+        # {
+        #   name: 'linux/x86/meterpreter/reverse_tcp',
+        #   test_available_commands: true,
+        #   extension: '',
+        #   platforms: [:linux],
+        #   executable: true,
+        #   execute_cmd: ['${payload_path}'],
+        #   generate_options: {
+        #     '-f': 'elf'
+        #   },
+        #   payload_options: {
+        #     MeterpreterTryToFork: false
+        #   }
+        # },
+        # {
+        #   name: 'linux/x64/meterpreter_reverse_tcp',
+        #   extension: '',
+        #   platforms: [:linux],
+        #   executable: true,
+        #   execute_cmd: ['${payload_path}'],
+        #   generate_options: {
+        #     '-f': 'elf'
+        #   },
+        #   payload_options: {
+        #     MeterpreterTryToFork: false
+        #   }
+        # },
+        # {
+        #   name: 'linux/x86/meterpreter_reverse_tcp',
+        #   extension: '',
+        #   platforms: [:linux],
+        #   executable: true,
+        #   execute_cmd: ['${payload_path}'],
+        #   generate_options: {
+        #     '-f': 'elf'
+        #   },
+        #   payload_options: {
+        #     MeterpreterTryToFork: false
+        #   }
+        # },
+        {
+          name: 'osx/x64/meterpreter_reverse_tcp',
+          extension: '',
+          test_available_commands: true,
+          platforms: [:osx],
+          executable: true,
+          execute_cmd: ['${payload_path}'],
+          generate_options: {
+            '-f': 'macho'
+          },
+          payload_options: {
+            MeterpreterTryToFork: false
+          }
+        },
+        # {
+        #   name: 'osx/x64/meterpreter/reverse_tcp',
+        #   extension: '',
+        #   platforms: [:osx],
+        #   executable: true,
+        #   execute_cmd: ['${payload_path}'],
+        #   generate_options: {
+        #     '-f': 'macho'
+        #   },
+        #   payload_options: {
+        #     MeterpreterTryToFork: false
+        #   }
+        # }
+      ]
+    },
     windows_meterpreter: {
       module_tests: [
         {
@@ -2154,8 +2476,8 @@ RSpec.describe 'payloads' do
   # xcopy Z:\metasploit-framework\Gemfile.lock .\Gemfile.lock /s /e
   # copy 'Z:\metasploit-framework\spec\acceptance\meterpreter_spec.rb' .\spec\acceptance\meterpreter_spec.rb ; $env:METERPRETER = 'php'; bundle exec rspec './spec/acceptance/meterpreter_spec.rb'
   # METERPRETER=php bundle exec rspec './spec/acceptance/meterpreter_spec.rb'
-  METERPRETER_PAYLOADS.each do |key, meterpreter_config|
-    describe "#{key}", focus: meterpreter_config[:focus] do
+  METERPRETER_PAYLOADS.each do |meterpreter_name, meterpreter_config|
+    describe "#{meterpreter_name}#{ENV.fetch('METERPRETER_RUNTIME_VERSION', '')}", focus: meterpreter_config[:focus] do
       meterpreter_config[:payloads].each do |payload_config|
         describe human_name_for_payload(payload_config).to_s, if: run_meterpreter?(meterpreter_config) && supported_platform?(payload_config) do
           let(:payload) { Payload.new(payload_config) }
