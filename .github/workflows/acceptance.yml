@@ -39,33 +39,35 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-10.15
+#          - macos-10.15
+          - windows-2016
           - windows-2019
-          - ubuntu-18.04
-        meterpreter:
-          - { name: python, runtime_version: 2.7 }
-          - { name: python, runtime_version: 3.6 }
-          - { name: python, runtime_version: 3.8 }
-          - { name: java, runtime_version: 8 }
-          - { name: php, runtime_version: 5.3 }
-          - { name: php, runtime_version: 7.4 }
-#          # Broken:
-          - { name: php, runtime_version: 8.1 }
-          - { name: windows_meterpreter }
-          - { name: mettle }
-        ruby:
-          - 3.0.2
-        include:
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2016 }
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
-        exclude:
-          - { meterpreter: { name: mettle }, os: windows-2019 }
+          - windows-2022
+#          - ubuntu-18.04
+#        meterpreter:
+#          - { name: python, runtime_version: 2.7 }
+#          - { name: python, runtime_version: 3.6 }
+#          - { name: python, runtime_version: 3.8 }
+#          - { name: java, runtime_version: 8 }
+#          - { name: php, runtime_version: 5.3 }
+#          - { name: php, runtime_version: 7.4 }
           # Broken:
+#          - { name: php, runtime_version: 8.1 }
+#          - { name: windows_meterpreter }
+#          - { name: mettle }
+#        ruby:
+#          - 3.0.2
+#        include:
+#          - { meterpreter: { name: windows_meterpreter }, os: windows-2016 }
+#          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
+#        exclude:
+#          - { meterpreter: { name: mettle }, os: windows-2019 }
+#          # Broken:
 #          - { meterpreter: { name: php, runtime_version: 5.3 }, os: windows-2019 }
-          # Skip mac/ubuntu windows_meterpreter test runs
-          - { meterpreter: { name: windows_meterpreter }, os: macos-10.15 }
-          - { meterpreter: { name: windows_meterpreter }, os: ubuntu-18.04 }
-
+#          # Skip mac/ubuntu windows_meterpreter test runs
+#          - { meterpreter: { name: windows_meterpreter }, os: macos-10.15 }
+#          - { meterpreter: { name: windows_meterpreter }, os: ubuntu-18.04 }
+#
     runs-on: ${{ matrix.os }}
 
     timeout-minutes: 25
@@ -77,28 +79,69 @@ jobs:
 
     name: ${{ matrix.meterpreter.name }} ${{ matrix.meterpreter.runtime_version }} ${{ matrix.os }}
     steps:
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install libpcap-dev graphviz
+      - name: test smb
+        run: |
+          Get-SmbServerConfiguration
+          Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
 
-      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-        if: ${{ matrix.meterpreter.name == 'php' }}
-        with:
-          php-version: ${{ matrix.meterpreter.runtime_version }}
-          tools: none
+          echo "log path"
 
-      - name: Set up Python
-        if: ${{ matrix.meterpreter.name == 'python' }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.meterpreter.runtime_version }}
+          whoami
+          whoami /all
+          echo 'net user'
+          net user
 
-      - uses: actions/setup-java@v2
-        if: ${{ matrix.meterpreter.name == 'java' }}
-        with:
-          distribution: temurin
-          java-version: ${{ matrix.meterpreter.runtime_version }}
+          echo 'net accounts'
+          net accounts
 
+          echo 'net user add'
+
+          # Disable password policy, so we can set passwords to 'password' without needing extra complexity
+          secedit /export /cfg c:\secpol.cfg
+          (gc C:\secpol.cfg).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File C:\secpol.cfg
+          secedit /configure /db c:\windows\security\local.sdb /cfg c:\secpol.cfg /areas SECURITYPOLICY
+          rm -force c:\secpol.cfg -confirm:$false
+
+          # Disable user access control, so we can run psexec remotely
+          # reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+          reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+
+          net user TestingAccount password /ADD /Y
+          # net user TestingAccount /delete
+
+          echo 'adding to local group'
+          net localgroup administrators TestingAccount /ADD
+
+          echo 'viewing net accounts'
+          net accounts
+
+          echo 'viewing testingaccount'
+          net user TestingAccount
+
+          exit
+
+#      - name: Install system dependencies (Linux)
+#        if: runner.os == 'Linux'
+#        run: sudo apt-get install libpcap-dev graphviz
+#
+#      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+#        if: ${{ matrix.meterpreter.name == 'php' }}
+#        with:
+#          php-version: ${{ matrix.meterpreter.runtime_version }}
+#          tools: none
+#
+#      - name: Set up Python
+#        if: ${{ matrix.meterpreter.name == 'python' }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.meterpreter.runtime_version }}
+#
+#      - uses: actions/setup-java@v2
+#        if: ${{ matrix.meterpreter.name == 'java' }}
+#        with:
+#          distribution: temurin
+#          java-version: ${{ matrix.meterpreter.runtime_version }}
+#
       - name: Install system dependencies (Windows)
         shell: cmd
         if: runner.os == 'Windows'
@@ -124,97 +167,99 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-
-#      - name: debugging
-#        if: always()
-#        run: |
-#          gem install pcaprub -v '0.13.1' --verbose
-
-      # Takes 5-6 minutes, potentially cacheable
-#      - name: Install postgres (Windows)
-#        if: runner.os == 'Windows'
-#        shell: bash
-#        run: |
-#          choco install postgresql12 --force --params '/Password:postgres'
-#          echo 'C:\Program Files\PostgreSQL\12\bin' >> $GITHUB_PATH
-#          echo 'C:\Program Files\PostgreSQL\12\lib' >> $GITHUB_PATH
-#          echo "PQ_LIB_DIR=C:\Program Files\PostgreSQL\12\lib" >> $GITHUB_ENV
 #
-#      - name: Create database
-#        run: |
-#          cp config/database.yml.github_actions config/database.yml
-#          bundle env
-#          bundle exec rake --version
-#          bundle exec rake db:create
-#          bundle exec rake db:migrate
-#          # fail build if db/schema.rb update is not committed
-#          git diff --exit-code db/schema.rb
-
+##      - name: debugging
+##        if: always()
+##        run: |
+##          gem install pcaprub -v '0.13.1' --verbose
+#
+#      # Takes 5-6 minutes, potentially cacheable
+##      - name: Install postgres (Windows)
+##        if: runner.os == 'Windows'
+##        shell: bash
+##        run: |
+##          choco install postgresql12 --force --params '/Password:postgres'
+##          echo 'C:\Program Files\PostgreSQL\12\bin' >> $GITHUB_PATH
+##          echo 'C:\Program Files\PostgreSQL\12\lib' >> $GITHUB_PATH
+##          echo "PQ_LIB_DIR=C:\Program Files\PostgreSQL\12\lib" >> $GITHUB_ENV
+##
+##      - name: Create database
+##        run: |
+##          cp config/database.yml.github_actions config/database.yml
+##          bundle env
+##          bundle exec rake --version
+##          bundle exec rake db:create
+##          bundle exec rake db:migrate
+##          # fail build if db/schema.rb update is not committed
+##          git diff --exit-code db/schema.rb
+#
       - name: acceptance
         run: |
-          bundle exec rspec './spec/acceptance/meterpreter_spec.rb' --color --format Fivemat --format AllureRspecFormatter
+          bundle exec rspec './spec/acceptance/smb_spec.rb' --color --format Fivemat --format AllureRspecFormatter
+#          bundle exec rspec './spec/acceptance/meterpreter_spec.rb' --color --format Fivemat --format AllureRspecFormatter
 
-      - name: Archive results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          # Provide a unique artifact for each matrix os, otherwise race conditions can lead to corrupt zips
-          name: raw-data-${{ matrix.meterpreter.name }}-${{ matrix.meterpreter.runtime_version }}-${{ matrix.os }}
-          path: tmp/allure-raw-data
-
-  # Generate a final report from the previous test results
-  report:
-    name: Generate report
-    needs: test
-    runs-on: ubuntu-18.04
-    if: always()
-
-    steps:
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install libpcap-dev graphviz
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup Ruby
-        env:
-          BUNDLE_WITHOUT: "coverage development pcap"
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7
-          bundler-cache: true
-
-      - uses: actions/download-artifact@v2
-        id: download
-        if: always()
-        with:
-          # Note: Not specifying a name will download all artifacts from the previous workflow jobs
-          path: raw-data
-
-      - name: allure generate
-        if: always()
-        run: |
-          export VERSION=2.17.2
-
-          curl -o allure-$VERSION.tgz -Ls https://github.com/allure-framework/allure2/releases/download/$VERSION/allure-$VERSION.tgz
-          tar -zxvf allure-$VERSION.tgz -C .
-
-          ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
-          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
-
-      - name: archive results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: final-report
-          path: |
-            ./allure-report
-
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./allure-report
+#
+#      - name: Archive results
+#        if: always()
+#        uses: actions/upload-artifact@v2
+#        with:
+#          # Provide a unique artifact for each matrix os, otherwise race conditions can lead to corrupt zips
+#          name: raw-data-${{ matrix.meterpreter.name }}-${{ matrix.meterpreter.runtime_version }}-${{ matrix.os }}
+#          path: tmp/allure-raw-data
+#
+#  # Generate a final report from the previous test results
+#  report:
+#    name: Generate report
+#    needs: test
+#    runs-on: ubuntu-18.04
+#    if: always()
+#
+#    steps:
+#      - name: Install system dependencies (Linux)
+#        if: runner.os == 'Linux'
+#        run: sudo apt-get install libpcap-dev graphviz
+#
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Setup Ruby
+#        env:
+#          BUNDLE_WITHOUT: "coverage development pcap"
+#        uses: ruby/setup-ruby@v1
+#        with:
+#          ruby-version: 2.7
+#          bundler-cache: true
+#
+#      - uses: actions/download-artifact@v2
+#        id: download
+#        if: always()
+#        with:
+#          # Note: Not specifying a name will download all artifacts from the previous workflow jobs
+#          path: raw-data
+#
+#      - name: allure generate
+#        if: always()
+#        run: |
+#          export VERSION=2.17.2
+#
+#          curl -o allure-$VERSION.tgz -Ls https://github.com/allure-framework/allure2/releases/download/$VERSION/allure-$VERSION.tgz
+#          tar -zxvf allure-$VERSION.tgz -C .
+#
+#          ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
+#          bundle exec ruby spec/acceptance/support_matrix/generate_report.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/matrix.html
+#
+#      - name: archive results
+#        if: always()
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: final-report
+#          path: |
+#            ./allure-report
+#
+#      - name: Deploy report to Github Pages
+#        if: always()
+#        uses: peaceiris/actions-gh-pages@v2
+#        env:
+#          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          PUBLISH_BRANCH: gh-pages
+#          PUBLISH_DIR: ./allure-report
