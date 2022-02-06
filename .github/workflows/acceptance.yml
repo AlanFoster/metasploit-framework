@@ -8,7 +8,8 @@ name: Acceptance
 permissions:
   actions: none
   checks: none
-  contents: read
+  # TODO: Write required for gh-pages write access
+  contents: write
   deployments: none
   id-token: none
   issues: none
@@ -37,25 +38,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        meterpreter:
-          - { name: python, runtime_version: 2.7 }
-          - { name: python, runtime_version: 3.8 }
-          - { name: java }
-          - { name: php, runtime_version: 5.3 }
-          - { name: php, runtime_version: 7.4 }
-          # Broken:
-          - { name: php, runtime_version: 8.1 }
-
-          - { name: windows_meterpreter }
         os:
           - macos-10.15
           - windows-2019
           - ubuntu-18.04
+        meterpreter:
+          - { name: python, runtime_version: 2.7 }
+          - { name: python, runtime_version: 3.8 }
+          - { name: java, runtime_version: 8 }
+          - { name: php, runtime_version: 5.3 }
+          - { name: php, runtime_version: 7.4 }
+#          # Broken:
+          - { name: php, runtime_version: 8.1 }
+          - { name: windows_meterpreter }
         ruby:
           - 3.0.2
-#        excluding:
-#           # Broken:
-#           - { os: windows-2019, name: php, runtime_version: 5.3 }
+        include:
+          - { meterpreter: { name: windows_meterpreter }, os: windows-2016 }
+          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
+        exclude:
+          - { meterpreter: { name: mettle }, os: windows-2019 }
+          # Broken:
+#          - { meterpreter: { name: php, runtime_version: 5.3 }, os: windows-2019 }
+          # Skip mac/ubuntu windows_meterpreter test runs
+          - { meterpreter: { name: windows_meterpreter }, os: macos-10.15 }
+          - { meterpreter: { name: windows_meterpreter }, os: ubuntu-18.04 }
 
     runs-on: ${{ matrix.os }}
 
@@ -64,6 +71,7 @@ jobs:
     env:
       RAILS_ENV: test
       METERPRETER: ${{ matrix.meterpreter.name }}
+      METERPRETER_RUNTIME_VERSION: ${{ matrix.meterpreter.runtime_version }}
 
     name: ${{ matrix.meterpreter.name }} ${{ matrix.meterpreter.runtime_version }} ${{ matrix.os }}
     steps:
@@ -71,7 +79,6 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install libpcap-dev graphviz
 
-      # TODO: PHP Meterpreter doesn't seem to work well with PHP 8, the default version of Github action environments
       - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         if: ${{ matrix.meterpreter.name == 'php' }}
         with:
@@ -83,6 +90,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.meterpreter.runtime_version }}
+
+      - uses: actions/setup-java@v2
+        if: ${{ matrix.meterpreter.name == 'java' }}
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.meterpreter.runtime_version }}
 
       - name: Install system dependencies (Windows)
         shell: cmd
@@ -144,7 +157,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           # Provide a unique artifact for each matrix os, otherwise race conditions can lead to corrupt zips
-          name: raw-data-${{ matrix.os }}
+          name: raw-data-${{ matrix.meterpreter.name }}-${{ matrix.meterpreter.runtime_version }}-${{ matrix.os }}
           path: tmp/allure-raw-data
 
   # Generate a final report from the previous test results

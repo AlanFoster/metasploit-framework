@@ -15,8 +15,10 @@ AllureRspec.configure do |config|
   # environment.properties
   config.environment_properties = {
     host_os: RbConfig::CONFIG['host_os'],
-    ruby_version: RUBY_VERSION
-  }
+    ruby_version: RUBY_VERSION,
+    meterpreter_name: ENV['METERPRETER'],
+    meterpreter_runtime_version: ['METERPRETER_RUNTIME_VERSION']
+  }.compact
   # categories.json
   # config.categories = File.new("my_custom_categories.json")
 end
