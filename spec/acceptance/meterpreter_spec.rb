@@ -372,17 +372,15 @@ RSpec.describe 'payloads' do
           lines: {
             all: {
               required: [
+                "Failed: 0"
               ],
               acceptable_failures: [
               ]
             },
             osx: {
               required: [
-                "Failed: 1"
               ],
               acceptable_failures: [
-                "FAILED: should search with date inclusive of exact date",
-                "Failed: 1"
               ]
             },
             linux: {
@@ -793,14 +791,13 @@ RSpec.describe 'payloads' do
           lines: {
             all: {
               required: [
+                "Failed: 0"
               ],
               acceptable_failures: []
             },
             osx: {
               required: [],
               acceptable_failures: [
-                "FAILED: should search with date inclusive of exact date",
-                "Failed: 1"
               ]
             },
             linux: {
@@ -980,6 +977,9 @@ RSpec.describe 'payloads' do
             windows: {
               required: [],
               acceptable_failures: [
+                ["FAILED: should upload a file", { flaky: true }],
+                ["Failed:", { flaky: true }],
+                ["Exception: EOFError : EOFError", { flaky: true }],
                 "Post failed: Errno::ENOENT No such file or directory @ rb_sysopen - /bin/echo",
                 "Call stack:",
                 "modules/post/test/file.rb",
@@ -1174,6 +1174,7 @@ RSpec.describe 'payloads' do
           lines: {
             all: {
               required: [
+                "Failed: 0"
               ],
               acceptable_failures: [
               ]
@@ -1181,8 +1182,6 @@ RSpec.describe 'payloads' do
             osx: {
               required: [],
               acceptable_failures: [
-                "FAILED: should search with date inclusive of exact date",
-                "Failed: 1"
               ]
             },
             linux: {
@@ -1215,6 +1214,7 @@ RSpec.describe 'payloads' do
             windows: {
               required: [],
               acceptable_failures: [
+                "stdapi_railgun_api: Operation failed: The command is not supported by this Meterpreter type",
                 "Exception: Rex::Post::Meterpreter::ExtensionLoadError : The \"extapi\" extension is not supported by this Meterpreter type",
                 "Exception: Rex::NotImplementedError : The requested method is not implemented.",
                 "FAILED: should start W32Time",

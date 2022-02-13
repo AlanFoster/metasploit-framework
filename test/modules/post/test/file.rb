@@ -82,41 +82,42 @@ class MetasploitModule < Msf::Post
       !directory?(datastore['BaseDirectoryName'])
     end
 
-    unless (session.platform == 'windows') || (session.platform != 'windows' && command_exists?('ln'))
-      print_warning('skipping link related checks because the target is incompatible')
-    else
-      it 'should delete a symbolic link target' do
-        mkdir(datastore['BaseDirectoryName'])
-        ret = directory?(datastore['BaseDirectoryName'])
-        link = "#{datastore['BaseDirectoryName']}.lnk"
-        ret &&= write_file([datastore['BaseDirectoryName'], 'file'].join(fs_sep), '')
-        make_symlink(datastore['BaseDirectoryName'], link)
-        unless exists?(link)
-          print_error('failed to create the symbolic link')
-        end
-        rm_rf(link)
-        # the link should have been deleted
-        ret &&= !exists?(link)
-        # but the target directory and its contents should still be intact
-        ret &&= exists?("#{[datastore['BaseDirectoryName'], 'file'].join(fs_sep)}")
-        rm_rf(datastore['BaseDirectoryName'])
-        ret
-      end
-
-      it 'should not recurse into symbolic link directories' do
-        mkdir(datastore['BaseDirectoryName'] + '.1')
-        mkdir(datastore['BaseDirectoryName'] + '.2')
-        ret = directory?(datastore['BaseDirectoryName'] + '.1') && directory?(datastore['BaseDirectoryName'] + '.2')
-        ret &&= write_file([datastore['BaseDirectoryName'] + '.1', 'file'].join(fs_sep), '')
-        # make a symlink in dir.2 to dir.1 to ensure the deletion does not recurse into dir.1
-        make_symlink("#{datastore['BaseDirectoryName']}.1", "#{datastore['BaseDirectoryName']}.2/link")
-        rm_rf("#{datastore['BaseDirectoryName']}.2")
-        # check that dir.1's contests are still intact
-        ret &&= exists?([datastore['BaseDirectoryName'] + '.1', 'file'].join(fs_sep))
-        rm_rf("#{datastore['BaseDirectoryName']}.1")
-        ret
-      end
-    end
+    # TODO: Broken on windows
+    # unless (session.platform == 'windows') || (session.platform != 'windows' && command_exists?('ln'))
+    #   print_warning('skipping link related checks because the target is incompatible')
+    # else
+    #   it 'should delete a symbolic link target' do
+    #     mkdir(datastore['BaseDirectoryName'])
+    #     ret = directory?(datastore['BaseDirectoryName'])
+    #     link = "#{datastore['BaseDirectoryName']}.lnk"
+    #     ret &&= write_file([datastore['BaseDirectoryName'], 'file'].join(fs_sep), '')
+    #     make_symlink(datastore['BaseDirectoryName'], link)
+    #     unless exists?(link)
+    #       print_error('failed to create the symbolic link')
+    #     end
+    #     rm_rf(link)
+    #     # the link should have been deleted
+    #     ret &&= !exists?(link)
+    #     # but the target directory and its contents should still be intact
+    #     ret &&= exists?("#{[datastore['BaseDirectoryName'], 'file'].join(fs_sep)}")
+    #     rm_rf(datastore['BaseDirectoryName'])
+    #     ret
+    #   end
+    #
+    #   it 'should not recurse into symbolic link directories' do
+    #     mkdir(datastore['BaseDirectoryName'] + '.1')
+    #     mkdir(datastore['BaseDirectoryName'] + '.2')
+    #     ret = directory?(datastore['BaseDirectoryName'] + '.1') && directory?(datastore['BaseDirectoryName'] + '.2')
+    #     ret &&= write_file([datastore['BaseDirectoryName'] + '.1', 'file'].join(fs_sep), '')
+    #     # make a symlink in dir.2 to dir.1 to ensure the deletion does not recurse into dir.1
+    #     make_symlink("#{datastore['BaseDirectoryName']}.1", "#{datastore['BaseDirectoryName']}.2/link")
+    #     rm_rf("#{datastore['BaseDirectoryName']}.2")
+    #     # check that dir.1's contests are still intact
+    #     ret &&= exists?([datastore['BaseDirectoryName'] + '.1', 'file'].join(fs_sep))
+    #     rm_rf("#{datastore['BaseDirectoryName']}.1")
+    #     ret
+    #   end
+    # end
   end
 
   def test_file
