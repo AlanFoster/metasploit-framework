@@ -110,6 +110,11 @@ jobs:
           REM mv C:\WpdPack\Lib\x64\Packet.lib C:\WpdPack\Lib\
           REM mv C:\WpdPack\Lib\x64\wpcap.lib C:\WpdPack\Lib\
 
+          dir C:\\
+
+          dir %WINDIR%
+          type %WINDIR%\\system32\\drivers\\etc\\hosts
+
           REM php configuration - enable sockets, otherwise php reverse shells fail on AF_INET constants
           php -r "file_put_contents(php_ini_loaded_file(), PHP_EOL . 'extension=sockets' . PHP_EOL, FILE_APPEND);"
 

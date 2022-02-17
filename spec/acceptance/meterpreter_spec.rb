@@ -2002,7 +2002,7 @@ RSpec.describe 'payloads' do
 
           meterpreter_config[:module_tests].each do |module_test|
             describe module_test[:name].to_s do
-              it "passes #{payload_config[:name]} #{module_test[:name]}", if: run_meterpreter?(meterpreter_config) && supported_platform?(payload_config) && supported_platform?(module_test) do
+              it "passes #{payload_config[:name]} #{module_test[:name]}", if: run_meterpreter?(meterpreter_config) && supported_platform?(payload_config) && supported_platform?(module_test) && module_test[:name] == 'test/file' do
                 puts "Running test payload: #{payload_config[:name]}, test:#{module_test[:name]}"
 
                 console.sendline("use #{module_test[:name]}")

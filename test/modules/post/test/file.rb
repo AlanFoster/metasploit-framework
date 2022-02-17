@@ -129,10 +129,23 @@ class MetasploitModule < Msf::Post
         'c:\\pagefile.sys',
         '/etc/passwd',
         '/etc/master.passwd',
+        'c:\\system32\\drivers\\etc\\hosts',
+        '%WINDIR%\\system32\\drivers\\etc\\hosts',
+        'c:\\Windows\\win.ini',
+        '%WINDIR%\\win.ini',
+        'C:\\Windows\\notepad.exe',
+        'C:\\Windows\\calc.exe',
+        'c:\\Windows\\notepad.exe',
+        'c:\\Windows\\calc.exe',
+        '%WINDIR%\\notepad.exe',
+        '%WINDIR%\\notepad.exe',
+        '%WINDIR%\\calc.exe',
         '%WINDIR%\\system32\\notepad.exe',
         '%WINDIR%\\system32\\calc.exe',
         File.expand_path(__FILE__)
       ].each do |path|
+        print_status "Does file #{path} exist == #{file?(path).inspect}"
+
         ret = true if file?(path)
       end
 
