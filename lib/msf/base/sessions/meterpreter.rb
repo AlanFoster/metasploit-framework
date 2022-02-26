@@ -652,6 +652,9 @@ class Meterpreter < Rex::Post::Meterpreter::Client
         ['php']
       when 'python'
         ['py']
+      # TODO: This is wrong
+      when 'rust'
+        ['dylib', 'dll', 'so']
       else
         nil
       end

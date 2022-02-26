@@ -367,7 +367,8 @@ class ClientCore < Extension
         end
       end
 
-      if client.binary_suffix == ['dylib']
+      # if client.binary_suffix == ['dylib']
+      if client.platform == 'rust'
         path = ::File.expand_path('~/CLionProjects/rust-meterpreter/target/debug/libstdapi.dylib')
       end
 
