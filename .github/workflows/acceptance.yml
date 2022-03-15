@@ -1,5 +1,6 @@
 name: Acceptance
 
+# Optional, enabling concurrency limits: https://docs.github.com/en/actions/using-jobs/using-concurrency
 #concurrency:
 #  group: ${{ github.ref }}-${{ github.workflow }}
 #  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -48,18 +49,17 @@ jobs:
           - { name: java, runtime_version: 8 }
           - { name: php, runtime_version: 5.3 }
           - { name: php, runtime_version: 7.4 }
-#          # Broken:
-#          - { name: php, runtime_version: 8.1 }
+          # Meterpreter is broken on PHP 8.1 https://github.com/rapid7/metasploit-payloads/issues/531
+          # - { name: php, runtime_version: 8.1 }
           - { name: windows_meterpreter }
           - { name: mettle }
         ruby:
           - 3.0.2
         include:
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2016 }
           - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
         exclude:
           - { meterpreter: { name: mettle }, os: windows-2019 }
-          # Broken:
+          # Meterpreter is broken on Windows with PHP 5.3 https://github.com/rapid7/metasploit-payloads/issues/532
           - { meterpreter: { name: php, runtime_version: 5.3 }, os: windows-2019 }
           # Skip mac/ubuntu windows_meterpreter test runs
           - { meterpreter: { name: windows_meterpreter }, os: macos-10.15 }
