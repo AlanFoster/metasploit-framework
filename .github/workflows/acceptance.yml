@@ -43,21 +43,20 @@ jobs:
           - windows-2019
           - ubuntu-18.04
         meterpreter:
-          - { name: python, runtime_version: 2.7 }
-          - { name: python, runtime_version: 3.6 }
+          # - { name: python, runtime_version: 2.7 }
+          # - { name: python, runtime_version: 3.6 }
           - { name: python, runtime_version: 3.8 }
           - { name: java, runtime_version: 8 }
           - { name: php, runtime_version: 5.3 }
-          - { name: php, runtime_version: 7.4 }
+          # - { name: php, runtime_version: 7.4 }
 #          # Broken:
-          - { name: php, runtime_version: 8.1 }
+          # - { name: php, runtime_version: 8.1 }
           - { name: windows_meterpreter }
           - { name: mettle }
         ruby:
           - 3.0.2
-        include:
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2016 }
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
+        # include:
+        #   - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
         exclude:
           - { meterpreter: { name: mettle }, os: windows-2019 }
           # Broken:

@@ -19,9 +19,9 @@ AllureRspec.configure do |config|
   }.compact
   meterpreter_name = ENV['METERPRETER']
   meterpreter_runtime_version = ENV['METERPRETER_RUNTIME_VERSION']
-  if meterpreter_name.present?
+  if meterpreter_name && !meterpreter_name.empty?
     environment_properties[:meterpreter_name] = meterpreter_name
-    if meterpreter_runtime_version.present?
+    if meterpreter_runtime_version && !meterpreter_runtime_version.empty?
       environment_properties[:meterpreter_runtime_version] = "#{meterpreter_name}#{meterpreter_runtime_version}"
     end
   end
