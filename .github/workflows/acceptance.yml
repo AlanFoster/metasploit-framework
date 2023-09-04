@@ -36,6 +36,7 @@ on:
       - 'modules/payloads/**'
       - 'lib/msf/core/payload/**'
       - 'lib/msf/core/**'
+      - 'tools/dev/**'
       - 'spec/acceptance/**'
       - 'spec/acceptance_spec_helper.rb'
 #   Example of running as a cron, to weed out flaky tests
@@ -49,31 +50,31 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-11
-          - windows-2019
+#          - macos-11
+#          - windows-2019
           - ubuntu-20.04
         ruby:
           - 3.0.2
         meterpreter:
           # Python
           - { name: python, runtime_version: 3.6 }
-          - { name: python, runtime_version: 3.11 }
-
-          # Java - newer versions of Java are not supported currently: https://github.com/rapid7/metasploit-payloads/issues/647
-          - { name: java, runtime_version: 8 }
-
-          # PHP
-          - { name: php, runtime_version: 5.3 }
-          - { name: php, runtime_version: 7.4 }
-          - { name: php, runtime_version: 8.2 }
-        include:
-          # Windows Meterpreter
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2019 }
-          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
-
-          # Mettle
-          - { meterpreter: { name: mettle }, os: macos-11 }
-          - { meterpreter: { name: mettle }, os: ubuntu-20.04 }
+#          - { name: python, runtime_version: 3.11 }
+#
+#          # Java - newer versions of Java are not supported currently: https://github.com/rapid7/metasploit-payloads/issues/647
+#          - { name: java, runtime_version: 8 }
+#
+#          # PHP
+#          - { name: php, runtime_version: 5.3 }
+#          - { name: php, runtime_version: 7.4 }
+#          - { name: php, runtime_version: 8.2 }
+#        include:
+#          # Windows Meterpreter
+#          - { meterpreter: { name: windows_meterpreter }, os: windows-2019 }
+#          - { meterpreter: { name: windows_meterpreter }, os: windows-2022 }
+#
+#          # Mettle
+#          - { meterpreter: { name: mettle }, os: macos-11 }
+#          - { meterpreter: { name: mettle }, os: ubuntu-20.04 }
 
     runs-on: ${{ matrix.os }}
 
@@ -170,6 +171,28 @@ jobs:
     if: always()
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        if: always()
+
+      - name: Install system dependencies (Linux)
+        if: always()
+        run: sudo apt-get -y --no-install-recommends install libpcap-dev graphviz
+
+      - name: Setup Ruby
+        if: always()
+        env:
+          BUNDLE_WITHOUT: "coverage development"
+          BUNDLE_FORCE_RUBY_PLATFORM: true
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.2
+          bundler-cache: true
+          cache-version: 4
+          # Github actions with Ruby requires Bundler 2.2.18+
+          # https://github.com/ruby/setup-ruby/tree/d2b39ad0b52eca07d23f3aa14fdf2a3fcc1f411c#windows
+          bundler: 2.2.33
+
       - uses: actions/download-artifact@v3
         id: download
         if: always()
@@ -180,12 +203,21 @@ jobs:
       - name: allure generate
         if: always()
         run: |
+          ls -la
+
           export VERSION=2.22.1
 
           curl -o allure-$VERSION.tgz -Ls https://github.com/allure-framework/allure2/releases/download/$VERSION/allure-$VERSION.tgz
           tar -zxvf allure-$VERSION.tgz -C .
 
+          echo 'before'
+          ls -la ${{steps.download.outputs.download-path}}
           ./allure-$VERSION/bin/allure generate ${{steps.download.outputs.download-path}}/* -o ./allure-report
+
+          echo 'after'
+          ls -la ${{steps.download.outputs.download-path}}
+          find ${{steps.download.outputs.download-path}}
+          bundle exec ruby tools/dev/report_generation/support_matrix/generate.rb --allure-data ${{steps.download.outputs.download-path}} > ./allure-report/support_matrix.html
 
       - name: archive results
         if: always()

@@ -4,6 +4,9 @@ A slower test suite that ensures high level functionality works as expected,
 such as verifying msfconsole opens successfully, and can generate Meterpreter payloads,
 create handlers, etc.
 
+The test suite runs on the current host, so the Meterpreter runtimes should be available.
+There is no remote host support currently.
+
 ### Examples
 
 Useful environment variables:
@@ -17,7 +20,7 @@ Running Meterpreter test suite:
 SPEC_OPTS='--tag acceptance' bundle exec rspec './spec/acceptance/meterpreter_spec.rb'
 ```
 
-Skip loading of Rails/Metasplotit with:
+Skip loading of Rails/Metasplot with:
 
 ```
 SPEC_OPTS='--tag acceptance' SPEC_HELPER_LOAD_METASPLOIT=false bundle exec rspec ./spec/acceptance
